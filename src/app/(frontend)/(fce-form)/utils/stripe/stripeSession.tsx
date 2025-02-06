@@ -13,24 +13,42 @@ interface NewSessionOptions {
 }
 
 export const postStripeSession = async ({ priceId }: NewSessionOptions) => {
-  const returnUrl =
-    process.env.NEXT_PUBLIC_SERVER_URL + '/checkout-return?session_id={CHECKOUT_SESSION_ID}'
+  try {
+    console.log('Creating Stripe session with price:', priceId)
+    console.log('Environment:', {
+      serverUrl: process.env.NEXT_PUBLIC_SERVER_URL,
+      vercelUrl: process.env.VERCEL_URL,
+      nodeEnv: process.env.NODE_ENV,
+    })
 
-  const session = await stripe.checkout.sessions.create({
-    ui_mode: 'embedded',
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    return_url: returnUrl,
-  })
+    // 使用更可靠的方式构建 URL
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL || process.env.VERCEL_URL || 'http://localhost:3000'
 
-  if (!session.client_secret) throw new Error('Error initiating Stripe session')
+    const returnUrl = `${baseUrl}/checkout-return?session_id={CHECKOUT_SESSION_ID}`
 
-  return {
-    clientSecret: session.client_secret,
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: 'embedded',
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      return_url: returnUrl,
+    })
+
+    if (!session.client_secret) {
+      console.error('Failed to create session:', session)
+      throw new Error('Error initiating Stripe session')
+    }
+
+    return {
+      clientSecret: session.client_secret,
+    }
+  } catch (error) {
+    console.error('Stripe session creation error:', error)
+    throw error
   }
 }
