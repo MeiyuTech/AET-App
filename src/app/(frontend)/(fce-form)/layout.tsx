@@ -4,5 +4,12 @@ import '@/app/(frontend)/globals.css'
 import { Toaster } from '@/components/ui/toaster'
 
 export default function FCEFormLayout({ children }: { children: React.ReactNode }) {
-  return <div className="fce-form-layout">{children}</div>
+  return (
+    <div className="fce-form-layout">
+      <Header />
+      {children}
+      <Footer />
+      <Toaster />
+    </div>
+  )
 }

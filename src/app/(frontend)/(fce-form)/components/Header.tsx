@@ -1,23 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Menu } from 'lucide-react'
-
-// Add these new types and data structures
-type NavItem = {
-  href: string
-  label: string
-  children?: NavItem[]
-}
 
 export default function Header() {
   return (
