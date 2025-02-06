@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { Stripe } from 'stripe'
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -9,41 +9,24 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 export const GET = async (request: NextRequest) => {
-  try {
-    const { searchParams } = new URL(request.url)
-    const stripeSessionId = searchParams.get('session_id')
+  const { searchParams } = new URL(request.url)
 
-    // Add logging
-    console.log('Stripe Session ID:', stripeSessionId)
+  const stripeSessionId = searchParams.get('session_id')
 
-    if (!stripeSessionId?.length) {
-      console.log('No session ID provided')
-      return NextResponse.redirect(new URL('/shop', request.url))
-    }
+  if (!stripeSessionId?.length) return redirect('/shop')
 
-    const session = await stripe.checkout.sessions.retrieve(stripeSessionId)
+  const session = await stripe.checkout.sessions.retrieve(stripeSessionId)
 
-    // Add logging
-    console.log('Session status:', session.status)
-
-    if (session.status === 'complete') {
-      return NextResponse.redirect(new URL('/checkout/success', request.url))
-    }
-
-    if (session.status === 'open') {
-      return NextResponse.redirect(new URL('/checkout', request.url))
-    }
-
-    // Default fallback
-    return NextResponse.redirect(new URL('/shop', request.url))
-  } catch (error) {
-    // Add error logging
-    console.error('Checkout return error:', error)
-
-    // Return error response instead of redirect for debugging
-    return NextResponse.json(
-      { error: 'Something went wrong processing the checkout' },
-      { status: 500 }
-    )
+  if (session.status === 'complete') {
+    // Go to a success page!
+    return redirect(`/checkout/success`)
   }
+
+  if (session.status === 'open') {
+    // Here you'll likely want to head back to some pre-payment page in your checkout
+    // so the user can try again
+    return redirect(`/checkout`)
+  }
+
+  return redirect('/shop')
 }
