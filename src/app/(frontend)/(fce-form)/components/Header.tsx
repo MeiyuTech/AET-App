@@ -13,17 +13,16 @@ export default function Header() {
         <div className="container mx-auto px-4 lg:px-8 py-4 lg:py-8 flex items-center">
           <Link href="/next-fce-form" className="flex-shrink-0">
             <Image
-              src="/AET-logo.png"
+              src="/aet_e_logo.png"
               alt="AET"
-              width={300}
-              height={100}
-              className="h-16 lg:h-24 w-auto"
+              width={425}
+              height={82}
+              className="w-auto h-auto"
               priority={true}
             />
           </Link>
         </div>
       </header>
-      <div className="h-[96px] lg:h-[144px]" />
     </>
   )
 }
