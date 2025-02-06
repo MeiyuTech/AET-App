@@ -1,8 +1,8 @@
 'use server'
 
-import { createClient } from '@/app/(frontend)/(fce-form)/utils/supabase/server'
-import { FormData } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
-import { formatUtils } from '@/app/(frontend)/(fce-form)/components/FCE-Form/utils'
+import { createClient } from '../../utils/supabase/server'
+import { FormData } from '../FCE-Form/types'
+import { formatUtils } from '../FCE-Form/utils'
 
 export async function createFCESubmission(formData: FormData) {
   const client = await createClient()
