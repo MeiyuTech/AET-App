@@ -12,11 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  DELIVERY_OPTIONS,
-  ADDITIONAL_SERVICES,
-  EVALUATION_SERVICES,
-} from '@/app/(frontend)/(fce-form)/components/FCE-Form/constants'
+import { DELIVERY_OPTIONS, ADDITIONAL_SERVICES, EVALUATION_SERVICES } from '../constants'
 import { useEffect } from 'react'
 
 export function ServiceSelection() {

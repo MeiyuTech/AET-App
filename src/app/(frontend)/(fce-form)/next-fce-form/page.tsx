@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import FCEForm from '@/app/(frontend)/(fce-form)/components/FCE-Form'
+import FCEForm from '../components/FCE-Form'
 
 export const metadata: Metadata = {
   title: 'FCE Form - Next Version',

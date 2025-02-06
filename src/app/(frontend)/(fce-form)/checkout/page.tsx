@@ -1,4 +1,4 @@
-import { CheckoutForm } from '@/app/(frontend)/(fce-form)/components/CheckoutForm'
+import { CheckoutForm } from '../components/CheckoutForm'
 
 const CheckoutPage = () => {
   // Here you would be getting the basked etc.

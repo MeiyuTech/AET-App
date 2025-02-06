@@ -2,8 +2,8 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { FormData, FormStep } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
-import { submitFCEApplication } from '@/app/(frontend)/(fce-form)/components/lib/actions'
+import { FormData, FormStep } from './types'
+import { submitFCEApplication } from '../lib/actions'
 
 interface FormState {
   // Form data
