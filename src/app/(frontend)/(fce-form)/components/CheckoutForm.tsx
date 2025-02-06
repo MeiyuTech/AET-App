@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useCallback, useState, useEffect } from 'react'
+import { useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 
-import { postStripeSession } from '../utils/stripe/stripeSession'
+import { postStripeSession } from '../utils/stripe/session'
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   throw new Error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined in environment variables')
