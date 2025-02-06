@@ -8,7 +8,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-export const GET = async (request: NextRequest, response: NextResponse) => {
+export const GET = async (request: NextRequest, _response: NextResponse) => {
   const { searchParams } = new URL(request.url)
 
   const stripeSessionId = searchParams.get('session_id')
