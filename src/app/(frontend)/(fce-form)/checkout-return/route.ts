@@ -8,9 +8,10 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-// @ts-ignore
 export const GET = async (request: NextRequest, response: NextResponse) => {
   const { searchParams } = new URL(request.url)
+  // TODO: Remove response parameter since it's not needed
+  console.log(response)
 
   const stripeSessionId = searchParams.get('session_id')
 
