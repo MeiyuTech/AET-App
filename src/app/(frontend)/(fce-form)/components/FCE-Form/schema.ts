@@ -21,7 +21,21 @@ const educationSchema = z.object({
     })
     .superRefine((data, ctx) => {
       const { startDate, endDate } = data
-      if (!startDate.year || !startDate.month || !endDate.year || !endDate.month) return
+      if (!startDate.year || !startDate.month) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select start date',
+          path: ['startDate', 'year'],
+        })
+      }
+
+      if (!endDate.year || !endDate.month) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select end date',
+          path: ['endDate', 'year'],
+        })
+      }
 
       const start = dayjs(`${startDate.year}-${startDate.month}-01`)
       const end = dayjs(`${endDate.year}-${endDate.month}-01`)
@@ -166,13 +180,19 @@ export const formSchema = z.object({
     })
     .superRefine((data, ctx) => {
       const { year, month, date } = data
-      if (!year || !month || !date) return
+      if (!year || !month || !date) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.invalid_date,
+          message: 'Please enter a valid Date of Birth',
+          path: ['date'],
+        })
+      }
 
       // Check if date is valid
       const isValid = dayjs(`${year}-${month}-${date}`, 'YYYY-MM-DD', true).isValid()
       if (!isValid) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: z.ZodIssueCode.invalid_date,
           message: 'Please enter a valid date',
           path: ['date'],
         })

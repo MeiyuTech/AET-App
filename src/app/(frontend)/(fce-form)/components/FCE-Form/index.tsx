@@ -6,6 +6,7 @@ import { RotateCcw } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
+import { motion, useAnimationControls } from 'framer-motion'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +34,7 @@ import { Review } from './steps/Review'
 export default function FCEForm() {
   const { toast } = useToast()
   const router = useRouter()
+  const controls = useAnimationControls()
   const {
     formData,
     currentStep,
@@ -85,7 +87,7 @@ export default function FCEForm() {
     if (savedStep) {
       setCurrentStep(Number(savedStep))
     }
-  }, [])
+  }, [form, setCurrentStep, setFormData])
 
   // Save form data when it changes
   useEffect(() => {
@@ -96,7 +98,7 @@ export default function FCEForm() {
       saveDraft()
     })
     return () => subscription.unsubscribe()
-  }, [form.watch, setFormData, saveDraft, currentStep])
+  }, [form, form.watch, setFormData, saveDraft, currentStep])
 
   // Render component based on current step
   const renderStep = () => {
@@ -114,8 +116,16 @@ export default function FCEForm() {
     }
   }
 
+  const scrollToTop = async () => {
+    await controls.start({
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeInOut' },
+    })
+    window.scrollTo(0, 0)
+  }
+
   const handleNext = async () => {
-    // 防止表单提交
+    // Prevent form submission
     event?.preventDefault()
 
     // Get fields to validate based on current step
@@ -128,6 +138,13 @@ export default function FCEForm() {
       console.log('Current form data:', form.getValues())
       setCurrentStep(currentStep + 1)
       await saveDraft()
+      await scrollToTop()
+    } else {
+      toast({
+        title: 'Please Complete Current Step',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -141,7 +158,7 @@ export default function FCEForm() {
       case FormStep.SERVICE_SELECTION:
         return ['serviceType']
       case FormStep.REVIEW:
-        // 在 Review 步骤时验证所有必填字段（不包括可选字段）
+        // Validate all required fields in Review step (excluding optional fields)
         return [
           // Client Info
           'name',
@@ -194,7 +211,7 @@ export default function FCEForm() {
       // reset form
       handleComplete()
       setCurrentStep(FormStep.CLIENT_INFO)
-      // 修改这里：提交成功后跳转到 checkout 页面
+      // Redirect to checkout page after successful submission
       router.push('/checkout')
     } catch (error) {
       console.error('Submission error:', error)
@@ -220,13 +237,7 @@ export default function FCEForm() {
     // If going forwards, validate current step first
     const currentFields = getFieldsToValidate(currentStep)
     const isCurrentStepValid = await form.trigger(currentFields)
-
     if (!isCurrentStepValid) {
-      toast({
-        title: 'Please Complete Current Step',
-        description: 'Please fill in all required fields',
-        variant: 'destructive',
-      })
       return
     }
 
@@ -235,7 +246,7 @@ export default function FCEForm() {
   }
 
   // Add reset handler
-  const handleReset = () => {
+  const handleReset = async () => {
     resetForm()
     // Reset React Hook Form with empty values
     form.reset({
@@ -292,6 +303,8 @@ export default function FCEForm() {
         pdf_only: 0,
       },
     })
+    setCurrentStep(FormStep.CLIENT_INFO)
+    await scrollToTop()
     toast({
       title: 'Form Reset',
       description: 'You can start filling out the application again',
@@ -371,7 +384,7 @@ export default function FCEForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <motion.form animate={controls} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* // Debugging information
         <div className="text-xs text-gray-400">
           Current Step: {currentStep} (Review = {FormStep.REVIEW})
@@ -449,7 +462,7 @@ export default function FCEForm() {
         {draftId && (
           <p className="text-sm text-gray-500 text-center">Draft Saved (ID: {draftId})</p>
         )}
-      </form>
+      </motion.form>
     </Form>
   )
 }

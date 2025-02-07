@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { FormData, FormStep } from './types'
-import { submitFCEApplication } from '../lib/actions'
+import { submitFCEApplication } from './actions'
 
 interface FormState {
   // Form data
