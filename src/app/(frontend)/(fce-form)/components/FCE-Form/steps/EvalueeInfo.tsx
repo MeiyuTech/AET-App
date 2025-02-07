@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs'
 import { Plus, Trash2 } from 'lucide-react'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import countryList from 'react-select-country-list'
 import { useFormContext, useFieldArray } from 'react-hook-form'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

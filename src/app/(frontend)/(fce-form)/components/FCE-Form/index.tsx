@@ -85,7 +85,7 @@ export default function FCEForm() {
     if (savedStep) {
       setCurrentStep(Number(savedStep))
     }
-  }, [])
+  }, [form, setCurrentStep, setFormData])
 
   // Save form data when it changes
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function FCEForm() {
       saveDraft()
     })
     return () => subscription.unsubscribe()
-  }, [form.watch, setFormData, saveDraft, currentStep])
+  }, [form, form.watch, setFormData, saveDraft, currentStep])
 
   // Render component based on current step
   const renderStep = () => {
