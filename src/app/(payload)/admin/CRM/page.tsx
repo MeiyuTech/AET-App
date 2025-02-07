@@ -126,14 +126,14 @@ export default function CRMPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">FCE Applications</h1>
+      <h1 className="text-4xl font-bold mb-4">FCE Applications</h1>
 
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          className="max-w-sm text-lg"
         />
       </div>
 
@@ -143,7 +143,7 @@ export default function CRMPage() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-lg">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -157,7 +157,7 @@ export default function CRMPage() {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-lg">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -165,7 +165,7 @@ export default function CRMPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
                   No results.
                 </TableCell>
               </TableRow>
