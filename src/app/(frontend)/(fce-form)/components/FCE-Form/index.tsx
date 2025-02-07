@@ -115,7 +115,7 @@ export default function FCEForm() {
   }
 
   const handleNext = async () => {
-    // 防止表单提交
+    // Prevent form submission
     event?.preventDefault()
 
     // Get fields to validate based on current step
@@ -128,6 +128,12 @@ export default function FCEForm() {
       console.log('Current form data:', form.getValues())
       setCurrentStep(currentStep + 1)
       await saveDraft()
+    } else {
+      toast({
+        title: 'Please Complete Current Step',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -141,7 +147,7 @@ export default function FCEForm() {
       case FormStep.SERVICE_SELECTION:
         return ['serviceType']
       case FormStep.REVIEW:
-        // 在 Review 步骤时验证所有必填字段（不包括可选字段）
+        // Validate all required fields in Review step (excluding optional fields)
         return [
           // Client Info
           'name',
@@ -194,7 +200,7 @@ export default function FCEForm() {
       // reset form
       handleComplete()
       setCurrentStep(FormStep.CLIENT_INFO)
-      // 修改这里：提交成功后跳转到 checkout 页面
+      // Redirect to checkout page after successful submission
       router.push('/checkout')
     } catch (error) {
       console.error('Submission error:', error)
@@ -220,13 +226,7 @@ export default function FCEForm() {
     // If going forwards, validate current step first
     const currentFields = getFieldsToValidate(currentStep)
     const isCurrentStepValid = await form.trigger(currentFields)
-
     if (!isCurrentStepValid) {
-      toast({
-        title: 'Please Complete Current Step',
-        description: 'Please fill in all required fields',
-        variant: 'destructive',
-      })
       return
     }
 
