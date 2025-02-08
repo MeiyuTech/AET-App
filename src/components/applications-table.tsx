@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Eye } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { EducationDetailsDialog } from '@/components/education-details-dialog'
 
 interface Education {
   id: string
@@ -92,6 +93,8 @@ export function ApplicationsTable() {
   const [globalFilter, setGlobalFilter] = useState('')
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedEducations, setSelectedEducations] = useState<Education[] | undefined>(undefined)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const supabase = createClientComponentClient()
 
   const columns: ColumnDef<Application>[] = [
@@ -281,6 +284,25 @@ export function ApplicationsTable() {
         </div>
       ),
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => {
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSelectedEducations(row.original.educations)
+              setDialogOpen(true)
+            }}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            Details
+          </Button>
+        )
+      },
+    },
   ]
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -415,6 +437,12 @@ export function ApplicationsTable() {
           Next
         </Button>
       </div>
+
+      <EducationDetailsDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        educations={selectedEducations}
+      />
     </div>
   )
 }
