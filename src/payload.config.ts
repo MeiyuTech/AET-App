@@ -95,6 +95,9 @@ export default buildConfig({
         },
       ],
     },
+    // Disable dark mode for the admin panel！！！
+    // TODO: Support dark mode for the admin panel
+    theme: 'light',
   },
   collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
