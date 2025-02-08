@@ -26,13 +26,45 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+interface Education {
+  id: string
+  country_of_study: string
+  degree_obtained: string
+  school_name: string
+  study_start_date: { month: string; year: string }
+  study_end_date: { month: string; year: string }
+}
+
 interface Application {
-  id: number
+  id: string
   created_at: string
-  email: string
+  submitted_at: string | null
+  status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
+  current_step: number
+
+  // Client Information
   name: string
-  status: string
-  // Add other fields as needed
+  email: string
+  country: string
+  city: string
+  region: string
+  phone: string
+  purpose: 'immigration' | 'employment' | 'education' | 'other'
+  purpose_other?: string
+
+  // Evaluee Information
+  pronouns: 'mr' | 'ms' | 'mx'
+  first_name: string
+  last_name: string
+  middle_name?: string
+  date_of_birth: string
+
+  // Service Information
+  service_type: any
+  delivery_method: string
+
+  // Related Education Records
+  educations?: Education[]
 }
 
 export default function CRMPage() {
@@ -51,12 +83,25 @@ export default function CRMPage() {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Date
+            Created At
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
-      cell: ({ row }) => new Date(row.getValue('created_at')).toLocaleDateString(),
+      cell: ({ row }) => {
+        const date = new Date(row.getValue('created_at'))
+        return date
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+          })
+          .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      },
     },
     {
       accessorKey: 'name',
@@ -66,10 +111,23 @@ export default function CRMPage() {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Name
+            Client Name
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         )
+      },
+    },
+    {
+      accessorKey: 'first_name',
+      header: 'Evaluee Name',
+      cell: ({ row }) => {
+        const firstName = row.getValue('first_name') as string
+        const middleName = row.original.middle_name
+        const lastName = row.original.last_name
+
+        return [firstName, middleName, lastName]
+          .filter(Boolean) // Remove empty/null/undefined values
+          .join(' ')
       },
     },
     {
@@ -79,6 +137,25 @@ export default function CRMPage() {
     {
       accessorKey: 'status',
       header: 'Status',
+      cell: ({ row }) => (
+        <div className={`capitalize font-medium ${getStatusColor(row.getValue('status'))}`}>
+          {row.getValue('status')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'purpose',
+      header: 'Purpose',
+      cell: ({ row }) => {
+        const purpose = row.getValue('purpose') as string
+        const purposeOther = row.original.purpose_other
+        return purpose === 'other' ? purposeOther : purpose
+      },
+    },
+    {
+      accessorKey: 'educations',
+      header: 'Education Count',
+      cell: ({ row }) => row.original.educations?.length || 0,
     },
   ]
 
@@ -100,16 +177,19 @@ export default function CRMPage() {
   useEffect(() => {
     async function fetchApplications() {
       try {
-        const { data, error } = await supabase
+        const { data: applications, error: applicationsError } = await supabase
           .from('fce_applications')
-          .select('*')
+          .select(
+            `
+            *,
+            educations:fce_educations(*)
+          `
+          )
           .order('created_at', { ascending: false })
 
-        if (error) {
-          throw error
-        }
+        if (applicationsError) throw applicationsError
 
-        setApplications(data || [])
+        setApplications(applications || [])
       } catch (error) {
         console.error('Error fetching applications:', error)
       } finally {
@@ -194,4 +274,16 @@ export default function CRMPage() {
       </div>
     </div>
   )
+}
+
+// Helper function to get status color
+function getStatusColor(status: string) {
+  const colors = {
+    draft: 'text-yellow-600',
+    submitted: 'text-blue-600',
+    processing: 'text-purple-600',
+    completed: 'text-green-600',
+    cancelled: 'text-red-600',
+  }
+  return colors[status as keyof typeof colors] || 'text-gray-600'
 }
