@@ -26,54 +26,23 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { EducationDetailsDialog } from '@/components/education-details-dialog'
+import {
+  DatabaseApplication,
+  DatabaseEducation,
+} from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
 
-interface Education {
-  id: string
-  country_of_study: string
-  degree_obtained: string
-  school_name: string
-  study_start_date: { month: string; year: string }
-  study_end_date: { month: string; year: string }
-}
-
-interface Application {
-  id: string
-  created_at: string
-  submitted_at: string | null
-  status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
-  current_step: number
-
-  // Client Information
-  name: string
-  email: string
-  phone: string
-  street_address?: string
-  street_address2?: string
-  city: string
-  region: string
-  country: string
-  zip_code?: string
-  purpose: 'immigration' | 'employment' | 'education' | 'other'
-  purpose_other?: string
-
-  // Evaluee Information
-  pronouns: 'mr' | 'ms' | 'mx'
-  first_name: string
-  middle_name?: string
-  last_name: string
-  date_of_birth: string
-
-  // Service Information
+// Extend DatabaseApplication but override/add specific fields needed for the table
+interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
+  // Override service_type to match the structure we're getting from the database
   service_type: {
     id: string
     name: string
     description?: string
     price: number
   }
-  delivery_method: 'email' | 'mail' | 'both'
 
-  // Related Records
-  educations?: Education[]
+  // Override educations to use DatabaseEducation type
+  educations?: DatabaseEducation[]
 }
 
 function getStatusColor(status: string) {
@@ -93,7 +62,9 @@ export function ApplicationsTable() {
   const [globalFilter, setGlobalFilter] = useState('')
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedEducations, setSelectedEducations] = useState<Education[] | undefined>(undefined)
+  const [selectedEducations, setSelectedEducations] = useState<DatabaseEducation[] | undefined>(
+    undefined
+  )
   const [dialogOpen, setDialogOpen] = useState(false)
   const supabase = createClientComponentClient()
 

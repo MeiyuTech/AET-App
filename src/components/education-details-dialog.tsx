@@ -1,11 +1,12 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DatabaseEducation } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
 
 interface EducationDetailsProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  educations?: Education[]
+  educations?: DatabaseEducation[]
 }
 
 export function EducationDetailsDialog({ open, onOpenChange, educations }: EducationDetailsProps) {
