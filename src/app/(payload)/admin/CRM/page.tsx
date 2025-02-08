@@ -1,6 +1,6 @@
 'use client'
 
-import { ApplicationsTable } from '@/components/applications-table'
+import { ApplicationsTable } from '@/app/(frontend)/(fce-form)/components/applications-table'
 
 export default function CRMPage() {
   return (

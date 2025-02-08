@@ -1,7 +1,7 @@
 {
-  "name": "next-usa-immigrate",
-  "version": "1.0.0",
-  "description": "Website template for Payload",
+  "name": "aet-app",
+  "version": "0.9.0",
+  "description": "AET App",
   "license": "MIT",
   "type": "module",
   "scripts": {

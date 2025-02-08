@@ -25,11 +25,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EducationDetailsDialog } from '@/components/education-details-dialog'
 import {
   DatabaseApplication,
   DatabaseEducation,
 } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
+import { EducationDetailsDialog } from './education-details-dialog'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table
 interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
