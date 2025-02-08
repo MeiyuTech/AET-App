@@ -76,6 +76,18 @@ export default function CRMPage() {
 
   const columns: ColumnDef<Application>[] = [
     {
+      id: 'index',
+      header: '#',
+      cell: ({ table, row }) => {
+        // Get all rows that are currently rendered
+        const rows = table.getRowModel().rows
+        // Find current row's position in the rendered rows
+        const index = rows.findIndex((r) => r.id === row.id)
+        // Return index + 1 for display
+        return index + 1
+      },
+    },
+    {
       accessorKey: 'created_at',
       header: ({ column }) => {
         return (
@@ -104,6 +116,22 @@ export default function CRMPage() {
       },
     },
     {
+      accessorKey: 'id',
+      header: 'ID',
+      cell: ({ row }) => {
+        const id = row.getValue('id') as string
+        return id
+      },
+    },
+    {
+      accessorKey: 'phone',
+      header: 'Phone',
+      cell: ({ row }) => {
+        const phone = row.getValue('phone') as string
+        return phone || 'N/A'
+      },
+    },
+    {
       accessorKey: 'name',
       header: ({ column }) => {
         return (
@@ -119,15 +147,23 @@ export default function CRMPage() {
     },
     {
       accessorKey: 'first_name',
-      header: 'Evaluee Name',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Evaluee Name
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
       cell: ({ row }) => {
         const firstName = row.getValue('first_name') as string
         const middleName = row.original.middle_name
         const lastName = row.original.last_name
 
-        return [firstName, middleName, lastName]
-          .filter(Boolean) // Remove empty/null/undefined values
-          .join(' ')
+        return [firstName, middleName, lastName].filter(Boolean).join(' ')
       },
     },
     {
@@ -136,7 +172,17 @@ export default function CRMPage() {
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Status
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
       cell: ({ row }) => (
         <div className={`capitalize font-medium ${getStatusColor(row.getValue('status'))}`}>
           {row.getValue('status')}
@@ -145,11 +191,60 @@ export default function CRMPage() {
     },
     {
       accessorKey: 'purpose',
-      header: 'Purpose',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Purpose
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
       cell: ({ row }) => {
         const purpose = row.getValue('purpose') as string
         const purposeOther = row.original.purpose_other
         return purpose === 'other' ? purposeOther : purpose
+      },
+    },
+    {
+      accessorKey: 'date_of_birth',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Birth Date
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const date = new Date(row.getValue('date_of_birth'))
+        return date.toISOString().split('T')[0]
+      },
+    },
+    {
+      accessorKey: 'country',
+      header: 'Address',
+      cell: ({ row }) => {
+        const streetAddress = row.original.street_address
+        const streetAddress2 = row.original.street_address2
+        const city = row.original.city
+        const region = row.original.region
+        const zipCode = row.original.zip_code
+        const country = row.getValue('country') as string
+
+        const addressParts = [
+          streetAddress,
+          streetAddress2,
+          [city, region, zipCode].filter(Boolean).join(' '),
+          country,
+        ]
+
+        return addressParts.filter(Boolean).join(', ')
       },
     },
     {
@@ -171,6 +266,11 @@ export default function CRMPage() {
     state: {
       sorting,
       columnFilters,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 100,
+      },
     },
   })
 
