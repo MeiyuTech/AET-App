@@ -35,6 +35,8 @@ export const postStripeSession = async ({ priceId, applicationId }: NewSessionOp
       throw new Error('No client secret returned from Stripe')
     }
 
+    console.log('Session created:', session)
+
     return {
       clientSecret: session.client_secret,
     }

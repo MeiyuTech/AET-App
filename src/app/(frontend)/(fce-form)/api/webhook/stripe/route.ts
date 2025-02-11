@@ -28,13 +28,32 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
 
+    console.log('Processing webhook event:', event.type)
+
     const client = await createClient()
 
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
 
-        // 更新支付状态
+        console.log('Session data:', {
+          client_reference_id: session.client_reference_id,
+          payment_intent: session.payment_intent,
+        })
+
+        if (!session.client_reference_id) {
+          console.error('No client_reference_id in session')
+          return new NextResponse('Missing client_reference_id', { status: 400 })
+        }
+
+        const { data: existingApp } = await client
+          .from('fce_applications')
+          .select('status, payment_status')
+          .eq('id', session.client_reference_id)
+          .single()
+
+        console.log('Current application state:', existingApp)
+
         const { error } = await client
           .from('fce_applications')
           .update({
@@ -46,36 +65,78 @@ export async function POST(req: Request) {
           .eq('id', session.client_reference_id)
 
         if (error) {
-          console.error('Error updating application:', error)
-          return new NextResponse('Error updating application', { status: 500 })
+          console.error('Error updating application:', {
+            error,
+            currentState: existingApp,
+            attemptedUpdate: {
+              status: 'processing',
+              payment_status: 'paid',
+            },
+          })
+          return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
         }
 
-        // TODO: 发送确认邮件
-        break
+        const { data: updatedApp } = await client
+          .from('fce_applications')
+          .select('status, payment_status')
+          .eq('id', session.client_reference_id)
+          .single()
+
+        console.log('Update result:', {
+          before: existingApp,
+          after: updatedApp,
+          changes: {
+            statusChanged: existingApp?.status !== updatedApp?.status,
+            paymentStatusChanged: existingApp?.payment_status !== updatedApp?.payment_status,
+          },
+        })
+
+        return new NextResponse('Webhook processed', { status: 200 })
       }
 
       case 'checkout.session.expired': {
         const session = event.data.object as Stripe.Checkout.Session
 
-        // 更新支付状态为过期
-        const { error } = await client
+        console.log('Expired session data:', {
+          client_reference_id: session.client_reference_id,
+        })
+
+        if (!session.client_reference_id) {
+          console.error('No client_reference_id in session')
+          return new NextResponse('Missing client_reference_id', { status: 400 })
+        }
+
+        const { error, data } = await client
           .from('fce_applications')
           .update({
             payment_status: 'expired',
           })
           .eq('id', session.client_reference_id)
+          .select()
+          .single()
 
         if (error) {
-          console.error('Error updating application:', error)
-          return new NextResponse('Error updating application', { status: 500 })
+          console.error('Error updating expired application:', error)
+          return new NextResponse(`Error updating expired application: ${error.message}`, {
+            status: 500,
+          })
         }
+
+        console.log('Successfully updated expired application:', data)
         break
+      }
+
+      default: {
+        console.log('Unhandled event type:', event.type)
       }
     }
 
     return new NextResponse('Webhook processed', { status: 200 })
   } catch (err) {
     console.error('Webhook error:', err)
-    return new NextResponse('Webhook error', { status: 400 })
+    return new NextResponse(
+      'Webhook error: ' + (err instanceof Error ? err.message : 'Unknown error'),
+      { status: 400 }
+    )
   }
 }
