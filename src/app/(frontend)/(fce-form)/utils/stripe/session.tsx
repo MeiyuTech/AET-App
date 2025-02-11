@@ -10,9 +10,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 interface NewSessionOptions {
   priceId: string
+  applicationId: string
 }
 
-export const postStripeSession = async ({ priceId }: NewSessionOptions) => {
+export const postStripeSession = async ({ priceId, applicationId }: NewSessionOptions) => {
   try {
     const currentUrl = getServerSideURL()
     const returnUrl = `${currentUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`
@@ -27,11 +28,14 @@ export const postStripeSession = async ({ priceId }: NewSessionOptions) => {
       ],
       mode: 'payment',
       return_url: returnUrl,
+      client_reference_id: applicationId,
     })
 
     if (!session.client_secret) {
       throw new Error('No client secret returned from Stripe')
     }
+
+    console.log('Session created:', session)
 
     return {
       clientSecret: session.client_secret,

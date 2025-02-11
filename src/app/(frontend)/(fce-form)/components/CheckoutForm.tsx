@@ -12,11 +12,20 @@ if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
-export const CheckoutForm = ({ priceId }: { priceId: string }) => {
+export const CheckoutForm = ({
+  priceId,
+  applicationId,
+}: {
+  priceId: string
+  applicationId: string
+}) => {
   const fetchClientSecret = useCallback(async () => {
-    const stripeResponse = await postStripeSession({ priceId })
+    const stripeResponse = await postStripeSession({
+      priceId,
+      applicationId, // 传递 applicationId
+    })
     return stripeResponse.clientSecret
-  }, [priceId])
+  }, [priceId, applicationId])
 
   const options = { fetchClientSecret }
 
