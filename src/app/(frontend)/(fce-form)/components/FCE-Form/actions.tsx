@@ -16,7 +16,7 @@ export async function submitFCEApplication(formData: FormData) {
 
     // 添加调试日志
     console.log('Original form data:', formData)
-    const dbData = formatUtils.toDatabase(formData, 3, 'completed')
+    const dbData = formatUtils.toDatabase(formData, 3, 'submitted')
     console.log('Converted database data:', dbData)
 
     // 开始数据库事务

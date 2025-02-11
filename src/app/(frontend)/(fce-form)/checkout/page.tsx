@@ -1,9 +1,18 @@
+import { redirect } from 'next/navigation'
 import { CheckoutForm } from '../components/CheckoutForm'
 
-const CheckoutPage = () => {
-  // 使用已存在的 applicationId
-  const applicationId = '12dd0a92-e6c7-4a40-8235-aaf72a79f458'
+interface PageProps {
+  searchParams: { applicationId?: string }
+}
+
+export default async function CheckoutPage({ searchParams }: PageProps) {
+  const { applicationId } = searchParams
   const priceId = 'price_1QVKKcJMcR2XIhynAkrlH1jl'
+
+  if (!applicationId) {
+    // If no applicationId, redirect to form
+    redirect('/fce-form')
+  }
 
   return (
     <main>
@@ -13,5 +22,3 @@ const CheckoutPage = () => {
     </main>
   )
 }
-
-export default CheckoutPage

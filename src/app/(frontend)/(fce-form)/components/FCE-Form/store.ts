@@ -13,7 +13,9 @@ interface FormState {
   // Draft ID from Supabase
   draftId: string | null
   // Form status
-  status: 'draft' | 'completed' | null
+  // When fullfilling the form, the status is always 'draft' or 'submitted'
+  // Other statuses are set by the backend
+  status: 'draft' | 'submitted' | null
   // Loading states
   isLoading: boolean
   isSaving: boolean
@@ -22,12 +24,12 @@ interface FormState {
   setFormData: (data: Partial<FormData>) => void
   setCurrentStep: (step: FormStep) => void
   setDraftId: (id: string) => void
-  setStatus: (status: 'draft' | 'completed' | null) => void
+  setStatus: (status: 'draft' | 'submitted' | null) => void
 
   // Save draft to Supabase
   saveDraft: () => Promise<void>
   // Submit final form
-  submitForm: () => Promise<void>
+  submitForm: () => Promise<{ success: boolean; applicationId: string } | undefined>
   // Load draft from Supabase
   loadDraft: (draftId: string) => Promise<void>
 
@@ -97,9 +99,10 @@ export const useFormStore = create<FormState>()(
 
           if (result.success) {
             set({
-              status: 'completed',
+              status: 'submitted',
               draftId: result.applicationId,
             })
+            return result
           }
         } catch (error) {
           console.error('Failed to submit form:', error)

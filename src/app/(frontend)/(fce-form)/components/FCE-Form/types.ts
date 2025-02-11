@@ -63,6 +63,11 @@ export interface DatabaseApplication {
   created_at: string
   updated_at: string
   submitted_at: string | null
+
+  // Payment related fields
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_id: string | null
+  paid_at: string | null
 }
 
 export interface DatabaseEducation {
