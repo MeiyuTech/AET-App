@@ -1,17 +1,24 @@
-import { redirect } from 'next/navigation'
 import { CheckoutForm } from '../components/CheckoutForm'
+import { notFound } from 'next/navigation'
 
 interface PageProps {
-  searchParams: { applicationId?: string }
+  searchParams:
+    | Promise<{
+        applicationId?: string
+      }>
+    | {
+        applicationId?: string
+      }
 }
 
 export default async function CheckoutPage({ searchParams }: PageProps) {
-  const { applicationId } = searchParams
+  const params = await searchParams
+  const { applicationId } = params
   const priceId = 'price_1QVKKcJMcR2XIhynAkrlH1jl'
 
   if (!applicationId) {
     // If no applicationId, redirect to form
-    redirect('/fce-form')
+    return notFound()
   }
 
   return (

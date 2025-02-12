@@ -342,6 +342,7 @@ export function ApplicationsTable() {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
+            second: '2-digit',
             hour12: false,
           })
           .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')

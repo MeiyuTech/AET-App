@@ -29,6 +29,9 @@ export const postStripeSession = async ({ priceId, applicationId }: NewSessionOp
       mode: 'payment',
       return_url: returnUrl,
       client_reference_id: applicationId,
+      metadata: {
+        applicationId: applicationId,
+      },
     })
 
     if (!session.client_secret) {

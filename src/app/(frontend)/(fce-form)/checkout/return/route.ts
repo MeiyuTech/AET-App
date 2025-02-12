@@ -18,8 +18,9 @@ export const GET = async (request: NextRequest) => {
   const session = await stripe.checkout.sessions.retrieve(stripeSessionId)
 
   if (session.status === 'complete') {
-    // Go to a success page!
-    return redirect(`/checkout/success`)
+    // Get application id from session metadata and redirect to success page with it
+    const applicationId = session.metadata?.applicationId
+    return redirect(`/checkout/success?applicationId=${applicationId}`)
   }
 
   if (session.status === 'open') {
