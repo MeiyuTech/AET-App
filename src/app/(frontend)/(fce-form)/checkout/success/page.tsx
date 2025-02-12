@@ -3,13 +3,9 @@ import { createClient } from '../../utils/supabase/server'
 
 // Define the props type for the page component
 interface SuccessPageProps {
-  searchParams:
-    | Promise<{
-        applicationId?: string
-      }>
-    | {
-        applicationId?: string
-      }
+  searchParams: Promise<{
+    applicationId?: string
+  }>
 }
 
 async function getApplicationData(applicationId: string) {
@@ -36,8 +32,7 @@ async function getApplicationData(applicationId: string) {
 
 const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
   // Wait for searchParams to resolve
-  const params = await searchParams
-  const applicationId = params.applicationId
+  const { applicationId } = await searchParams
 
   if (!applicationId) {
     return notFound()

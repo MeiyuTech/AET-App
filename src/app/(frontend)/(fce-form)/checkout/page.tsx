@@ -2,13 +2,9 @@ import { CheckoutForm } from '../components/CheckoutForm'
 import { notFound } from 'next/navigation'
 
 interface PageProps {
-  searchParams:
-    | Promise<{
-        applicationId?: string
-      }>
-    | {
-        applicationId?: string
-      }
+  searchParams: Promise<{
+    applicationId?: string
+  }>
 }
 
 export default async function CheckoutPage({ searchParams }: PageProps) {
