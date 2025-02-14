@@ -29,7 +29,7 @@ import {
 import {
   DatabaseApplication,
   DatabaseEducation,
-} from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
+} from '@/app/(frontend)/(aet-app)/components/FCE-Form/types'
 import { EducationDetailsDialog } from './education-details-dialog'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table

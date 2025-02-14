@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { sendTestEmail } from '@/app/(frontend)/(fce-form)/components/FCE-Form/actions'
+import { sendTestEmail } from '@/app/(frontend)/(aet-app)/utils/actions'
 
 export function EmailTester() {
   const [loading, setLoading] = useState(false)

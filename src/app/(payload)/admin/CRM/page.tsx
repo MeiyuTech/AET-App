@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-import { ApplicationsTable } from '@/app/(frontend)/(fce-form)/components/applications-table'
+import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/applications-table'
 
 export default async function CRMPage() {
   const payload = await getPayload({ config })
