@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { sendTestEmail } from '@/app/(frontend)/(fce-form)/components/FCE-Form/actions'
 
 export function EmailTester() {
   const [loading, setLoading] = useState(false)
@@ -10,11 +11,8 @@ export function EmailTester() {
   const handleTestEmail = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/test-email', {
-        method: 'POST',
-      })
-      const data = await response.json()
-      setResult(data.message || 'Email sent successfully')
+      const { message } = await sendTestEmail()
+      setResult(message)
     } catch (error) {
       setResult('Failed to send email')
       console.error('Email sending error:', error)
