@@ -95,7 +95,11 @@ export const useFormStore = create<FormState>()(
         set({ isLoading: true })
 
         try {
-          const result = await submitFCEApplication(state.formData as FormData)
+          const result = await submitFCEApplication({
+            ...(state.formData as FormData),
+            // Make sure email is included in the submission
+            email: state.formData.email as string,
+          })
 
           if (result.success) {
             set({

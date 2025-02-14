@@ -46,7 +46,36 @@ export async function submitFCEApplication(formData: FormData) {
 
     await Promise.all(educationPromises)
 
-    return { success: true, applicationId: application.id }
+    const fromAddress = process.env.RESEND_DEFAULT_FROM_ADDRESS || 'onboarding@resend.dev'
+    const fromName = process.env.RESEND_DEFAULT_FROM_NAME || 'Resend'
+    const fromEmail = `${fromName} <${fromAddress}>`
+
+    const payload = await getPayload({ config })
+    // Send confirmation email
+    await payload.sendEmail({
+      from: fromEmail,
+      to: [formData.email],
+      cc: process.env.RESEND_DEFAULT_CC_ADDRESS,
+      subject: 'FCE Application Confirmation',
+      html: `
+        <h1>FCE Application Received</h1>
+        <p>Dear ${formData.firstName} ${formData.lastName},</p>
+        <p>We have received your FCE application. Your application ID is: ${application.id}</p>
+        <p>We will process your application and get back to you soon.</p>
+        <h2>Application Details:</h2>
+        <ul>
+          <li>Delivery Method: ${formData.deliveryMethod}</li>
+          <li>Additional Services: ${formData.additionalServices.join(', ') || 'None'}</li>
+        </ul>
+        <p>If you have any questions, please contact us.</p>
+        <p>Best regards,<br>FCE Service Team</p>
+      `,
+    })
+
+    return {
+      success: true,
+      applicationId: application.id,
+    }
   } catch (error) {
     console.error('Failed to submit FCE application:', error)
     throw new Error('Failed to submit application')
@@ -69,7 +98,7 @@ export async function sendTestEmail() {
     await payload.sendEmail({
       from: fromEmail,
       to: 'nietsemorej@gmail.com',
-      cc: 'ikblue.002fa7@gmail.com',
+      cc: process.env.RESEND_DEFAULT_CC_ADDRESS,
       subject: 'Test Email',
       html: '<p>This is a test email from your application.</p>',
     })
