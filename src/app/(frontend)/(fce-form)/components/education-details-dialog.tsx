@@ -2,11 +2,17 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DatabaseEducation } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
+import countryList from 'react-select-country-list'
 
 interface EducationDetailsProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   educations?: DatabaseEducation[]
+}
+
+function getCountryName(code: string) {
+  const countries = countryList().getData()
+  return countries.find((c) => c.value === code)?.label || code
 }
 
 export function EducationDetailsDialog({ open, onOpenChange, educations }: EducationDetailsProps) {
@@ -28,7 +34,7 @@ export function EducationDetailsDialog({ open, onOpenChange, educations }: Educa
                   </div>
                   <div>
                     <div className="font-semibold">Country of Study</div>
-                    <div>{education.country_of_study}</div>
+                    <div>{getCountryName(education.country_of_study)}</div>
                   </div>
                   <div>
                     <div className="font-semibold">Degree Obtained</div>

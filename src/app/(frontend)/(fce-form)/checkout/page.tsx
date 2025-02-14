@@ -1,9 +1,21 @@
 import { CheckoutForm } from '../components/CheckoutForm'
+import { notFound } from 'next/navigation'
 
-const CheckoutPage = () => {
-  // 使用已存在的 applicationId
-  const applicationId = '12dd0a92-e6c7-4a40-8235-aaf72a79f458'
+interface PageProps {
+  searchParams: Promise<{
+    applicationId?: string
+  }>
+}
+
+export default async function CheckoutPage({ searchParams }: PageProps) {
+  const params = await searchParams
+  const { applicationId } = params
   const priceId = 'price_1QVKKcJMcR2XIhynAkrlH1jl'
+
+  if (!applicationId) {
+    // If no applicationId, redirect to form
+    return notFound()
+  }
 
   return (
     <main>
@@ -13,5 +25,3 @@ const CheckoutPage = () => {
     </main>
   )
 }
-
-export default CheckoutPage

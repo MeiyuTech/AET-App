@@ -14,6 +14,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ChevronDown, Eye } from 'lucide-react'
+import countryList from 'react-select-country-list'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -43,6 +44,9 @@ interface Application extends Omit<DatabaseApplication, 'service_type' | 'educat
 
   // Override educations to use DatabaseEducation type
   educations?: DatabaseEducation[]
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_id: string | null
+  paid_at: string | null
 }
 
 function getStatusColor(status: string) {
@@ -52,6 +56,16 @@ function getStatusColor(status: string) {
     processing: 'text-purple-600',
     completed: 'text-green-600',
     cancelled: 'text-red-600',
+  }
+  return colors[status as keyof typeof colors] || 'text-gray-600'
+}
+
+function getPaymentStatusColor(status: string) {
+  const colors = {
+    pending: 'text-yellow-600',
+    paid: 'text-green-600',
+    failed: 'text-red-600',
+    expired: 'text-gray-600',
   }
   return colors[status as keyof typeof colors] || 'text-gray-600'
 }
@@ -93,6 +107,34 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const date = new Date(row.getValue('created_at'))
+        return date
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+          })
+          .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      },
+    },
+    {
+      accessorKey: 'updated_at',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Updated At
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const date = new Date(row.getValue('updated_at'))
         return date
           .toLocaleString('en-US', {
             year: 'numeric',
@@ -256,6 +298,63 @@ export function ApplicationsTable() {
       ),
     },
     {
+      accessorKey: 'payment_status',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Payment Status
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => (
+        <div
+          className={`capitalize font-medium ${getPaymentStatusColor(row.getValue('payment_status'))}`}
+        >
+          {row.getValue('payment_status')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'paid_at',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Paid At
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const paidAt = row.getValue('paid_at')
+        if (!paidAt) return 'N/A'
+
+        const date = new Date(paidAt as string)
+        return date
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+          })
+          .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      },
+    },
+    {
+      accessorKey: 'payment_id',
+      header: 'Payment ID',
+      cell: ({ row }) => row.getValue('payment_id') || 'N/A',
+    },
+    {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => {
@@ -349,7 +448,7 @@ export function ApplicationsTable() {
           placeholder="Search all columns..."
           value={globalFilter ?? ''}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm text-lg"
+          className="max-w-sm text-base"
         />
       </div>
 
@@ -359,7 +458,7 @@ export function ApplicationsTable() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-lg">
+                  <TableHead key={header.id} className="text-base">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -373,7 +472,7 @@ export function ApplicationsTable() {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-lg">
+                    <TableCell key={cell.id} className="text-base">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -381,7 +480,7 @@ export function ApplicationsTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-base">
                   No results.
                 </TableCell>
               </TableRow>

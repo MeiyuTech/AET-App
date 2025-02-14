@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import { FormData } from "./types"
-import { EVALUATION_SERVICES } from "./constants"
-import { DatabaseApplication, DatabaseEducation, DeliveryMethod, AdditionalService } from "./types"
-import { EducationSchema, FormStep } from "./types"
+import { FormData } from './types'
+import { EVALUATION_SERVICES } from './constants'
+import { DatabaseApplication, DatabaseEducation, DeliveryMethod, AdditionalService } from './types'
+import { EducationSchema, FormStep } from './types'
 
 dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
@@ -25,54 +25,71 @@ export const dateUtils = {
     return dayjs(`${year}-${month}-${date}`).isAfter(dayjs())
   },
 
-  isValidDateRange(startMonth?: string, startYear?: string, endMonth?: string, endYear?: string): boolean {
+  isValidDateRange(
+    startMonth?: string,
+    startYear?: string,
+    endMonth?: string,
+    endYear?: string
+  ): boolean {
     if (!startMonth || !startYear || !endMonth || !endYear) return true
 
     const startDate = dayjs(`${startYear}-${startMonth}-01`)
     const endDate = dayjs(`${endYear}-${endMonth}-01`)
 
     return endDate.isAfter(startDate)
-  }
+  },
 }
 
 export function calculateTotalPrice(formData: FormData): number {
-  let total = 0;
+  let total = 0
 
   // Foreign Credential Evaluation
-  const fceSpeed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed;
+  const fceSpeed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
   if (fceSpeed) {
-    total += EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed].price;
+    total += EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed].price
 
     // Add second degree prices
-    const secondDegreePrice = fceSpeed === "7day"
-      ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE["7day"].price
-      : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price;
+    const secondDegreePrice =
+      fceSpeed === '7day'
+        ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+        : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-    total += secondDegreePrice * formData.serviceType.foreignCredentialEvaluation.secondDegrees;
+    total += secondDegreePrice * formData.serviceType.foreignCredentialEvaluation.secondDegrees
   }
 
   // Course Evaluation
-  const cbeSpeed = formData.serviceType.coursebyCourse.firstDegree.speed;
+  const cbeSpeed = formData.serviceType.coursebyCourse.firstDegree.speed
   if (cbeSpeed) {
-    total += EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed].price;
+    total += EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed].price
 
     // Add second degree prices
-    const secondDegreePrice = cbeSpeed === "8day"
-      ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE["8day"].price
-      : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price;
+    const secondDegreePrice =
+      cbeSpeed === '8day'
+        ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+        : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 
-    total += secondDegreePrice * formData.serviceType.coursebyCourse.secondDegrees;
+    total += secondDegreePrice * formData.serviceType.coursebyCourse.secondDegrees
   }
 
-  return total;
+  return total
 }
 
 export const formatUtils = {
-  // 将前端格式转换为数据库格式
-  toDatabase(formData: Partial<FormData>, currentStep: FormStep, status: 'draft' | 'completed' = 'draft'): Omit<DatabaseApplication, 'id' | 'created_at' | 'updated_at' | 'submitted_at'> {
+  // Convert frontend form data to database format
+  // When fullfilling the form, the status is always 'draft' or 'submitted'
+  // Other statuses are set by the backend
+  toDatabase(
+    formData: Partial<FormData>,
+    currentStep: FormStep,
+    status: 'draft' | 'submitted' = 'draft'
+  ): Omit<DatabaseApplication, 'id' | 'created_at' | 'updated_at' | 'submitted_at' | 'paid_at'> {
     return {
       status,
       current_step: currentStep,
+
+      // Payment related fields (default values)
+      payment_status: 'pending',
+      payment_id: null,
 
       // Client Information
       name: formData.name!,
@@ -97,17 +114,17 @@ export const formatUtils = {
 
       // Service Selection
       service_type: formData.serviceType!,
-      delivery_method: formData.deliveryMethod || "no_delivery_needed",
+      delivery_method: formData.deliveryMethod || 'no_delivery_needed',
       additional_services: formData.additionalServices || [],
       additional_services_quantity: formData.additionalServicesQuantity || {
         extra_copy: 0,
         pdf_with_hard_copy: 0,
         pdf_only: 0,
-      }
+      },
     }
   },
 
-  // 将数据库格式转换为前端格式
+  // Convert database format back to frontend form data
   toFormData(dbData: DatabaseApplication): Partial<FormData> {
     return {
       // Client Information
@@ -139,22 +156,24 @@ export const formatUtils = {
       serviceType: dbData.service_type,
       deliveryMethod: dbData.delivery_method as DeliveryMethod,
       additionalServices: dbData.additional_services as AdditionalService[],
-      additionalServicesQuantity: dbData.additional_services_quantity
+      additionalServicesQuantity: dbData.additional_services_quantity,
     }
   },
 
-  // 转换教育经历格式
-  toEducationDatabase(education: EducationSchema): Omit<DatabaseEducation, 'id' | 'application_id'> {
+  // Convert education data to database format
+  toEducationDatabase(
+    education: EducationSchema
+  ): Omit<DatabaseEducation, 'id' | 'application_id'> {
     return {
       country_of_study: education.countryOfStudy,
       degree_obtained: education.degreeObtained,
       school_name: education.schoolName,
       study_start_date: education.studyDuration.startDate,
-      study_end_date: education.studyDuration.endDate
+      study_end_date: education.studyDuration.endDate,
     }
   },
 
-  // 将数据库教育经历转换为前端格式
+  // Convert database education data to frontend format
   toEducationFormData(dbEducation: DatabaseEducation): EducationSchema {
     return {
       countryOfStudy: dbEducation.country_of_study,
@@ -162,8 +181,8 @@ export const formatUtils = {
       schoolName: dbEducation.school_name,
       studyDuration: {
         startDate: dbEducation.study_start_date,
-        endDate: dbEducation.study_end_date
-      }
+        endDate: dbEducation.study_end_date,
+      },
     }
-  }
+  },
 }

@@ -202,17 +202,20 @@ export default function FCEForm() {
       }
 
       console.log('Form is valid, submitting data:', data)
-      await submitForm()
+      const result = await submitForm()
 
-      // Clear local storage after successful submission
-      localStorage.removeItem('fce-form-data')
-      localStorage.removeItem('fce-form-step')
+      if (result?.success) {
+        // Clear local storage after successful submission
+        localStorage.removeItem('fce-form-data')
+        localStorage.removeItem('fce-form-step')
 
-      // reset form
-      handleComplete()
-      setCurrentStep(FormStep.CLIENT_INFO)
-      // Redirect to checkout page after successful submission
-      router.push('/checkout')
+        // reset form
+        handleComplete()
+        setCurrentStep(FormStep.CLIENT_INFO)
+
+        // Redirect to checkout page with applicationId
+        router.push(`/checkout?applicationId=${result.applicationId}`)
+      }
     } catch (error) {
       console.error('Submission error:', error)
       toast({
