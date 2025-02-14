@@ -18,7 +18,7 @@ export default async function CRMPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-4xl font-bold mb-4">FCE Applications</h1>
+      <h1 className="text-4xl font-bold mb-4">AET Services Applications</h1>
       <ApplicationsTable />
     </div>
   )
