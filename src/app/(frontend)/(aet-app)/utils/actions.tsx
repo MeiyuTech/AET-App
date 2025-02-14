@@ -275,3 +275,38 @@ export async function sendTestEmail() {
     return { success: false, message: 'Failed to send email' }
   }
 }
+
+export async function verifyApplication(applicationId: string) {
+  try {
+    const client = await createClient()
+    const { data, error } = await client
+      .from('fce_applications')
+      .select(
+        `
+        id, 
+        status, 
+        submitted_at,
+        first_name,
+        last_name,
+        email,
+        service_type,
+        delivery_method
+      `
+      )
+      .eq('id', applicationId)
+      .single()
+
+    if (error) {
+      console.error('Error verifying application:', error)
+      return { exists: false }
+    }
+
+    return {
+      exists: true,
+      application: data,
+    }
+  } catch (error) {
+    console.error('Failed to verify application:', error)
+    return { exists: false }
+  }
+}

@@ -1,10 +1,32 @@
-import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export default function HomePage() {
   return (
     <div className="container mx-auto py-10">
-      <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">
-        <h1 className="text-2xl font-bold">AET Service Application</h1>
+      <div className="max-w-3xl mx-auto space-y-8 px-4 md:px-6 pt-16">
+        <h1 className="text-3xl font-bold text-center">AET Service Application</h1>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Application Form Card */}
+          <Link
+            href="/apply"
+            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
+          >
+            <h2 className="text-xl font-semibold mb-3">Submit Application</h2>
+            <p className="text-gray-600">
+              Fill out the application form to start your AET service request
+            </p>
+          </Link>
+
+          {/* Application Status Card */}
+          <Link
+            href="/status"
+            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
+          >
+            <h2 className="text-xl font-semibold mb-3">Check Status</h2>
+            <p className="text-gray-600">Track the progress of your submitted application</p>
+          </Link>
+        </div>
       </div>
     </div>
   )
