@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import FCEForm from '../components/FCE-Form'
 
 export const metadata: Metadata = {
   title: 'AET Service Application Status',

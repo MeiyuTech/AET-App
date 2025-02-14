@@ -11,7 +11,7 @@ export default function Header() {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <div className="container mx-auto px-4 lg:px-8 py-4 lg:py-8 flex items-center">
-          <Link href="/next-fce-form" className="flex-shrink-0">
+          <Link href="/" className="flex-shrink-0">
             <Image
               src="/aet_e_logo.png"
               alt="AET"

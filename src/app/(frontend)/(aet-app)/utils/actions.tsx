@@ -3,8 +3,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/FCE-Form/types'
-import { formatUtils } from '../components/FCE-Form/utils'
+import { FormData } from '../components/ApplicationForm/types'
+import { formatUtils } from '../components/ApplicationForm/utils'
 
 export async function createFCESubmission(formData: FormData) {
   const client = await createClient()
