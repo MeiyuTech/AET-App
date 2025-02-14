@@ -12,16 +12,50 @@ export async function createFCESubmission(formData: FormData) {
   if (error) throw error
 }
 
+interface EmailOptions {
+  to: string | string[]
+  subject: string
+  html: string
+  cc?: string | string[]
+}
+
+async function sendEmail({ to, subject, html, cc }: EmailOptions) {
+  if (!process.env.RESEND_DEFAULT_FROM_ADDRESS) {
+    throw new Error('RESEND_DEFAULT_FROM_ADDRESS is not set')
+  }
+  if (!process.env.RESEND_DEFAULT_FROM_NAME) {
+    throw new Error('RESEND_DEFAULT_FROM_NAME is not set')
+  }
+
+  const fromAddress = process.env.RESEND_DEFAULT_FROM_ADDRESS
+  const fromName = process.env.RESEND_DEFAULT_FROM_NAME
+  const fromEmail = `${fromName} <${fromAddress}>`
+
+  try {
+    const payload = await getPayload({ config })
+    await payload.sendEmail({
+      from: fromEmail,
+      to,
+      cc: cc || process.env.RESEND_DEFAULT_CC_ADDRESS,
+      subject,
+      html,
+    })
+    return { success: true, message: 'Email sent successfully' }
+  } catch (error) {
+    console.error('Email sending error:', error)
+    throw error
+  }
+}
+
 export async function submitFCEApplication(formData: FormData) {
   try {
     const client = await createClient()
 
-    // 添加调试日志
     console.log('Original form data:', formData)
     const dbData = formatUtils.toDatabase(formData, 3, 'submitted')
     console.log('Converted database data:', dbData)
 
-    // 开始数据库事务
+    // Start database transaction
     const { data: application, error: applicationError } = await client
       .from('fce_applications')
       .insert({
@@ -36,7 +70,7 @@ export async function submitFCEApplication(formData: FormData) {
       throw applicationError
     }
 
-    // 插入教育经历记录
+    // Insert education records
     const educationPromises = formData.educations.map((education) =>
       client.from('fce_educations').insert({
         application_id: application.id,
@@ -46,16 +80,9 @@ export async function submitFCEApplication(formData: FormData) {
 
     await Promise.all(educationPromises)
 
-    const fromAddress = process.env.RESEND_DEFAULT_FROM_ADDRESS || 'onboarding@resend.dev'
-    const fromName = process.env.RESEND_DEFAULT_FROM_NAME || 'Resend'
-    const fromEmail = `${fromName} <${fromAddress}>`
-
-    const payload = await getPayload({ config })
-    // Send confirmation email
-    await payload.sendEmail({
-      from: fromEmail,
-      to: [formData.email],
-      cc: process.env.RESEND_DEFAULT_CC_ADDRESS,
+    // Send confirmation email using the new sendEmail function
+    await sendEmail({
+      to: formData.email,
       subject: 'FCE Application Confirmation',
       html: `
         <h1>FCE Application Received</h1>
@@ -82,29 +109,16 @@ export async function submitFCEApplication(formData: FormData) {
   }
 }
 
+// Send email to test the email sending functionality
 export async function sendTestEmail() {
-  if (!process.env.RESEND_DEFAULT_FROM_ADDRESS) {
-    throw new Error('RESEND_DEFAULT_FROM_ADDRESS is not set')
-  }
-  if (!process.env.RESEND_DEFAULT_FROM_NAME) {
-    throw new Error('RESEND_DEFAULT_FROM_NAME is not set')
-  }
-  const fromAddress = process.env.RESEND_DEFAULT_FROM_ADDRESS || 'onboarding@resend.dev'
-  const fromName = process.env.RESEND_DEFAULT_FROM_NAME || 'Resend'
-  const fromEmail = `${fromName} <${fromAddress}>`
-
   try {
-    const payload = await getPayload({ config })
-    await payload.sendEmail({
-      from: fromEmail,
+    return await sendEmail({
       to: 'nietsemorej@gmail.com',
-      cc: process.env.RESEND_DEFAULT_CC_ADDRESS,
       subject: 'Test Email',
       html: '<p>This is a test email from your application.</p>',
     })
-    return { success: true, message: 'Email sent successfully' }
   } catch (error) {
-    console.error('Email sending error:', error)
+    console.error('Failed to send test email:', error)
     return { success: false, message: 'Failed to send email' }
   }
 }

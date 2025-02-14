@@ -18,8 +18,8 @@ import { EmailTester } from '@/components/email/EmailTester'
 export default function HomePage() {
   return (
     <div className="container mx-auto p-4">
-      <h1>Email Test Page</h1>
-      <EmailTester />
+      <h1>Test Page</h1>
+      {/* <EmailTester /> */}
     </div>
   )
 }
