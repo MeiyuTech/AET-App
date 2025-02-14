@@ -13,9 +13,15 @@ import {
 import { AnimatedCard } from '@/components/ui/animated-elements'
 import { InvestmentProjectsSection } from '@/components/sections/InvestmentProjectsSection'
 import { GlobalNetworkSection } from '@/components/sections/GlobalNetworkSection'
+import { EmailTester } from '@/components/email/EmailTester'
 
 export default function HomePage() {
-  return <></>
+  return (
+    <div className="container mx-auto p-4">
+      <h1>Email Test Page</h1>
+      <EmailTester />
+    </div>
+  )
 }
 
 export function generateMetadata(): Metadata {
