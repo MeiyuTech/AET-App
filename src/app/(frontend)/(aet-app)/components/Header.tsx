@@ -17,7 +17,7 @@ export default function Header() {
               alt="AET"
               width={425}
               height={82}
-              className="w-auto h-auto"
+              className="w-[425px] h-auto"
               priority={true}
             />
           </Link>
