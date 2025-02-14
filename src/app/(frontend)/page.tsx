@@ -1,31 +1,11 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import {
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from '@/components/ui/card'
-
-import { AnimatedCard } from '@/components/ui/animated-elements'
-import { InvestmentProjectsSection } from '@/components/sections/InvestmentProjectsSection'
-import { GlobalNetworkSection } from '@/components/sections/GlobalNetworkSection'
-import { EmailTester } from '@/components/email/EmailTester'
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto p-4">
-      <h1>Test Page</h1>
-      {/* <EmailTester /> */}
+    <div className="container mx-auto py-10">
+      <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">
+        <h1 className="text-2xl font-bold">AET Service Application</h1>
+      </div>
     </div>
   )
-}
-
-export function generateMetadata(): Metadata {
-  return {
-    title: '首页 | 美域佳华',
-  }
 }

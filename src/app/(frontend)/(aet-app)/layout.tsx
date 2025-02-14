@@ -6,9 +6,7 @@ import { Toaster } from '@/components/ui/toaster'
 export default function FCEFormLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
       {children}
-      <Footer />
       <Toaster />
     </>
   )

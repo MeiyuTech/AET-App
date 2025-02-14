@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import FCEForm from '../components/ApplicationForm'
 
 export const metadata: Metadata = {
-  title: 'FCE Form - Next Version',
-  description: 'Foreign Credential Evaluation Form',
+  title: 'AET Service Application',
+  description: 'AET Service Application',
 }
 
 export default function ApplyPage() {
