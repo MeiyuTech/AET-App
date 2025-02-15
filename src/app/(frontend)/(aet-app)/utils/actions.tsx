@@ -279,16 +279,32 @@ export async function sendTestEmail() {
 export async function verifyApplication(applicationId: string) {
   try {
     const client = await createClient()
+
+    // 首先获取主应用数据
     const { data, error } = await client
       .from('fce_applications')
       .select(
         `
-        id, 
-        status, 
+        id,
+        status,
         submitted_at,
-        first_name,
-        last_name,
+        name,
+        country,
+        street_address,
+        street_address2,
+        city,
+        region,
+        zip_code,
+        phone,
+        fax,
         email,
+        purpose,
+        purpose_other,
+        pronouns,
+        first_name,
+        middle_name,
+        last_name,
+        date_of_birth,
         service_type,
         delivery_method
       `
@@ -301,9 +317,71 @@ export async function verifyApplication(applicationId: string) {
       return { exists: false }
     }
 
+    // 然后获取教育信息
+    const { data: educationsData, error: educationsError } = await client
+      .from('fce_educations')
+      .select(
+        `
+        country_of_study,
+        degree_obtained,
+        school_name,
+        study_start_date,
+        study_end_date
+      `
+      )
+      .eq('application_id', applicationId)
+
+    if (educationsError) {
+      console.error('Error fetching educations:', educationsError)
+      return { exists: false }
+    }
+
+    // Transform database field names to frontend field names
+    const formattedData = {
+      // 状态相关
+      status: data.status,
+      submitted_at: data.submitted_at,
+
+      // 客户信息
+      name: data.name,
+      country: data.country,
+      streetAddress: data.street_address,
+      streetAddress2: data.street_address2,
+      city: data.city,
+      region: data.region,
+      zipCode: data.zip_code,
+      phone: data.phone,
+      fax: data.fax,
+      email: data.email,
+      purpose: data.purpose,
+      purposeOther: data.purpose_other,
+
+      // 评估对象信息
+      pronouns: data.pronouns,
+      firstName: data.first_name,
+      middleName: data.middle_name,
+      lastName: data.last_name,
+      dateOfBirth: data.date_of_birth,
+
+      // 服务信息
+      serviceType: data.service_type,
+      deliveryMethod: data.delivery_method,
+
+      // 教育信息
+      educations: educationsData.map((edu: any) => ({
+        countryOfStudy: edu.country_of_study,
+        degreeObtained: edu.degree_obtained,
+        schoolName: edu.school_name,
+        studyDuration: {
+          startDate: edu.study_start_date,
+          endDate: edu.study_end_date,
+        },
+      })),
+    }
+
     return {
       exists: true,
-      application: data,
+      application: formattedData,
     }
   } catch (error) {
     console.error('Failed to verify application:', error)

@@ -360,7 +360,7 @@ export function Review() {
                   const service = ADDITIONAL_SERVICES[serviceId]
                   if (service) {
                     if (serviceId === 'extra_copy' && 'quantity' in service) {
-                      // 只处理 extra_copy 的数量
+                      // only handle the quantity of extra_copy
                       const quantity = formData.additionalServicesQuantity.extra_copy
                       return (
                         <div key={serviceId}>
