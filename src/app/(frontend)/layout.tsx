@@ -6,8 +6,10 @@ import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 // import { AdminBar } from '@/components/AdminBar'
-import { Footer } from '@/Footer/Component'
-import { Header } from '@/Header/Component'
+// import { Footer } from '@/Footer/Component'
+// import { Header } from '@/Header/Component'
+import Header from '@/app/(frontend)/(aet-app)/components/Header'
+import Footer from '@/app/(frontend)/(aet-app)/components/Footer'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -52,9 +54,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           /> */}
 
         {/* <Header /> */}
+        <Header />
         <main className="pt-[96px]">{children}</main>
         {/* <Footer /> */}
-        {/* <FloatingQRCode /> */}
+        <Footer />
         {/* </Providers> */}
       </body>
     </html>
@@ -63,8 +66,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | 美域佳华',
-    default: '美域佳华',
+    template: '%s | American Education & Translation Services (AET) | Since 2009',
+    default: 'American Education & Translation Services (AET) | Since 2009',
   },
   metadataBase: new URL(getServerSideURL()),
   openGraph: mergeOpenGraph(),

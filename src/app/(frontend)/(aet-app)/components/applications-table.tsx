@@ -14,7 +14,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ChevronDown, Eye } from 'lucide-react'
-import countryList from 'react-select-country-list'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -29,7 +28,7 @@ import {
 import {
   DatabaseApplication,
   DatabaseEducation,
-} from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
+} from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
 import { EducationDetailsDialog } from './education-details-dialog'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table

@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { DatabaseEducation } from '@/app/(frontend)/(fce-form)/components/FCE-Form/types'
+import { DatabaseEducation } from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
 import countryList from 'react-select-country-list'
 
 interface EducationDetailsProps {

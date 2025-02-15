@@ -23,6 +23,7 @@ import { RowLabel as RowLabel_1f6ff6ff633e3695d348f4f3c58f1466 } from '@/Footer/
 import { default as default_4a5d472e05e22c65c62c05f28cc2433d } from '@/components/IconMeiyu'
 import { default as default_8d24159279b507b7babebd4e9a8398d7 } from '@/components/LogoMeiyu/Logo'
 import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
+import { default as default_c40ef03a60862f363604e04bbcbe9a27 } from '@/app/(payload)/admin/CRM/components/CRMButton.tsx'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 
 export const importMap = {
@@ -51,5 +52,6 @@ export const importMap = {
   "@/components/IconMeiyu#default": default_4a5d472e05e22c65c62c05f28cc2433d,
   "@/components/LogoMeiyu/Logo#default": default_8d24159279b507b7babebd4e9a8398d7,
   "@/components/BeforeDashboard#default": default_1a7510af427896d367a49dbf838d2de6,
+  "@/app/(payload)/admin/CRM/components/CRMButton.tsx#default": default_c40ef03a60862f363604e04bbcbe9a27,
   "@/components/BeforeLogin#default": default_8a7ab0eb7ab5c511aba12e68480bfe5e
 }

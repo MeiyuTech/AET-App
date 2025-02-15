@@ -31,7 +31,11 @@ export default buildConfig({
       beforeLogin: ['@/components/BeforeLogin'],
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      beforeDashboard: [
+        '@/components/BeforeDashboard',
+        '@/app/(payload)/admin/CRM/components/CRMButton.tsx',
+      ],
+      beforeNavLinks: ['@/app/(payload)/admin/CRM/components/CRMButton.tsx'],
       // Override the icon and logo for the Admin Panel
       graphics: {
         Icon: '@/components/IconMeiyu',
