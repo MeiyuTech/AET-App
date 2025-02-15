@@ -306,7 +306,9 @@ export async function verifyApplication(applicationId: string) {
         last_name,
         date_of_birth,
         service_type,
-        delivery_method
+        delivery_method,
+        additional_services,
+        additional_services_quantity
       `
       )
       .eq('id', applicationId)
@@ -366,6 +368,8 @@ export async function verifyApplication(applicationId: string) {
       // 服务信息
       serviceType: data.service_type,
       deliveryMethod: data.delivery_method,
+      additionalServices: data.additional_services,
+      additionalServicesQuantity: data.additional_services_quantity,
 
       // 教育信息
       educations: educationsData.map((edu: any) => ({
