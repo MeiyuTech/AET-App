@@ -16,6 +16,9 @@ import { FormData } from '../components/ApplicationForm/types'
 interface ApplicationData extends Partial<FormData> {
   status: string
   submitted_at: string
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_id: string | null
+  paid_at: string | null
   additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
   additionalServicesQuantity: {
     extra_copy: number
@@ -194,6 +197,35 @@ export default function StatusCheck() {
                     {new Date(application.submitted_at).toLocaleString()}
                   </dd>
                 </div>
+                <div>
+                  <dt className="font-medium">Payment Status</dt>
+                  <dd
+                    className={`capitalize ${
+                      application.payment_status === 'paid'
+                        ? 'text-green-600'
+                        : application.payment_status === 'failed'
+                          ? 'text-red-600'
+                          : application.payment_status === 'expired'
+                            ? 'text-orange-600'
+                            : 'text-yellow-600'
+                    }`}
+                  >
+                    {application.payment_status}
+                  </dd>
+                </div>
+                {application.paid_at ? (
+                  <div>
+                    <dt className="font-medium">Paid At</dt>
+                    <dd className="text-muted-foreground">
+                      {new Date(application.paid_at).toLocaleString()}
+                    </dd>
+                  </div>
+                ) : (
+                  <div>
+                    <dt className="font-medium">Paid At</dt>
+                    <dd className="text-muted-foreground">Not paid yet</dd>
+                  </div>
+                )}
               </dl>
             </CardContent>
           </Card>

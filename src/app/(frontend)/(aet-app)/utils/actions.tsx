@@ -280,7 +280,7 @@ export async function verifyApplication(applicationId: string) {
   try {
     const client = await createClient()
 
-    // 首先获取主应用数据
+    // get the application data
     const { data, error } = await client
       .from('fce_applications')
       .select(
@@ -308,7 +308,10 @@ export async function verifyApplication(applicationId: string) {
         service_type,
         delivery_method,
         additional_services,
-        additional_services_quantity
+        additional_services_quantity,
+        payment_status,
+        payment_id,
+        paid_at
       `
       )
       .eq('id', applicationId)
@@ -343,6 +346,9 @@ export async function verifyApplication(applicationId: string) {
       // 状态相关
       status: data.status,
       submitted_at: data.submitted_at,
+      payment_status: data.payment_status,
+      payment_id: data.payment_id,
+      paid_at: data.paid_at,
 
       // 客户信息
       name: data.name,
