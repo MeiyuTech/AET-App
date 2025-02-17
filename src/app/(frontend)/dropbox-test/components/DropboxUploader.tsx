@@ -100,7 +100,7 @@ export default function DropboxUploader() {
           }))
 
           try {
-            const response = await fetch('/api/dropbox-upload', {
+            const response = await fetch('/api/dropbox/upload', {
               method: 'POST',
               body: formData,
               signal: controller.signal,
