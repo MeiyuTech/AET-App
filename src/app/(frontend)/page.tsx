@@ -26,6 +26,15 @@ export default function HomePage() {
             <h2 className="text-xl font-semibold mb-3">Check Status</h2>
             <p className="text-gray-600">Track the progress of your submitted application</p>
           </Link>
+
+          {/* Dropbox Upload Test Card */}
+          <Link
+            href="/dropbox-test"
+            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50"
+          >
+            <h2 className="text-xl font-semibold mb-3">Test Dropbox Upload</h2>
+            <p className="text-gray-600">Upload test files directly to company Dropbox</p>
+          </Link>
         </div>
       </div>
     </div>

@@ -22,7 +22,7 @@ export const CheckoutForm = ({
   const fetchClientSecret = useCallback(async () => {
     const stripeResponse = await postStripeSession({
       priceId,
-      applicationId, // 传递 applicationId
+      applicationId,
     })
     return stripeResponse.clientSecret
   }, [priceId, applicationId])

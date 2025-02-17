@@ -12,6 +12,7 @@ import {
   ADDITIONAL_SERVICES,
 } from '../components/ApplicationForm/constants'
 import { FormData } from '../components/ApplicationForm/types'
+import { useRouter } from 'next/navigation'
 
 interface ApplicationData extends Partial<FormData> {
   status: string
@@ -32,6 +33,7 @@ export default function StatusCheck() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -142,6 +144,12 @@ export default function StatusCheck() {
     return total.toFixed(2)
   }
 
+  const handlePayment = () => {
+    if (application?.payment_status !== 'paid' && applicationId) {
+      router.push(`/checkout?applicationId=${applicationId}`)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -223,10 +231,22 @@ export default function StatusCheck() {
                 ) : (
                   <div>
                     <dt className="font-medium">Paid At</dt>
-                    <dd className="text-muted-foreground">Not paid yet</dd>
+                    <dd className="text-muted-foreground">Not Paid</dd>
                   </div>
                 )}
               </dl>
+
+              {/* Add payment button if not paid */}
+              {application.payment_status !== 'paid' && (
+                <div className="mt-4">
+                  <button
+                    onClick={handlePayment}
+                    className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                  >
+                    Proceed to Payment
+                  </button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
