@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { Dropbox } from 'dropbox'
 import fetch from 'node-fetch'
 
-// 添加更详细的调试日志
+// Add detailed debugging logs
 console.log('DROPBOX_ACCESS_TOKEN exists:', !!process.env.DROPBOX_ACCESS_TOKEN)
 console.log('DROPBOX_ACCESS_TOKEN prefix:', process.env.DROPBOX_ACCESS_TOKEN?.substring(0, 5))
 
@@ -14,7 +14,12 @@ const dbx = new Dropbox({
   // we need to explicitly provide a fetch implementation.
   // By using node-fetch and passing it to the Dropbox SDK, we can resolve this issue.
   // This will allow us to properly configure the Dropbox access token.
-  fetch: fetch as any,
+  fetch: fetch,
+  // Add the pathRoot parameter to specify the namespace ID
+  pathRoot: JSON.stringify({
+    '.tag': 'namespace_id',
+    namespace_id: process.env.DROPBOX_NAMESPACE_ID,
+  }),
 })
 
 export async function POST(request: Request) {
@@ -26,22 +31,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // 确保 token 存在
+    // Ensure token exists
     if (!process.env.DROPBOX_ACCESS_TOKEN) {
       throw new Error('Dropbox access token is not configured')
     }
 
     const buffer = await file.arrayBuffer()
-    // 更新上传路径到 Team Files/WebsitesDev 目录
+    // Use the correct path in team space
     const path = `/Team Files/WebsitesDev/${file.name}`
 
     try {
+      // Add the Dropbox-API-Path-Root header in the upload request
       await dbx.filesUpload({
         path: path,
         contents: buffer,
       })
-    } catch (uploadError: any) {
-      // 添加更详细的错误信息
+    } catch (uploadError) {
+      // Add detailed error information
       console.error('Detailed upload error:', {
         error: uploadError,
         errorMessage: uploadError.message,
@@ -52,7 +58,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Dropbox upload error:', {
       message: error.message,
       status: error.status,
