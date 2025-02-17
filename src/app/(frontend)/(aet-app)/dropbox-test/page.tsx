@@ -1,4 +1,4 @@
-import DropboxUploader from './components/DropboxUploader'
+import DropboxUploader from '../components/Dropbox/Uploader'
 
 export default function DropboxTestPage() {
   return (
