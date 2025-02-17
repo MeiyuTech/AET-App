@@ -322,7 +322,7 @@ export async function verifyApplication(applicationId: string) {
       return { exists: false }
     }
 
-    // 然后获取教育信息
+    // get the education data
     const { data: educationsData, error: educationsError } = await client
       .from('fce_educations')
       .select(
@@ -343,14 +343,14 @@ export async function verifyApplication(applicationId: string) {
 
     // Transform database field names to frontend field names
     const formattedData = {
-      // 状态相关
+      // Status Info
       status: data.status,
       submitted_at: data.submitted_at,
       payment_status: data.payment_status,
       payment_id: data.payment_id,
       paid_at: data.paid_at,
 
-      // 客户信息
+      // Client Info
       name: data.name,
       country: data.country,
       streetAddress: data.street_address,
@@ -364,20 +364,20 @@ export async function verifyApplication(applicationId: string) {
       purpose: data.purpose,
       purposeOther: data.purpose_other,
 
-      // 评估对象信息
+      // Evaluee Info
       pronouns: data.pronouns,
       firstName: data.first_name,
       middleName: data.middle_name,
       lastName: data.last_name,
       dateOfBirth: data.date_of_birth,
 
-      // 服务信息
+      // Service Info
       serviceType: data.service_type,
       deliveryMethod: data.delivery_method,
       additionalServices: data.additional_services,
       additionalServicesQuantity: data.additional_services_quantity,
 
-      // 教育信息
+      // Education Info
       educations: educationsData.map((edu: any) => ({
         countryOfStudy: edu.country_of_study,
         degreeObtained: edu.degree_obtained,
