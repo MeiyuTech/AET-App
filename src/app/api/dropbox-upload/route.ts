@@ -45,6 +45,10 @@ export async function POST(request: Request) {
       await dbx.filesUpload({
         path: path,
         contents: buffer,
+        mode: { '.tag': 'add' },
+        // Auto-rename the file if it already exists (but the content is different)
+        autorename: true,
+        client_modified: new Date().toISOString().split('.')[0] + 'Z',
       })
     } catch (uploadError) {
       // Add detailed error information
