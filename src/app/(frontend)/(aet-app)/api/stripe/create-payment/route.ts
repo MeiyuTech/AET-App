@@ -31,6 +31,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: session.url })
   } catch (error) {
     console.error('Error creating payment:', error)
-    return NextResponse.json({ error: 'Error creating payment' }, { status: 500 })
+
+    // Handle Stripe errors
+    if (error instanceof Stripe.errors.StripeError) {
+      return NextResponse.json(
+        {
+          error: error.message || 'Payment processing failed',
+          code: error.code,
+          type: error.type,
+        },
+        { status: error.statusCode || 400 }
+      )
+    }
+
+    // Handle other errors
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
