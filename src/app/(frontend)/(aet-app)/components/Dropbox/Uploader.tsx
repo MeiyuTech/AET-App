@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, DragEvent } from 'react'
+import type { Office } from '../OfficeSelector'
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf', '.doc', '.docx']
@@ -15,7 +16,13 @@ const STATUS_STYLES = {
 
 type UploadStatus = keyof typeof STATUS_STYLES
 
-export default function DropboxUploader() {
+const AET_APP_EAST_OFFICES = ['boston', 'newyork']
+
+interface DropboxUploaderProps {
+  office: Office
+}
+
+export default function DropboxUploader({ office }: DropboxUploaderProps) {
   const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
@@ -89,6 +96,16 @@ export default function DropboxUploader() {
         Array.from(files).map(async (file) => {
           const formData = new FormData()
           formData.append('file', file)
+
+          // Add office information
+          formData.append('officeId', office.id)
+          formData.append('officeName', office.name)
+
+          // Determine token type based on office ID
+          formData.append(
+            'tokenType',
+            AET_APP_EAST_OFFICES.includes(office.id) ? 'AET_App_East' : 'AET_App'
+          )
 
           // Create new AbortController for this upload
           const controller = new AbortController()

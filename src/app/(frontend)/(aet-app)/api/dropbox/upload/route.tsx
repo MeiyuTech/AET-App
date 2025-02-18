@@ -1,13 +1,22 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { Dropbox } from 'dropbox'
 import fetch from 'node-fetch'
 
-// Add detailed debugging logs
-console.log('DROPBOX_ACCESS_TOKEN exists:', !!process.env.DROPBOX_ACCESS_TOKEN)
-console.log('DROPBOX_ACCESS_TOKEN prefix:', process.env.DROPBOX_ACCESS_TOKEN?.substring(0, 5))
+const TOKENS = {
+  AET_App: {
+    accessToken: process.env.DROPBOX_AET_App_ACCESS_TOKEN,
+    namespaceId: process.env.DROPBOX_AET_App_NAMESPACE_ID,
+    basePath: '/Team Files/WebsitesDev', // Base path for AET App
+  },
+  AET_App_East: {
+    accessToken: process.env.DROPBOX_AET_App_East_ACCESS_TOKEN,
+    namespaceId: process.env.DROPBOX_AET_App_East_NAMESPACE_ID,
+    basePath: '/WebsitesDev', // Base path for AET App East
+  },
+}
 
 const dbx = new Dropbox({
-  accessToken: process.env.DROPBOX_ACCESS_TOKEN,
+  accessToken: process.env.DROPBOX_AET_App_East_ACCESS_TOKEN,
   // The Dropbox SDK requires a fetch implementation for making HTTP requests.
   // In a browser environment, fetch is globally available.
   // However, in a Node.js environment (where Next.js API routes run on the server),
@@ -18,31 +27,47 @@ const dbx = new Dropbox({
   // Add the pathRoot parameter to specify the namespace ID
   pathRoot: JSON.stringify({
     '.tag': 'namespace_id',
-    namespace_id: process.env.DROPBOX_NAMESPACE_ID,
+    namespace_id: process.env.DROPBOX_AET_App_East_NAMESPACE_ID,
   }),
 })
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
+    const tokenType = formData.get('tokenType') as 'AET_App' | 'AET_App_East'
+    const officeName = formData.get('officeName') as string
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
+    const { accessToken, namespaceId, basePath } = TOKENS[tokenType]
+
+    // Create folder path based on office
+    const folderPath = `${basePath}/${officeName}`
+
     // Ensure token exists
-    if (!process.env.DROPBOX_ACCESS_TOKEN) {
+    if (!accessToken) {
       throw new Error('Dropbox access token is not configured')
     }
 
     const buffer = await file.arrayBuffer()
     // Use the correct path in team space
-    const path = `/Team Files/WebsitesDev/${file.name}`
+    const path = `${folderPath}/${file.name}`
+
+    // Create a new Dropbox instance with the correct token and namespace
+    const currentDbx = new Dropbox({
+      accessToken: accessToken,
+      fetch: fetch,
+      pathRoot: JSON.stringify({
+        '.tag': 'namespace_id',
+        namespace_id: namespaceId,
+      }),
+    })
 
     try {
-      // Add the Dropbox-API-Path-Root header in the upload request
-      await dbx.filesUpload({
+      await currentDbx.filesUpload({
         path: path,
         contents: buffer,
         mode: { '.tag': 'add' },
@@ -63,20 +88,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Dropbox upload error:', {
-      message: error.message,
-      status: error.status,
-      details: error.error,
-    })
-
-    return NextResponse.json(
-      {
-        error: 'Upload failed',
-        details: error.message,
-        status: error.status,
-        apiError: error.error,
-      },
-      { status: 500 }
-    )
+    console.error('Upload error:', error)
+    return NextResponse.json({ error: 'Error uploading to Dropbox' }, { status: 500 })
   }
 }

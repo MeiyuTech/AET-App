@@ -6,6 +6,8 @@ node_modules
 .next
 .vercel
 *.pdf
+*.doc
+*.docx
 
 # Payload default media upload directory
 public/media/
