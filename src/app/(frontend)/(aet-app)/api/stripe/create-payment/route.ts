@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+import { stripe, STRIPE_CONFIG } from '../../../utils/stripe/config'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { amount, currency } = body
+
+    // Convert amount to cents and ensure it's a valid integer
+    const unitAmount = Math.round(amount * 100)
 
     // Create inline price and checkout session
     const session = await stripe.checkout.sessions.create({
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
             product_data: {
               name: 'Custom Payment',
             },
-            unit_amount: amount * 100, // Convert to cents
+            unit_amount: unitAmount, // Use rounded integer amount
           },
           quantity: 1,
         },
@@ -30,21 +31,28 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (error) {
-    console.error('Error creating payment:', error)
+    console.error(`${STRIPE_CONFIG.mode} payment creation error:`, error)
 
     // Handle Stripe errors
-    if (error instanceof Stripe.errors.StripeError) {
+    if (error instanceof stripe.errors.StripeError) {
       return NextResponse.json(
         {
           error: error.message || 'Payment processing failed',
           code: error.code,
           type: error.type,
+          mode: STRIPE_CONFIG.mode,
         },
         { status: error.statusCode || 400 }
       )
     }
 
     // Handle other errors
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        mode: STRIPE_CONFIG.mode,
+      },
+      { status: 500 }
+    )
   }
 }

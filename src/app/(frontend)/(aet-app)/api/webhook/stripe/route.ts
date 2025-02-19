@@ -13,7 +13,16 @@ export async function POST(req: Request) {
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
 
+  // 添加调试日志
+  console.log('Webhook called with:', {
+    hasSignature: !!signature,
+    bodyLength: body.length,
+    mode: STRIPE_CONFIG.mode,
+    webhookSecret: !!STRIPE_CONFIG.webhookSecret, // 只记录是否存在，不记录实际值
+  })
+
   if (!signature) {
+    console.error('Missing stripe-signature header')
     return new NextResponse('No signature', { status: 400 })
   }
 
@@ -125,6 +134,12 @@ export async function POST(req: Request) {
 
     return new NextResponse('Webhook processed', { status: 200 })
   } catch (err) {
+    // add debug log
+    console.error('Webhook signature verification failed:', {
+      error: err.message,
+      signatureHeader: signature,
+      mode: STRIPE_CONFIG.mode,
+    })
     console.error(`${STRIPE_CONFIG.mode} webhook error:`, err)
     return new NextResponse(
       `${STRIPE_CONFIG.mode} webhook error: ` +

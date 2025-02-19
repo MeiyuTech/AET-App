@@ -7,7 +7,7 @@ export default function StripeInlinePricing() {
   const [stripeMode, setStripeMode] = useState<'test' | 'live'>('test')
 
   useEffect(() => {
-    // 检查当前环境
+    // check if the publishable key is a test key
     const isTestMode = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.startsWith('pk_test_')
     setStripeMode(isTestMode ? 'test' : 'live')
   }, [])

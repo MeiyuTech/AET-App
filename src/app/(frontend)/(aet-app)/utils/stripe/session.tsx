@@ -1,12 +1,7 @@
 'use server'
 
-import { Stripe } from 'stripe'
 import { getServerSideURL } from '@/utilities/getURL'
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not defined in environment variables')
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+import { stripe, STRIPE_CONFIG } from './config'
 
 interface NewSessionOptions {
   priceId: string
@@ -38,13 +33,13 @@ export const postStripeSession = async ({ priceId, applicationId }: NewSessionOp
       throw new Error('No client secret returned from Stripe')
     }
 
-    console.log('Session created:', session)
+    console.log(`${STRIPE_CONFIG.mode} session created:`, session)
 
     return {
       clientSecret: session.client_secret,
     }
   } catch (error) {
-    console.error('Error creating Stripe session:', error)
+    console.error(`${STRIPE_CONFIG.mode} error creating session:`, error)
     throw new Error('Failed to create payment session')
   }
 }
