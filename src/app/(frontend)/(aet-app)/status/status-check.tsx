@@ -58,6 +58,7 @@ export default function StatusCheck() {
       }
     } catch (err) {
       setError('Failed to check application status. Please try again.')
+      console.error(err)
     } finally {
       setIsLoading(false)
     }
