@@ -10,6 +10,7 @@ import React from 'react'
 // import { Header } from '@/Header/Component'
 import Header from '@/app/(frontend)/(aet-app)/components/Header'
 import Footer from '@/app/(frontend)/(aet-app)/components/Footer'
+import { Toaster } from '@/components/ui/toaster'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -58,6 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main className="pt-[128px]">{children}</main>
         {/* <Footer /> */}
         <Footer />
+        <Toaster />
         {/* </Providers> */}
       </body>
     </html>
