@@ -2,6 +2,7 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { createClient } from '../../../utils/supabase/server'
+import { stripe, STRIPE_MODE } from '../../../utils/stripe/config'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY is not defined')
@@ -11,8 +12,6 @@ if (!process.env.STRIPE_WEBHOOK_SECRET) {
   throw new Error('STRIPE_WEBHOOK_SECRET is not defined')
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
@@ -21,12 +20,13 @@ export async function POST(req: Request) {
     return new NextResponse('No signature', { status: 400 })
   }
 
+  const webhookSecret =
+    STRIPE_MODE === 'live'
+      ? process.env.STRIPE_LIVE_WEBHOOK_SECRET
+      : process.env.STRIPE_TEST_WEBHOOK_SECRET
+
   try {
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
+    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret!)
 
     console.log('Processing webhook event:', event.type)
 
