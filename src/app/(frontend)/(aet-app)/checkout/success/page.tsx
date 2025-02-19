@@ -54,8 +54,17 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
           Thank you, <span className="font-semibold">{applicationData.name}</span>!
         </p>
         <p className="text-gray-600 mb-2">Your payment has been processed successfully.</p>
-        <p className="text-gray-600">
+        <p className="text-gray-600 mb-2">
           Application ID: <span className="font-mono">{applicationId}</span>
+        </p>
+        <p className="text-gray-600 mb-2">
+          Payment Status: <span className="font-semibold">{applicationData.payment_status}</span>
+        </p>
+        <p className="text-gray-600">
+          Paid At:{' '}
+          <span className="font-semibold">
+            {new Date(applicationData.paid_at).toLocaleString()}
+          </span>
         </p>
       </div>
       <p className="text-sm text-gray-500">We will review your application and contact you soon.</p>
