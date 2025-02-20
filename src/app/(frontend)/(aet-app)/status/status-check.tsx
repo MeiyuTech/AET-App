@@ -32,6 +32,24 @@ interface StatusCheckProps {
   initialApplicationId?: string
 }
 
+// add UUID validation function
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+const isValidUUID = (uuid: string): boolean => {
+  return UUID_REGEX.test(uuid)
+}
+
+const formatUUID = (input: string): string => {
+  // remove all non-hexadecimal characters
+  const cleaned = input.replace(/[^0-9a-f]/gi, '')
+
+  // if the length is less than 32, return the cleaned string
+  if (cleaned.length < 32) return cleaned
+
+  // add hyphens to the UUID format
+  return `${cleaned.slice(0, 8)}-${cleaned.slice(8, 12)}-${cleaned.slice(12, 16)}-${cleaned.slice(16, 20)}-${cleaned.slice(20, 32)}`
+}
+
 export default function StatusCheck({ initialApplicationId }: StatusCheckProps) {
   const [applicationId, setApplicationId] = useState(initialApplicationId || '')
   const [error, setError] = useState('')
@@ -49,6 +67,11 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     window.history.pushState({}, '', url)
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatUUID(e.target.value)
+    setApplicationId(formatted)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -57,6 +80,12 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
     if (!applicationId.trim()) {
       setError('Please enter an application ID')
+      setIsLoading(false)
+      return
+    }
+
+    if (!isValidUUID(applicationId)) {
+      setError('Please enter a valid application ID')
       setIsLoading(false)
       return
     }
@@ -183,9 +212,11 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 id="applicationId"
                 type="text"
                 value={applicationId}
-                onChange={(e) => setApplicationId(e.target.value)}
+                onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
-                placeholder="Enter your application ID"
+                placeholder="xxxxxxxx-xxxx-4xxx-xxxx-xxxxxxxxxxxx"
+                pattern="^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                maxLength={36}
                 disabled={isLoading}
               />
             </div>
