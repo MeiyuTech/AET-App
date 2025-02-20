@@ -6,12 +6,16 @@ export const metadata: Metadata = {
   description: 'AET Service Application Status',
 }
 
-export default async function StatusPage() {
+export default async function StatusPage({
+  searchParams,
+}: {
+  searchParams: { applicationId?: string }
+}) {
   return (
     <div className="container mx-auto py-10">
       <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">
         <h1 className="text-2xl font-bold">AET Service Application Status</h1>
-        <StatusCheck />
+        <StatusCheck initialApplicationId={searchParams.applicationId} />
       </div>
     </div>
   )

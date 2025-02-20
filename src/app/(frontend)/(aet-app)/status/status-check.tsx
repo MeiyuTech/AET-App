@@ -28,12 +28,26 @@ interface ApplicationData extends Partial<FormData> {
   }
 }
 
-export default function StatusCheck() {
-  const [applicationId, setApplicationId] = useState('')
+interface StatusCheckProps {
+  initialApplicationId?: string
+}
+
+export default function StatusCheck({ initialApplicationId }: StatusCheckProps) {
+  const [applicationId, setApplicationId] = useState(initialApplicationId || '')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
   const router = useRouter()
+
+  const updateURL = (id: string) => {
+    const url = new URL(window.location.href)
+    if (id) {
+      url.searchParams.set('applicationId', id)
+    } else {
+      url.searchParams.delete('applicationId')
+    }
+    window.history.pushState({}, '', url)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,6 +76,8 @@ export default function StatusCheck() {
     } finally {
       setIsLoading(false)
     }
+
+    updateURL(applicationId)
   }
 
   const calculateTotalPrice = () => {
