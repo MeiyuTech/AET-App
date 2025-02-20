@@ -6,12 +6,15 @@ export const metadata: Metadata = {
   description: 'AET Service Application Status',
 }
 
-export default async function StatusPage({
-  searchParams,
-}: {
-  searchParams: { applicationId?: string }
-}) {
-  const applicationId = (await searchParams).applicationId as string | undefined
+interface PageProps {
+  searchParams: Promise<{
+    applicationId?: string
+  }>
+}
+
+export default async function StatusPage({ searchParams }: PageProps) {
+  const { applicationId } = await searchParams
+
   return (
     <div className="container mx-auto py-10">
       <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">

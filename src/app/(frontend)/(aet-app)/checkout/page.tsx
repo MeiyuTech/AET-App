@@ -8,8 +8,7 @@ interface PageProps {
 }
 
 export default async function CheckoutPage({ searchParams }: PageProps) {
-  const params = await searchParams
-  const { applicationId } = params
+  const { applicationId } = await searchParams
   const priceId = 'price_1QVKKcJMcR2XIhynAkrlH1jl'
 
   if (!applicationId) {
