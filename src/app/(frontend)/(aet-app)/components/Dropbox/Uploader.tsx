@@ -5,7 +5,7 @@ import type { Office } from '../OfficeSelector'
 const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf', '.doc', '.docx']
 
-// 首先定义状态类型和样式
+// define the status styles
 const STATUS_STYLES = {
   pending: 'text-gray-500',
   uploading: 'text-blue-500',
