@@ -1,6 +1,8 @@
 import Stripe from 'stripe'
 
-const isProduction = false
+// It works well in test mode
+// const isProduction = false
+const isProduction = process.env.NODE_ENV === 'production'
 
 // Choose the correct API key based on the environment
 const stripeSecretKey = isProduction
