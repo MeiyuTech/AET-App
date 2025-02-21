@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 
@@ -10,24 +8,7 @@ interface SuccessMessageProps {
   applicationId: string
 }
 
-export function SuccessMessage({
-  applicationData: initialData,
-  applicationId,
-}: SuccessMessageProps) {
-  const [applicationData, setApplicationData] = useState(initialData)
-  const router = useRouter()
-
-  useEffect(() => {
-    // if payment_status is not paid, refresh the page every 3 seconds
-    if (applicationData.payment_status !== 'paid') {
-      const timer = setTimeout(() => {
-        router.refresh() // refresh the page data
-      }, 3000)
-
-      return () => clearTimeout(timer)
-    }
-  }, [applicationData.payment_status, router])
-
+export function SuccessMessage({ applicationData, applicationId }: SuccessMessageProps) {
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
       <br />
@@ -52,7 +33,7 @@ export function SuccessMessage({
           <span className="font-semibold">
             {applicationData.paid_at
               ? new Date(applicationData.paid_at).toLocaleString()
-              : 'Loading...'}
+              : 'Processing...'}
           </span>
         </p>
       </Card>
@@ -71,7 +52,6 @@ export function SuccessMessage({
     </div>
   )
 }
-
 function getPaymentStatusColor(status: string) {
   const colors = {
     pending: 'text-yellow-600',
