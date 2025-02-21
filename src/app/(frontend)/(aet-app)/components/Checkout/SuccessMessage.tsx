@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
+import Link from 'next/link'
 
 interface SuccessMessageProps {
   applicationData: any
@@ -51,11 +52,22 @@ export function SuccessMessage({
           <span className="font-semibold">
             {applicationData.paid_at
               ? new Date(applicationData.paid_at).toLocaleString()
-              : 'Processing...'}
+              : 'Loading...'}
           </span>
         </p>
       </Card>
-      <p className="text-sm text-gray-500">We will review your application and contact you soon.</p>
+      <p className="text-sm text-gray-500 mb-4">
+        We will review your application and contact you soon.
+      </p>
+
+      <Link
+        href={`/status?applicationId=${applicationId}`}
+        className="text-blue-600 hover:text-blue-800 underline text-sm"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View Application Status
+      </Link>
     </div>
   )
 }
