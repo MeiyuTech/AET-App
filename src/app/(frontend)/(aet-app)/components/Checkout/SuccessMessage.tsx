@@ -9,12 +9,18 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ applicationData, applicationId }: SuccessMessageProps) {
-  console.log('Application Data:', applicationData)
-  console.log('Application ID:', applicationId)
-  console.log('Paid At:', applicationData.paid_at)
-  console.log('Payment Status:', applicationData.payment_status)
-  console.log('Name:', applicationData.name)
-
+  const date = new Date(applicationData.paid_at as string)
+  const formattedPaidAt = date
+    .toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
+    .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
       <br />
@@ -36,8 +42,7 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
         </p>
 
         <p className="text-gray-600">
-          Paid At:{' '}
-          <span className="font-semibold">{applicationData.paid_at || 'Processing...'}</span>
+          Paid At: <span className="font-semibold">{formattedPaidAt || 'Processing...'}</span>
         </p>
       </Card>
       <p className="text-sm text-gray-500 mb-4">
