@@ -35,12 +35,12 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
             {applicationData.payment_status}
           </span>
         </p>
-        <p className="text-gray-600">
+        {/* <p className="text-gray-600">
           Paid At:{' '}
           <span className="font-semibold">
             {applicationData.paid_at ? paidAt.toLocaleString() : 'Processing...'}
           </span>
-        </p>
+        </p> */}
       </Card>
       <p className="text-sm text-gray-500 mb-4">
         We will review your application and contact you soon.
