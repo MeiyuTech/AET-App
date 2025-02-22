@@ -14,7 +14,7 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
   console.log('Paid At:', applicationData.paid_at)
   console.log('Payment Status:', applicationData.payment_status)
   console.log('Name:', applicationData.name)
-  const paidAt = new Date(applicationData.paid_at)
+  const paidAt = new Date(applicationData.paid_at).toLocaleString()
 
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
@@ -35,12 +35,17 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
             {applicationData.payment_status}
           </span>
         </p>
-        {/* <p className="text-gray-600">
+        {/*
+         *  If directly use 'new Date(applicationData.paid_at).toLocaleString()'
+         *  or 'paidAt.toLocaleString()', it will make Hydration failed in Production.
+         *  So we need to make the process happen before return to avoid this issue.
+         */}
+        <p className="text-gray-600">
           Paid At:{' '}
           <span className="font-semibold">
-            {applicationData.paid_at ? paidAt.toLocaleString() : 'Processing...'}
+            {applicationData.paid_at ? paidAt : 'Processing...'}
           </span>
-        </p> */}
+        </p>
       </Card>
       <p className="text-sm text-gray-500 mb-4">
         We will review your application and contact you soon.
