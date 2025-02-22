@@ -9,12 +9,6 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ applicationData, applicationId }: SuccessMessageProps) {
-  console.log('Application Data:', applicationData)
-  console.log('Application ID:', applicationId)
-  console.log('Paid At:', applicationData.paid_at)
-  console.log('Payment Status:', applicationData.payment_status)
-  console.log('Name:', applicationData.name)
-
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
       <br />
