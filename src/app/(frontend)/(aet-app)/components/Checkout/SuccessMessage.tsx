@@ -10,7 +10,6 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ applicationData, applicationId }: SuccessMessageProps) {
-  const formattedPaidAt = formatDateTime(applicationData.paid_at as string)
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
       <br />
@@ -29,10 +28,6 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
           <span className={`font-3xl ${getPaymentStatusColor(applicationData.payment_status)}`}>
             {applicationData.payment_status}
           </span>
-        </p>
-
-        <p className="text-gray-600">
-          Paid At: <span className="font-semibold">{formattedPaidAt || 'Processing...'}</span>
         </p>
       </Card>
       <p className="text-sm text-gray-500 mb-4">
