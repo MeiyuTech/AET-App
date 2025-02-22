@@ -44,7 +44,17 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
     return notFound()
   }
 
-  return <SuccessMessage applicationData={applicationData} applicationId={applicationId} />
+  // Render in server side to avoid Hydration failed in Production
+  const formattedPaidAt = applicationData.paid_at
+    ? new Date(applicationData.paid_at).toLocaleString()
+    : null
+
+  return (
+    <SuccessMessage
+      applicationData={{ ...applicationData, paid_at: formattedPaidAt }}
+      applicationId={applicationId}
+    />
+  )
 }
 
 export default SuccessPage
