@@ -30,6 +30,7 @@ import {
   DatabaseEducation,
 } from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
 import { EducationDetailsDialog } from './education-details-dialog'
+import { formatDateTime } from '../utils/dateFormat'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table
 interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
@@ -332,20 +333,7 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const paidAt = row.getValue('paid_at')
-        if (!paidAt) return 'N/A'
-
-        const date = new Date(paidAt as string)
-        return date
-          .toLocaleString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false,
-          })
-          .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+        return formatDateTime(paidAt as string)
       },
     },
     {
