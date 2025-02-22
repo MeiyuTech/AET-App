@@ -9,6 +9,13 @@ interface SuccessMessageProps {
 }
 
 export function SuccessMessage({ applicationData, applicationId }: SuccessMessageProps) {
+  console.log('Application Data:', applicationData)
+  console.log('Application ID:', applicationId)
+  console.log('Paid At:', applicationData.paid_at)
+  console.log('Payment Status:', applicationData.payment_status)
+  console.log('Name:', applicationData.name)
+  const paidAt = new Date(applicationData.paid_at)
+
   return (
     <div className="text-center max-w-2xl mx-auto p-6">
       <br />
@@ -31,9 +38,7 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
         <p className="text-gray-600">
           Paid At:{' '}
           <span className="font-semibold">
-            {applicationData.paid_at
-              ? new Date(applicationData.paid_at).toLocaleString()
-              : 'Processing...'}
+            {applicationData.paid_at ? paidAt.toLocaleString() : 'Processing...'}
           </span>
         </p>
       </Card>
@@ -52,6 +57,7 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
     </div>
   )
 }
+
 function getPaymentStatusColor(status: string) {
   const colors = {
     pending: 'text-yellow-600',
