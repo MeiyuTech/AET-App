@@ -43,7 +43,11 @@ const SuccessPage = async ({ searchParams }: SuccessPageProps) => {
   if (!applicationData) {
     return notFound()
   }
-  return <SuccessMessage applicationData={applicationData} applicationId={applicationId} />
+  return (
+    <div className="p-4">
+      <SuccessMessage applicationData={applicationData} applicationId={applicationId} />
+    </div>
+  )
 }
 
 export default SuccessPage
