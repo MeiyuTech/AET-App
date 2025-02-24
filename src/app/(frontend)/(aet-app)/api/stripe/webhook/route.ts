@@ -4,11 +4,6 @@ import { Stripe } from 'stripe'
 import { createClient } from '../../../utils/supabase/server'
 import { stripe, STRIPE_CONFIG } from '../../../utils/stripe/config'
 
-// Validate environment variables
-if (!STRIPE_CONFIG.webhookSecret) {
-  throw new Error(`Stripe ${STRIPE_CONFIG.mode} webhook secret is not configured`)
-}
-
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
