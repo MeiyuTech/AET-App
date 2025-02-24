@@ -1,17 +1,10 @@
 'use client'
 
 import { useCallback } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 
 import { postStripeSession } from '../utils/stripe/session'
-import { STRIPE_CONFIG } from '../utils/stripe/config'
-
-if (!STRIPE_CONFIG.publishableKey) {
-  throw new Error('STRIPE_CONFIG.publishableKey is not defined in environment variables')
-}
-
-const stripePromise = loadStripe(STRIPE_CONFIG.publishableKey)
+import { stripePromise } from '../utils/stripe/config'
 
 export const CheckoutForm = ({
   priceId,

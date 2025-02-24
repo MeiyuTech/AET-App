@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-
+import { loadStripe } from '@stripe/stripe-js'
 // It works well in test mode
 // const isProduction = false
 const isProduction = process.env.NODE_ENV === 'production'
@@ -15,6 +15,7 @@ const webhookSecret = isProduction
   : process.env.STRIPE_TEST_WEBHOOK_SECRET!
 
 export const stripe = new Stripe(stripeSecretKey)
+export const stripePromise = loadStripe(stripeSecretKey)
 
 export const STRIPE_MODE = isProduction ? 'live' : 'test'
 
@@ -22,7 +23,4 @@ export const STRIPE_MODE = isProduction ? 'live' : 'test'
 export const STRIPE_CONFIG = {
   mode: STRIPE_MODE,
   webhookSecret,
-  publishableKey: isProduction
-    ? process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
-    : process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY,
 } as const
