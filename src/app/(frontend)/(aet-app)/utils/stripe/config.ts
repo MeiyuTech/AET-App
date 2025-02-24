@@ -9,10 +9,6 @@ const stripeSecretKey = isProduction
   ? process.env.STRIPE_LIVE_SECRET_KEY!
   : process.env.STRIPE_TEST_SECRET_KEY!
 
-const stripePublishableKey = isProduction
-  ? process.env.STRIPE_LIVE_PUBLISHABLE_KEY!
-  : process.env.STRIPE_TEST_PUBLISHABLE_KEY!
-
 // Get the correct webhook secret based on the environment
 const stripeWebhookSecret = isProduction
   ? process.env.STRIPE_LIVE_WEBHOOK_SECRET!
@@ -27,12 +23,6 @@ export async function getStripeConfig() {
     )
   }
 
-  if (!stripePublishableKey) {
-    throw new Error(
-      `${process.env.NODE_ENV}:\n  Stripe ${STRIPE_MODE} Mode: publishable key is not configured`
-    )
-  }
-
   if (!stripeWebhookSecret) {
     throw new Error(
       `${process.env.NODE_ENV}:\n  Stripe ${STRIPE_MODE} Mode: webhook secret is not configured`
@@ -42,7 +32,6 @@ export async function getStripeConfig() {
   const stripeConfig = {
     mode: STRIPE_MODE,
     secretKey: stripeSecretKey,
-    publishableKey: stripePublishableKey,
     webhookSecret: stripeWebhookSecret,
   } as const
 
