@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { getStripeConfig } from '../../../utils/stripe/config'
+import { getServerSideURL } from '@/utilities/getURL'
 
 export async function POST(request: Request) {
   const stripeConfig = await getStripeConfig()
   const stripe = new Stripe(stripeConfig.secretKey)
+  const serverSideURL = getServerSideURL()
 
   try {
     const body = await request.json()
@@ -29,8 +31,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/payment/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/payment/cancel`,
+      success_url: `${serverSideURL}/payment/success`,
+      cancel_url: `${serverSideURL}/payment/cancel`,
     })
 
     return NextResponse.json({ url: session.url })
