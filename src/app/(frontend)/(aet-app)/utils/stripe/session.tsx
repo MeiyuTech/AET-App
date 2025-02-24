@@ -1,7 +1,8 @@
 'use server'
 
 import { getServerSideURL } from '@/utilities/getURL'
-import { stripe, getStripeConfig } from './config'
+import { Stripe } from 'stripe'
+import { getStripeConfig } from './config'
 
 interface NewSessionOptions {
   priceId: string
@@ -10,6 +11,8 @@ interface NewSessionOptions {
 
 export const postStripeSession = async ({ priceId, applicationId }: NewSessionOptions) => {
   const stripeConfig = await getStripeConfig()
+  const stripe = new Stripe(stripeConfig.secretKey)
+
   try {
     const currentUrl = getServerSideURL()
     const returnUrl = `${currentUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`

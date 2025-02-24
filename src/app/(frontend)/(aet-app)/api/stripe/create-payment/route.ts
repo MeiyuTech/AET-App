@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
-import { stripe, getStripeConfig } from '../../../utils/stripe/config'
+import { Stripe } from 'stripe'
+import { getStripeConfig } from '../../../utils/stripe/config'
 
 export async function POST(request: Request) {
   const stripeConfig = await getStripeConfig()
+  const stripe = new Stripe(stripeConfig.secretKey)
+
   try {
     const body = await request.json()
     const { amount, currency } = body

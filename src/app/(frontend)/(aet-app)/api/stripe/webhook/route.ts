@@ -2,12 +2,14 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { createClient } from '../../../utils/supabase/server'
-import { stripe, getStripeConfig } from '../../../utils/stripe/config'
+import { getStripeConfig } from '../../../utils/stripe/config'
 
 export async function POST(req: Request) {
-  const stripeConfig = await getStripeConfig()
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
+
+  const stripeConfig = await getStripeConfig()
+  const stripe = new Stripe(stripeConfig.secretKey)
 
   if (!signature) {
     return new NextResponse('No signature', { status: 400 })

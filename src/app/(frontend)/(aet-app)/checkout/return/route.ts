@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, getStripeConfig } from '../../utils/stripe/config'
+import { Stripe } from 'stripe'
+import { getStripeConfig } from '../../utils/stripe/config'
 
 export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url)
   const stripeSessionId = searchParams.get('session_id')
+
   const stripeConfig = await getStripeConfig()
+  const stripe = new Stripe(stripeConfig.secretKey)
 
   if (!stripeSessionId?.length) {
     const error = `${stripeConfig.mode} mode: Missing session_id in return URL`
