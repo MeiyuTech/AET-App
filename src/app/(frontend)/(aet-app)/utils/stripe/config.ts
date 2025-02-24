@@ -41,10 +41,10 @@ export async function getStripeConfig() {
   const isProduction = process.env.NODE_ENV === 'production'
   const STRIPE_MODE = isProduction ? 'live' : 'test'
 
-  const STRIPE_CONFIG = {
+  const stripeConfig = {
     mode: STRIPE_MODE,
     webhookSecret,
   } as const
 
-  return STRIPE_CONFIG
+  return stripeConfig
 }

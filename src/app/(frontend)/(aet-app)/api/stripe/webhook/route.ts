@@ -2,9 +2,10 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { createClient } from '../../../utils/supabase/server'
-import { stripe, STRIPE_CONFIG } from '../../../utils/stripe/config'
+import { stripe, getStripeConfig } from '../../../utils/stripe/config'
 
 export async function POST(req: Request) {
+  const stripeConfig = await getStripeConfig()
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
 
@@ -13,9 +14,9 @@ export async function POST(req: Request) {
   }
 
   try {
-    const event = stripe.webhooks.constructEvent(body, signature, STRIPE_CONFIG.webhookSecret)
+    const event = stripe.webhooks.constructEvent(body, signature, stripeConfig.webhookSecret)
 
-    console.log(`Processing ${STRIPE_CONFIG.mode} webhook event:`, event.type)
+    console.log(`Processing ${stripeConfig.mode} webhook event:`, event.type)
 
     const client = await createClient()
 
@@ -114,15 +115,15 @@ export async function POST(req: Request) {
       }
 
       default: {
-        console.log(`Unhandled ${STRIPE_CONFIG.mode} event type:`, event.type)
+        console.log(`Unhandled ${stripeConfig.mode} event type:`, event.type)
       }
     }
 
     return new NextResponse('Webhook processed', { status: 200 })
   } catch (err) {
-    console.error(`${STRIPE_CONFIG.mode} webhook error:`, err)
+    console.error(`${stripeConfig.mode} webhook error:`, err)
     return new NextResponse(
-      `${STRIPE_CONFIG.mode} webhook error: ` +
+      `${stripeConfig.mode} webhook error: ` +
         (err instanceof Error ? err.message : 'Unknown error'),
       { status: 400 }
     )
