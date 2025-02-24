@@ -2,7 +2,6 @@
 
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
-import { formatDateTime } from '../../utils/dateFormat'
 
 interface SuccessMessageProps {
   applicationData: any
@@ -28,6 +27,8 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
           <span className={`font-3xl ${getPaymentStatusColor(applicationData.payment_status)}`}>
             {applicationData.payment_status}
           </span>
+          <br />
+          (Refresh the page to see the latest status)
         </p>
       </Card>
       <p className="text-sm text-gray-500 mb-4">
