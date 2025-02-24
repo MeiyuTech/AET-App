@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
+import { createPayment } from '../../utils/stripe/actions'
 
 export default function StripeInlinePricing() {
   // Use string type for amount to better handle input
@@ -13,19 +14,8 @@ export default function StripeInlinePricing() {
   const handleCreatePayment = async () => {
     try {
       setLoading(true)
-      // Convert string to number for API call
-      const numericAmount = parseFloat(amount || '0')
 
-      const response = await fetch('/api/stripe/create-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: numericAmount,
-          currency: 'usd',
-        }),
-      })
+      const response = await createPayment({ amount })
 
       const data = await response.json()
 

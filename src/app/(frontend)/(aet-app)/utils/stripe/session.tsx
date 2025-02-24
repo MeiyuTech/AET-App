@@ -12,9 +12,9 @@ interface NewSessionOptions {
 export const postStripeSession = async ({ priceId, applicationId }: NewSessionOptions) => {
   const stripeConfig = await getStripeConfig()
   const stripe = new Stripe(stripeConfig.secretKey)
+  const currentUrl = getServerSideURL()
 
   try {
-    const currentUrl = getServerSideURL()
     const returnUrl = `${currentUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`
 
     const session = await stripe.checkout.sessions.create({

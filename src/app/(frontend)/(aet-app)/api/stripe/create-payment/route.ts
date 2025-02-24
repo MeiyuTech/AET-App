@@ -6,7 +6,7 @@ import { getStripeConfig } from '../../../utils/stripe/config'
 export async function POST(request: Request) {
   const stripeConfig = await getStripeConfig()
   const stripe = new Stripe(stripeConfig.secretKey)
-  const serverSideURL = getServerSideURL()
+  const currentUrl = getServerSideURL()
 
   try {
     const body = await request.json()
@@ -31,10 +31,9 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${serverSideURL}/stripe-test`,
-      cancel_url: `${serverSideURL}/stripe-test`,
+      success_url: `${currentUrl}/stripe-test`,
+      // cancel_url: `${currentUrl}/stripe-test`,
     })
-
     return NextResponse.json({ url: session.url })
   } catch (error) {
     console.error(`${stripeConfig.mode} payment creation error:`, error)
