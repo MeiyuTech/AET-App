@@ -56,6 +56,8 @@ export default function StripeInlinePricing() {
     }
   }
 
+  console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
+
   return (
     <div className="max-w-md mx-auto">
       {/* Cannot use server side env variables in client side code */}
