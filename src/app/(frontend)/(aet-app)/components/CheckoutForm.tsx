@@ -14,6 +14,14 @@ export const CheckoutForm = ({
   applicationId: string
 }) => {
   // Elegantly fetch the client secret in a synchronous function
+  const fetchStripePromise = useCallback(async () => {
+    const stripeConfig = await getStripeConfig()
+    const stripePromise = loadStripe(stripeConfig.publishableKey)
+    return stripePromise
+  }, [])
+
+  const stripePromise = fetchStripePromise()
+
   const fetchClientSecret = useCallback(async () => {
     const stripeResponse = await postStripeSession({
       priceId,
@@ -23,14 +31,6 @@ export const CheckoutForm = ({
   }, [priceId, applicationId])
 
   const options = { fetchClientSecret }
-
-  const fetchStripePromise = useCallback(async () => {
-    const stripeConfig = await getStripeConfig()
-    const stripePromise = loadStripe(stripeConfig.publishableKey)
-    return stripePromise
-  }, [])
-
-  const stripePromise = fetchStripePromise()
 
   return (
     <div id="checkout">
