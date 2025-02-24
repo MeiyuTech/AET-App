@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
-import { STRIPE_CONFIG } from '../../utils/stripe/config'
 
 export default function StripeInlinePricing() {
   // Use string type for amount to better handle input
@@ -59,7 +58,8 @@ export default function StripeInlinePricing() {
 
   return (
     <div className="max-w-md mx-auto">
-      {STRIPE_CONFIG.mode === 'test' && (
+      {/* Cannot use server side env variables in client side code */}
+      {!(process.env.NODE_ENV === 'production') && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
           <p className="text-yellow-700">
             Warning: Stripe is in test mode. Use test card numbers only.
