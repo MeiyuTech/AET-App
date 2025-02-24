@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { verifyApplication } from '../utils/actions'
+import { useToast } from '@/hooks/use-toast'
+
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import {
   PURPOSE_OPTIONS,
@@ -12,7 +13,8 @@ import {
   ADDITIONAL_SERVICES,
 } from '../components/ApplicationForm/constants'
 import { FormData } from '../components/ApplicationForm/types'
-import { useRouter } from 'next/navigation'
+import { verifyApplication } from '../utils/actions'
+import { createPayment } from '../utils/stripe/actions'
 
 interface ApplicationData extends Partial<FormData> {
   status: string
@@ -55,7 +57,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
-  const router = useRouter()
+  const { toast } = useToast()
 
   const updateURL = (id: string) => {
     const url = new URL(window.location.href)
@@ -190,9 +192,25 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     return total.toFixed(2)
   }
 
-  const handlePayment = () => {
-    if (application?.payment_status !== 'paid' && applicationId) {
-      router.push(`/checkout?applicationId=${applicationId}`)
+  const handlePayment = async () => {
+    try {
+      const amount = calculateTotalPrice()
+      const response = await createPayment({ amount })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Payment creation failed')
+      }
+
+      window.location.href = data.url
+    } catch (error) {
+      console.error('Payment creation failed:', error)
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Payment creation failed',
+      })
     }
   }
 
