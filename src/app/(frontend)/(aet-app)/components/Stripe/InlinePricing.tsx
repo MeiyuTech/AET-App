@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
+import { STRIPE_CONFIG } from '../../utils/stripe/config'
 
 export default function StripeInlinePricing() {
   const [stripeMode, setStripeMode] = useState<'test' | 'live'>('test')
 
   useEffect(() => {
     // check if the publishable key is a test key
-    const isTestMode = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.startsWith('pk_test_')
+    const isTestMode = STRIPE_CONFIG.publishableKey?.startsWith('pk_test_')
     setStripeMode(isTestMode ? 'test' : 'live')
   }, [])
 
