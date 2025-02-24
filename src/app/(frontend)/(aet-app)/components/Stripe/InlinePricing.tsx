@@ -8,9 +8,7 @@ export default function StripeInlinePricing() {
   const [stripeMode, setStripeMode] = useState<'test' | 'live'>('test')
 
   useEffect(() => {
-    // check if the publishable key is a test key
-    const isTestMode = STRIPE_CONFIG.publishableKey?.startsWith('pk_test_')
-    setStripeMode(isTestMode ? 'test' : 'live')
+    setStripeMode(STRIPE_CONFIG.mode)
   }, [])
 
   // Use string type for amount to better handle input
