@@ -31,8 +31,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${serverSideURL}/payment/success`,
-      cancel_url: `${serverSideURL}/payment/cancel`,
+      success_url: `${serverSideURL}/stripe-test`,
+      cancel_url: `${serverSideURL}/stripe-test`,
     })
 
     return NextResponse.json({ url: session.url })
