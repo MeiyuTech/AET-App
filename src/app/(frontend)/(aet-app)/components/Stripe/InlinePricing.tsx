@@ -1,16 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import { STRIPE_CONFIG } from '../../utils/stripe/config'
 
 export default function StripeInlinePricing() {
-  const [stripeMode, setStripeMode] = useState<'test' | 'live'>('test')
-
-  useEffect(() => {
-    setStripeMode(STRIPE_CONFIG.mode)
-  }, [])
-
   // Use string type for amount to better handle input
   const [amount, setAmount] = useState('')
   const { toast } = useToast()
@@ -65,7 +59,7 @@ export default function StripeInlinePricing() {
 
   return (
     <div className="max-w-md mx-auto">
-      {stripeMode === 'test' && (
+      {STRIPE_CONFIG.mode === 'test' && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
           <p className="text-yellow-700">
             Warning: Stripe is in test mode. Use test card numbers only.
