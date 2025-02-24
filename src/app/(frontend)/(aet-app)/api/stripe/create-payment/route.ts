@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
-import { stripe, STRIPE_CONFIG } from '../../../utils/stripe/config'
+import { stripe, getStripeConfig } from '../../../utils/stripe/config'
 
 export async function POST(request: Request) {
+  const stripeConfig = await getStripeConfig()
   try {
     const body = await request.json()
     const { amount, currency } = body
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (error) {
-    console.error(`${STRIPE_CONFIG.mode} payment creation error:`, error)
+    console.error(`${stripeConfig.mode} payment creation error:`, error)
 
     // Handle Stripe errors
     if (error instanceof stripe.errors.StripeError) {
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
           error: error.message || 'Payment processing failed',
           code: error.code,
           type: error.type,
-          mode: STRIPE_CONFIG.mode,
+          mode: stripeConfig.mode,
         },
         { status: error.statusCode || 400 }
       )
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: 'Internal server error',
-        mode: STRIPE_CONFIG.mode,
+        mode: stripeConfig.mode,
       },
       { status: 500 }
     )
