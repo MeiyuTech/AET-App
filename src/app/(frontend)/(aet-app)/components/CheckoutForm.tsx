@@ -4,7 +4,6 @@ import { useCallback } from 'react'
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { postStripeSession } from '../utils/stripe/session'
-import { getStripeConfig } from '../utils/stripe/config'
 
 export const CheckoutForm = ({
   priceId,
@@ -13,15 +12,12 @@ export const CheckoutForm = ({
   priceId: string
   applicationId: string
 }) => {
+  if (!process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY) {
+    throw new Error('NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY is not set')
+  }
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY!)
+
   // Elegantly fetch the client secret in a synchronous function
-  const fetchStripePromise = useCallback(async () => {
-    const stripeConfig = await getStripeConfig()
-    const stripePromise = loadStripe(stripeConfig.publishableKey)
-    return stripePromise
-  }, [])
-
-  const stripePromise = fetchStripePromise()
-
   const fetchClientSecret = useCallback(async () => {
     const stripeResponse = await postStripeSession({
       priceId,

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
-import { getStripeConfig } from '../../../utils/stripe/config'
 import { getServerSideURL } from '@/utilities/getURL'
+import { getStripeConfig } from '../../../utils/stripe/config'
 
 export async function POST(request: Request) {
   const stripeConfig = await getStripeConfig()
