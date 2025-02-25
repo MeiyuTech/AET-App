@@ -1,4 +1,4 @@
-import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, foreignKey, jsonb, check, smallint, date, integer, boolean, numeric, serial, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, foreignKey, jsonb, check, smallint, date, numeric, integer, boolean, serial, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const locales = pgEnum("_locales", ['en', 'zh'])
@@ -116,6 +116,7 @@ export const fceApplications = pgTable("fce_applications", {
 	paymentId: text("payment_id"),
 	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }),
 	office: text(),
+	dueAmount: numeric("due_amount", { precision: 6, scale:  2 }).default('NULL'),
 }, (table) => {
 	return {
 		idxFceApplicationsEmail: index("idx_fce_applications_email").using("btree", table.email.asc().nullsLast().op("text_ops")),
