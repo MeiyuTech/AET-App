@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { amount, currency } = body
+    const { amount, currency, applicationId } = body
 
     // Convert amount to cents and ensure it's a valid integer
     const unitAmount = Math.round(amount * 100)
@@ -31,8 +31,12 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${currentUrl}/stripe-test`,
+      client_reference_id: applicationId || '',
+      success_url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
       // cancel_url: `${currentUrl}/stripe-test`,
+      metadata: {
+        applicationId: applicationId || '',
+      },
     })
     return NextResponse.json({ url: session.url })
   } catch (error) {
