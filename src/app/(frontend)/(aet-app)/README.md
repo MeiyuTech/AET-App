@@ -2,13 +2,13 @@
 
 ## TODO
 
-- [ ] CRM Loading issue: it is about auth...
+- [ ] CRM Loading issue: **it is about auth...**
 - [ ] feat: we can change the payment price for every order (bufore payment) in admin panel
 - [ ] Dropbox refresh token
 - [ ] Email sending
 - [ ] clean up payment code!!!
-- [ ] Add 'payment_amount' in supabase
-- [ ] Add 'office' in supabase
+- [x] Add 'payment_amount' in supabase
+- [x] Add 'office' in supabase
 - [ ] Add CHECK for database update or insert!!! (like, only if it is Processing, we can change the office or payment_amount )
 
 ## Features
