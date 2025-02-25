@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, Eye } from 'lucide-react'
+import { ChevronDown, Eye, Edit } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,6 +31,15 @@ import {
 } from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
 import { EducationDetailsDialog } from './education-details-dialog'
 import { formatDateTime } from '../utils/dateFormat'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { toast } from '@/hooks/use-toast'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table
 interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
@@ -81,6 +90,29 @@ export function ApplicationsTable() {
   )
   const [dialogOpen, setDialogOpen] = useState(false)
   const supabase = createClientComponentClient()
+
+  const handleOfficeChange = async (id: string, office: string | null) => {
+    try {
+      const { error } = await supabase.from('fce_applications').update({ office }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, office } : app)))
+
+      toast({
+        title: 'Office updated',
+        description: `Application office has been set to ${office || 'none'}.`,
+      })
+    } catch (error) {
+      console.error('Error updating office:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the office. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
 
   const columns: ColumnDef<Application>[] = [
     {
@@ -146,6 +178,51 @@ export function ApplicationsTable() {
             hour12: false,
           })
           .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      },
+    },
+    {
+      accessorKey: 'office',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Office
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const office = row.getValue('office') as string | null
+        return (
+          <div className="flex items-center">
+            <span className="mr-2">{office || 'N/A'}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Set Office</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
+                  <DropdownMenuItem
+                    key={city}
+                    onClick={() => handleOfficeChange(row.original.id, city)}
+                  >
+                    {city}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
+                  Clear
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
       },
     },
     {
@@ -275,8 +352,22 @@ export function ApplicationsTable() {
     },
     {
       accessorKey: 'educations',
-      header: 'Education Count',
-      cell: ({ row }) => row.original.educations?.length || 0,
+      header: 'Education Info',
+      cell: ({ row }) => {
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSelectedEducations(row.original.educations)
+              setDialogOpen(true)
+            }}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            Details
+          </Button>
+        )
+      },
     },
     {
       accessorKey: 'status',
@@ -340,25 +431,6 @@ export function ApplicationsTable() {
       accessorKey: 'payment_id',
       header: 'Payment ID',
       cell: ({ row }) => row.getValue('payment_id') || 'N/A',
-    },
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => {
-        return (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSelectedEducations(row.original.educations)
-              setDialogOpen(true)
-            }}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            Details
-          </Button>
-        )
-      },
     },
   ]
 
