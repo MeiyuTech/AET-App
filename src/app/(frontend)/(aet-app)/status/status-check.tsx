@@ -195,7 +195,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const handlePayment = async () => {
     try {
       const amount = calculateTotalPrice()
-      const response = await createPayment({ amount })
+      const response = await createPayment({ amount, applicationId })
 
       const data = await response.json()
 

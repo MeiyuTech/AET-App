@@ -1,6 +1,15 @@
-# FCE Form Component
+# AET App
 
-A multi-step form component for Foreign Credential Evaluation (FCE) applications with state management, validation, and draft saving functionality.
+## TODO
+
+- [ ] CRM Loading issue: it is about auth...
+- [ ] feat: we can change the payment price for every order (bufore payment) in admin panel
+- [ ] Dropbox refresh token
+- [ ] Email sending
+- [ ] clean up payment code!!!
+- [ ] Add 'payment_amount' in supabase
+- [ ] Add 'office' in supabase
+- [ ] Add CHECK for database update or insert!!! (like, only if it is Processing, we can change the office or payment_amount )
 
 ## Features
 
@@ -39,12 +48,14 @@ FCE-Form/
    - Contact information
    - Address details (with country-specific regions)
    - Purpose of evaluation
+
 2. **Evaluee Information** (`EvalueeInfo.tsx`)
 
    - Personal information
    - Multiple education records
    - Study period details
    - Dynamic education fields
+
 3. **Service Selection** (`ServiceSelection.tsx`)
 
    - Document Evaluation Services
@@ -55,6 +66,7 @@ FCE-Form/
    - Translation Service
    - Delivery options
    - Additional services with quantities
+
 4. **Review** (`Review.tsx`)
 
    - Summary of all information
@@ -87,7 +99,7 @@ interface FormState {
 ## Usage
 
 ```tsx
-import FCEForm from "@/app/components/FCE-Form"
+import FCEForm from '@/app/components/FCE-Form'
 
 export default function FormPage() {
   return (

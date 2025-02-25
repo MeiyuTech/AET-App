@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, Eye } from 'lucide-react'
+import { ChevronDown, Eye, Edit } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,6 +31,25 @@ import {
 } from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
 import { EducationDetailsDialog } from './education-details-dialog'
 import { formatDateTime } from '../utils/dateFormat'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { toast } from '@/hooks/use-toast'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 // Extend DatabaseApplication but override/add specific fields needed for the table
 interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
@@ -47,6 +66,7 @@ interface Application extends Omit<DatabaseApplication, 'service_type' | 'educat
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null
+  due_amount: number | null
 }
 
 function getStatusColor(status: string) {
@@ -80,7 +100,58 @@ export function ApplicationsTable() {
     undefined
   )
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [pendingDueAmount, setPendingDueAmount] = useState<{
+    id: string
+    amount: number | null
+  } | null>(null)
   const supabase = createClientComponentClient()
+
+  const handleOfficeChange = async (id: string, office: string | null) => {
+    try {
+      const { error } = await supabase.from('fce_applications').update({ office }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, office } : app)))
+
+      toast({
+        title: 'Office updated',
+        description: `Application office has been set to ${office || 'none'}.`,
+      })
+    } catch (error) {
+      console.error('Error updating office:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the office. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleDueAmountChange = async (id: string, due_amount: number | null) => {
+    try {
+      const { error } = await supabase.from('fce_applications').update({ due_amount }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, due_amount } : app)))
+
+      toast({
+        title: 'Due amount updated',
+        description: `Application due amount has been set to ${due_amount !== null ? `$${due_amount.toFixed(2)}` : 'none'}.`,
+      })
+    } catch (error) {
+      console.error('Error updating due amount:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the due amount. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
 
   const columns: ColumnDef<Application>[] = [
     {
@@ -146,6 +217,51 @@ export function ApplicationsTable() {
             hour12: false,
           })
           .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      },
+    },
+    {
+      accessorKey: 'office',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Office
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const office = row.getValue('office') as string | null
+        return (
+          <div className="flex items-center">
+            <span className="mr-2">{office || 'N/A'}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Set Office</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
+                  <DropdownMenuItem
+                    key={city}
+                    onClick={() => handleOfficeChange(row.original.id, city)}
+                  >
+                    {city}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
+                  Clear
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
       },
     },
     {
@@ -275,8 +391,21 @@ export function ApplicationsTable() {
     },
     {
       accessorKey: 'educations',
-      header: 'Education Count',
-      cell: ({ row }) => row.original.educations?.length || 0,
+      header: 'Education Info',
+      cell: ({ row }) => {
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSelectedEducations(row.original.educations)
+              setDialogOpen(true)
+            }}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+          </Button>
+        )
+      },
     },
     {
       accessorKey: 'status',
@@ -296,6 +425,92 @@ export function ApplicationsTable() {
           {row.getValue('status')}
         </div>
       ),
+    },
+    {
+      accessorKey: 'due_amount',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Due Amount
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const dueAmount = row.getValue('due_amount') as number | null
+
+        return (
+          <div className="flex items-center">
+            <span className="mr-2">{dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Set Due Amount</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      const form = e.target as HTMLFormElement
+                      const input = form.elements.namedItem('amount') as HTMLInputElement
+                      const amount = parseFloat(input.value)
+
+                      if (!isNaN(amount) && amount >= 0) {
+                        // 4 digits for the integer part and 2 digits for the decimal part
+                        const limitedAmount = Math.min(9999.99, Math.round(amount * 100) / 100)
+
+                        // 设置待确认的金额并打开确认对话框
+                        setPendingDueAmount({
+                          id: row.original.id,
+                          amount: limitedAmount,
+                        })
+                        setConfirmDialogOpen(true)
+                      }
+                    }}
+                  >
+                    <div className="flex items-center">
+                      <span className="mr-1">$</span>
+                      <Input
+                        name="amount"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="9999.99"
+                        defaultValue={dueAmount !== null ? dueAmount.toString() : ''}
+                        placeholder="0.00"
+                        className="w-28"
+                      />
+                      <Button type="submit" size="sm" className="ml-2">
+                        Save
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    // 对于清除操作也添加确认
+                    setPendingDueAmount({
+                      id: row.original.id,
+                      amount: null,
+                    })
+                    setConfirmDialogOpen(true)
+                  }}
+                >
+                  Clear
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'payment_status',
@@ -340,25 +555,6 @@ export function ApplicationsTable() {
       accessorKey: 'payment_id',
       header: 'Payment ID',
       cell: ({ row }) => row.getValue('payment_id') || 'N/A',
-    },
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => {
-        return (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSelectedEducations(row.original.educations)
-              setDialogOpen(true)
-            }}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            Details
-          </Button>
-        )
-      },
     },
   ]
 
@@ -500,6 +696,33 @@ export function ApplicationsTable() {
         onOpenChange={setDialogOpen}
         educations={selectedEducations}
       />
+
+      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-500">Confirm Due Amount Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change the due amount to
+              {pendingDueAmount?.amount !== null
+                ? ` $${pendingDueAmount?.amount.toFixed(2)}`
+                : ' none'}
+              ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingDueAmount) {
+                  handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+                }
+              }}
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

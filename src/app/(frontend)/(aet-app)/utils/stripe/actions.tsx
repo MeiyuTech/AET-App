@@ -1,4 +1,10 @@
-export async function createPayment({ amount }: { amount: string }) {
+export async function createPayment({
+  amount,
+  applicationId,
+}: {
+  amount: string
+  applicationId: string
+}) {
   const numericAmount = parseFloat(amount || '0')
 
   const response = await fetch('/api/stripe/create-payment', {
@@ -9,6 +15,7 @@ export async function createPayment({ amount }: { amount: string }) {
     body: JSON.stringify({
       amount: numericAmount,
       currency: 'usd',
+      applicationId: applicationId,
     }),
   })
 

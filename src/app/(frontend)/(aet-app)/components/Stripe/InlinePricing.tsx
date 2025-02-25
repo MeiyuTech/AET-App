@@ -15,7 +15,9 @@ export default function StripeInlinePricing() {
     try {
       setLoading(true)
 
-      const response = await createPayment({ amount })
+      // This is a temporary application id, we need to get the application id from the context
+      // TODO: Get application id from context
+      const response = await createPayment({ amount, applicationId: '123' })
 
       const data = await response.json()
 
