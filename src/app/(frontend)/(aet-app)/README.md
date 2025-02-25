@@ -9,6 +9,7 @@
 - [ ] clean up payment code!!!
 - [ ] Add 'payment_amount' in supabase
 - [ ] Add 'office' in supabase
+- [ ] Add CHECK for database update or insert!!! (like, only if it is Processing, we can change the office or payment_amount )
 
 ## Features
 
