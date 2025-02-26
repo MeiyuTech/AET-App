@@ -91,7 +91,7 @@ function getPaymentStatusColor(status: string) {
   return colors[status as keyof typeof colors] || 'text-gray-600'
 }
 
-export function ApplicationsTable() {
+export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -149,7 +149,6 @@ export function ApplicationsTable() {
 
   const handleDueAmountChange = async (id: string, due_amount: number | null) => {
     try {
-      // 查找当前应用并检查状态
       const application = applications.find((app) => app.id === id)
 
       if (!application) {
@@ -644,7 +643,7 @@ export function ApplicationsTable() {
   })
 
   useEffect(() => {
-    async function fetchApplications() {
+    async function fetchApplications(filter: string) {
       try {
         const { data: applications, error: applicationsError } = await supabase
           .from('fce_applications')
@@ -654,10 +653,10 @@ export function ApplicationsTable() {
             educations:fce_educations(*)
           `
           )
+          .or(filter)
           .order('created_at', { ascending: false })
 
         if (applicationsError) throw applicationsError
-
         setApplications(applications || [])
       } catch (error) {
         console.error('Error fetching applications:', error)
@@ -666,8 +665,24 @@ export function ApplicationsTable() {
       }
     }
 
-    fetchApplications()
-  }, [])
+    // Verify if dataFilter is valid
+    const isValidFilter = (filter: string) => {
+      // Add more complex validation logic here
+      return filter && /^[a-zA-Z0-9.,= ]*$/.test(filter) // Only allow letters, numbers, commas, equals, and spaces
+    }
+
+    if (isValidFilter(dataFilter)) {
+      fetchApplications(dataFilter)
+    } else {
+      console.error('Invalid dataFilter:', dataFilter)
+      // Handle invalid filter conditions, e.g. display a message or do not execute the query
+      toast({
+        title: 'Unauthorized User',
+        description: 'Please login with an authorized user',
+        variant: 'destructive',
+      })
+    }
+  }, [dataFilter, supabase])
 
   if (loading) {
     return <div className="p-4">Loading...</div>
