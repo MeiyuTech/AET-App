@@ -115,7 +115,7 @@ export default function DropboxUploader({ office }: DropboxUploaderProps) {
               signal: controller.signal,
             })
 
-            const result = await response.json()
+            // const result = await response.json()
 
             setProgress((prev) => ({
               ...prev,

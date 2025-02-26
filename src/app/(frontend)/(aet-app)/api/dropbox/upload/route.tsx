@@ -1,27 +1,40 @@
+'use server'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { Dropbox } from 'dropbox'
 import fetch from 'node-fetch'
+import {
+  DROPBOX_TOKENS,
+  TOKEN_REFRESH,
+} from '@/app/(frontend)/(aet-app)/utils/dropbox/config.server'
 
-const TOKENS = {
-  AET_App: {
-    refreshToken: process.env.DROPBOX_AET_App_REFRESH_TOKEN,
-    appKey: process.env.DROPBOX_AET_App_KEY,
-    appSecret: process.env.DROPBOX_AET_App_SECRET,
-    namespaceId: process.env.DROPBOX_AET_App_NAMESPACE_ID,
-    basePath: '/Team Files/WebsitesDev', // Base path for AET App
-  },
-  AET_App_East: {
-    refreshToken: process.env.DROPBOX_AET_App_East_REFRESH_TOKEN,
-    appKey: process.env.DROPBOX_AET_App_East_KEY,
-    appSecret: process.env.DROPBOX_AET_App_East_SECRET,
-    namespaceId: process.env.DROPBOX_AET_App_East_NAMESPACE_ID,
-    basePath: '/WebsitesDev', // Base path for AET App East
-  },
+async function getAccessToken(tokenType: 'AET_App' | 'AET_App_East') {
+  const { refreshToken, appKey, appSecret } = DROPBOX_TOKENS[tokenType]
+
+  try {
+    const token = await refreshAccessToken(refreshToken, appKey, appSecret)
+    console.log(`success to get access token (${tokenType})`)
+    return token
+  } catch (error) {
+    console.error('failed to get access token:', error)
+    throw error
+  }
 }
 
-async function refreshAccessToken(refreshToken: string, appKey: string, appSecret: string) {
+async function refreshAccessToken(
+  refreshToken: string | undefined,
+  appKey: string | undefined,
+  appSecret: string | undefined
+) {
   try {
-    const response = await fetch('https://api.dropbox.com/oauth2/token', {
+    if (!refreshToken || !appKey || !appSecret) {
+      throw new Error(
+        'Refresh token or app key or app secret is undefined: \n' +
+          JSON.stringify({ refreshToken, appKey, appSecret })
+      )
+    }
+
+    const response = await fetch(TOKEN_REFRESH.DROPBOX_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -36,14 +49,18 @@ async function refreshAccessToken(refreshToken: string, appKey: string, appSecre
 
     if (!response.ok) {
       const errorData = await response.text()
-      throw new Error(`Failed to refresh token: ${response.status} ${errorData}`)
+      throw new Error(`failed to refresh token: ${response.status} ${errorData}`)
     }
 
-    const data = (await response.json()) as { access_token: string }
-    console.log('data', data)
+    const data = (await response.json()) as {
+      access_token: string
+      expires_in: number
+      token_type: string
+    }
+
     return data.access_token
   } catch (error) {
-    console.error('Error refreshing access token:', error)
+    console.error('failed to refresh access token:', error)
     throw error
   }
 }
@@ -70,28 +87,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    const { refreshToken, appKey, appSecret, namespaceId, basePath } = TOKENS[tokenType]
+    const { namespaceId, basePath } = DROPBOX_TOKENS[tokenType]
 
-    if (!refreshToken || !appKey || !appSecret) {
+    if (!namespaceId || !basePath) {
       throw new Error(
-        'Dropbox credentials configuration is incomplete: \n' + JSON.stringify(TOKENS[tokenType])
+        'Dropbox config is incomplete: \n' + JSON.stringify(DROPBOX_TOKENS[tokenType])
       )
     }
 
-    let currentAccessToken
-    try {
-      currentAccessToken = await refreshAccessToken(refreshToken, appKey, appSecret)
-      console.log('success to get access token')
-    } catch (refreshError) {
-      console.error('failed to get access token:', refreshError)
-      throw refreshError
-    }
+    const accessToken = await getAccessToken(tokenType)
 
     const folderPath = `${basePath}/${officeName}`
     const buffer = await file.arrayBuffer()
     const path = `${folderPath}/${file.name}`
 
-    const dbx = createDropboxClient(currentAccessToken, namespaceId!)
+    const dbx = createDropboxClient(accessToken, namespaceId)
 
     try {
       await dbx.filesUpload({
