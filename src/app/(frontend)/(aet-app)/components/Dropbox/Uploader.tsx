@@ -1,22 +1,14 @@
 'use client'
 import { useState, useRef, DragEvent } from 'react'
 import type { Office } from '../OfficeSelector'
-
-const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf', '.doc', '.docx']
-
-// define the status styles
-const STATUS_STYLES = {
-  pending: 'text-gray-500',
-  uploading: 'text-blue-500',
-  success: 'text-green-600',
-  failed: 'text-red-600',
-  cancelled: 'text-orange-500',
-} as const
+import {
+  MAX_FILE_SIZE,
+  ALLOWED_TYPES,
+  STATUS_STYLES,
+  AET_APP_EAST_OFFICES,
+} from '../../utils/dropbox/config.client'
 
 type UploadStatus = keyof typeof STATUS_STYLES
-
-const AET_APP_EAST_OFFICES = ['boston', 'newyork']
 
 interface DropboxUploaderProps {
   office: Office
@@ -123,7 +115,7 @@ export default function DropboxUploader({ office }: DropboxUploaderProps) {
               signal: controller.signal,
             })
 
-            const result = await response.json()
+            // const result = await response.json()
 
             setProgress((prev) => ({
               ...prev,
