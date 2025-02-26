@@ -2,13 +2,14 @@
 
 ## TODO
 
-- [ ] CRM Loading issue: it is about auth...
+- [x] CRM Loading issue:
+      Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
 - [ ] feat: we can change the payment price for every order (bufore payment) in admin panel
 - [ ] Dropbox refresh token
 - [ ] Email sending
 - [ ] clean up payment code!!!
-- [ ] Add 'payment_amount' in supabase
-- [ ] Add 'office' in supabase
+- [x] Add 'payment_amount' in supabase
+- [x] Add 'office' in supabase
 - [ ] Add CHECK for database update or insert!!! (like, only if it is Processing, we can change the office or payment_amount )
 
 ## Features
