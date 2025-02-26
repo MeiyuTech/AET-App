@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   ColumnDef,
@@ -307,7 +308,15 @@ export function ApplicationsTable() {
       header: 'ID',
       cell: ({ row }) => {
         const id = row.getValue('id') as string
-        return id
+        return (
+          <Link
+            href={`../status?applicationId=${id}`}
+            target="_blank"
+            className="text-blue-500 hover:underline"
+          >
+            {id}
+          </Link>
+        )
       },
     },
     {
