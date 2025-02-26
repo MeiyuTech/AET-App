@@ -109,6 +109,22 @@ export function ApplicationsTable() {
 
   const handleOfficeChange = async (id: string, office: string | null) => {
     try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const status = application.status
+      if (status !== 'submitted') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Only applications with status "Submitted" can be updated.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       const { error } = await supabase.from('fce_applications').update({ office }).eq('id', id)
 
       if (error) throw error
@@ -132,6 +148,23 @@ export function ApplicationsTable() {
 
   const handleDueAmountChange = async (id: string, due_amount: number | null) => {
     try {
+      // 查找当前应用并检查状态
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const status = application.status
+      if (status !== 'submitted') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Only applications with status "Submitted" can be updated.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       const { error } = await supabase.from('fce_applications').update({ due_amount }).eq('id', id)
 
       if (error) throw error
@@ -234,31 +267,36 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const office = row.getValue('office') as string | null
+        const status = row.getValue('status') as string
+        const isEditable = status === 'submitted' || status === 'processing'
+
         return (
           <div className="flex items-center">
             <span className="mr-2">{office || 'N/A'}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Set Office</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
-                  <DropdownMenuItem
-                    key={city}
-                    onClick={() => handleOfficeChange(row.original.id, city)}
-                  >
-                    {city}
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Set Office</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
+                    <DropdownMenuItem
+                      key={city}
+                      onClick={() => handleOfficeChange(row.original.id, city)}
+                    >
+                      {city}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
+                    Clear
                   </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
-                  Clear
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
         )
@@ -441,72 +479,74 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const dueAmount = row.getValue('due_amount') as number | null
+        const status = row.getValue('status') as string
+        const isEditable = status === 'submitted' || status === 'processing'
 
         return (
           <div className="flex items-center">
             <span className="mr-2">{dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Set Due Amount</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <div className="px-2 py-1.5">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      const form = e.target as HTMLFormElement
-                      const input = form.elements.namedItem('amount') as HTMLInputElement
-                      const amount = parseFloat(input.value)
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Set Due Amount</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1.5">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        const form = e.target as HTMLFormElement
+                        const input = form.elements.namedItem('amount') as HTMLInputElement
+                        const amount = parseFloat(input.value)
 
-                      if (!isNaN(amount) && amount >= 0) {
-                        // 4 digits for the integer part and 2 digits for the decimal part
-                        const limitedAmount = Math.min(9999.99, Math.round(amount * 100) / 100)
+                        if (!isNaN(amount) && amount >= 0) {
+                          // 4 digits for the integer part and 2 digits for the decimal part
+                          const limitedAmount = Math.min(9999.99, Math.round(amount * 100) / 100)
 
-                        // 设置待确认的金额并打开确认对话框
-                        setPendingDueAmount({
-                          id: row.original.id,
-                          amount: limitedAmount,
-                        })
-                        setConfirmDialogOpen(true)
-                      }
+                          setPendingDueAmount({
+                            id: row.original.id,
+                            amount: limitedAmount,
+                          })
+                          setConfirmDialogOpen(true)
+                        }
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <span className="mr-1">$</span>
+                        <Input
+                          name="amount"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          max="9999.99"
+                          defaultValue={dueAmount !== null ? dueAmount.toString() : ''}
+                          placeholder="0.00"
+                          className="w-28"
+                        />
+                        <Button type="submit" size="sm" className="ml-2">
+                          Save
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPendingDueAmount({
+                        id: row.original.id,
+                        amount: null,
+                      })
+                      setConfirmDialogOpen(true)
                     }}
                   >
-                    <div className="flex items-center">
-                      <span className="mr-1">$</span>
-                      <Input
-                        name="amount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        max="9999.99"
-                        defaultValue={dueAmount !== null ? dueAmount.toString() : ''}
-                        placeholder="0.00"
-                        className="w-28"
-                      />
-                      <Button type="submit" size="sm" className="ml-2">
-                        Save
-                      </Button>
-                    </div>
-                  </form>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    // 对于清除操作也添加确认
-                    setPendingDueAmount({
-                      id: row.original.id,
-                      amount: null,
-                    })
-                    setConfirmDialogOpen(true)
-                  }}
-                >
-                  Clear
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                    Clear
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
         )
