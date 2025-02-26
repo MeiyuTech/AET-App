@@ -4,32 +4,60 @@ import fetch from 'node-fetch'
 
 const TOKENS = {
   AET_App: {
-    accessToken: process.env.DROPBOX_AET_App_ACCESS_TOKEN,
+    refreshToken: process.env.DROPBOX_AET_App_REFRESH_TOKEN,
+    appKey: process.env.DROPBOX_AET_App_KEY,
+    appSecret: process.env.DROPBOX_AET_App_SECRET,
     namespaceId: process.env.DROPBOX_AET_App_NAMESPACE_ID,
     basePath: '/Team Files/WebsitesDev', // Base path for AET App
   },
   AET_App_East: {
-    accessToken: process.env.DROPBOX_AET_App_East_ACCESS_TOKEN,
+    refreshToken: process.env.DROPBOX_AET_App_East_REFRESH_TOKEN,
+    appKey: process.env.DROPBOX_AET_App_East_KEY,
+    appSecret: process.env.DROPBOX_AET_App_East_SECRET,
     namespaceId: process.env.DROPBOX_AET_App_East_NAMESPACE_ID,
     basePath: '/WebsitesDev', // Base path for AET App East
   },
 }
 
-const dbx = new Dropbox({
-  accessToken: process.env.DROPBOX_AET_App_East_ACCESS_TOKEN,
-  // The Dropbox SDK requires a fetch implementation for making HTTP requests.
-  // In a browser environment, fetch is globally available.
-  // However, in a Node.js environment (where Next.js API routes run on the server),
-  // we need to explicitly provide a fetch implementation.
-  // By using node-fetch and passing it to the Dropbox SDK, we can resolve this issue.
-  // This will allow us to properly configure the Dropbox access token.
-  fetch: fetch,
-  // Add the pathRoot parameter to specify the namespace ID
-  pathRoot: JSON.stringify({
-    '.tag': 'namespace_id',
-    namespace_id: process.env.DROPBOX_AET_App_East_NAMESPACE_ID,
-  }),
-})
+async function refreshAccessToken(refreshToken: string, appKey: string, appSecret: string) {
+  try {
+    const response = await fetch('https://api.dropbox.com/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token',
+        client_id: appKey,
+        client_secret: appSecret,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.text()
+      throw new Error(`Failed to refresh token: ${response.status} ${errorData}`)
+    }
+
+    const data = (await response.json()) as { access_token: string }
+    console.log('data', data)
+    return data.access_token
+  } catch (error) {
+    console.error('Error refreshing access token:', error)
+    throw error
+  }
+}
+
+function createDropboxClient(accessToken: string, namespaceId: string | null) {
+  return new Dropbox({
+    accessToken: accessToken,
+    fetch: fetch,
+    pathRoot: JSON.stringify({
+      '.tag': 'namespace_id',
+      namespace_id: namespaceId,
+    }),
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,41 +70,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    const { accessToken, namespaceId, basePath } = TOKENS[tokenType]
+    const { refreshToken, appKey, appSecret, namespaceId, basePath } = TOKENS[tokenType]
 
-    // Create folder path based on office
-    const folderPath = `${basePath}/${officeName}`
-
-    // Ensure token exists
-    if (!accessToken) {
-      throw new Error('Dropbox access token is not configured')
+    if (!refreshToken || !appKey || !appSecret) {
+      throw new Error(
+        'Dropbox credentials configuration is incomplete: \n' + JSON.stringify(TOKENS[tokenType])
+      )
     }
 
+    let currentAccessToken
+    try {
+      currentAccessToken = await refreshAccessToken(refreshToken, appKey, appSecret)
+      console.log('success to get access token')
+    } catch (refreshError) {
+      console.error('failed to get access token:', refreshError)
+      throw refreshError
+    }
+
+    const folderPath = `${basePath}/${officeName}`
     const buffer = await file.arrayBuffer()
-    // Use the correct path in team space
     const path = `${folderPath}/${file.name}`
 
-    // Create a new Dropbox instance with the correct token and namespace
-    const currentDbx = new Dropbox({
-      accessToken: accessToken,
-      fetch: fetch,
-      pathRoot: JSON.stringify({
-        '.tag': 'namespace_id',
-        namespace_id: namespaceId,
-      }),
-    })
+    const dbx = createDropboxClient(currentAccessToken, namespaceId!)
 
     try {
-      await currentDbx.filesUpload({
+      await dbx.filesUpload({
         path: path,
         contents: buffer,
         mode: { '.tag': 'add' },
-        // Auto-rename the file if it already exists (but the content is different)
         autorename: true,
         client_modified: new Date().toISOString().split('.')[0] + 'Z',
       })
     } catch (uploadError) {
-      // Add detailed error information
       console.error('Detailed upload error:', {
         error: uploadError,
         errorMessage: uploadError.message,
