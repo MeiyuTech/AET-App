@@ -302,18 +302,6 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   </div>
                 )}
               </dl>
-
-              {/* Add payment button if not paid */}
-              {application.payment_status !== 'paid' && (
-                <div className="mt-4">
-                  <button
-                    onClick={handlePayment}
-                    className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-                  >
-                    Proceed to Payment
-                  </button>
-                </div>
-              )}
             </CardContent>
           </Card>
 
@@ -325,7 +313,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
             application.office && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Upload Documents</CardTitle>
+                  <CardTitle>Upload Documents to {application.office} Office</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
@@ -618,6 +606,18 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   * Actual price may vary. We will provide an official quote based on your specific
                   situation.
                 </div>
+
+                {/* Add payment button if not paid */}
+                {application.payment_status !== 'paid' && (
+                  <div className="mt-4">
+                    <button
+                      onClick={handlePayment}
+                      className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                    >
+                      Proceed to Payment
+                    </button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

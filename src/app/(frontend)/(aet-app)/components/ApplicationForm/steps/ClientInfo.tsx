@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { Country, State } from 'country-state-city'
+import { State } from 'country-state-city'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
@@ -17,14 +17,6 @@ import { FormData } from '../types'
 
 export function ClientInfo() {
   const form = useFormContext<FormData>()
-  const countries = useMemo(
-    () =>
-      Country.getAllCountries().map((country) => ({
-        value: country.isoCode,
-        label: country.name,
-      })),
-    []
-  )
 
   // Get selected country
   const selectedCountry = form.watch('country')
