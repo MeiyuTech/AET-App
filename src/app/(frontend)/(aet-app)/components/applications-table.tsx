@@ -219,12 +219,15 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
       if (
         newStatus === 'cancelled' &&
-        !(currentStatus === 'processing' || currentStatus === 'submitted')
+        !(
+          (currentStatus === 'processing' && paymentStatus !== 'paid') ||
+          currentStatus === 'submitted'
+        )
       ) {
         toast({
           title: 'Operation not allowed',
           description:
-            'Only applications with status "Processing" or "Submitted" can be cancelled.',
+            'Only applications with status "Submitted" or "Processing" (if not paid) can be cancelled.',
           variant: 'destructive',
         })
         return
@@ -571,7 +574,8 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
         // Determine which status changes are allowed
         const canComplete = status === 'processing' && paymentStatus === 'paid'
-        const canCancel = status === 'processing' || status === 'submitted'
+        const canCancel =
+          (status === 'processing' && paymentStatus !== 'paid') || status === 'submitted'
         const isEditable = canComplete || canCancel
 
         return (
