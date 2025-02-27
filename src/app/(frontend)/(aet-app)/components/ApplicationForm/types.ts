@@ -22,7 +22,7 @@ export interface FormDraft {
 // Re-export EducationSchema type
 export type { EducationSchema }
 
-// 添加数据库格式的类型定义
+// Add database format type definition
 export interface DatabaseApplication {
   id: string
   status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
@@ -39,6 +39,7 @@ export interface DatabaseApplication {
   phone: string
   fax: string | null
   email: string
+  office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
   purpose: 'immigration' | 'employment' | 'education' | 'other'
   purpose_other: string | null
 
@@ -50,7 +51,7 @@ export interface DatabaseApplication {
   date_of_birth: string // ISO format date
 
   // Service Selection
-  service_type: FormData['serviceType'] // 使用相同的类型
+  service_type: FormData['serviceType'] // use same type
   delivery_method: string
   additional_services: string[]
   additional_services_quantity: {

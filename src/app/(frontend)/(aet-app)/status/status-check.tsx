@@ -5,7 +5,6 @@ import { useToast } from '@/hooks/use-toast'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Uploader from '../components/Dropbox/Uploader'
-import { Office } from '../components/OfficeSelector'
 import {
   PURPOSE_OPTIONS,
   PRONOUN_OPTIONS,
@@ -24,7 +23,6 @@ interface ApplicationData extends Partial<FormData> {
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null
-  office: string
   additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
   additionalServicesQuantity: {
     extra_copy: number

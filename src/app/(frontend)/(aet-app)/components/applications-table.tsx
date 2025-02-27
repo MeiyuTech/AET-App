@@ -137,7 +137,16 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       if (error) throw error
 
       // Update local state
-      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, office } : app)))
+      setApplications((apps) =>
+        apps.map((app) =>
+          app.id === id
+            ? {
+                ...app,
+                office: office as 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami',
+              }
+            : app
+        )
+      )
 
       toast({
         title: 'Office updated',
