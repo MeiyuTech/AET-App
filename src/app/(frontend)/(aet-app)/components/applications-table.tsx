@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '../utils/supabase/client'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -112,7 +112,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     currentStatus: string
   } | null>(null)
   const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   const handleOfficeChange = async (id: string, office: string | null) => {
     try {
