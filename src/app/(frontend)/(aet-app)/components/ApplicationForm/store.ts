@@ -26,12 +26,8 @@ interface FormState {
   setDraftId: (id: string) => void
   setStatus: (status: 'draft' | 'submitted' | null) => void
 
-  // Save draft to local storage (handled automatically by persist)
-  saveDraft: () => void
   // Submit final form
   submitForm: () => Promise<{ success: boolean; applicationId: string } | undefined>
-  // Load draft from local storage (handled automatically by persist)
-  loadDraft: () => void
 
   // Add reset action
   resetForm: () => void
@@ -115,11 +111,6 @@ export const useFormStore = create<FormState>()(
 
       setStatus: (status) => set({ status }),
 
-      saveDraft: () => {
-        // No implementation needed - persist middleware handles saving to localStorage
-        // This is kept as a no-op function for API compatibility
-      },
-
       submitForm: async () => {
         const state = get()
         set({ isLoading: true })
@@ -144,11 +135,6 @@ export const useFormStore = create<FormState>()(
         } finally {
           set({ isLoading: false })
         }
-      },
-
-      loadDraft: () => {
-        // No implementation needed - persist middleware handles loading from localStorage
-        // This is kept as a no-op function for API compatibility
       },
 
       resetForm: () => {

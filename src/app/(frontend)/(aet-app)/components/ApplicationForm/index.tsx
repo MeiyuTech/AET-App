@@ -59,10 +59,10 @@ export default function FCEForm() {
     fax: '',
     phone: '',
     email: '',
-    office: 'Miami',
-    purpose: 'immigration',
+    office: undefined,
+    purpose: undefined,
     purposeOther: '',
-    pronouns: 'mr',
+    pronouns: undefined,
     firstName: '',
     lastName: '',
     middleName: '',
@@ -134,19 +134,19 @@ export default function FCEForm() {
     if (formData && Object.keys(formData).length > 0) {
       form.reset(formData as FormData)
     }
-    // 空依赖数组，只在组件挂载时执行一次
-  }, []) // 移除依赖项，避免循环
+    // empty dependency array, only run once on mount
+  }, []) // remove dependencies to avoid loop
 
   // Update Zustand store when form values change
   useEffect(() => {
     const subscription = form.watch((value) => {
-      // 添加深度比较，避免相同值导致的不必要更新
+      // add deep comparison to avoid unnecessary updates with same values
       if (JSON.stringify(value) !== JSON.stringify(formData)) {
         setFormData(value as Partial<FormData>)
       }
     })
     return () => subscription.unsubscribe()
-  }, [form, setFormData]) // 移除form.watch和formData依赖
+  }, [form, setFormData]) // remove form.watch and formData dependencies
 
   // Render component based on current step
   const renderStep = () => {
@@ -259,6 +259,7 @@ export default function FCEForm() {
 
         // Redirect to checkout page with applicationId
         // router.push(`/checkout?applicationId=${result.applicationId}`)
+        router.push(`/status?applicationId=${result.applicationId}`)
       }
     } catch (error) {
       console.error('Submission error:', error)
@@ -300,17 +301,6 @@ export default function FCEForm() {
       title: 'Form Reset',
       description: 'You can start filling out the application again',
       variant: 'destructive',
-    })
-  }
-
-  // Add complete handler
-  const handleComplete = () => {
-    console.log('Form complete')
-    resetFormState()
-    toast({
-      title: 'Submitted Successfully',
-      description: 'Your message has been sent successfully.',
-      className: 'text-teal-400',
     })
   }
 

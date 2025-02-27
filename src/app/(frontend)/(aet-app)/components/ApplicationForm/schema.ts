@@ -6,8 +6,8 @@ dayjs.extend(customParseFormat)
 
 const educationSchema = z.object({
   countryOfStudy: z.string({ required_error: 'Please enter country of study' }),
-  degreeObtained: z.string().min(1, { message: 'Please enter the degree obtained' }),
-  schoolName: z.string().min(1, { message: 'Please enter school name' }),
+  degreeObtained: z.string().optional(),
+  schoolName: z.string().optional(),
   studyDuration: z
     .object({
       startDate: z.object({
@@ -19,40 +19,7 @@ const educationSchema = z.object({
         year: z.string({ required_error: 'Please select end year' }),
       }),
     })
-    .superRefine((data, ctx) => {
-      const { startDate, endDate } = data
-      if (!startDate.year || !startDate.month) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Please select start date',
-          path: ['startDate', 'year'],
-        })
-      }
-
-      if (!endDate.year || !endDate.month) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Please select end date',
-          path: ['endDate', 'year'],
-        })
-      }
-
-      const start = dayjs(`${startDate.year}-${startDate.month}-01`)
-      const end = dayjs(`${endDate.year}-${endDate.month}-01`)
-
-      if (end.isBefore(start) || end.isSame(start)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Graduation date must be after enrollment date',
-          path: ['endDate', 'year'],
-        })
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Graduation date must be after enrollment date',
-          path: ['endDate', 'month'],
-        })
-      }
-    }),
+    .optional(),
 })
 
 // Define speed options and their display values
@@ -154,16 +121,19 @@ export const formSchema = z.object({
       }
     }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
-  office: z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami'], {
-    required_error: 'Please select office',
-  }),
-  purpose: z.enum(['immigration', 'employment', 'education', 'other'], {
+  office: z.union(
+    [z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami']), z.undefined()],
+    {
+      required_error: 'Please select office',
+    }
+  ),
+  purpose: z.union([z.enum(['immigration', 'employment', 'education', 'other']), z.undefined()], {
     required_error: 'Please select evaluation purpose',
   }),
   purposeOther: z.string().optional(),
 
   // 2. EVALUEE INFORMATION
-  pronouns: z.enum(['mr', 'ms', 'mx'], {
+  pronouns: z.union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
     required_error: 'Please select your pronouns',
   }),
   firstName: z
@@ -213,7 +183,7 @@ export const formSchema = z.object({
     }),
 
   // New education array field
-  educations: z.array(educationSchema).min(1, { message: 'At least one degree is required' }),
+  educations: z.array(educationSchema).optional(),
 
   // 3. SERVICE SELECTION
   serviceType: serviceTypeSchema,
