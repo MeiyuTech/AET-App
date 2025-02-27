@@ -230,14 +230,16 @@ export async function submitFCEApplication(formData: FormData) {
     }
 
     // Insert education records
-    const educationPromises = formData.educations!.map((education) =>
+    const educationPromises = formData.educations?.map((education) =>
       client.from('fce_educations').insert({
         application_id: application.id,
         ...formatUtils.toEducationDatabase(education),
       })
     )
 
-    await Promise.all(educationPromises)
+    if (educationPromises) {
+      await Promise.all(educationPromises)
+    }
 
     // Send confirmation email using the new email content generator
     await sendEmail({
