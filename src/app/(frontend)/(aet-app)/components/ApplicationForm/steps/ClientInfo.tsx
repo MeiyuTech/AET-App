@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { PURPOSE_OPTIONS, COUNTRIES, getRegionLabel } from '../constants'
+import { PURPOSE_OPTIONS, OFFICE_OPTIONS, COUNTRIES, getRegionLabel } from '../constants'
 import { FormData } from '../types'
 
 export function ClientInfo() {
@@ -253,6 +253,29 @@ export function ClientInfo() {
           )}
         />
       </div>
+
+      <FormField
+        control={form.control}
+        name="office"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Office</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select purpose" />
+              </SelectTrigger>
+              <SelectContent>
+                {OFFICE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       <FormField
         control={form.control}

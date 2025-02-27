@@ -1,12 +1,11 @@
 'use server'
 
+import fetch from 'node-fetch'
 import { NextRequest, NextResponse } from 'next/server'
 import { Dropbox } from 'dropbox'
-import fetch from 'node-fetch'
-import {
-  DROPBOX_TOKENS,
-  TOKEN_REFRESH,
-} from '@/app/(frontend)/(aet-app)/utils/dropbox/config.server'
+
+import { DROPBOX_TOKENS, TOKEN_REFRESH } from '../../../utils/dropbox/config.server'
+import { getOfficeTokenType } from '../../../utils/dropbox/config.client'
 
 async function getAccessToken(tokenType: 'AET_App' | 'AET_App_East') {
   const { refreshToken, appKey, appSecret } = DROPBOX_TOKENS[tokenType]
@@ -80,8 +79,8 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
-    const tokenType = formData.get('tokenType') as 'AET_App' | 'AET_App_East'
     const officeName = formData.get('officeName') as string
+    const tokenType = getOfficeTokenType(officeName)
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })

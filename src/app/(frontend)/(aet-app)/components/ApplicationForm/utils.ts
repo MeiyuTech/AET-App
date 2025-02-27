@@ -101,6 +101,7 @@ export const formatUtils = {
       phone: formData.phone!,
       fax: formData.fax || null,
       email: formData.email!,
+      office: formData.office!,
       purpose: formData.purpose!,
       purpose_other: formData.purposeOther || null,
       country: formData.country!,

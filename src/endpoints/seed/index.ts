@@ -51,18 +51,18 @@ export const seed = async ({
         context: {
           disableRevalidate: true,
         },
-      }),
-    ),
+      })
+    )
   )
 
   await Promise.all(
-    collections.map((collection) => payload.db.deleteMany({ collection, req, where: {} })),
+    collections.map((collection) => payload.db.deleteMany({ collection, req, where: {} }))
   )
 
   await Promise.all(
     collections
       .filter((collection) => Boolean(payload.collections[collection].config.versions))
-      .map((collection) => payload.db.deleteVersions({ collection, req, where: {} })),
+      .map((collection) => payload.db.deleteVersions({ collection, req, where: {} }))
   )
 
   payload.logger.info(`— Seeding demo author and user...`)
@@ -81,16 +81,16 @@ export const seed = async ({
 
   const [image1Buffer, image2Buffer, image3Buffer, hero1Buffer] = await Promise.all([
     fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post1.webp',
+      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post1.webp'
     ),
     fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post2.webp',
+      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post2.webp'
     ),
     fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post3.webp',
+      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-post3.webp'
     ),
     fetchFileByURL(
-      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-hero1.webp',
+      'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/main/templates/website/src/endpoints/seed/image-hero1.webp'
     ),
   ])
 
@@ -207,7 +207,7 @@ export const seed = async ({
       JSON.stringify({ ...post1, categories: [technologyCategory.id] })
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image1ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
+        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID))
     ),
   })
 
@@ -221,7 +221,7 @@ export const seed = async ({
       JSON.stringify({ ...post2, categories: [newsCategory.id] })
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image2ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image3ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
+        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID))
     ),
   })
 
@@ -235,7 +235,7 @@ export const seed = async ({
       JSON.stringify({ ...post3, categories: [financeCategory.id] })
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image3ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image1ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
+        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID))
     ),
   })
 
@@ -285,17 +285,14 @@ export const seed = async ({
       data: JSON.parse(
         JSON.stringify(home)
           .replace(/"\{\{IMAGE_1\}\}"/g, String(imageHomeID))
-          .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID)),
+          .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID))
       ),
     }),
     payload.create({
       collection: 'pages',
       depth: 0,
       data: JSON.parse(
-        JSON.stringify(contactPageData).replace(
-          /"\{\{CONTACT_FORM_ID\}\}"/g,
-          String(contactFormID),
-        ),
+        JSON.stringify(contactPageData).replace(/"\{\{CONTACT_FORM_ID\}\}"/g, String(contactFormID))
       ),
     }),
   ])

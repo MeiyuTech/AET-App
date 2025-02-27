@@ -9,4 +9,19 @@ export const STATUS_STYLES = {
   cancelled: 'text-orange-500',
 } as const
 
-export const AET_APP_EAST_OFFICES = ['boston', 'newyork']
+export function getOfficeTokenType(officeName: string) {
+  switch (officeName) {
+    case 'Boston':
+      return 'AET_App_East'
+    case 'New York':
+      return 'AET_App_East'
+    case 'San Francisco':
+      return 'AET_App'
+    case 'Los Angeles':
+      return 'AET_App'
+    case 'Miami':
+      return 'AET_App'
+    default:
+      throw new Error(`Invalid office name: ${officeName}`)
+  }
+}
