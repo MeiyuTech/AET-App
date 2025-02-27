@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Uploader from '../components/Dropbox/Uploader'
+import { Office } from '../components/OfficeSelector'
 import {
   PURPOSE_OPTIONS,
   PRONOUN_OPTIONS,
@@ -22,6 +24,7 @@ interface ApplicationData extends Partial<FormData> {
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null
+  office: Office
   additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
   additionalServicesQuantity: {
     extra_copy: number
@@ -316,6 +319,25 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
             </CardContent>
           </Card>
 
+          {/* File Upload Section 
+          - only show when status is submitted or processing and office is not null
+          */}
+          {application.status &&
+            ['submitted', 'processing'].includes(application.status.toLowerCase()) &&
+            application.office && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Upload Documents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    You can upload additional documents related to your application here.
+                  </p>
+                  <Uploader office={application.office} />
+                </CardContent>
+              </Card>
+            )}
+
           {/* Client Information */}
           <Card>
             <CardHeader>
@@ -574,7 +596,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       const service = ADDITIONAL_SERVICES[serviceId]
                       if (service) {
                         if (serviceId === 'extra_copy' && 'quantity' in service) {
-                          // 只处理 extra_copy 的数量
+                          // only handle extra_copy quantity
                           const quantity = application.additionalServicesQuantity.extra_copy
                           return (
                             <div key={serviceId}>
