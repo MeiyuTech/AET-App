@@ -1,18 +1,12 @@
 'use client'
 
 import { useState, useRef, DragEvent } from 'react'
-import type { Office } from '../OfficeSelector'
-import {
-  MAX_FILE_SIZE,
-  ALLOWED_TYPES,
-  STATUS_STYLES,
-  AET_APP_EAST_OFFICES,
-} from '../../utils/dropbox/config.client'
+import { MAX_FILE_SIZE, ALLOWED_TYPES, STATUS_STYLES } from '../../utils/dropbox/config.client'
 
 type UploadStatus = keyof typeof STATUS_STYLES
 
 interface DropboxUploaderProps {
-  office: Office
+  office: string
 }
 
 export default function DropboxUploader({ office }: DropboxUploaderProps) {
@@ -91,14 +85,7 @@ export default function DropboxUploader({ office }: DropboxUploaderProps) {
           formData.append('file', file)
 
           // Add office information
-          formData.append('officeId', office.id)
-          formData.append('officeName', office.name)
-
-          // Determine token type based on office ID
-          formData.append(
-            'tokenType',
-            AET_APP_EAST_OFFICES.includes(office.id) ? 'AET_App_East' : 'AET_App'
-          )
+          formData.append('officeName', office)
 
           // Create new AbortController for this upload
           const controller = new AbortController()

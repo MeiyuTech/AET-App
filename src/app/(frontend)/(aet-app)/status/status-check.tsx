@@ -24,7 +24,7 @@ interface ApplicationData extends Partial<FormData> {
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null
-  office: Office
+  office: string
   additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
   additionalServicesQuantity: {
     extra_copy: number

@@ -10,7 +10,7 @@ export default function DropboxUploadForm() {
   return (
     <div className="space-y-6">
       <OfficeSelector selectedOffice={selectedOffice} onOfficeSelect={setSelectedOffice} />
-      {selectedOffice && <DropboxUploader office={selectedOffice} />}
+      {selectedOffice && <DropboxUploader office={selectedOffice.name} />}
     </div>
   )
 }
