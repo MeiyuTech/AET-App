@@ -106,6 +106,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     id: string
     amount: number | null
   } | null>(null)
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    id: string
+    status: string
+    currentStatus: string
+  } | null>(null)
+  const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
   const supabase = createClientComponentClient()
 
   const handleOfficeChange = async (id: string, office: string | null) => {
@@ -183,6 +189,99 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         description: 'Could not update the due amount. Please try again.',
         variant: 'destructive',
       })
+    }
+  }
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const currentStatus = application.status
+      const paymentStatus = application.payment_status
+
+      // Validate status change based on the rules
+      if (
+        newStatus === 'completed' &&
+        !(currentStatus === 'processing' && paymentStatus === 'paid')
+      ) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Processing" and payment status "Paid" can be completed.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      if (
+        newStatus === 'cancelled' &&
+        !(currentStatus === 'processing' || currentStatus === 'submitted')
+      ) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Processing" or "Submitted" can be cancelled.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Open confirmation dialog
+      setPendingStatusChange({
+        id,
+        status: newStatus,
+        currentStatus,
+      })
+      setStatusConfirmDialogOpen(true)
+    } catch (error) {
+      console.error('Error preparing status change:', error)
+      toast({
+        title: 'Operation failed',
+        description: 'Could not prepare the status change. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const confirmStatusChange = async () => {
+    if (!pendingStatusChange) return
+
+    try {
+      const { id, status } = pendingStatusChange
+
+      const { error } = await supabase.from('fce_applications').update({ status }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) =>
+        apps.map((app) =>
+          app.id === id
+            ? {
+                ...app,
+                status: status as 'completed' | 'cancelled' | 'draft' | 'submitted' | 'processing',
+              }
+            : app
+        )
+      )
+
+      toast({
+        title: 'Status updated',
+        description: `Application status has been changed to ${status}.`,
+      })
+    } catch (error) {
+      console.error('Error updating status:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the status. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setPendingStatusChange(null)
     }
   }
 
@@ -466,11 +565,48 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
           </Button>
         )
       },
-      cell: ({ row }) => (
-        <div className={`capitalize font-medium ${getStatusColor(row.getValue('status'))}`}>
-          {row.getValue('status')}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const status = row.getValue('status') as string
+        const paymentStatus = row.getValue('payment_status') as string
+
+        // Determine which status changes are allowed
+        const canComplete = status === 'processing' && paymentStatus === 'paid'
+        const canCancel = status === 'processing' || status === 'submitted'
+        const isEditable = canComplete || canCancel
+
+        return (
+          <div className="flex items-center">
+            <div className={`capitalize font-medium mr-2 ${getStatusColor(status)}`}>{status}</div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
+                </Button>
+              </DropdownMenuTrigger>
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {canComplete && (
+                    <DropdownMenuItem
+                      onClick={() => handleStatusChange(row.original.id, 'completed')}
+                    >
+                      Mark as Completed
+                    </DropdownMenuItem>
+                  )}
+                  {canCancel && (
+                    <DropdownMenuItem
+                      onClick={() => handleStatusChange(row.original.id, 'cancelled')}
+                    >
+                      Cancel Application
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'due_amount',
@@ -784,6 +920,23 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
             >
               Confirm
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={statusConfirmDialogOpen} onOpenChange={setStatusConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-500">Confirm Status Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change the status from &quot;
+              {pendingStatusChange?.currentStatus}&quot; to &quot;{pendingStatusChange?.status}
+              &quot;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmStatusChange}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
