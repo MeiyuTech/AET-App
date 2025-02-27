@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   ColumnDef,
@@ -90,7 +91,7 @@ function getPaymentStatusColor(status: string) {
   return colors[status as keyof typeof colors] || 'text-gray-600'
 }
 
-export function ApplicationsTable() {
+export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -105,10 +106,32 @@ export function ApplicationsTable() {
     id: string
     amount: number | null
   } | null>(null)
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    id: string
+    status: string
+    currentStatus: string
+  } | null>(null)
+  const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
   const supabase = createClientComponentClient()
 
   const handleOfficeChange = async (id: string, office: string | null) => {
     try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const status = application.status
+      if (status !== 'submitted') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Only applications with status "Submitted" can be updated.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       const { error } = await supabase.from('fce_applications').update({ office }).eq('id', id)
 
       if (error) throw error
@@ -132,6 +155,22 @@ export function ApplicationsTable() {
 
   const handleDueAmountChange = async (id: string, due_amount: number | null) => {
     try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const status = application.status
+      if (status !== 'submitted') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Only applications with status "Submitted" can be updated.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       const { error } = await supabase.from('fce_applications').update({ due_amount }).eq('id', id)
 
       if (error) throw error
@@ -150,6 +189,102 @@ export function ApplicationsTable() {
         description: 'Could not update the due amount. Please try again.',
         variant: 'destructive',
       })
+    }
+  }
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const currentStatus = application.status
+      const paymentStatus = application.payment_status
+
+      // Validate status change based on the rules
+      if (
+        newStatus === 'completed' &&
+        !(currentStatus === 'processing' && paymentStatus === 'paid')
+      ) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Processing" and payment status "Paid" can be completed.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      if (
+        newStatus === 'cancelled' &&
+        !(
+          (currentStatus === 'processing' && paymentStatus !== 'paid') ||
+          currentStatus === 'submitted'
+        )
+      ) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Submitted" or "Processing" (if not paid) can be cancelled.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Open confirmation dialog
+      setPendingStatusChange({
+        id,
+        status: newStatus,
+        currentStatus,
+      })
+      setStatusConfirmDialogOpen(true)
+    } catch (error) {
+      console.error('Error preparing status change:', error)
+      toast({
+        title: 'Operation failed',
+        description: 'Could not prepare the status change. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const confirmStatusChange = async () => {
+    if (!pendingStatusChange) return
+
+    try {
+      const { id, status } = pendingStatusChange
+
+      const { error } = await supabase.from('fce_applications').update({ status }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) =>
+        apps.map((app) =>
+          app.id === id
+            ? {
+                ...app,
+                status: status as 'completed' | 'cancelled' | 'draft' | 'submitted' | 'processing',
+              }
+            : app
+        )
+      )
+
+      toast({
+        title: 'Status updated',
+        description: `Application status has been changed to ${status}.`,
+      })
+    } catch (error) {
+      console.error('Error updating status:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the status. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setPendingStatusChange(null)
     }
   }
 
@@ -234,31 +369,36 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const office = row.getValue('office') as string | null
+        const status = row.getValue('status') as string
+        const isEditable = status === 'submitted' || status === 'processing'
+
         return (
           <div className="flex items-center">
             <span className="mr-2">{office || 'N/A'}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Set Office</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
-                  <DropdownMenuItem
-                    key={city}
-                    onClick={() => handleOfficeChange(row.original.id, city)}
-                  >
-                    {city}
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Set Office</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {['Boston', 'New York', 'Miami', 'San Francisco', 'Los Angeles'].map((city) => (
+                    <DropdownMenuItem
+                      key={city}
+                      onClick={() => handleOfficeChange(row.original.id, city)}
+                    >
+                      {city}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
+                    Clear
                   </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleOfficeChange(row.original.id, null)}>
-                  Clear
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
         )
@@ -269,7 +409,15 @@ export function ApplicationsTable() {
       header: 'ID',
       cell: ({ row }) => {
         const id = row.getValue('id') as string
-        return id
+        return (
+          <Link
+            href={`../status?applicationId=${id}`}
+            target="_blank"
+            className="text-blue-500 hover:underline"
+          >
+            {id}
+          </Link>
+        )
       },
     },
     {
@@ -420,11 +568,49 @@ export function ApplicationsTable() {
           </Button>
         )
       },
-      cell: ({ row }) => (
-        <div className={`capitalize font-medium ${getStatusColor(row.getValue('status'))}`}>
-          {row.getValue('status')}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const status = row.getValue('status') as string
+        const paymentStatus = row.getValue('payment_status') as string
+
+        // Determine which status changes are allowed
+        const canComplete = status === 'processing' && paymentStatus === 'paid'
+        const canCancel =
+          (status === 'processing' && paymentStatus !== 'paid') || status === 'submitted'
+        const isEditable = canComplete || canCancel
+
+        return (
+          <div className="flex items-center">
+            <div className={`capitalize font-medium mr-2 ${getStatusColor(status)}`}>{status}</div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
+                </Button>
+              </DropdownMenuTrigger>
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {canComplete && (
+                    <DropdownMenuItem
+                      onClick={() => handleStatusChange(row.original.id, 'completed')}
+                    >
+                      Mark as Completed
+                    </DropdownMenuItem>
+                  )}
+                  {canCancel && (
+                    <DropdownMenuItem
+                      onClick={() => handleStatusChange(row.original.id, 'cancelled')}
+                    >
+                      Cancel Application
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'due_amount',
@@ -441,72 +627,74 @@ export function ApplicationsTable() {
       },
       cell: ({ row }) => {
         const dueAmount = row.getValue('due_amount') as number | null
+        const status = row.getValue('status') as string
+        const isEditable = status === 'submitted' || status === 'processing'
 
         return (
           <div className="flex items-center">
             <span className="mr-2">{dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="sm" disabled={!isEditable}>
+                  <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Set Due Amount</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <div className="px-2 py-1.5">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      const form = e.target as HTMLFormElement
-                      const input = form.elements.namedItem('amount') as HTMLInputElement
-                      const amount = parseFloat(input.value)
+              {isEditable && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Set Due Amount</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1.5">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        const form = e.target as HTMLFormElement
+                        const input = form.elements.namedItem('amount') as HTMLInputElement
+                        const amount = parseFloat(input.value)
 
-                      if (!isNaN(amount) && amount >= 0) {
-                        // 4 digits for the integer part and 2 digits for the decimal part
-                        const limitedAmount = Math.min(9999.99, Math.round(amount * 100) / 100)
+                        if (!isNaN(amount) && amount >= 0) {
+                          // 4 digits for the integer part and 2 digits for the decimal part
+                          const limitedAmount = Math.min(9999.99, Math.round(amount * 100) / 100)
 
-                        // 设置待确认的金额并打开确认对话框
-                        setPendingDueAmount({
-                          id: row.original.id,
-                          amount: limitedAmount,
-                        })
-                        setConfirmDialogOpen(true)
-                      }
+                          setPendingDueAmount({
+                            id: row.original.id,
+                            amount: limitedAmount,
+                          })
+                          setConfirmDialogOpen(true)
+                        }
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <span className="mr-1">$</span>
+                        <Input
+                          name="amount"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          max="9999.99"
+                          defaultValue={dueAmount !== null ? dueAmount.toString() : ''}
+                          placeholder="0.00"
+                          className="w-28"
+                        />
+                        <Button type="submit" size="sm" className="ml-2">
+                          Save
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPendingDueAmount({
+                        id: row.original.id,
+                        amount: null,
+                      })
+                      setConfirmDialogOpen(true)
                     }}
                   >
-                    <div className="flex items-center">
-                      <span className="mr-1">$</span>
-                      <Input
-                        name="amount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        max="9999.99"
-                        defaultValue={dueAmount !== null ? dueAmount.toString() : ''}
-                        placeholder="0.00"
-                        className="w-28"
-                      />
-                      <Button type="submit" size="sm" className="ml-2">
-                        Save
-                      </Button>
-                    </div>
-                  </form>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    // 对于清除操作也添加确认
-                    setPendingDueAmount({
-                      id: row.original.id,
-                      amount: null,
-                    })
-                    setConfirmDialogOpen(true)
-                  }}
-                >
-                  Clear
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                    Clear
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
         )
@@ -595,7 +783,7 @@ export function ApplicationsTable() {
   })
 
   useEffect(() => {
-    async function fetchApplications() {
+    async function fetchApplications(filter: string) {
       try {
         const { data: applications, error: applicationsError } = await supabase
           .from('fce_applications')
@@ -605,10 +793,10 @@ export function ApplicationsTable() {
             educations:fce_educations(*)
           `
           )
+          .or(filter)
           .order('created_at', { ascending: false })
 
         if (applicationsError) throw applicationsError
-
         setApplications(applications || [])
       } catch (error) {
         console.error('Error fetching applications:', error)
@@ -617,8 +805,24 @@ export function ApplicationsTable() {
       }
     }
 
-    fetchApplications()
-  }, [])
+    // Verify if dataFilter is valid
+    const isValidFilter = (filter: string) => {
+      // Add more complex validation logic here
+      return filter && /^[a-zA-Z0-9.,= ]*$/.test(filter) // Only allow letters, numbers, commas, equals, and spaces
+    }
+
+    if (isValidFilter(dataFilter)) {
+      fetchApplications(dataFilter)
+    } else {
+      console.error('Invalid dataFilter:', dataFilter)
+      // Handle invalid filter conditions, e.g. display a message or do not execute the query
+      toast({
+        title: 'Unauthorized User',
+        description: 'Please login with an authorized user',
+        variant: 'destructive',
+      })
+    }
+  }, [dataFilter, supabase])
 
   if (loading) {
     return <div className="p-4">Loading...</div>
@@ -720,6 +924,23 @@ export function ApplicationsTable() {
             >
               Confirm
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={statusConfirmDialogOpen} onOpenChange={setStatusConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-500">Confirm Status Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change the status from &quot;
+              {pendingStatusChange?.currentStatus}&quot; to &quot;{pendingStatusChange?.status}
+              &quot;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmStatusChange}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
