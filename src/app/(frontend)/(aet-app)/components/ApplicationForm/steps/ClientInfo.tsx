@@ -254,7 +254,7 @@ export function ClientInfo() {
             <FormLabel>Office</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder="Select purpose" />
+                <SelectValue placeholder="Select office" />
               </SelectTrigger>
               <SelectContent>
                 {OFFICE_OPTIONS.map((option) => (

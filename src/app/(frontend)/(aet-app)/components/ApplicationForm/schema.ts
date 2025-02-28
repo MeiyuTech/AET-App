@@ -4,23 +4,104 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 
 dayjs.extend(customParseFormat)
 
-const educationSchema = z.object({
-  countryOfStudy: z.string({ required_error: 'Please enter country of study' }),
-  degreeObtained: z.string().optional(),
-  schoolName: z.string().optional(),
-  studyDuration: z
-    .object({
-      startDate: z.object({
-        month: z.string({ required_error: 'Please select start month' }),
-        year: z.string({ required_error: 'Please select start year' }),
-      }),
-      endDate: z.object({
-        month: z.string({ required_error: 'Please select end month' }),
-        year: z.string({ required_error: 'Please select end year' }),
-      }),
-    })
-    .optional(),
-})
+const educationSchema = z
+  .object({
+    countryOfStudy: z.string().optional(),
+    degreeObtained: z.string().optional(),
+    schoolName: z.string().optional(),
+    studyDuration: z
+      .object({
+        startDate: z.object({
+          month: z.string().optional(),
+          year: z.string().optional(),
+        }),
+        endDate: z.object({
+          month: z.string().optional(),
+          year: z.string().optional(),
+        }),
+      })
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Check if any field has been filled
+    const hasStartedFilling =
+      !!data.countryOfStudy ||
+      !!data.degreeObtained ||
+      !!data.schoolName ||
+      !!data.studyDuration?.startDate?.month ||
+      !!data.studyDuration?.startDate?.year ||
+      !!data.studyDuration?.endDate?.month ||
+      !!data.studyDuration?.endDate?.year
+
+    // If user hasn't started filling, that's fine
+    if (!hasStartedFilling) return true
+
+    // Check each field and add appropriate error if missing
+    if (!data.countryOfStudy) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the country of study',
+        path: ['countryOfStudy'],
+      })
+    }
+
+    if (!data.degreeObtained) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the degree obtained',
+        path: ['degreeObtained'],
+      })
+    }
+
+    if (!data.schoolName) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the school name',
+        path: ['schoolName'],
+      })
+    }
+
+    // Check study duration fields
+    if (!data.studyDuration) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the study duration',
+        path: ['studyDuration'],
+      })
+    } else {
+      if (!data.studyDuration.startDate?.month) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select start month',
+          path: ['studyDuration', 'startDate', 'month'],
+        })
+      }
+
+      if (!data.studyDuration.startDate?.year) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select start year',
+          path: ['studyDuration', 'startDate', 'year'],
+        })
+      }
+
+      if (!data.studyDuration.endDate?.month) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select end month',
+          path: ['studyDuration', 'endDate', 'month'],
+        })
+      }
+
+      if (!data.studyDuration.endDate?.year) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select end year',
+          path: ['studyDuration', 'endDate', 'year'],
+        })
+      }
+    }
+  })
 
 // Define speed options and their display values
 const speedOptions = {
