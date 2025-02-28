@@ -142,6 +142,23 @@ function generateServiceDescription(serviceType: FormData['serviceType']) {
   return services
 }
 
+function getCCAddress(office: string) {
+  switch (office) {
+    case 'Boston':
+      return ['boston@aet21.com', 'boston@americantranslationservice.com']
+    case 'New York':
+      return ['nyc@aet21.com', 'nyc@americantranslationservice.com']
+    case 'San Francisco':
+      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+    case 'Los Angeles':
+      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+    case 'Miami':
+      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+    default:
+      return ['info@americantranslationservice.com']
+  }
+}
+
 function generateApplicationConfirmationEmail(
   formData: FormData,
   applicationId: string,
@@ -160,7 +177,7 @@ function generateApplicationConfirmationEmail(
 
   return `
     <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-      <h1 style="color: #7bc1f4;">Your Application Has Been Received</h1>
+      <h1 style="color: #7bc1f4;">Your AET Services Application Has Been Received</h1>
       <p>Dear ${formData.firstName} ${formData.lastName},</p>
       <p>We have received your application. Your application ID is: <strong style="color: #7bc1f4">${applicationId}</strong></p>
 
@@ -191,6 +208,7 @@ function generateApplicationConfirmationEmail(
       <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0;">
         <h2 style="color: #7bc1f4;">Next Steps:</h2>
         <ul>
+          <li> <a href="https://app.americantranslationservice.com/status?applicationId=${applicationId}">Check your status</a> with Application ID: <strong style="color: #7bc1f4">${applicationId}</strong></li>
           <li>Complete the payment process if you haven't already</li>
           <li>Submit all required documents as specified in your application</li>
           <li>We will begin processing your evaluation once payment is confirmed</li>
@@ -248,6 +266,7 @@ export async function submitAETApplication(formData: FormData) {
     // Send confirmation email using the new email content generator
     await sendEmail({
       to: formData.email,
+      cc: getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       // TODO: remove (test) after it's ready
       subject: '(test)AET Services Application Confirmation',
