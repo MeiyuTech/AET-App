@@ -236,6 +236,14 @@ export function Review() {
           <CardTitle>Selected Services</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Customized Service */}
+          {formData.serviceType?.customizedService?.required && (
+            <div>
+              <div className="font-medium">Customized Service</div>
+              <div className="pl-4">Price will be quoted upon request</div>
+            </div>
+          )}
+
           {/* Foreign Credential Evaluation */}
           {formData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed && (
             <div>
@@ -383,7 +391,13 @@ export function Review() {
 
           {/* Total Price */}
           <div className="pt-4 border-t">
-            <div className="font-medium">Estimated Total: ${calculateTotalPrice()}</div>
+            <div className="font-medium">
+              Estimated Total:{' '}
+              {formData.serviceType?.translation?.required ||
+              formData.serviceType?.customizedService?.required
+                ? 'Price will be quoted upon request'
+                : `$${calculateTotalPrice()}`}
+            </div>
             <div className="text-xs text-muted-foreground mt-1">
               * Actual price may vary. We will provide an official quote based on your specific
               situation.

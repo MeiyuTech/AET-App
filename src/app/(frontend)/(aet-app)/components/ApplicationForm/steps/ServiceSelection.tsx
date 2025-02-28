@@ -44,12 +44,27 @@ export function ServiceSelection() {
     <div className="space-y-6">
       <Card>
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">Document Evaluation Service</h3>
+          <h3 className="text-lg font-semibold mb-4">Service Selection</h3>
           {errors.serviceType && (
-            <p className="text-sm text-destructive mb-4">
-              Please select at least one evaluation service
-            </p>
+            <p className="text-sm text-destructive mb-4">Please select at least one service</p>
           )}
+          {/* Customized Service */}
+          <div className="mb-6">
+            <h4 className="font-medium mb-3">Customized Service</h4>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="customized-service-required"
+                onCheckedChange={(checked) => {
+                  setValue('serviceType.customizedService.required', checked)
+                }}
+                checked={watch('serviceType.customizedService.required')}
+              />
+              <Label htmlFor="customized-service-required" className="flex justify-between w-full">
+                <span>Customized Service Required</span>
+                <span className="text-muted-foreground">Price varies by document</span>
+              </Label>
+            </div>
+          </div>
 
           {/* Foreign Credential Evaluation Report */}
           <div className="mb-6">

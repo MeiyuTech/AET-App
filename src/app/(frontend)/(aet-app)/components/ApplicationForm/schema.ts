@@ -133,6 +133,9 @@ const speedOptions = {
 // Update the service selection part of the schema
 const serviceTypeSchema = z
   .object({
+    customizedService: z.object({
+      required: z.boolean().default(false),
+    }),
     foreignCredentialEvaluation: z.object({
       firstDegree: z.object({
         speed: z.enum(['7day', '3day', '24hour', 'sameday'] as const).optional(),
@@ -159,6 +162,7 @@ const serviceTypeSchema = z
     (data) => {
       // At least one evaluation service must be selected
       return !!(
+        data.customizedService.required ||
         data.foreignCredentialEvaluation.firstDegree.speed ||
         data.coursebyCourse.firstDegree.speed ||
         data.professionalExperience.speed ||
@@ -166,7 +170,7 @@ const serviceTypeSchema = z
       )
     },
     {
-      message: 'Please select at least one evaluation service',
+      message: 'Please select at least one service',
       path: ['foreignCredentialEvaluation', 'firstDegree', 'speed'],
     }
   )

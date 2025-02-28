@@ -107,6 +107,10 @@ function getServiceDeliveryTime(serviceType: FormData['serviceType']) {
 function generateServiceDescription(serviceType: FormData['serviceType']) {
   const services: string[] = []
 
+  if (serviceType.customizedService.required) {
+    services.push('Customized Service')
+  }
+
   if (serviceType.foreignCredentialEvaluation.firstDegree.speed) {
     const additionalDegrees =
       serviceType.foreignCredentialEvaluation.secondDegrees > 0
