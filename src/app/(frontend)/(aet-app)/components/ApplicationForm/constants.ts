@@ -165,7 +165,7 @@ export const EVALUATION_SERVICES = {
   },
 } as const
 
-// 配送选项（结合显示文本和价格）
+// Delivery Options
 export const DELIVERY_OPTIONS = {
   usps_domestic: {
     label: 'USPS First Class Mail (Domestic)',
@@ -197,7 +197,7 @@ export const DELIVERY_OPTIONS = {
   },
 } as const
 
-// 附加服务（结合显示文本和价格）
+// Additional Services (combined with display text and price)
 export const ADDITIONAL_SERVICES = {
   extra_copy: {
     label: 'Extra Hard Copy Report',

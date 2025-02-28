@@ -43,10 +43,66 @@ export default function FCEForm() {
     isSaving,
     setFormData,
     setCurrentStep,
-    saveDraft,
     submitForm,
     resetForm,
   } = useFormStore()
+
+  // Default values for form reset
+  const defaultFormValues: FormData = {
+    name: '',
+    country: '',
+    streetAddress: '',
+    streetAddress2: '',
+    city: '',
+    region: '',
+    zipCode: '',
+    fax: '',
+    phone: '',
+    email: '',
+    office: undefined,
+    purpose: undefined,
+    purposeOther: '',
+    pronouns: undefined,
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    dateOfBirth: {
+      month: '',
+      date: '',
+      year: '',
+    },
+    educations: [
+      {
+        countryOfStudy: '',
+        degreeObtained: '',
+        schoolName: '',
+        studyDuration: {
+          startDate: { month: '', year: '' },
+          endDate: { month: '', year: '' },
+        },
+      },
+    ],
+    serviceType: {
+      foreignCredentialEvaluation: {
+        firstDegree: { speed: undefined },
+        secondDegrees: 0,
+      },
+      coursebyCourse: {
+        firstDegree: { speed: undefined },
+        secondDegrees: 0,
+      },
+      professionalExperience: { speed: undefined },
+      positionEvaluation: { speed: undefined },
+      translation: { required: false },
+    },
+    deliveryMethod: 'no_delivery_needed',
+    additionalServices: [],
+    additionalServicesQuantity: {
+      extra_copy: 0,
+      pdf_with_hard_copy: 0,
+      pdf_only: 0,
+    },
+  }
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -73,32 +129,24 @@ export default function FCEForm() {
     },
   })
 
-  // Load saved form data when component mounts
+  // Initialize form with persisted data - ONLY ON MOUNT
   useEffect(() => {
-    const savedData = localStorage.getItem('fce-form-data')
-    const savedStep = localStorage.getItem('fce-form-step')
-
-    if (savedData) {
-      const parsedData = JSON.parse(savedData) as Partial<FormData>
-      setFormData(parsedData)
-      form.reset(parsedData as FormData)
+    if (formData && Object.keys(formData).length > 0) {
+      form.reset(formData as FormData)
     }
+    // empty dependency array, only run once on mount
+  }, []) // remove dependencies to avoid loop
 
-    if (savedStep) {
-      setCurrentStep(Number(savedStep))
-    }
-  }, [form, setCurrentStep, setFormData])
-
-  // Save form data when it changes
+  // Update Zustand store when form values change
   useEffect(() => {
     const subscription = form.watch((value) => {
-      setFormData(value as Partial<FormData>)
-      localStorage.setItem('fce-form-data', JSON.stringify(value))
-      localStorage.setItem('fce-form-step', currentStep.toString())
-      saveDraft()
+      // add deep comparison to avoid unnecessary updates with same values
+      if (JSON.stringify(value) !== JSON.stringify(formData)) {
+        setFormData(value as Partial<FormData>)
+      }
     })
     return () => subscription.unsubscribe()
-  }, [form, form.watch, setFormData, saveDraft, currentStep])
+  }, [form, setFormData]) // remove form.watch and formData dependencies
 
   // Render component based on current step
   const renderStep = () => {
@@ -124,9 +172,9 @@ export default function FCEForm() {
     window.scrollTo(0, 0)
   }
 
-  const handleNext = async () => {
+  const handleNext = async (e: React.FormEvent) => {
     // Prevent form submission
-    event?.preventDefault()
+    e.preventDefault()
 
     // Get fields to validate based on current step
     const fieldsToValidate = getFieldsToValidate(currentStep)
@@ -137,7 +185,6 @@ export default function FCEForm() {
     if (isValid) {
       console.log('Current form data:', form.getValues())
       setCurrentStep(currentStep + 1)
-      await saveDraft()
       await scrollToTop()
     } else {
       toast({
@@ -187,6 +234,12 @@ export default function FCEForm() {
     setCurrentStep(currentStep - 1)
   }
 
+  // Helper function to reset form state
+  const resetFormState = () => {
+    resetForm()
+    form.reset(defaultFormValues)
+  }
+
   const onSubmit = async (data: FormData) => {
     console.log('Starting form submission...', { currentStep, data })
 
@@ -196,25 +249,17 @@ export default function FCEForm() {
     }
 
     try {
-      const isValid = await form.trigger()
-      if (!isValid) {
-        return
-      }
-
       console.log('Form is valid, submitting data:', data)
       const result = await submitForm()
 
       if (result?.success) {
-        // Clear local storage after successful submission
-        localStorage.removeItem('fce-form-data')
-        localStorage.removeItem('fce-form-step')
-
-        // reset form
-        handleComplete()
+        // Reset form after successful submission
+        resetFormState()
         setCurrentStep(FormStep.CLIENT_INFO)
 
         // Redirect to checkout page with applicationId
-        router.push(`/checkout?applicationId=${result.applicationId}`)
+        // router.push(`/checkout?applicationId=${result.applicationId}`)
+        router.push(`/status?applicationId=${result.applicationId}`)
       }
     } catch (error) {
       console.error('Submission error:', error)
@@ -250,134 +295,12 @@ export default function FCEForm() {
 
   // Add reset handler
   const handleReset = async () => {
-    resetForm()
-    // Reset React Hook Form with empty values
-    form.reset({
-      name: '',
-      country: '',
-      streetAddress: '',
-      streetAddress2: '',
-      city: '',
-      region: '',
-      zipCode: '',
-      phone: '',
-      fax: '',
-      email: '',
-      purpose: undefined,
-      purposeOther: '',
-      pronouns: undefined,
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      dateOfBirth: {
-        month: '',
-        date: '',
-        year: '',
-      },
-      educations: [
-        {
-          countryOfStudy: '',
-          degreeObtained: '',
-          schoolName: '',
-          studyDuration: {
-            startDate: { month: '', year: '' },
-            endDate: { month: '', year: '' },
-          },
-        },
-      ],
-      serviceType: {
-        foreignCredentialEvaluation: {
-          firstDegree: { speed: undefined },
-          secondDegrees: 0,
-        },
-        coursebyCourse: {
-          firstDegree: { speed: undefined },
-          secondDegrees: 0,
-        },
-        professionalExperience: { speed: undefined },
-        positionEvaluation: { speed: undefined },
-        translation: { required: false },
-      },
-      deliveryMethod: undefined,
-      additionalServices: [],
-      additionalServicesQuantity: {
-        extra_copy: 0,
-        pdf_with_hard_copy: 0,
-        pdf_only: 0,
-      },
-    })
-    setCurrentStep(FormStep.CLIENT_INFO)
+    resetFormState()
     await scrollToTop()
     toast({
       title: 'Form Reset',
       description: 'You can start filling out the application again',
       variant: 'destructive',
-    })
-  }
-
-  // Add complete handler
-  const handleComplete = () => {
-    console.log('Form complete')
-    resetForm()
-    // Reset React Hook Form with empty values
-    form.reset({
-      name: '',
-      country: '',
-      streetAddress: '',
-      streetAddress2: '',
-      city: '',
-      region: '',
-      zipCode: '',
-      phone: '',
-      fax: '',
-      email: '',
-      purpose: undefined,
-      purposeOther: '',
-      pronouns: undefined,
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      dateOfBirth: {
-        month: '',
-        date: '',
-        year: '',
-      },
-      educations: [
-        {
-          countryOfStudy: '',
-          degreeObtained: '',
-          schoolName: '',
-          studyDuration: {
-            startDate: { month: '', year: '' },
-            endDate: { month: '', year: '' },
-          },
-        },
-      ],
-      serviceType: {
-        foreignCredentialEvaluation: {
-          firstDegree: { speed: undefined },
-          secondDegrees: 0,
-        },
-        coursebyCourse: {
-          firstDegree: { speed: undefined },
-          secondDegrees: 0,
-        },
-        professionalExperience: { speed: undefined },
-        positionEvaluation: { speed: undefined },
-        translation: { required: false },
-      },
-      deliveryMethod: undefined,
-      additionalServices: [],
-      additionalServicesQuantity: {
-        extra_copy: 0,
-        pdf_with_hard_copy: 0,
-        pdf_only: 0,
-      },
-    })
-    toast({
-      title: 'Submitted Successfully',
-      description: 'Your message has been sent successfully.',
-      className: 'text-teal-400',
     })
   }
 
@@ -417,14 +340,7 @@ export default function FCEForm() {
                 {isSaving ? 'Submitting...' : 'Submit Application'}
               </Button>
             ) : (
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleNext()
-                }}
-                disabled={isSaving}
-              >
+              <Button type="button" onClick={handleNext} disabled={isSaving}>
                 {isSaving ? 'Saving...' : 'Next'}
               </Button>
             )}

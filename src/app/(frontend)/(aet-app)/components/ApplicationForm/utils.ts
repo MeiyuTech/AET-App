@@ -136,9 +136,10 @@ export const formatUtils = {
       city: dbData.city,
       region: dbData.region,
       zipCode: dbData.zip_code,
-      phone: dbData.phone,
       fax: dbData.fax || undefined,
+      phone: dbData.phone,
       email: dbData.email,
+      office: dbData.office,
       purpose: dbData.purpose,
       purposeOther: dbData.purpose_other || undefined,
 
@@ -166,11 +167,21 @@ export const formatUtils = {
     education: EducationSchema
   ): Omit<DatabaseEducation, 'id' | 'application_id'> {
     return {
-      country_of_study: education.countryOfStudy,
-      degree_obtained: education.degreeObtained,
-      school_name: education.schoolName,
-      study_start_date: education.studyDuration.startDate,
-      study_end_date: education.studyDuration.endDate,
+      country_of_study: education.countryOfStudy || '',
+      degree_obtained: education.degreeObtained || '',
+      school_name: education?.schoolName || '',
+      study_start_date: education.studyDuration
+        ? {
+            month: education.studyDuration.startDate.month || '',
+            year: education.studyDuration.startDate.year || '',
+          }
+        : { month: '', year: '' },
+      study_end_date: education.studyDuration
+        ? {
+            month: education.studyDuration.endDate.month || '',
+            year: education.studyDuration.endDate.year || '',
+          }
+        : { month: '', year: '' },
     }
   },
 

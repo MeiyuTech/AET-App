@@ -4,56 +4,104 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 
 dayjs.extend(customParseFormat)
 
-const educationSchema = z.object({
-  countryOfStudy: z.string({ required_error: 'Please enter country of study' }),
-  degreeObtained: z.string().min(1, { message: 'Please enter the degree obtained' }),
-  schoolName: z.string().min(1, { message: 'Please enter school name' }),
-  studyDuration: z
-    .object({
-      startDate: z.object({
-        month: z.string({ required_error: 'Please select start month' }),
-        year: z.string({ required_error: 'Please select start year' }),
-      }),
-      endDate: z.object({
-        month: z.string({ required_error: 'Please select end month' }),
-        year: z.string({ required_error: 'Please select end year' }),
-      }),
-    })
-    .superRefine((data, ctx) => {
-      const { startDate, endDate } = data
-      if (!startDate.year || !startDate.month) {
+const educationSchema = z
+  .object({
+    countryOfStudy: z.string().optional(),
+    degreeObtained: z.string().optional(),
+    schoolName: z.string().optional(),
+    studyDuration: z
+      .object({
+        startDate: z.object({
+          month: z.string().optional(),
+          year: z.string().optional(),
+        }),
+        endDate: z.object({
+          month: z.string().optional(),
+          year: z.string().optional(),
+        }),
+      })
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Check if any field has been filled
+    const hasStartedFilling =
+      !!data.countryOfStudy ||
+      !!data.degreeObtained ||
+      !!data.schoolName ||
+      !!data.studyDuration?.startDate?.month ||
+      !!data.studyDuration?.startDate?.year ||
+      !!data.studyDuration?.endDate?.month ||
+      !!data.studyDuration?.endDate?.year
+
+    // If user hasn't started filling, that's fine
+    if (!hasStartedFilling) return true
+
+    // Check each field and add appropriate error if missing
+    if (!data.countryOfStudy) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the country of study',
+        path: ['countryOfStudy'],
+      })
+    }
+
+    if (!data.degreeObtained) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the degree obtained',
+        path: ['degreeObtained'],
+      })
+    }
+
+    if (!data.schoolName) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the school name',
+        path: ['schoolName'],
+      })
+    }
+
+    // Check study duration fields
+    if (!data.studyDuration) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please fill in the study duration',
+        path: ['studyDuration'],
+      })
+    } else {
+      if (!data.studyDuration.startDate?.month) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Please select start date',
-          path: ['startDate', 'year'],
+          message: 'Please select start month',
+          path: ['studyDuration', 'startDate', 'month'],
         })
       }
 
-      if (!endDate.year || !endDate.month) {
+      if (!data.studyDuration.startDate?.year) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Please select end date',
-          path: ['endDate', 'year'],
+          message: 'Please select start year',
+          path: ['studyDuration', 'startDate', 'year'],
         })
       }
 
-      const start = dayjs(`${startDate.year}-${startDate.month}-01`)
-      const end = dayjs(`${endDate.year}-${endDate.month}-01`)
-
-      if (end.isBefore(start) || end.isSame(start)) {
+      if (!data.studyDuration.endDate?.month) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Graduation date must be after enrollment date',
-          path: ['endDate', 'year'],
-        })
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Graduation date must be after enrollment date',
-          path: ['endDate', 'month'],
+          message: 'Please select end month',
+          path: ['studyDuration', 'endDate', 'month'],
         })
       }
-    }),
-})
+
+      if (!data.studyDuration.endDate?.year) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please select end year',
+          path: ['studyDuration', 'endDate', 'year'],
+        })
+      }
+    }
+  })
 
 // Define speed options and their display values
 const speedOptions = {
@@ -154,16 +202,19 @@ export const formSchema = z.object({
       }
     }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
-  office: z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami'], {
-    required_error: 'Please select office',
-  }),
-  purpose: z.enum(['immigration', 'employment', 'education', 'other'], {
+  office: z.union(
+    [z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami']), z.undefined()],
+    {
+      required_error: 'Please select office',
+    }
+  ),
+  purpose: z.union([z.enum(['immigration', 'employment', 'education', 'other']), z.undefined()], {
     required_error: 'Please select evaluation purpose',
   }),
   purposeOther: z.string().optional(),
 
   // 2. EVALUEE INFORMATION
-  pronouns: z.enum(['mr', 'ms', 'mx'], {
+  pronouns: z.union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
     required_error: 'Please select your pronouns',
   }),
   firstName: z
@@ -213,7 +264,7 @@ export const formSchema = z.object({
     }),
 
   // New education array field
-  educations: z.array(educationSchema).min(1, { message: 'At least one degree is required' }),
+  educations: z.array(educationSchema).optional(),
 
   // 3. SERVICE SELECTION
   serviceType: serviceTypeSchema,

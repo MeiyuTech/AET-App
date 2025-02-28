@@ -230,14 +230,16 @@ export async function submitFCEApplication(formData: FormData) {
     }
 
     // Insert education records
-    const educationPromises = formData.educations.map((education) =>
+    const educationPromises = formData.educations?.map((education) =>
       client.from('fce_educations').insert({
         application_id: application.id,
         ...formatUtils.toEducationDatabase(education),
       })
     )
 
-    await Promise.all(educationPromises)
+    if (educationPromises) {
+      await Promise.all(educationPromises)
+    }
 
     // Send confirmation email using the new email content generator
     await sendEmail({
@@ -295,9 +297,10 @@ export async function verifyApplication(applicationId: string) {
         city,
         region,
         zip_code,
-        phone,
         fax,
+        phone,
         email,
+        office,
         purpose,
         purpose_other,
         pronouns,
@@ -358,8 +361,9 @@ export async function verifyApplication(applicationId: string) {
       city: data.city,
       region: data.region,
       zipCode: data.zip_code,
-      phone: data.phone,
       fax: data.fax,
+      phone: data.phone,
+      office: data.office,
       email: data.email,
       purpose: data.purpose,
       purposeOther: data.purpose_other,

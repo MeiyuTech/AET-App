@@ -26,29 +26,74 @@ interface FormState {
   setDraftId: (id: string) => void
   setStatus: (status: 'draft' | 'submitted' | null) => void
 
-  // Save draft to Supabase
-  saveDraft: () => Promise<void>
   // Submit final form
   submitForm: () => Promise<{ success: boolean; applicationId: string } | undefined>
-  // Load draft from Supabase
-  loadDraft: (draftId: string) => Promise<void>
 
   // Add reset action
   resetForm: () => void
 }
 
+// 默认表单值
+const defaultFormValues: Partial<FormData> = {
+  name: '',
+  country: '',
+  streetAddress: '',
+  streetAddress2: '',
+  city: '',
+  region: '',
+  zipCode: '',
+  phone: '',
+  fax: '',
+  email: '',
+  office: undefined,
+  purpose: undefined,
+  purposeOther: '',
+  pronouns: 'mr',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  dateOfBirth: {
+    month: '',
+    date: '',
+    year: '',
+  },
+  educations: [
+    {
+      countryOfStudy: '',
+      degreeObtained: '',
+      schoolName: '',
+      studyDuration: {
+        startDate: { month: '', year: '' },
+        endDate: { month: '', year: '' },
+      },
+    },
+  ],
+  serviceType: {
+    foreignCredentialEvaluation: {
+      firstDegree: { speed: undefined },
+      secondDegrees: 0,
+    },
+    coursebyCourse: {
+      firstDegree: { speed: undefined },
+      secondDegrees: 0,
+    },
+    professionalExperience: { speed: undefined },
+    positionEvaluation: { speed: undefined },
+    translation: { required: false },
+  },
+  deliveryMethod: 'no_delivery_needed',
+  additionalServices: [],
+  additionalServicesQuantity: {
+    extra_copy: 0,
+    pdf_with_hard_copy: 0,
+    pdf_only: 0,
+  },
+}
+
 export const useFormStore = create<FormState>()(
   persist(
     (set, get) => ({
-      formData: {
-        deliveryMethod: 'no_delivery_needed',
-        additionalServices: [],
-        additionalServicesQuantity: {
-          extra_copy: 0,
-          pdf_with_hard_copy: 0,
-          pdf_only: 0,
-        },
-      },
+      formData: defaultFormValues,
       currentStep: FormStep.CLIENT_INFO,
       draftId: null,
       status: null,
@@ -65,30 +110,6 @@ export const useFormStore = create<FormState>()(
       setDraftId: (id) => set({ draftId: id }),
 
       setStatus: (status) => set({ status }),
-
-      saveDraft: async () => {
-        const state = get()
-        set({ isSaving: true })
-
-        try {
-          // TODO: Implement Supabase save logic
-          // If no draftId, create new draft
-          // If has draftId, update existing draft
-          // Example:
-          // const { data, error } = await supabase
-          //   .from('fce_forms')
-          //   .upsert({
-          //     id: state.draftId,
-          //     form_data: state.formData,
-          //     status: 'draft',
-          //     current_step: state.currentStep
-          //   })
-        } catch (error) {
-          console.error('Failed to save draft:', error)
-        } finally {
-          set({ isSaving: false })
-        }
-      },
 
       submitForm: async () => {
         const state = get()
@@ -116,42 +137,13 @@ export const useFormStore = create<FormState>()(
         }
       },
 
-      loadDraft: async (draftId) => {
-        set({ isLoading: true })
-
-        try {
-          // TODO: Implement Supabase load logic
-          // Example:
-          // const { data, error } = await supabase
-          //   .from('fce_forms')
-          //   .select('*')
-          //   .eq('id', draftId)
-          //   .single()
-          // if (data) {
-          //   set({
-          //     formData: data.form_data,
-          //     currentStep: data.current_step,
-          //     status: data.status,
-          //     draftId: data.id
-          //   })
-          // }
-        } catch (error) {
-          console.error('Failed to load draft:', error)
-        } finally {
-          set({ isLoading: false })
-        }
-      },
-
       resetForm: () => {
         set({
-          formData: {},
+          formData: defaultFormValues,
           currentStep: FormStep.CLIENT_INFO,
           draftId: null,
           status: null,
         })
-        // Clear local storage
-        localStorage.removeItem('fce-form-data')
-        localStorage.removeItem('fce-form-step')
       },
     }),
     {

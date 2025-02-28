@@ -1,7 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, X } from 'lucide-react'
 import { useMemo } from 'react'
 import countryList from 'react-select-country-list'
 import { useFormContext, useFieldArray } from 'react-hook-form'
@@ -58,18 +58,34 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           render={({ field }) => (
             <FormItem>
               <FormLabel>Study Country</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {countries.map((country) => (
-                    <SelectItem key={country.value} value={country.value}>
-                      {country.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem key={country.value} value={country.value}>
+                        {country.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {field.value && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-8 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                    onClick={() => {
+                      field.onChange(undefined)
+                    }}
+                  >
+                    <X className="h-4 w-4 text-red-500" />
+                    <span className="sr-only">Clear selection</span>
+                  </Button>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -104,18 +120,34 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.startDate.month`}
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Month" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {MONTH_OPTIONS.map((month) => (
-                          <SelectItem key={month.value} value={month.value}>
-                            {month.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MONTH_OPTIONS.map((month) => (
+                            <SelectItem key={month.value} value={month.value}>
+                              {month.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-8 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                          onClick={() => {
+                            field.onChange(undefined)
+                          }}
+                        >
+                          <X className="h-4 w-4 text-red-500" />
+                          <span className="sr-only">Clear selection</span>
+                        </Button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -126,18 +158,34 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.startDate.year`}
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {YEAR_OPTIONS.map((year) => (
-                          <SelectItem key={year.value} value={year.value}>
-                            {year.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {YEAR_OPTIONS.map((year) => (
+                            <SelectItem key={year.value} value={year.value}>
+                              {year.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-8 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                          onClick={() => {
+                            field.onChange(undefined)
+                          }}
+                        >
+                          <X className="h-4 w-4 text-red-500" />
+                          <span className="sr-only">Clear selection</span>
+                        </Button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -154,18 +202,34 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.endDate.month`}
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Month" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {MONTH_OPTIONS.map((month) => (
-                          <SelectItem key={month.value} value={month.value}>
-                            {month.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MONTH_OPTIONS.map((month) => (
+                            <SelectItem key={month.value} value={month.value}>
+                              {month.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-8 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                          onClick={() => {
+                            field.onChange(undefined)
+                          }}
+                        >
+                          <X className="h-4 w-4 text-red-500" />
+                          <span className="sr-only">Clear selection</span>
+                        </Button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -176,18 +240,34 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.endDate.year`}
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {YEAR_OPTIONS.map((year) => (
-                          <SelectItem key={year.value} value={year.value}>
-                            {year.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {YEAR_OPTIONS.map((year) => (
+                            <SelectItem key={year.value} value={year.value}>
+                              {year.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-8 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                          onClick={() => {
+                            field.onChange(undefined)
+                          }}
+                        >
+                          <X className="h-4 w-4 text-red-500" />
+                          <span className="sr-only">Clear selection</span>
+                        </Button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

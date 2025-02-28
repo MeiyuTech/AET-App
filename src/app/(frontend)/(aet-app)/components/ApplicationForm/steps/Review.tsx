@@ -196,7 +196,7 @@ export function Review() {
             <div className="col-span-2">
               <dt className="font-medium mb-2">Education Information</dt>
               <dd className="space-y-4">
-                {formData.educations.map((education, index) => (
+                {formData.educations?.map((education, index) => (
                   <div key={index} className="pl-4 border-l-2 border-muted">
                     <h4 className="font-medium text-sm mb-2">Degree {index + 1}</h4>
                     <dl className="grid grid-cols-2 gap-2 text-sm">
