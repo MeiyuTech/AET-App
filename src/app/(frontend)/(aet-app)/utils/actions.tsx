@@ -337,7 +337,8 @@ export async function verifyApplication(applicationId: string) {
         additional_services_quantity,
         payment_status,
         payment_id,
-        paid_at
+        paid_at,
+        due_amount
       `
       )
       .eq('id', applicationId)
@@ -372,6 +373,7 @@ export async function verifyApplication(applicationId: string) {
       // Status Info
       status: data.status,
       submitted_at: data.submitted_at,
+      due_amount: data.due_amount,
       payment_status: data.payment_status,
       payment_id: data.payment_id,
       paid_at: data.paid_at,
