@@ -19,9 +19,7 @@ export default async function StatusPage({ searchParams }: PageProps) {
     <div className="container mx-auto py-10">
       <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">
         <h1 className="text-2xl font-bold">AET Service Application Status</h1>
-        <p className="text-sm text-gray-500">
-          Please enter the application ID to check the status of your application.
-        </p>
+        <p className="text-sm text-gray-500">Check the status with your Application ID.</p>
         <StatusCheck initialApplicationId={applicationId} />
       </div>
     </div>
