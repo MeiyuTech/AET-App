@@ -6,7 +6,8 @@
       Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
 - [x] feat: we can change the payment price for every order (bufore payment) in admin panel
 - [x] Dropbox refresh token
-- [ ] Email sending
+- [x] Customized Service
+- [x] Email sending
 - [ ] clean up payment code!!!
 - [ ] Upload file for each user
 - [ ] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html

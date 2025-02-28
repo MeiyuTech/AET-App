@@ -8,6 +8,64 @@ export enum FormStep {
   REVIEW = 3, // Review Information
 }
 
+// Default form values constant that can be reused across components
+export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
+  name: '',
+  country: '',
+  streetAddress: '',
+  streetAddress2: '',
+  city: '',
+  region: '',
+  zipCode: '',
+  phone: '',
+  fax: '',
+  email: '',
+  office: undefined,
+  purpose: undefined,
+  purposeOther: '',
+  pronouns: undefined,
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  dateOfBirth: {
+    month: '',
+    date: '',
+    year: '',
+  },
+  educations: [
+    {
+      countryOfStudy: '',
+      degreeObtained: '',
+      schoolName: '',
+      studyDuration: {
+        startDate: { month: '', year: '' },
+        endDate: { month: '', year: '' },
+      },
+    },
+  ],
+  serviceType: {
+    customizedService: { required: false },
+    foreignCredentialEvaluation: {
+      firstDegree: { speed: undefined },
+      secondDegrees: 0,
+    },
+    coursebyCourse: {
+      firstDegree: { speed: undefined },
+      secondDegrees: 0,
+    },
+    professionalExperience: { speed: undefined },
+    positionEvaluation: { speed: undefined },
+    translation: { required: false },
+  },
+  deliveryMethod: 'no_delivery_needed',
+  additionalServices: [],
+  additionalServicesQuantity: {
+    extra_copy: 0,
+    pdf_with_hard_copy: 0,
+    pdf_only: 0,
+  },
+}
+
 export type FormData = z.infer<typeof formSchema>
 
 export interface FormDraft {

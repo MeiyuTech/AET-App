@@ -2,8 +2,8 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { FormData, FormStep } from './types'
-import { submitFCEApplication } from '../../utils/actions'
+import { submitAETApplication } from '../../utils/actions'
+import { FormData, FormStep, defaultFormValues } from './types'
 
 interface FormState {
   // Form data
@@ -33,62 +33,8 @@ interface FormState {
   resetForm: () => void
 }
 
-// 默认表单值
-const defaultFormValues: Partial<FormData> = {
-  name: '',
-  country: '',
-  streetAddress: '',
-  streetAddress2: '',
-  city: '',
-  region: '',
-  zipCode: '',
-  phone: '',
-  fax: '',
-  email: '',
-  office: undefined,
-  purpose: undefined,
-  purposeOther: '',
-  pronouns: 'mr',
-  firstName: '',
-  lastName: '',
-  middleName: '',
-  dateOfBirth: {
-    month: '',
-    date: '',
-    year: '',
-  },
-  educations: [
-    {
-      countryOfStudy: '',
-      degreeObtained: '',
-      schoolName: '',
-      studyDuration: {
-        startDate: { month: '', year: '' },
-        endDate: { month: '', year: '' },
-      },
-    },
-  ],
-  serviceType: {
-    foreignCredentialEvaluation: {
-      firstDegree: { speed: undefined },
-      secondDegrees: 0,
-    },
-    coursebyCourse: {
-      firstDegree: { speed: undefined },
-      secondDegrees: 0,
-    },
-    professionalExperience: { speed: undefined },
-    positionEvaluation: { speed: undefined },
-    translation: { required: false },
-  },
-  deliveryMethod: 'no_delivery_needed',
-  additionalServices: [],
-  additionalServicesQuantity: {
-    extra_copy: 0,
-    pdf_with_hard_copy: 0,
-    pdf_only: 0,
-  },
-}
+// Using the default form values imported from types.ts
+// No need to redefine them here
 
 export const useFormStore = create<FormState>()(
   persist(
@@ -116,7 +62,7 @@ export const useFormStore = create<FormState>()(
         set({ isLoading: true })
 
         try {
-          const result = await submitFCEApplication({
+          const result = await submitAETApplication({
             ...(state.formData as FormData),
             // Make sure email is included in the submission
             email: state.formData.email as string,

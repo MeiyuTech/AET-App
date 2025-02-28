@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { RotateCcw } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/use-toast'
-import { useRouter } from 'next/navigation'
 import { motion, useAnimationControls } from 'framer-motion'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,21 +21,22 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import { Form } from '@/components/ui/form'
-import { FormStep, FormData } from './types'
-import { formSchema } from './schema'
+
 import { StepIndicator } from './StepIndicator'
-import { useFormStore } from './store'
 import { ClientInfo } from './steps/ClientInfo'
 import { EvalueeInfo } from './steps/EvalueeInfo'
 import { ServiceSelection } from './steps/ServiceSelection'
 import { Review } from './steps/Review'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import { formSchema } from './schema'
+import { useFormStore } from './store'
+import { FormData, FormStep, defaultFormValues } from './types'
 
 // Import other step components...
 
-export default function FCEForm() {
+export default function ApplicationForm() {
   const { toast } = useToast()
   const router = useRouter()
   const controls = useAnimationControls()
@@ -50,63 +52,6 @@ export default function FCEForm() {
     resetForm,
   } = useFormStore()
   const [termsAgreed, setTermsAgreed] = useState(false)
-
-  // Default values for form reset
-  const defaultFormValues: FormData = {
-    name: '',
-    country: '',
-    streetAddress: '',
-    streetAddress2: '',
-    city: '',
-    region: '',
-    zipCode: '',
-    fax: '',
-    phone: '',
-    email: '',
-    office: undefined,
-    purpose: undefined,
-    purposeOther: '',
-    pronouns: undefined,
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    dateOfBirth: {
-      month: '',
-      date: '',
-      year: '',
-    },
-    educations: [
-      {
-        countryOfStudy: '',
-        degreeObtained: '',
-        schoolName: '',
-        studyDuration: {
-          startDate: { month: '', year: '' },
-          endDate: { month: '', year: '' },
-        },
-      },
-    ],
-    serviceType: {
-      foreignCredentialEvaluation: {
-        firstDegree: { speed: undefined },
-        secondDegrees: 0,
-      },
-      coursebyCourse: {
-        firstDegree: { speed: undefined },
-        secondDegrees: 0,
-      },
-      professionalExperience: { speed: undefined },
-      positionEvaluation: { speed: undefined },
-      translation: { required: false },
-    },
-    deliveryMethod: 'no_delivery_needed',
-    additionalServices: [],
-    additionalServicesQuantity: {
-      extra_copy: 0,
-      pdf_with_hard_copy: 0,
-      pdf_only: 0,
-    },
-  }
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
