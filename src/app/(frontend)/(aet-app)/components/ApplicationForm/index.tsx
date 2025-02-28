@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Link from 'next/link'
 import { RotateCcw } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/use-toast'
@@ -28,6 +29,8 @@ import { ClientInfo } from './steps/ClientInfo'
 import { EvalueeInfo } from './steps/EvalueeInfo'
 import { ServiceSelection } from './steps/ServiceSelection'
 import { Review } from './steps/Review'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 // Import other step components...
 
@@ -46,6 +49,7 @@ export default function FCEForm() {
     submitForm,
     resetForm,
   } = useFormStore()
+  const [termsAgreed, setTermsAgreed] = useState(false)
 
   // Default values for form reset
   const defaultFormValues: FormData = {
@@ -135,6 +139,7 @@ export default function FCEForm() {
       form.reset(formData as FormData)
     }
     // empty dependency array, only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // remove dependencies to avoid loop
 
   // Update Zustand store when form values change
@@ -146,6 +151,7 @@ export default function FCEForm() {
       }
     })
     return () => subscription.unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, setFormData]) // remove form.watch and formData dependencies
 
   // Render component based on current step
@@ -257,9 +263,18 @@ export default function FCEForm() {
         resetFormState()
         setCurrentStep(FormStep.CLIENT_INFO)
 
-        // Redirect to checkout page with applicationId
-        // router.push(`/checkout?applicationId=${result.applicationId}`)
-        router.push(`/status?applicationId=${result.applicationId}`)
+        // Show success toast notification with better styling
+        toast({
+          title: ' 🎉 Application Submitted Successfully!  🎉',
+          description: `Your application has been successfully submitted. We are processing your information.`,
+          className: 'bg-green-50 border border-green-200 text-green-800',
+          //
+        })
+
+        // Delay redirect to allow the user to see the success message
+        setTimeout(() => {
+          router.push(`/status?applicationId=${result.applicationId}`)
+        }, 2500) // 2.5 second delay before redirect
       }
     } catch (error) {
       console.error('Submission error:', error)
@@ -324,6 +339,25 @@ export default function FCEForm() {
 
         {renderStep()}
 
+        {currentStep === FormStep.REVIEW && (
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              checked={termsAgreed}
+              onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
+            />
+            <Label htmlFor="terms" className="text-sm">
+              I have read and agree to{' '}
+              <Link
+                href="https://www.americantranslationservice.com/e-terms-of-use.html"
+                className="text-blue-500 hover:underline"
+                target="_blank"
+              >
+                AET&apos;s Terms of Service
+              </Link>
+            </Label>
+          </div>
+        )}
         <div className="flex justify-between mt-8">
           <Button
             type="button"
@@ -336,7 +370,7 @@ export default function FCEForm() {
 
           <div className="flex gap-2">
             {currentStep === FormStep.REVIEW ? (
-              <Button type="submit" disabled={isSaving}>
+              <Button type="submit" disabled={isSaving || !termsAgreed}>
                 {isSaving ? 'Submitting...' : 'Submit Application'}
               </Button>
             ) : (

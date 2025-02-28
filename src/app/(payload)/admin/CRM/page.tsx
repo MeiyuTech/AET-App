@@ -1,5 +1,4 @@
-'use server'
-
+import { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -7,6 +6,11 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/applications-table'
+
+export const metadata: Metadata = {
+  title: 'AET Service Application ｜ AET CRM',
+  description: 'AET Service Application CRM',
+}
 
 export default async function CRMPage() {
   const payload = await getPayload({ config })

@@ -215,6 +215,24 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     }
   }
 
+  // Handle payment based on office location
+  const handleOfficePaymentAction = () => {
+    if (!application || !application.office) return
+
+    // Direct payment link for Boston and New York offices
+    if (['Boston', 'New York'].includes(application.office)) {
+      // Replace with actual payment link for Boston/ New York
+      window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    } else if (['Los Angeles', 'San Francisco', 'Miami'].includes(application.office)) {
+      // Use Stripe payment flow for Los Angeles, San Francisco, and Miami offices
+      handlePayment()
+    } else {
+      // Default behavior for unknown offices
+      console.log('Unknown office:', application.office)
+      window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -611,7 +629,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 {application.payment_status !== 'paid' && (
                   <div className="mt-4">
                     <button
-                      onClick={handlePayment}
+                      onClick={handleOfficePaymentAction}
                       className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
                     >
                       Proceed to Payment
