@@ -6,7 +6,7 @@ import { createClient } from './supabase/server'
 import { FormData } from '../components/ApplicationForm/types'
 import { formatUtils } from '../components/ApplicationForm/utils'
 
-export async function createFCESubmission(formData: FormData) {
+export async function createAETSubmission(formData: FormData) {
   const client = await createClient()
   const { error } = await client.from('fce_applications').insert(formData)
   if (error) throw error
@@ -206,7 +206,7 @@ function generateApplicationConfirmationEmail(
   `
 }
 
-export async function submitFCEApplication(formData: FormData) {
+export async function submitAETApplication(formData: FormData) {
   try {
     const client = await createClient()
 
@@ -259,7 +259,7 @@ export async function submitFCEApplication(formData: FormData) {
       applicationId: application.id,
     }
   } catch (error) {
-    console.error('Failed to submit FCE application:', error)
+    console.error('Failed to submit AET application:', error)
     throw new Error('Failed to submit application')
   }
 }

@@ -34,7 +34,7 @@ import { Label } from '@/components/ui/label'
 
 // Import other step components...
 
-export default function FCEForm() {
+export default function ApplicationForm() {
   const { toast } = useToast()
   const router = useRouter()
   const controls = useAnimationControls()
