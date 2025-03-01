@@ -340,7 +340,15 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   <p className="text-sm text-muted-foreground mb-4">
                     You can upload additional documents related to your application here.
                   </p>
-                  <Uploader office={application.office} />
+                  <Uploader
+                    office={application.office}
+                    applicationId={applicationId}
+                    fullName={
+                      [application.firstName, application.middleName, application.lastName]
+                        .filter(Boolean)
+                        .join(' ') || 'Not provided'
+                    }
+                  />
                 </CardContent>
               </Card>
             )}

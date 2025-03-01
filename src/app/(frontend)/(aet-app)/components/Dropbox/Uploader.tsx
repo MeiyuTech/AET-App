@@ -7,9 +7,11 @@ type UploadStatus = keyof typeof STATUS_STYLES
 
 interface DropboxUploaderProps {
   office: string
+  applicationId: string | null
+  fullName: string | null
 }
 
-export default function DropboxUploader({ office }: DropboxUploaderProps) {
+export default function DropboxUploader({ office, applicationId, fullName }: DropboxUploaderProps) {
   const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
@@ -86,7 +88,12 @@ export default function DropboxUploader({ office }: DropboxUploaderProps) {
 
           // Add office information
           formData.append('officeName', office)
-
+          if (fullName) {
+            formData.append('fullName', fullName)
+          }
+          if (applicationId) {
+            formData.append('applicationId', applicationId)
+          }
           // Create new AbortController for this upload
           const controller = new AbortController()
           abortControllersRef.current[file.name] = controller
