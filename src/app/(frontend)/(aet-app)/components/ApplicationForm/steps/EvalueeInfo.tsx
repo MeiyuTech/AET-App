@@ -449,7 +449,10 @@ export function EvalueeInfo() {
       {/* Education Information */}
       <div className="space-y-4 pt-6">
         <div className="flex justify-between items-center">
-          <h3 className="font-medium">Education Information</h3>
+          <h3 className="font-medium">
+            Education Information <span className="text-sm text-gray-500 ml-2">(Optional)</span>
+          </h3>
+
           <Button
             type="button"
             variant="outline"
