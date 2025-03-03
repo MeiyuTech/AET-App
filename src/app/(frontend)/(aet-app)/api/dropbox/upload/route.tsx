@@ -80,6 +80,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('file') as File
     const officeName = formData.get('officeName') as string
+    const applicationId = formData.get('applicationId') as string
+    const fullName = formData.get('fullName') as string
     const tokenType = getOfficeTokenType(officeName)
 
     if (!file) {
@@ -95,8 +97,10 @@ export async function POST(request: NextRequest) {
     }
 
     const accessToken = await getAccessToken(tokenType)
-
-    const folderPath = `${basePath}/${officeName}`
+    let folderPath = `${basePath}/${officeName}`
+    if (applicationId && fullName) {
+      folderPath = `${basePath}/${officeName}/${fullName} - ${applicationId}`
+    }
     const buffer = await file.arrayBuffer()
     const path = `${folderPath}/${file.name}`
 
