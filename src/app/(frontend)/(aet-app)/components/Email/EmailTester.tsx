@@ -47,7 +47,6 @@ export function ApplicationConfirmationEmailTester() {
           'St',
           'Jobs',
           ['Service 1', 'Service 2'],
-          ['Delivery Time 1', 'Delivery Time 2'],
           'USPS First Class Domestic',
           ['pdf_only'],
           '1234567890',

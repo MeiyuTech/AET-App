@@ -12,94 +12,80 @@ export async function createAETSubmission(formData: FormData) {
   if (error) throw error
 }
 
-function getServiceDeliveryTime(serviceType: FormData['serviceType']) {
-  const deliveryTimes: string[] = []
+function generateServiceDescription(serviceType: FormData['serviceType']) {
+  const services: string[] = []
 
-  // FCE Service
+  // Customized Service
+  if (serviceType.customizedService.required) {
+    services.push('Customized Service: Delivery Time Will Be Quoted Upon Request')
+  }
+
+  // Foreign Credential Evaluation
   if (serviceType.foreignCredentialEvaluation.firstDegree.speed) {
+    let service: string = 'Foreign Credential Evaluation'
+    const additionalDegrees =
+      serviceType.foreignCredentialEvaluation.secondDegrees > 0
+        ? ` plus ${serviceType.foreignCredentialEvaluation.secondDegrees} additional degree(s)`
+        : ''
+    service += `${additionalDegrees} :`
+
     const speedMap = {
       sameday: 'same day',
       '24hour': '24 hours',
       '3day': '3 business days',
       '7day': '7 business days',
     }
-    deliveryTimes.push(
-      `Foreign Credential Evaluation: ${speedMap[serviceType.foreignCredentialEvaluation.firstDegree.speed]}`
-    )
+    service += ` ${speedMap[serviceType.foreignCredentialEvaluation.firstDegree.speed]}`
+    services.push(service)
   }
 
   // Course by Course
   if (serviceType.coursebyCourse.firstDegree.speed) {
+    let service: string = 'Course by Course Evaluation'
+    const additionalDegrees =
+      serviceType.coursebyCourse.secondDegrees > 0
+        ? ` plus ${serviceType.coursebyCourse.secondDegrees} additional degree(s)`
+        : ''
+    service += `${additionalDegrees} :`
+
     const speedMap = {
       '24hour': '24 hours',
       '3day': '3 business days',
       '5day': '5 business days',
       '8day': '8 business days',
     }
-    deliveryTimes.push(
-      `Course by Course Evaluation: ${speedMap[serviceType.coursebyCourse.firstDegree.speed]}`
-    )
+    service += ` ${speedMap[serviceType.coursebyCourse.firstDegree.speed]}`
+    services.push(service)
   }
 
   // Professional Experience
   if (serviceType.professionalExperience.speed) {
+    let service: string = 'Professional Experience Evaluation'
     const speedMap = {
       '3day': '3 business days',
       '7day': '7 business days',
       '21day': '21 business days',
     }
-    deliveryTimes.push(
-      `Professional Experience Evaluation: ${speedMap[serviceType.professionalExperience.speed]}`
-    )
+    service += ` ${speedMap[serviceType.professionalExperience.speed]}`
+    services.push(service)
   }
 
   // Position Evaluation
   if (serviceType.positionEvaluation.speed) {
+    let service: string = 'Position Evaluation'
     const speedMap = {
       '2day': '2 business days',
       '3day': '3 business days',
       '5day': '5 business days',
       '10day': '10 business days',
     }
-    deliveryTimes.push(`Position Evaluation: ${speedMap[serviceType.positionEvaluation.speed]}`)
+    service += ` ${speedMap[serviceType.positionEvaluation.speed]}`
+    services.push(service)
   }
 
-  return deliveryTimes
-}
-
-function generateServiceDescription(serviceType: FormData['serviceType']) {
-  const services: string[] = []
-
-  if (serviceType.customizedService.required) {
-    services.push('Customized Service')
-  }
-
-  if (serviceType.foreignCredentialEvaluation.firstDegree.speed) {
-    const additionalDegrees =
-      serviceType.foreignCredentialEvaluation.secondDegrees > 0
-        ? ` plus ${serviceType.foreignCredentialEvaluation.secondDegrees} additional degree(s)`
-        : ''
-    services.push(`Foreign Credential Evaluation${additionalDegrees}`)
-  }
-
-  if (serviceType.coursebyCourse.firstDegree.speed) {
-    const additionalDegrees =
-      serviceType.coursebyCourse.secondDegrees > 0
-        ? ` plus ${serviceType.coursebyCourse.secondDegrees} additional degree(s)`
-        : ''
-    services.push(`Course by Course Evaluation${additionalDegrees}`)
-  }
-
-  if (serviceType.professionalExperience.speed) {
-    services.push('Professional Experience Evaluation')
-  }
-
-  if (serviceType.positionEvaluation.speed) {
-    services.push('Position Evaluation')
-  }
-
+  // Document Translation
   if (serviceType.translation.required) {
-    services.push('Document Translation')
+    services.push('Document Translation: Delivery Time Will Be Quoted Upon Request')
   }
 
   return services
@@ -194,7 +180,6 @@ export async function submitAETApplication(formData: FormData) {
         formData.firstName,
         formData.lastName,
         generateServiceDescription(formData.serviceType),
-        getServiceDeliveryTime(formData.serviceType),
         getDeliveryMethod(formData.deliveryMethod),
         // TODO: use 'additionalServicesQuantity'
         formData.additionalServices,
