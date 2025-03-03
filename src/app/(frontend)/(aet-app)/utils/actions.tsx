@@ -1,52 +1,15 @@
 'use server'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 
 import { createClient } from './supabase/server'
 import { FormData } from '../components/ApplicationForm/types'
 import { formatUtils } from '../components/ApplicationForm/utils'
+import { getApplicationConfirmationEmailHTML } from './email/config'
+import { sendEmail } from './email/actions'
 
 export async function createAETSubmission(formData: FormData) {
   const client = await createClient()
   const { error } = await client.from('fce_applications').insert(formData)
   if (error) throw error
-}
-
-interface EmailOptions {
-  to: string | string[]
-  subject: string
-  html: string
-  cc?: string | string[]
-  bcc?: string | string[]
-}
-
-async function sendEmail({ to, subject, html, cc, bcc }: EmailOptions) {
-  if (!process.env.RESEND_DEFAULT_FROM_ADDRESS) {
-    throw new Error('RESEND_DEFAULT_FROM_ADDRESS is not set')
-  }
-  if (!process.env.RESEND_DEFAULT_FROM_NAME) {
-    throw new Error('RESEND_DEFAULT_FROM_NAME is not set')
-  }
-
-  const fromAddress = process.env.RESEND_DEFAULT_FROM_ADDRESS
-  const fromName = process.env.RESEND_DEFAULT_FROM_NAME
-  const fromEmail = `${fromName} <${fromAddress}>`
-
-  try {
-    const payload = await getPayload({ config })
-    await payload.sendEmail({
-      from: fromEmail,
-      to,
-      cc: cc || process.env.RESEND_DEFAULT_CC_ADDRESS,
-      bcc: bcc || process.env.RESEND_DEFAULT_BCC_ADDRESS,
-      subject,
-      html,
-    })
-    return { success: true, message: 'Email sent successfully' }
-  } catch (error) {
-    console.error('Email sending error:', error)
-    throw error
-  }
 }
 
 function getServiceDeliveryTime(serviceType: FormData['serviceType']) {
@@ -159,73 +122,30 @@ function getCCAddress(office: string) {
   }
 }
 
-function generateApplicationConfirmationEmail(
-  formData: FormData,
-  applicationId: string,
-  submittedAt: string
+function getDeliveryMethod(
+  deliveryMethod:
+    | 'no_delivery_needed'
+    | 'usps_first_class_domestic'
+    | 'usps_first_class_international'
+    | 'usps_priority_domestic'
+    | 'usps_express_domestic'
+    | 'ups_express_domestic'
+    | 'usps_express_international'
+    | 'fedex_express_international'
+    | undefined
 ): string {
-  const services = generateServiceDescription(formData.serviceType)
-  const deliveryTimes = getServiceDeliveryTime(formData.serviceType)
-  const submissionDate = new Date(submittedAt).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZoneName: 'short',
-  })
+  const deliveryMethodMap: { [key: string]: string } = {
+    no_delivery_needed: 'No Delivery Needed',
+    usps_first_class_domestic: 'USPS First Class Domestic',
+    usps_first_class_international: 'USPS First Class International',
+    usps_priority_domestic: 'USPS Priority Domestic',
+    usps_express_domestic: 'USPS Express Domestic',
+    ups_express_domestic: 'UPS Express Domestic',
+    usps_express_international: 'USPS Express International',
+    fedex_express_international: 'FedEx Express International',
+  }
 
-  return `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-      <h1 style="color: #7bc1f4;">Your AET Services Application Has Been Received</h1>
-      <p>Dear ${formData.firstName} ${formData.lastName},</p>
-      <p>We have received your application. Your application ID is: <strong style="color: #7bc1f4">${applicationId}</strong></p>
-
-      <h2 style="color: #7bc1f4;">Submission Time:</h2>
-      <ul>
-        <li>${submissionDate}</li>
-      </ul>
-      <h2 style="color: #7bc1f4;">Services Requested:</h2>
-      <ul>
-        ${services.map((service) => `<li>${service}</li>`).join('')}
-      </ul>
-
-      <h2 style="color: #7bc1f4;">Expected Delivery Times:</h2>
-      <ul>
-        ${deliveryTimes.map((time) => `<li>${time}</li>`).join('')}
-      </ul>
-
-      <h2 style="color: #7bc1f4;">Additional Details:</h2>
-      <ul>
-        <li>Delivery Method: ${formData.deliveryMethod}</li>
-        ${
-          formData.additionalServices.length > 0
-            ? `<li>Additional Services: ${formData.additionalServices.join(', ')}</li>`
-            : ''
-        }
-      </ul>
-
-      <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0;">
-        <h2 style="color: #7bc1f4;">Next Steps:</h2>
-        <ul>
-          <li> <a href="https://app.americantranslationservice.com/status?applicationId=${applicationId}">Check your status</a> with Application ID: <strong style="color: #7bc1f4">${applicationId}</strong></li>
-          <li>Complete the payment process if you haven't already</li>
-          <li>Submit all required documents as specified in your application</li>
-          <li>We will begin processing your evaluation once payment is confirmed</li>
-        </ul>
-      </div>
-
-      <p>
-        If you have any questions or need to provide additional information, please contact us and reference your application ID: 
-        <strong style="color: #7bc1f4">${applicationId}</strong>
-      </p>
-
-      <p style="margin-top: 30px;">
-        Best regards,<br>
-        <span >AET Services Team</span>
-      </p>
-    </div>
-  `
+  return deliveryMethod ? deliveryMethodMap[deliveryMethod] : 'No Delivery Method Selected'
 }
 
 export async function submitAETApplication(formData: FormData) {
@@ -264,18 +184,28 @@ export async function submitAETApplication(formData: FormData) {
     }
 
     // Send confirmation email using the new email content generator
-    await sendEmail({
+    const { success: emailSuccess, message: sendEmailMessage } = await sendEmail({
       to: formData.email,
       cc: getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       // TODO: remove (test) after it's ready
       subject: '(test)AET Services Application Confirmation',
-      html: generateApplicationConfirmationEmail(
-        formData,
+      html: getApplicationConfirmationEmailHTML(
+        formData.firstName,
+        formData.lastName,
+        generateServiceDescription(formData.serviceType),
+        getServiceDeliveryTime(formData.serviceType),
+        getDeliveryMethod(formData.deliveryMethod),
+        formData.additionalServices,
         application.id,
         application.submitted_at
       ),
     })
+
+    if (!emailSuccess) {
+      console.error('Failed to send confirmation email:', sendEmailMessage)
+      throw new Error('Failed to send confirmation email')
+    }
 
     return {
       success: true,
@@ -284,20 +214,6 @@ export async function submitAETApplication(formData: FormData) {
   } catch (error) {
     console.error('Failed to submit AET application:', error)
     throw new Error('Failed to submit application')
-  }
-}
-
-// Send email to test the email sending functionality
-export async function sendTestEmail() {
-  try {
-    return await sendEmail({
-      to: 'nietsemorej@gmail.com',
-      subject: 'Test Email',
-      html: '<p>This is a test email from your application.</p>',
-    })
-  } catch (error) {
-    console.error('Failed to send test email:', error)
-    return { success: false, message: 'Failed to send email' }
   }
 }
 
