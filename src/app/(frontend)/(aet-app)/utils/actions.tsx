@@ -196,6 +196,7 @@ export async function submitAETApplication(formData: FormData) {
         generateServiceDescription(formData.serviceType),
         getServiceDeliveryTime(formData.serviceType),
         getDeliveryMethod(formData.deliveryMethod),
+        // TODO: use 'additionalServicesQuantity'
         formData.additionalServices,
         application.id,
         application.submitted_at
