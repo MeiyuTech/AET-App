@@ -240,7 +240,7 @@ export function Review() {
           {formData.serviceType?.customizedService?.required && (
             <div>
               <div className="font-medium">Customized Service</div>
-              <div className="pl-4">Price will be quoted upon request</div>
+              <div className="pl-4">Price Will Be Quoted Upon Request</div>
             </div>
           )}
 
@@ -338,7 +338,7 @@ export function Review() {
           {formData.serviceType?.translation?.required && (
             <div>
               <div className="font-medium">Translation Service</div>
-              <div className="pl-4">Price will be quoted upon request</div>
+              <div className="pl-4">Price Will Be Quoted Upon Request</div>
             </div>
           )}
 
