@@ -46,13 +46,13 @@ export default function HomePage() {
           </Link> */}
 
           {/* Email Tester Card */}
-          <Link
+          {/* <Link
             href="/email-test"
             className="block p-6 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50"
           >
             <h2 className="text-xl font-semibold mb-3">Test Email</h2>
             <p className="text-gray-600">Test Email</p>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
