@@ -9,12 +9,14 @@
 - [x] Customized Service
 - [x] Email sending
 - [ ] clean up payment code!!!
-- [ ] Upload file for each user
+- [x] Upload file for each user
 - [ ] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
 - [x] Add 'payment_amount' in supabase
 - [x] Add 'office' in supabase
 - [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
 - [ ] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Database
+- [ ] better email template, table layout
+- [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
 
 ## Features
 
