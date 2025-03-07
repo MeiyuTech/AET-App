@@ -1,5 +1,11 @@
 import { Country, State } from 'country-state-city'
 
+// Application configuration settings
+export const CONFIG = {
+  // Feature flag to control the Service Selection step
+  SHOW_SERVICE_SELECTION: false,
+}
+
 export const COUNTRIES = Country.getAllCountries().map((country) => ({
   value: country.isoCode,
   label: country.name,

@@ -33,9 +33,7 @@ import { Review } from './steps/Review'
 import { formSchema } from './schema'
 import { useFormStore } from './store'
 import { FormData, FormStep, defaultFormValues } from './types'
-
-// Feature flag to control the Service Selection step
-const SHOW_SERVICE_SELECTION = false
+import { CONFIG } from './constants'
 
 // Import other step components...
 
@@ -111,7 +109,7 @@ export default function ApplicationForm() {
         return <EvalueeInfo />
       case FormStep.SERVICE_SELECTION:
         // Only render if feature flag is enabled
-        return SHOW_SERVICE_SELECTION ? <ServiceSelection /> : null
+        return CONFIG.SHOW_SERVICE_SELECTION ? <ServiceSelection /> : null
       case FormStep.REVIEW:
         return <Review />
       default:
@@ -141,7 +139,7 @@ export default function ApplicationForm() {
       console.log('Current form data:', form.getValues())
 
       // Skip SERVICE_SELECTION step if feature flag is disabled
-      if (!SHOW_SERVICE_SELECTION && currentStep === FormStep.EVALUEE_INFO) {
+      if (!CONFIG.SHOW_SERVICE_SELECTION && currentStep === FormStep.EVALUEE_INFO) {
         setCurrentStep(FormStep.REVIEW)
       } else {
         setCurrentStep(currentStep + 1)
@@ -194,7 +192,7 @@ export default function ApplicationForm() {
 
   const handlePrevious = () => {
     // If Service Selection is hidden and we're at Review, go back to Evaluee Info
-    if (!SHOW_SERVICE_SELECTION && currentStep === FormStep.REVIEW) {
+    if (!CONFIG.SHOW_SERVICE_SELECTION && currentStep === FormStep.REVIEW) {
       setCurrentStep(FormStep.EVALUEE_INFO)
     } else {
       setCurrentStep(currentStep - 1)
@@ -253,7 +251,7 @@ export default function ApplicationForm() {
     if (targetStep === currentStep) return
 
     // Handle SERVICE_SELECTION navigation based on feature flag
-    if (!SHOW_SERVICE_SELECTION) {
+    if (!CONFIG.SHOW_SERVICE_SELECTION) {
       // If trying to go to SERVICE_SELECTION, redirect to appropriate step
       if (targetStep === FormStep.SERVICE_SELECTION) {
         // If coming from earlier step, go to REVIEW
@@ -327,7 +325,7 @@ export default function ApplicationForm() {
         <StepIndicator
           currentStep={currentStep}
           onStepClick={handleStepClick}
-          showServiceSelection={SHOW_SERVICE_SELECTION}
+          showServiceSelection={CONFIG.SHOW_SERVICE_SELECTION}
         />
 
         {renderStep()}

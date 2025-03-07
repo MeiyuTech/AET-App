@@ -10,6 +10,7 @@ import {
   DELIVERY_OPTIONS,
   ADDITIONAL_SERVICES,
   getCountryLabel,
+  CONFIG,
 } from '../constants'
 
 export function Review() {
@@ -231,180 +232,184 @@ export function Review() {
       </Card>
 
       {/* Service Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Selected Services</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Customized Service */}
-          {formData.serviceType?.customizedService?.required && (
-            <div>
-              <div className="font-medium">Customized Service</div>
-              <div className="pl-4">Price Will Be Quoted Upon Request</div>
-            </div>
-          )}
+      {CONFIG.SHOW_SERVICE_SELECTION && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Selected Services</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Customized Service */}
+            {formData.serviceType?.customizedService?.required && (
+              <div>
+                <div className="font-medium">Customized Service</div>
+                <div className="pl-4">Price Will Be Quoted Upon Request</div>
+              </div>
+            )}
 
-          {/* Foreign Credential Evaluation */}
-          {formData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed && (
-            <div>
-              <h4 className="font-medium mb-2">Educational Foreign Credential Evaluation</h4>
-              <div className="pl-4 space-y-2">
-                {(() => {
-                  const speed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
-                  const service =
-                    speed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[speed]
-                  return (
-                    service && (
-                      <>
-                        <div>
-                          First Degree: {service.label} - ${service.price}
-                        </div>
-                        {formData.serviceType.foreignCredentialEvaluation.secondDegrees > 0 && (
+            {/* Foreign Credential Evaluation */}
+            {formData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed && (
+              <div>
+                <h4 className="font-medium mb-2">Educational Foreign Credential Evaluation</h4>
+                <div className="pl-4 space-y-2">
+                  {(() => {
+                    const speed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
+                    const service =
+                      speed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[speed]
+                    return (
+                      service && (
+                        <>
                           <div>
-                            Second Degree:{' '}
-                            {formData.serviceType.foreignCredentialEvaluation.secondDegrees} × $
-                            {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price} = $
-                            {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price *
-                              formData.serviceType.foreignCredentialEvaluation.secondDegrees}
+                            First Degree: {service.label} - ${service.price}
                           </div>
-                        )}
-                      </>
+                          {formData.serviceType.foreignCredentialEvaluation.secondDegrees > 0 && (
+                            <div>
+                              Second Degree:{' '}
+                              {formData.serviceType.foreignCredentialEvaluation.secondDegrees} × $
+                              {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price} =
+                              $
+                              {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price *
+                                formData.serviceType.foreignCredentialEvaluation.secondDegrees}
+                            </div>
+                          )}
+                        </>
+                      )
                     )
-                  )
-                })()}
+                  })()}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Course by Course */}
-          {formData.serviceType?.coursebyCourse?.firstDegree?.speed && (
-            <div>
-              <div className="font-medium">Course-by-course Evaluation</div>
-              <div className="pl-4 space-y-2">
-                {(() => {
-                  const speed = formData.serviceType.coursebyCourse.firstDegree.speed
-                  const service = speed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[speed]
-                  return (
-                    service && (
-                      <>
-                        <div>
-                          First Degree: {service.label} - ${service.price}
-                        </div>
-                        {formData.serviceType.coursebyCourse.secondDegrees > 0 && (
+            {/* Course by Course */}
+            {formData.serviceType?.coursebyCourse?.firstDegree?.speed && (
+              <div>
+                <div className="font-medium">Course-by-course Evaluation</div>
+                <div className="pl-4 space-y-2">
+                  {(() => {
+                    const speed = formData.serviceType.coursebyCourse.firstDegree.speed
+                    const service =
+                      speed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[speed]
+                    return (
+                      service && (
+                        <>
                           <div>
-                            Second Degree: {formData.serviceType.coursebyCourse.secondDegrees} × $
-                            {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} = $
-                            {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price *
-                              formData.serviceType.coursebyCourse.secondDegrees}
+                            First Degree: {service.label} - ${service.price}
                           </div>
-                        )}
-                      </>
+                          {formData.serviceType.coursebyCourse.secondDegrees > 0 && (
+                            <div>
+                              Second Degree: {formData.serviceType.coursebyCourse.secondDegrees} × $
+                              {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} = $
+                              {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price *
+                                formData.serviceType.coursebyCourse.secondDegrees}
+                            </div>
+                          )}
+                        </>
+                      )
                     )
-                  )
-                })()}
+                  })()}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Professional Experience */}
-          {formData.serviceType?.professionalExperience?.speed && (
-            <div>
-              <div className="font-medium">Professional Experience Evaluation</div>
-              <div className="pl-4">
-                {(() => {
-                  const speed = formData.serviceType.professionalExperience.speed
-                  const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
-                  return service ? `${service.label} - $${service.price}` : null
-                })()}
+            {/* Professional Experience */}
+            {formData.serviceType?.professionalExperience?.speed && (
+              <div>
+                <div className="font-medium">Professional Experience Evaluation</div>
+                <div className="pl-4">
+                  {(() => {
+                    const speed = formData.serviceType.professionalExperience.speed
+                    const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
+                    return service ? `${service.label} - $${service.price}` : null
+                  })()}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Position Evaluation */}
-          {formData.serviceType?.positionEvaluation?.speed && (
-            <div>
-              <div className="font-medium">Position Evaluation</div>
-              <div className="pl-4">
-                {(() => {
-                  const speed = formData.serviceType.positionEvaluation.speed
-                  const service = speed && EVALUATION_SERVICES.POSITION[speed]
-                  return service ? `${service.label} - $${service.price}` : null
-                })()}
+            {/* Position Evaluation */}
+            {formData.serviceType?.positionEvaluation?.speed && (
+              <div>
+                <div className="font-medium">Position Evaluation</div>
+                <div className="pl-4">
+                  {(() => {
+                    const speed = formData.serviceType.positionEvaluation.speed
+                    const service = speed && EVALUATION_SERVICES.POSITION[speed]
+                    return service ? `${service.label} - $${service.price}` : null
+                  })()}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Translation Service */}
-          {formData.serviceType?.translation?.required && (
-            <div>
-              <div className="font-medium">Translation Service</div>
-              <div className="pl-4">Price Will Be Quoted Upon Request</div>
-            </div>
-          )}
-
-          {/* Type of Delivery */}
-          {formData.deliveryMethod && (
-            <div>
-              <div className="font-medium">Type of Delivery</div>
-              <div className="pl-4">
-                {(() => {
-                  const method = formData.deliveryMethod
-                  const service =
-                    method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
-                  return service
-                    ? `${service.label} - $${service.price.toFixed(2)}`
-                    : 'No Delivery Needed - Free'
-                })()}
+            {/* Translation Service */}
+            {formData.serviceType?.translation?.required && (
+              <div>
+                <div className="font-medium">Translation Service</div>
+                <div className="pl-4">Price Will Be Quoted Upon Request</div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Additional Services */}
-          {formData.additionalServices?.length > 0 && (
-            <div>
-              <div className="font-medium">Additional Services</div>
-              <div className="pl-4 space-y-1">
-                {formData.additionalServices.map((serviceId) => {
-                  const service = ADDITIONAL_SERVICES[serviceId]
-                  if (service) {
-                    if (serviceId === 'extra_copy' && 'quantity' in service) {
-                      // only handle the quantity of extra_copy
-                      const quantity = formData.additionalServicesQuantity.extra_copy
-                      return (
-                        <div key={serviceId}>
-                          {service.label} × {quantity} = ${(service.price * quantity).toFixed(2)}
-                        </div>
-                      )
-                    } else {
-                      return (
-                        <div key={serviceId}>
-                          {service.label} - ${service.price.toFixed(2)}
-                        </div>
-                      )
+            {/* Type of Delivery */}
+            {formData.deliveryMethod && (
+              <div>
+                <div className="font-medium">Type of Delivery</div>
+                <div className="pl-4">
+                  {(() => {
+                    const method = formData.deliveryMethod
+                    const service =
+                      method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
+                    return service
+                      ? `${service.label} - $${service.price.toFixed(2)}`
+                      : 'No Delivery Needed - Free'
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Additional Services */}
+            {formData.additionalServices?.length > 0 && (
+              <div>
+                <div className="font-medium">Additional Services</div>
+                <div className="pl-4 space-y-1">
+                  {formData.additionalServices.map((serviceId) => {
+                    const service = ADDITIONAL_SERVICES[serviceId]
+                    if (service) {
+                      if (serviceId === 'extra_copy' && 'quantity' in service) {
+                        // only handle the quantity of extra_copy
+                        const quantity = formData.additionalServicesQuantity.extra_copy
+                        return (
+                          <div key={serviceId}>
+                            {service.label} × {quantity} = ${(service.price * quantity).toFixed(2)}
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div key={serviceId}>
+                            {service.label} - ${service.price.toFixed(2)}
+                          </div>
+                        )
+                      }
                     }
-                  }
-                  return null
-                })}
+                    return null
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Total Price */}
+            <div className="pt-4 border-t">
+              <div className="font-medium">
+                Estimated Total:{' '}
+                {formData.serviceType?.translation?.required ||
+                formData.serviceType?.customizedService?.required
+                  ? 'Price will be quoted upon request'
+                  : `$${calculateTotalPrice()}`}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">
+                * Actual price may vary. We will provide an official quote based on your specific
+                situation.
               </div>
             </div>
-          )}
-
-          {/* Total Price */}
-          <div className="pt-4 border-t">
-            <div className="font-medium">
-              Estimated Total:{' '}
-              {formData.serviceType?.translation?.required ||
-              formData.serviceType?.customizedService?.required
-                ? 'Price will be quoted upon request'
-                : `$${calculateTotalPrice()}`}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              * Actual price may vary. We will provide an official quote based on your specific
-              situation.
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
       <div className="text-muted-foreground mt-1">
         Please review all information carefully. We will process your application as soon as
         possible after submission.

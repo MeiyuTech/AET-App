@@ -1,5 +1,6 @@
 import { cn } from '@/utilities/cn'
 import { FormStep } from './types'
+import { CONFIG } from './constants'
 
 interface StepIndicatorProps {
   currentStep: FormStep
@@ -10,18 +11,14 @@ interface StepIndicatorProps {
 export function StepIndicator({
   currentStep,
   onStepClick,
-  showServiceSelection = true,
+  showServiceSelection = CONFIG.SHOW_SERVICE_SELECTION,
 }: StepIndicatorProps) {
-  const allSteps = [
-    { title: 'Client Info', step: FormStep.CLIENT_INFO },
-    { title: 'Evaluee Info', step: FormStep.EVALUEE_INFO },
-    { title: 'Services', step: FormStep.SERVICE_SELECTION },
-    { title: 'Review', step: FormStep.REVIEW },
+  const steps = [
+    { step: FormStep.CLIENT_INFO, label: 'Client Info' },
+    { step: FormStep.EVALUEE_INFO, label: 'Evaluee Info' },
+    ...(showServiceSelection ? [{ step: FormStep.SERVICE_SELECTION, label: 'Services' }] : []),
+    { step: FormStep.REVIEW, label: 'Review' },
   ]
-
-  const steps = showServiceSelection
-    ? allSteps
-    : allSteps.filter((s) => s.step !== FormStep.SERVICE_SELECTION)
 
   return (
     <div className="mb-8">
@@ -70,7 +67,7 @@ export function StepIndicator({
                 currentStep < step.step && 'text-gray-500'
               )}
             >
-              {step.title}
+              {step.label}
             </span>
           </div>
         ))}
