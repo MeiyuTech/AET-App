@@ -27,9 +27,13 @@ export const getRegionLabel = (countryCode: string) => {
 }
 
 export const PURPOSE_OPTIONS = [
-  { value: 'immigration', label: 'Immigration' },
-  { value: 'employment', label: 'Employment' },
-  { value: 'education', label: 'Education' },
+  // { value: 'immigration', label: 'Immigration' },
+  // { value: 'employment', label: 'Employment' },
+  // { value: 'education', label: 'Education' },
+  { value: 'translation', label: 'Translation' },
+  { value: 'evaluation', label: 'Evaluation' },
+  { value: 'interpretation', label: 'Interpretation' },
+  { value: 'visa', label: 'Visa' },
   { value: 'other', label: 'Other' },
 ] as const
 

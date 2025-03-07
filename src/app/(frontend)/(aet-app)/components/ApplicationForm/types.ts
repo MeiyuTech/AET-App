@@ -98,7 +98,8 @@ export interface DatabaseApplication {
   fax: string | null
   email: string
   office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
-  purpose: 'immigration' | 'employment' | 'education' | 'other'
+  // purpose: 'immigration' | 'employment' | 'education' | 'other'
+  purpose: 'translation' | 'evaluation' | 'interpretation' | 'visa' | 'other'
   purpose_other: string | null
 
   // Evaluee Information
