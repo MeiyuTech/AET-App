@@ -44,7 +44,8 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
     },
   ],
   serviceType: {
-    customizedService: { required: false },
+    // If wanna skip service selection, set customizedService to true
+    customizedService: { required: true },
     foreignCredentialEvaluation: {
       firstDegree: { speed: undefined },
       secondDegrees: 0,
