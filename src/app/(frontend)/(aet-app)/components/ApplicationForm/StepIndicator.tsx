@@ -4,15 +4,24 @@ import { FormStep } from './types'
 interface StepIndicatorProps {
   currentStep: FormStep
   onStepClick: (step: FormStep) => void
+  showServiceSelection?: boolean
 }
 
-export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
-  const steps = [
+export function StepIndicator({
+  currentStep,
+  onStepClick,
+  showServiceSelection = true,
+}: StepIndicatorProps) {
+  const allSteps = [
     { title: 'Client Info', step: FormStep.CLIENT_INFO },
     { title: 'Evaluee Info', step: FormStep.EVALUEE_INFO },
     { title: 'Services', step: FormStep.SERVICE_SELECTION },
     { title: 'Review', step: FormStep.REVIEW },
   ]
+
+  const steps = showServiceSelection
+    ? allSteps
+    : allSteps.filter((s) => s.step !== FormStep.SERVICE_SELECTION)
 
   return (
     <div className="mb-8">
