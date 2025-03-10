@@ -230,10 +230,7 @@ export default function ApplicationForm() {
           //
         })
 
-        // Delay redirect to allow the user to see the success message
-        setTimeout(() => {
-          router.push(`/status?applicationId=${result.applicationId}`)
-        }, 2500) // 2.5 second delay before redirect
+        router.push(`/status?applicationId=${result.applicationId}`)
       }
     } catch (error) {
       console.error('Submission error:', error)
