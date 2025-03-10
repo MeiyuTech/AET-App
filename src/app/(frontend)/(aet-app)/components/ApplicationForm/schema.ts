@@ -158,22 +158,27 @@ const serviceTypeSchema = z
       required: z.boolean().default(false),
     }),
   })
-  .refine(
-    (data) => {
-      // At least one evaluation service must be selected
-      return !!(
-        data.customizedService.required ||
-        data.foreignCredentialEvaluation.firstDegree.speed ||
-        data.coursebyCourse.firstDegree.speed ||
-        data.professionalExperience.speed ||
-        data.positionEvaluation.speed
-      )
-    },
-    {
-      message: 'Please select at least one service',
-      path: ['foreignCredentialEvaluation', 'firstDegree', 'speed'],
+  .optional()
+  .superRefine((data, ctx) => {
+    if (!data) return true
+
+    const hasService = !!(
+      data.customizedService.required ||
+      data.foreignCredentialEvaluation.firstDegree.speed ||
+      data.coursebyCourse.firstDegree.speed ||
+      data.professionalExperience.speed ||
+      data.positionEvaluation.speed ||
+      data.translation.required
+    )
+
+    if (!hasService) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please select at least one service',
+        path: ['foreignCredentialEvaluation', 'firstDegree', 'speed'],
+      })
     }
-  )
+  })
 
 // Validation rules migrated from FCE-Form.tsx ??
 export const formSchema = z.object({
