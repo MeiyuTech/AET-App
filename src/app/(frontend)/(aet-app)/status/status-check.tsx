@@ -1,10 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useToast } from '@/hooks/use-toast'
+// import { useToast } from '@/hooks/use-toast'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import Uploader from '../components/Dropbox/Uploader'
 import {
   PURPOSE_OPTIONS,
   PRONOUN_OPTIONS,
@@ -14,8 +13,10 @@ import {
   ADDITIONAL_SERVICES,
 } from '../components/ApplicationForm/constants'
 import { FormData } from '../components/ApplicationForm/types'
+import Uploader from '../components/Dropbox/Uploader'
+import StripeInlinePricingWithID from '../components/Stripe/InlinePricingWithID'
 import { verifyApplication } from '../utils/actions'
-import { createPayment } from '../utils/stripe/actions'
+// import { createPayment } from '../utils/stripe/actions'
 
 interface ApplicationData extends Partial<FormData> {
   status: string
@@ -59,7 +60,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
-  const { toast } = useToast()
+  // const { toast } = useToast()
 
   const updateURL = (id: string) => {
     const url = new URL(window.location.href)
@@ -113,127 +114,131 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     updateURL(applicationId)
   }
 
-  const calculateTotalPrice = () => {
-    if (!application) return '0.00'
+  // const calculateTotalPrice = () => {
+  //   if (!application) return '0.00'
 
-    let total = 0
+  //   let total = 0
 
-    if (application.serviceType) {
-      // Foreign Credential Evaluation
-      const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
-      const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
-      if (fceService) {
-        total += fceService.price
+  //   if (application.serviceType) {
+  //     // Foreign Credential Evaluation
+  //     const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
+  //     const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
+  //     if (fceService) {
+  //       total += fceService.price
 
-        // Second Degrees
-        if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-          const secondDegreePrice =
-            fceSpeed === '7day'
-              ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-              : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+  //       // Second Degrees
+  //       if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
+  //         const secondDegreePrice =
+  //           fceSpeed === '7day'
+  //             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+  //             : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-          total +=
-            secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
-        }
-      }
+  //         total +=
+  //           secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
+  //       }
+  //     }
 
-      // Course by Course Evaluation
-      const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
-      const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
-      if (cbeService) {
-        total += cbeService.price
+  //     // Course by Course Evaluation
+  //     const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
+  //     const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
+  //     if (cbeService) {
+  //       total += cbeService.price
 
-        // Second Degrees
-        if (application.serviceType.coursebyCourse.secondDegrees > 0) {
-          const secondDegreePrice =
-            cbeSpeed === '8day'
-              ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-              : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+  //       // Second Degrees
+  //       if (application.serviceType.coursebyCourse.secondDegrees > 0) {
+  //         const secondDegreePrice =
+  //           cbeSpeed === '8day'
+  //             ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+  //             : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 
-          total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
-        }
-      }
+  //         total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
+  //       }
+  //     }
 
-      // Professional Experience Evaluation
-      const profExpSpeed = application.serviceType.professionalExperience?.speed
-      const profExpService =
-        profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
-      if (profExpService) {
-        total += profExpService.price
-      }
+  //     // Professional Experience Evaluation
+  //     const profExpSpeed = application.serviceType.professionalExperience?.speed
+  //     const profExpService =
+  //       profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
+  //     if (profExpService) {
+  //       total += profExpService.price
+  //     }
 
-      // Position Evaluation
-      const posEvalSpeed = application.serviceType.positionEvaluation?.speed
-      const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
-      if (posEvalService) {
-        total += posEvalService.price
-      }
-    }
+  //     // Position Evaluation
+  //     const posEvalSpeed = application.serviceType.positionEvaluation?.speed
+  //     const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
+  //     if (posEvalService) {
+  //       total += posEvalService.price
+  //     }
+  //   }
 
-    // Delivery
-    const deliveryService =
-      application.deliveryMethod &&
-      DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
-    if (deliveryService) {
-      total += deliveryService.price
-    }
+  //   // Delivery
+  //   const deliveryService =
+  //     application.deliveryMethod &&
+  //     DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
+  //   if (deliveryService) {
+  //     total += deliveryService.price
+  //   }
 
-    // Additional Services
-    application.additionalServices?.forEach((serviceId) => {
-      const service = ADDITIONAL_SERVICES[serviceId]
-      if (service) {
-        if ('quantity' in service) {
-          const quantity = application.additionalServicesQuantity?.[serviceId] || 0
-          total += service.price * quantity
-        } else {
-          total += service.price
-        }
-      }
-    })
+  //   // Additional Services
+  //   application.additionalServices?.forEach((serviceId) => {
+  //     const service = ADDITIONAL_SERVICES[serviceId]
+  //     if (service) {
+  //       if ('quantity' in service) {
+  //         const quantity = application.additionalServicesQuantity?.[serviceId] || 0
+  //         total += service.price * quantity
+  //       } else {
+  //         total += service.price
+  //       }
+  //     }
+  //   })
 
-    return total.toFixed(2)
-  }
+  //   return total.toFixed(2)
+  // }
 
-  const handlePayment = async () => {
-    try {
-      const amount = application?.due_amount
-        ? (application.due_amount as number).toString()
-        : calculateTotalPrice()
-      const response = await createPayment({ amount, applicationId })
+  // const handlePayment = async () => {
+  //   try {
+  //     const amount = application?.due_amount
+  //       ? (application.due_amount as number).toString()
+  //       : calculateTotalPrice()
+  //     const response = await createPayment({ amount, applicationId })
 
-      const data = await response.json()
+  //     const data = await response.json()
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Payment creation failed')
-      }
+  //     if (!response.ok) {
+  //       throw new Error(data.error || 'Payment creation failed')
+  //     }
 
-      window.location.href = data.url
-    } catch (error) {
-      console.error('Payment creation failed:', error)
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Payment creation failed',
-      })
-    }
-  }
+  //     window.location.href = data.url
+  //   } catch (error) {
+  //     console.error('Payment creation failed:', error)
+  //     toast({
+  //       variant: 'destructive',
+  //       title: 'Error',
+  //       description: error instanceof Error ? error.message : 'Payment creation failed',
+  //     })
+  //   }
+  // }
 
   // Handle payment based on office location
   const handleOfficePaymentAction = () => {
-    if (!application || !application.office) return
-
-    // Direct payment link for Boston and New York offices
-    if (['Boston', 'New York'].includes(application.office)) {
-      // Replace with actual payment link for Boston/ New York
-      window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-    } else if (['Los Angeles', 'San Francisco', 'Miami'].includes(application.office)) {
-      // Use Stripe payment flow for Los Angeles, San Francisco, and Miami offices
-      handlePayment()
-    } else {
-      // Default behavior for unknown offices
-      console.log('Unknown office:', application.office)
-      window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    if (!application || !application.office) {
+      console.log('No application or office found')
+      return
     }
+
+    window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    // // Direct payment link for Boston and New York offices
+    // if (['Boston', 'New York'].includes(application.office)) {
+    //   // Replace with actual payment link for Boston/ New York
+    //   window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    // } else if (['Los Angeles', 'San Francisco', 'Miami'].includes(application.office)) {
+    //   // Use Stripe payment flow for Los Angeles, San Francisco, and Miami offices
+    //   window.open('/stripe-test', '_blank')
+    // } else {
+    //   // Default behavior for unknown offices
+    //   console.log('Unknown office:', application.office)
+    //   window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+    // }
   }
 
   return (
@@ -638,7 +643,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
               {/* Total Price */}
               <div className="pt-4 border-t">
-                <div className="font-medium">
+                {/* <div className="font-medium">
                   <div className="font-medium">
                     Estimated Total:{' '}
                     {application.serviceType?.translation?.required ||
@@ -652,19 +657,29 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 <div className="text-xs text-muted-foreground mt-1">
                   * Actual price may vary. We will provide an official quote based on your specific
                   situation.
-                </div>
+                </div> */}
 
                 {/* Add payment button if not paid */}
-                {application.payment_status !== 'paid' && application.due_amount && (
-                  <div className="mt-4">
-                    <button
-                      onClick={handleOfficePaymentAction}
-                      className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-                    >
-                      Proceed to Payment
-                    </button>
-                  </div>
-                )}
+                {(application.office === 'Boston' || application.office === 'New York') &&
+                  application.payment_status !== 'paid' && (
+                    <div className="mt-4">
+                      <button
+                        onClick={handleOfficePaymentAction}
+                        className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        Proceed to Payment
+                      </button>
+                    </div>
+                  )}
+
+                {(application.office === 'San Francisco' ||
+                  application.office === 'Los Angeles' ||
+                  application.office === 'Miami') &&
+                  application.payment_status !== 'paid' && (
+                    <div className="mt-4">
+                      <StripeInlinePricingWithID applicationId={applicationId} />
+                    </div>
+                  )}
               </div>
             </CardContent>
           </Card>

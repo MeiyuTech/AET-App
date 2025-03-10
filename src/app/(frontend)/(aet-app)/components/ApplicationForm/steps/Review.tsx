@@ -17,85 +17,85 @@ export function Review() {
   const { watch } = useFormContext<FormData>()
   const formData = watch()
 
-  // Calculate total price
-  const calculateTotalPrice = () => {
-    let total = 0
+  // // Calculate total price
+  // const calculateTotalPrice = () => {
+  //   let total = 0
 
-    if (formData.serviceType) {
-      // Foreign Credential Evaluation
-      const fceSpeed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
-      const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
-      if (fceService) {
-        total += fceService.price
+  //   if (formData.serviceType) {
+  //     // Foreign Credential Evaluation
+  //     const fceSpeed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
+  //     const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
+  //     if (fceService) {
+  //       total += fceService.price
 
-        // Second Degrees
-        if (formData.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-          const secondDegreePrice =
-            fceSpeed === '7day'
-              ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-              : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+  //       // Second Degrees
+  //       if (formData.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
+  //         const secondDegreePrice =
+  //           fceSpeed === '7day'
+  //             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+  //             : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-          total +=
-            secondDegreePrice * formData.serviceType.foreignCredentialEvaluation.secondDegrees
-        }
-      }
+  //         total +=
+  //           secondDegreePrice * formData.serviceType.foreignCredentialEvaluation.secondDegrees
+  //       }
+  //     }
 
-      // Course by Course Evaluation
-      const cbeSpeed = formData.serviceType.coursebyCourse.firstDegree.speed
-      const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
-      if (cbeService) {
-        total += cbeService.price
+  //     // Course by Course Evaluation
+  //     const cbeSpeed = formData.serviceType.coursebyCourse.firstDegree.speed
+  //     const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
+  //     if (cbeService) {
+  //       total += cbeService.price
 
-        // Second Degrees
-        if (formData.serviceType.coursebyCourse.secondDegrees > 0) {
-          const secondDegreePrice =
-            cbeSpeed === '8day'
-              ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-              : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+  //       // Second Degrees
+  //       if (formData.serviceType.coursebyCourse.secondDegrees > 0) {
+  //         const secondDegreePrice =
+  //           cbeSpeed === '8day'
+  //             ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+  //             : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 
-          total += secondDegreePrice * formData.serviceType.coursebyCourse.secondDegrees
-        }
-      }
+  //         total += secondDegreePrice * formData.serviceType.coursebyCourse.secondDegrees
+  //       }
+  //     }
 
-      // Professional Experience Evaluation
-      const profExpSpeed = formData.serviceType.professionalExperience.speed
-      const profExpService =
-        profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
-      if (profExpService) {
-        total += profExpService.price
-      }
+  //     // Professional Experience Evaluation
+  //     const profExpSpeed = formData.serviceType.professionalExperience.speed
+  //     const profExpService =
+  //       profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
+  //     if (profExpService) {
+  //       total += profExpService.price
+  //     }
 
-      // Position Evaluation
-      const posEvalSpeed = formData.serviceType.positionEvaluation.speed
-      const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
-      if (posEvalService) {
-        total += posEvalService.price
-      }
-    }
+  //     // Position Evaluation
+  //     const posEvalSpeed = formData.serviceType.positionEvaluation.speed
+  //     const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
+  //     if (posEvalService) {
+  //       total += posEvalService.price
+  //     }
+  //   }
 
-    // Delivery
-    const deliveryService =
-      formData.deliveryMethod &&
-      DELIVERY_OPTIONS[formData.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
-    if (deliveryService) {
-      total += deliveryService.price
-    }
+  //   // Delivery
+  //   const deliveryService =
+  //     formData.deliveryMethod &&
+  //     DELIVERY_OPTIONS[formData.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
+  //   if (deliveryService) {
+  //     total += deliveryService.price
+  //   }
 
-    // Additional Services
-    formData.additionalServices?.forEach((serviceId) => {
-      const service = ADDITIONAL_SERVICES[serviceId]
-      if (service) {
-        if ('quantity' in service) {
-          const quantity = formData.additionalServicesQuantity?.[serviceId] || 0
-          total += service.price * quantity
-        } else {
-          total += service.price
-        }
-      }
-    })
+  //   // Additional Services
+  //   formData.additionalServices?.forEach((serviceId) => {
+  //     const service = ADDITIONAL_SERVICES[serviceId]
+  //     if (service) {
+  //       if ('quantity' in service) {
+  //         const quantity = formData.additionalServicesQuantity?.[serviceId] || 0
+  //         total += service.price * quantity
+  //       } else {
+  //         total += service.price
+  //       }
+  //     }
+  //   })
 
-    return total.toFixed(2)
-  }
+  //   return total.toFixed(2)
+  // }
 
   return (
     <div className="space-y-6">
@@ -396,11 +396,12 @@ export function Review() {
             {/* Total Price */}
             <div className="pt-4 border-t">
               <div className="font-medium">
-                Estimated Total:{' '}
+                {/* Estimated Total:{' '}
                 {formData.serviceType?.translation?.required ||
                 formData.serviceType?.customizedService?.required
                   ? 'Price will be quoted upon request'
-                  : `$${calculateTotalPrice()}`}
+                  : `$${calculateTotalPrice()}`} */}
+                Estimated Total: Price will be quoted upon request
               </div>
               <div className="text-xs text-muted-foreground mt-1">
                 * Actual price may vary. We will provide an official quote based on your specific
