@@ -33,6 +33,7 @@ import { Review } from './steps/Review'
 import { formSchema } from './schema'
 import { useFormStore } from './store'
 import { FormData, FormStep, defaultFormValues } from './types'
+import { CONFIG } from './constants'
 
 // Import other step components...
 
@@ -107,7 +108,8 @@ export default function ApplicationForm() {
       case FormStep.EVALUEE_INFO:
         return <EvalueeInfo />
       case FormStep.SERVICE_SELECTION:
-        return <ServiceSelection />
+        // Only render if feature flag is enabled
+        return CONFIG.SHOW_SERVICE_SELECTION ? <ServiceSelection /> : null
       case FormStep.REVIEW:
         return <Review />
       default:
@@ -135,7 +137,14 @@ export default function ApplicationForm() {
 
     if (isValid) {
       console.log('Current form data:', form.getValues())
-      setCurrentStep(currentStep + 1)
+
+      // Skip SERVICE_SELECTION step if feature flag is disabled
+      if (!CONFIG.SHOW_SERVICE_SELECTION && currentStep === FormStep.EVALUEE_INFO) {
+        setCurrentStep(FormStep.REVIEW)
+      } else {
+        setCurrentStep(currentStep + 1)
+      }
+
       await scrollToTop()
     } else {
       toast({
@@ -182,7 +191,12 @@ export default function ApplicationForm() {
   }
 
   const handlePrevious = () => {
-    setCurrentStep(currentStep - 1)
+    // If Service Selection is hidden and we're at Review, go back to Evaluee Info
+    if (!CONFIG.SHOW_SERVICE_SELECTION && currentStep === FormStep.REVIEW) {
+      setCurrentStep(FormStep.EVALUEE_INFO)
+    } else {
+      setCurrentStep(currentStep - 1)
+    }
   }
 
   // Helper function to reset form state
@@ -236,6 +250,34 @@ export default function ApplicationForm() {
     // Don't do anything if clicking current step
     if (targetStep === currentStep) return
 
+    // Handle SERVICE_SELECTION navigation based on feature flag
+    if (!CONFIG.SHOW_SERVICE_SELECTION) {
+      // If trying to go to SERVICE_SELECTION, redirect to appropriate step
+      if (targetStep === FormStep.SERVICE_SELECTION) {
+        // If coming from earlier step, go to REVIEW
+        if (currentStep < FormStep.SERVICE_SELECTION) {
+          targetStep = FormStep.REVIEW
+        }
+        // If coming from later step, go to EVALUEE_INFO
+        else {
+          targetStep = FormStep.EVALUEE_INFO
+        }
+      }
+
+      // If going from CLIENT_INFO directly to REVIEW, validate EVALUEE_INFO first
+      if (currentStep === FormStep.CLIENT_INFO && targetStep === FormStep.REVIEW) {
+        const clientInfoFields = getFieldsToValidate(FormStep.CLIENT_INFO)
+        const isClientInfoValid = await form.trigger(clientInfoFields)
+        if (!isClientInfoValid) return
+
+        const evalueeInfoFields = getFieldsToValidate(FormStep.EVALUEE_INFO)
+        const isEvalueeInfoValid = await form.trigger(evalueeInfoFields)
+        if (!isEvalueeInfoValid) {
+          targetStep = FormStep.EVALUEE_INFO
+        }
+      }
+    }
+
     // If going backwards, allow direct navigation without validation
     if (targetStep < currentStep) {
       setCurrentStep(targetStep)
@@ -280,7 +322,11 @@ export default function ApplicationForm() {
           Validation Errors: {Object.keys(form.formState.errors).join(', ')}
         </div> */}
 
-        <StepIndicator currentStep={currentStep} onStepClick={handleStepClick} />
+        <StepIndicator
+          currentStep={currentStep}
+          onStepClick={handleStepClick}
+          showServiceSelection={CONFIG.SHOW_SERVICE_SELECTION}
+        />
 
         {renderStep()}
 

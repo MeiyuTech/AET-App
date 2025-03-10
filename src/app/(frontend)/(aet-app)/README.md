@@ -18,6 +18,11 @@
 - [ ] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Database
 - [ ] better email template, table layout
 - [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
+- [ ] 上传文件路径调整（支付前后，文件夹变化）
+- [ ] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
+- [ ] 增加一个字段（‘purpose’？）记录对应服务。
+  - [ ] miami： 翻译公证，学历评估，口译，签证
+- [ ] 可能还要增加一个字段， comments，简单为每个 order 写一个注解。
 
 ## Features
 

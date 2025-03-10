@@ -212,9 +212,12 @@ export const formSchema = z.object({
       required_error: 'Please select office',
     }
   ),
-  purpose: z.union([z.enum(['immigration', 'employment', 'education', 'other']), z.undefined()], {
-    required_error: 'Please select evaluation purpose',
-  }),
+  purpose: z.union(
+    [z.enum(['translation', 'evaluation', 'interpretation', 'visa', 'other']), z.undefined()],
+    {
+      required_error: 'Please select evaluation purpose',
+    }
+  ),
   purposeOther: z.string().optional(),
 
   // 2. EVALUEE INFORMATION

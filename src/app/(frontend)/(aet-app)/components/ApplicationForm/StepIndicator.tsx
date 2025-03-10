@@ -1,30 +1,46 @@
 import { cn } from '@/utilities/cn'
 import { FormStep } from './types'
+import { CONFIG } from './constants'
 
 interface StepIndicatorProps {
   currentStep: FormStep
   onStepClick: (step: FormStep) => void
+  showServiceSelection?: boolean
 }
 
-export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
+export function StepIndicator({
+  currentStep,
+  onStepClick,
+  showServiceSelection = CONFIG.SHOW_SERVICE_SELECTION,
+}: StepIndicatorProps) {
   const steps = [
-    { title: 'Client Info', step: FormStep.CLIENT_INFO },
-    { title: 'Evaluee Info', step: FormStep.EVALUEE_INFO },
-    { title: 'Services', step: FormStep.SERVICE_SELECTION },
-    { title: 'Review', step: FormStep.REVIEW },
+    { step: FormStep.CLIENT_INFO, label: 'Client Info' },
+    { step: FormStep.EVALUEE_INFO, label: 'Evaluee Info' },
+    ...(showServiceSelection ? [{ step: FormStep.SERVICE_SELECTION, label: 'Services' }] : []),
+    { step: FormStep.REVIEW, label: 'Review' },
   ]
 
   return (
     <div className="mb-8">
-      {/* Buttons container */}
-      <div className="relative w-[80%] mx-auto">
+      {/* Step Indicator Container - Using grid instead of previous relative positioning solution */}
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: `repeat(${steps.length}, 1fr)`,
+          gap: '0',
+        }}
+      >
         {/* Background line */}
-        <div className="absolute top-5 w-full h-[2px] bg-gray-200" />
+        <div
+          className="col-span-full h-[2px] bg-gray-200 self-center relative -z-10"
+          style={{ top: '20px', marginLeft: '15%', width: '70%' }}
+        />
 
-        {/* Circles/buttons container */}
-        <div className="relative flex justify-between">
-          {steps.map((step, index) => (
-            <div key={step.step} className="cursor-pointer" onClick={() => onStepClick(step.step)}>
+        {/* Create step items */}
+        {steps.map((step, index) => (
+          <div key={step.step} className="flex flex-col items-center">
+            {/* Circle indicator button */}
+            <div onClick={() => onStepClick(step.step)} className="cursor-pointer mb-2">
               <div
                 className={cn(
                   'w-10 h-10 rounded-full border-2 flex items-center justify-center bg-white transition-all duration-200',
@@ -41,24 +57,19 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
                 )}
               </div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Titles container */}
-      <div className="flex justify-between w-full mt-2">
-        {steps.map((step) => (
-          <span
-            key={step.step}
-            className={cn(
-              'text-sm font-medium transition-colors duration-200 text-center flex-1',
-              currentStep === step.step && 'text-primary',
-              currentStep > step.step && 'text-primary',
-              currentStep < step.step && 'text-gray-500'
-            )}
-          >
-            {step.title}
-          </span>
+            {/* Step title */}
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors duration-200 text-center',
+                currentStep === step.step && 'text-primary',
+                currentStep > step.step && 'text-primary',
+                currentStep < step.step && 'text-gray-500'
+              )}
+            >
+              {step.label}
+            </span>
+          </div>
         ))}
       </div>
     </div>

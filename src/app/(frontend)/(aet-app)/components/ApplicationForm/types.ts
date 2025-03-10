@@ -44,7 +44,8 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
     },
   ],
   serviceType: {
-    customizedService: { required: false },
+    // If wanna skip service selection, set customizedService to true
+    customizedService: { required: true },
     foreignCredentialEvaluation: {
       firstDegree: { speed: undefined },
       secondDegrees: 0,
@@ -98,7 +99,8 @@ export interface DatabaseApplication {
   fax: string | null
   email: string
   office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
-  purpose: 'immigration' | 'employment' | 'education' | 'other'
+  // purpose: 'immigration' | 'employment' | 'education' | 'other'
+  purpose: 'translation' | 'evaluation' | 'interpretation' | 'visa' | 'other'
   purpose_other: string | null
 
   // Evaluee Information
