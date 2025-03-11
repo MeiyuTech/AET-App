@@ -17,20 +17,23 @@ export default function Footer() {
         <div>
           <h3 className="text-2xl font-semibold mb-6 text-amber-400">Contact Information</h3>
           <div className="space-y-3 text-xl">
-            <p>San Francisco Office</p>
-            <p>Miami Office</p>
-            <p>Office Hours</p>
+            <p>19800 MacArthur Blvd Ste 420, Irvine CA 92612</p>
+            <p>Office Hours: Mon. – Fri. 9:30am - 5:30pm PST</p>
             <div className="flex items-center gap-2">
               <span>Phone</span>
-              <a href={`tel:+1 (415) 935-1122`} className="hover:text-teal-400">
-                +1 (415) 935-1122
+              <a href={`tel:+1 (949) 954-7996`} className="hover:text-teal-400">
+                +1 (949) 954-7996
               </a>
             </div>
             <div className="flex items-center gap-2">
               <span>Email</span>
-              <a href={`mailto:example@example.com`} className="hover:text-teal-400">
-                example@example.com
+              <a href={`mailto:ca2@aet21.com`} className="hover:text-teal-400">
+                ca2@aet21.com
               </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>WeChat</span>
+              <span className="hover:text-teal-400">LA9499547996</span>
             </div>
           </div>
         </div>
