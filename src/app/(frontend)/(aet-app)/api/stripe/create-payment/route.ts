@@ -11,20 +11,28 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { amount, currency, applicationId } = body
+    const stripeFee = amount * 0.03
+    const totalAmount = amount + stripeFee
 
     // Convert amount to cents and ensure it's a valid integer
-    const unitAmount = Math.round(amount * 100)
+    const unitAmount = Math.round(totalAmount * 100)
 
     // Create inline price and checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'alipay', 'us_bank_account'],
       // customer: 'hi',
+      payment_method_options: {
+        us_bank_account: {
+          setup_future_usage: 'on_session',
+        },
+      },
       line_items: [
         {
           price_data: {
             currency: currency,
             product_data: {
-              name: 'Custom Payment',
+              name: 'Customized Service Payment',
+              description: `Price: ${amount.toFixed(2)} + Service fee: ${stripeFee.toFixed(2)}`,
             },
             unit_amount: unitAmount, // Use rounded integer amount
           },
@@ -34,7 +42,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       client_reference_id: applicationId || '',
       success_url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
-      // cancel_url: `${currentUrl}/stripe-test`,
+      // return_url: `${currentUrl}/stripe-test`,
       metadata: {
         applicationId: applicationId || '',
       },
