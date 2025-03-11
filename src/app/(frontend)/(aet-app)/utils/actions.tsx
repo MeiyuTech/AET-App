@@ -174,8 +174,7 @@ export async function submitAETApplication(formData: FormData) {
       to: formData.email,
       cc: getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      // TODO: remove (test) after it's ready
-      subject: '(test)AET Services Application Confirmation',
+      subject: 'AET Services Application Confirmation',
       html: getApplicationConfirmationEmailHTML(
         formData.firstName,
         formData.lastName,
