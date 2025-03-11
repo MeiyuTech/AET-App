@@ -112,6 +112,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     currentStatus: string
   } | null>(null)
   const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
+  const [pendingPaymentStatusChange, setPendingPaymentStatusChange] = useState<{
+    id: string
+    status: string
+    currentStatus: string
+  } | null>(null)
+  const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
   const supabase = createClient()
 
   const handleOfficeChange = async (id: string, office: string | null) => {
@@ -242,6 +248,20 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         return
       }
 
+      // Allow changing from submitted to processing if payment status is paid
+      if (
+        newStatus === 'processing' &&
+        !(currentStatus === 'submitted' && paymentStatus === 'paid')
+      ) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Submitted" and payment status "Paid" can be marked as processing.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       // Open confirmation dialog
       setPendingStatusChange({
         id,
@@ -294,6 +314,89 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       })
     } finally {
       setPendingStatusChange(null)
+    }
+  }
+
+  const handlePaymentStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const currentStatus = application.payment_status
+
+      // Only allow changing from pending or expired to paid
+      if (newStatus === 'paid' && !(currentStatus === 'pending' || currentStatus === 'expired')) {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with payment status "Pending" or "Expired" can be marked as paid.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Open confirmation dialog
+      setPendingPaymentStatusChange({
+        id,
+        status: newStatus,
+        currentStatus,
+      })
+      setPaymentStatusConfirmDialogOpen(true)
+    } catch (error) {
+      console.error('Error preparing payment status change:', error)
+      toast({
+        title: 'Operation failed',
+        description: 'Could not prepare the payment status change. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const confirmPaymentStatusChange = async () => {
+    if (!pendingPaymentStatusChange) return
+
+    try {
+      const { id, status } = pendingPaymentStatusChange
+      const paid_at = status === 'paid' ? new Date().toISOString() : null
+      const payment_id = 'Marked as Paid'
+
+      // Update both payment_status and paid_at
+      const { error } = await supabase
+        .from('fce_applications')
+        .update({ payment_status: status, paid_at, payment_id })
+        .eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) =>
+        apps.map((app) =>
+          app.id === id
+            ? {
+                ...app,
+                payment_status: status as 'pending' | 'paid' | 'failed' | 'expired',
+                paid_at,
+              }
+            : app
+        )
+      )
+
+      toast({
+        title: 'Payment status updated',
+        description: `Payment status has been changed to ${status}.`,
+      })
+    } catch (error) {
+      console.error('Error updating payment status:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the payment status. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setPendingPaymentStatusChange(null)
     }
   }
 
@@ -585,7 +688,8 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         const canComplete = status === 'processing' && paymentStatus === 'paid'
         const canCancel =
           (status === 'processing' && paymentStatus !== 'paid') || status === 'submitted'
-        const isEditable = canComplete || canCancel
+        const canProcess = status === 'submitted' && paymentStatus === 'paid'
+        const isEditable = canComplete || canCancel || canProcess
 
         return (
           <div className="flex items-center">
@@ -605,6 +709,13 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
                       onClick={() => handleStatusChange(row.original.id, 'completed')}
                     >
                       Mark as Completed
+                    </DropdownMenuItem>
+                  )}
+                  {canProcess && (
+                    <DropdownMenuItem
+                      onClick={() => handleStatusChange(row.original.id, 'processing')}
+                    >
+                      Mark as Processing
                     </DropdownMenuItem>
                   )}
                   {canCancel && (
@@ -722,13 +833,37 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
           </Button>
         )
       },
-      cell: ({ row }) => (
-        <div
-          className={`capitalize font-medium ${getPaymentStatusColor(row.getValue('payment_status'))}`}
-        >
-          {row.getValue('payment_status')}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const paymentStatus = row.getValue('payment_status') as string
+        // Allow changing payment status if it's pending or expired
+        const canChangeToPaid = paymentStatus === 'pending' || paymentStatus === 'expired'
+
+        return (
+          <div className="flex items-center">
+            <div className={`capitalize font-medium mr-2 ${getPaymentStatusColor(paymentStatus)}`}>
+              {paymentStatus}
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" disabled={!canChangeToPaid}>
+                  <Edit className={`h-4 w-4 ${!canChangeToPaid ? 'opacity-50' : ''}`} />
+                </Button>
+              </DropdownMenuTrigger>
+              {canChangeToPaid && (
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Change Payment Status</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => handlePaymentStatusChange(row.original.id, 'paid')}
+                  >
+                    Mark as Paid
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          </div>
+        )
+      },
     },
     {
       accessorKey: 'paid_at',
@@ -950,6 +1085,32 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmStatusChange}>Confirm</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={paymentStatusConfirmDialogOpen}
+        onOpenChange={setPaymentStatusConfirmDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-500">
+              Confirm Payment Status Change
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change the payment status from &quot;
+              {pendingPaymentStatusChange?.currentStatus}&quot; to &quot;
+              {pendingPaymentStatusChange?.status}
+              &quot;? This action cannot be undone.
+              <br />
+              <br />
+              Payment date will be set to current time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmPaymentStatusChange}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
