@@ -41,8 +41,7 @@ export function ApplicationConfirmationEmailTester() {
       setLoading(true)
       const { message } = await await sendEmail({
         to: 'nietsemorej@gmail.com',
-        // TODO: remove (test) after it's ready
-        subject: '(test)AET Services Application Confirmation',
+        subject: 'AET Services Application Confirmation',
         html: getApplicationConfirmationEmailHTML(
           'St',
           'Jobs',
