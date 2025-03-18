@@ -58,6 +58,8 @@ export default function FCEApplicationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...(formData as FormData),
+      // Set default purpose to 'evaluation'
+      purpose: 'evaluation',
       deliveryMethod: formData?.deliveryMethod || 'no_delivery_needed',
       additionalServices: formData?.additionalServices || [],
       additionalServicesQuantity: formData?.additionalServicesQuantity || {
@@ -76,8 +78,14 @@ export default function FCEApplicationForm() {
           },
         },
       ],
+      // Set default service type 'customizedService' as required
+      serviceType: {
+        customizedService: { required: true },
+      },
     },
   })
+
+  console.log('formData', formData)
 
   // Initialize form with persisted data - ONLY ON MOUNT
   useEffect(() => {
