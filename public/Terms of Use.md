@@ -11,7 +11,7 @@ Definitions
 Company: Refers to American Education and Translation Services (AET).
 User: Any individual or entity accessing or using the services provided by the Company.
 Services: Includes translation, credential evaluation, online application submissions, payment processing, file uploads, and any other services provided by AET.
-Website: Refers to the Company's website (https://app.americantranslationservice.com/) and all associated pages.
+Website: Refers to the Company's websites and all associated pages.
 
 Use of Services
 
@@ -62,7 +62,7 @@ Payment Terms
 All payments for services must be made in accordance with the payment terms specified at the time of order. Prices are subject to change without notice.
 
 Payment Methods
-We accept payments via PayPal, Stripe (credit cards), and bank transfers. By using these payment methods, you agree to comply with their respective terms of service.
+We accept payments via PayPal, Stripe, and bank transfers. By using these payment methods, you agree to comply with their respective terms of service.
 
 Payment Security
 AET does not store your credit card information or banking details on our servers. All payment processing is handled by our secure third-party payment processors (PayPal and Stripe), who maintain industry-standard security measures to protect your financial information.

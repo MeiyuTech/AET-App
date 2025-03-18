@@ -85,7 +85,7 @@ We implement a variety of security measures to maintain the safety of your perso
 
 However, no method of transmission over the internet or electronic storage is completely secure, and we cannot guarantee its absolute security.
 
-**_Your Choices_**
+**Your Choices**
 
 **Access and Correction**
 You have the right to access and correct your personal information. If you need to update or correct your information, please contact us.
@@ -96,14 +96,14 @@ You may opt out of receiving marketing emails from us by following the unsubscri
 **Data Deletion**
 You may request deletion of your personal information, subject to our legal obligations and legitimate business interests. Please contact us for such requests.
 
-**_Third-Party Links_**
+**Third-Party Links**
 
 Our website may contain links to third-party websites. We are not responsible for the privacy practices or the content of these websites. We encourage you to read the privacy policies of any linked sites you visit.
 
-**_Changes to This Privacy Policy_**
+**Changes to This Privacy Policy**
 
 We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. Your continued use of our services after any changes indicates your acceptance of the new terms.
 
-**_Contact Information_**
+**Contact Information**
 
 If you have any questions or concerns about this Privacy Policy, please contact us at: service@aet21.com
