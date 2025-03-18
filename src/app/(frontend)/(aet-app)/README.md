@@ -2,26 +2,26 @@
 
 ## TODO
 
-- [x] CRM Loading issue:
-      Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
-- [x] feat: we can change the payment price for every order (bufore payment) in admin panel
-- [x] Dropbox refresh token
-- [x] Customized Service
-- [x] Email sending
+- [X] CRM Loading issue:
+  Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
+- [X] feat: we can change the payment price for every order (bufore payment) in admin panel
+- [X] Dropbox refresh token
+- [X] Customized Service
+- [X] Email sending
 - [ ] clean up payment code!!!
-- [x] Upload file for each user
+- [X] Upload file for each user
 - [ ] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
-- [x] Add 'payment_amount' in supabase
-- [x] Add 'office' in supabase
-- [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
+- [X] Add 'payment_amount' in supabase
+- [X] Add 'office' in supabase
+- [X] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
 - [ ] Update fuzzy filter
 - [ ] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Database
 - [ ] better email template, table layout
 - [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
 - [ ] 上传文件路径调整（支付前后，文件夹变化）
-- [ ] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
-- [ ] 增加一个字段（‘purpose’？）记录对应服务。
-  - [ ] miami： 翻译公证，学历评估，口译，签证
+- [X] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
+- [X] 增加一个字段（‘purpose’？）记录对应服务。
+  - [X] miami： 翻译公证，学历评估，口译，签证
 - [ ] 可能还要增加一个字段， comments，简单为每个 order 写一个注解。
 
 ## Features
@@ -61,14 +61,12 @@ FCE-Form/
    - Contact information
    - Address details (with country-specific regions)
    - Purpose of evaluation
-
 2. **Evaluee Information** (`EvalueeInfo.tsx`)
 
    - Personal information
    - Multiple education records
    - Study period details
    - Dynamic education fields
-
 3. **Service Selection** (`ServiceSelection.tsx`)
 
    - Document Evaluation Services
@@ -79,7 +77,6 @@ FCE-Form/
    - Translation Service
    - Delivery options
    - Additional services with quantities
-
 4. **Review** (`Review.tsx`)
 
    - Summary of all information
