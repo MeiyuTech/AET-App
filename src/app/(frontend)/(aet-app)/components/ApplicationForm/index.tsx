@@ -76,6 +76,10 @@ export default function ApplicationForm() {
           },
         },
       ],
+      // Set default service type 'customizedService' as required
+      serviceType: {
+        customizedService: { required: true },
+      },
     },
   })
 
