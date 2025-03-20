@@ -85,8 +85,6 @@ export default function FCEApplicationForm() {
     },
   })
 
-  console.log('formData', formData)
-
   // Initialize form with persisted data - ONLY ON MOUNT
   useEffect(() => {
     if (formData && Object.keys(formData).length > 0) {
