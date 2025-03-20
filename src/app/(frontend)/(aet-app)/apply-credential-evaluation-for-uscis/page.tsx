@@ -10,7 +10,7 @@ export default function ApplyFCEPage() {
   return (
     <div className="container mx-auto py-10">
       <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-16">
-        <h1 className="text-2xl font-bold">AET H-1B Credential Evaluation Application</h1>
+        <h1 className="text-2xl font-bold">AET Credential Evaluation Application</h1>
         <FCEApplicationForm />
       </div>
     </div>
