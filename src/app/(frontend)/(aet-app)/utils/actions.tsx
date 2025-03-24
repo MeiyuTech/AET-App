@@ -98,13 +98,13 @@ function getCCAddress(office: string) {
     case 'New York':
       return ['nyc@aet21.com', 'nyc@americantranslationservice.com']
     case 'San Francisco':
-      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+      return ['ca@aet21.com']
     case 'Los Angeles':
-      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+      return ['ca2@aet21.com']
     case 'Miami':
       return ['info@americantranslationservice.com', 'ca2@aet21.com']
     default:
-      return ['info@americantranslationservice.com']
+      return ['ca2@aet21.com']
   }
 }
 
