@@ -100,7 +100,14 @@ export interface DatabaseApplication {
   email: string
   office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
   // purpose: 'immigration' | 'employment' | 'education' | 'other'
-  purpose: 'translation' | 'evaluation' | 'interpretation' | 'visa' | 'other'
+  purpose:
+    | 'translation'
+    | 'evaluation-immigration'
+    | 'evaluation-employment'
+    | 'evaluation-education'
+    | 'interpretation'
+    | 'visa'
+    | 'other'
   purpose_other: string | null
 
   // Evaluee Information
