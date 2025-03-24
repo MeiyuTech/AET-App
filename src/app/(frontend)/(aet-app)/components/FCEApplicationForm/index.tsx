@@ -59,7 +59,6 @@ export default function FCEApplicationForm() {
     defaultValues: {
       ...(formData as FormData),
       // Set default purpose to 'evaluation'
-      purpose: 'evaluation',
       deliveryMethod: formData?.deliveryMethod || 'no_delivery_needed',
       additionalServices: formData?.additionalServices || [],
       additionalServicesQuantity: formData?.additionalServicesQuantity || {

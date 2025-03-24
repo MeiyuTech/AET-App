@@ -199,7 +199,7 @@ export const getApplicationConfirmationEmailHTML = (
           
           
           
-          <p><span style="color: #3b82f6;">If anything, please reply to this email thread with all of your questions.</span> We are looking forward to cooperating with you!</p>
+          <p><span style="color: #3b82f6;">If anything, please reply to this email thread （Reply All Please） with all of your questions.</span> We are looking forward to cooperating with you!</p>
           
           <p>Best Regards,<br>AET Team</p>
         </div>

@@ -7,16 +7,14 @@ export default function HomePage() {
         <h1 className="text-3xl font-bold text-center">AET Service</h1>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* H-1B Credential Evaluation Application Form Card */}
+          {/* Credential Evaluation Application Form Card */}
           <Link
             href="/apply-credential-evaluation-for-uscis"
             className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
           >
-            <h2 className="text-xl font-semibold mb-3">
-              Submit H-1B Credential Evaluation Application
-            </h2>
+            <h2 className="text-xl font-semibold mb-3">Submit Credential Evaluation Application</h2>
             <p className="text-gray-600">
-              Fill out the application form to start your H-1B Credential Evaluation request
+              Fill out the application form to start your Credential Evaluation request
             </p>
           </Link>
         </div>

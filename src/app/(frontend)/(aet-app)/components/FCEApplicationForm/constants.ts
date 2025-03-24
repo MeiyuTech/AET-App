@@ -36,10 +36,9 @@ export const PURPOSE_OPTIONS = [
   // { value: 'immigration', label: 'Immigration' },
   // { value: 'employment', label: 'Employment' },
   // { value: 'education', label: 'Education' },
-  { value: 'translation', label: 'Translation' },
-  { value: 'evaluation', label: 'Evaluation' },
-  { value: 'interpretation', label: 'Interpretation' },
-  { value: 'visa', label: 'Visa' },
+  { value: 'evaluation-immigration', label: 'Evaluation-Immigration' },
+  { value: 'evaluation-employment', label: 'Evaluation-Employment' },
+  { value: 'evaluation-education', label: 'Evaluation-Education' },
   { value: 'other', label: 'Other' },
 ] as const
 

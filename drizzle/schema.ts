@@ -1,4 +1,4 @@
-import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, foreignKey, jsonb, check, smallint, date, numeric, integer, boolean, serial, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, check, smallint, date, jsonb, numeric, foreignKey, integer, boolean, serial, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const locales = pgEnum("_locales", ['en', 'zh'])
@@ -64,26 +64,6 @@ export const contactSubmissions = pgTable("contact_submissions", {
 	}
 });
 
-export const fceEducations = pgTable("fce_educations", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	applicationId: uuid("application_id").notNull(),
-	countryOfStudy: text("country_of_study").notNull(),
-	degreeObtained: text("degree_obtained").notNull(),
-	schoolName: text("school_name").notNull(),
-	studyStartDate: jsonb("study_start_date").notNull(),
-	studyEndDate: jsonb("study_end_date").notNull(),
-}, (table) => {
-	return {
-		idxFceEducationsApplication: index("idx_fce_educations_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),
-		fceEducationsApplicationIdFkey: foreignKey({
-			columns: [table.applicationId],
-			foreignColumns: [fceApplications.id],
-			name: "fce_educations_application_id_fkey"
-		}).onDelete("cascade"),
-		anyoneCanManageEducations: pgPolicy("Anyone can manage educations", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
-	}
-});
-
 export const fceApplications = pgTable("fce_applications", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	status: text().default('draft').notNull(),
@@ -131,10 +111,30 @@ export const fceApplications = pgTable("fce_applications", {
 		fceApplicationsPaymentStatusCheck1: check("fce_applications_payment_status_check1", sql`payment_status = ANY (ARRAY['boston'::text, 'new york'::text, 'miami'::text, 'san francisco'::text, 'los angeles'::text, NULL::text])`),
 		fceApplicationsPhoneCheck: check("fce_applications_phone_check", sql`phone ~ '^\d{3}-\d{3}-\d{4}$'::text`),
 		fceApplicationsPronounsCheck: check("fce_applications_pronouns_check", sql`pronouns = ANY (ARRAY['mr'::text, 'ms'::text, 'mx'::text])`),
-		fceApplicationsPurposeCheck: check("fce_applications_purpose_check", sql`purpose = ANY (ARRAY['immigration'::text, 'employment'::text, 'education'::text, 'other'::text, 'translation'::text, 'evaluation'::text, 'interpretation'::text, 'visa'::text])`),
+		fceApplicationsPurposeCheck: check("fce_applications_purpose_check", sql`purpose = ANY (ARRAY['evaluation-immigration'::text, 'evaluation-employment'::text, 'evaluation-education'::text, 'immigration'::text, 'employment'::text, 'education'::text, 'other'::text, 'translation'::text, 'evaluation'::text, 'interpretation'::text, 'visa'::text])`),
 		fceApplicationsStatusCheck: check("fce_applications_status_check", sql`status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])`),
 		fceApplicationsZipCodeCheck: check("fce_applications_zip_code_check", sql`zip_code ~ '^\d{5}(-\d{4})?$'::text`),
 		validPurposeOther: check("valid_purpose_other", sql`((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))`),
+	}
+});
+
+export const fceEducations = pgTable("fce_educations", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	applicationId: uuid("application_id").notNull(),
+	countryOfStudy: text("country_of_study").notNull(),
+	degreeObtained: text("degree_obtained").notNull(),
+	schoolName: text("school_name").notNull(),
+	studyStartDate: jsonb("study_start_date").notNull(),
+	studyEndDate: jsonb("study_end_date").notNull(),
+}, (table) => {
+	return {
+		idxFceEducationsApplication: index("idx_fce_educations_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),
+		fceEducationsApplicationIdFkey: foreignKey({
+			columns: [table.applicationId],
+			foreignColumns: [fceApplications.id],
+			name: "fce_educations_application_id_fkey"
+		}).onDelete("cascade"),
+		anyoneCanManageEducations: pgPolicy("Anyone can manage educations", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
 	}
 });
 

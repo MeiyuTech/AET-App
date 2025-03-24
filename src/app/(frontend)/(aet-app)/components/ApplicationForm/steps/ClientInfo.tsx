@@ -274,10 +274,10 @@ export function ClientInfo() {
         name="purpose"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Purpose</FormLabel>
+            <FormLabel>Service Type</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder="Select purpose" />
+                <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
                 {PURPOSE_OPTIONS.map((option) => (

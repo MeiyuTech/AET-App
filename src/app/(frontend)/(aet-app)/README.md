@@ -10,7 +10,7 @@
 - [x] Email sending
 - [ ] clean up payment code!!!
 - [x] Upload file for each user
-- [ ] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
+- [x] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
 - [x] Add 'payment_amount' in supabase
 - [x] Add 'office' in supabase
 - [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
@@ -21,18 +21,20 @@
 - [ ] 上传文件路径调整（支付前后，文件夹变化）
 - [x] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
 - [x] 增加一个字段（‘purpose’？）记录对应服务。
+
   - [x] miami： 翻译公证，学历评估，口译，签证
-- [ ] email 里提醒大家 reply all。
+
 - [x] status 界面增加 instruction
-- [ ] 123
+- [x] status 增加hover card，说明所需上传文件
 - [ ] 1.单独建立五个申请卡片，对应 general，translation，evaluation和 visa
 - [ ] 2.其中 evaluation 要分： immigration，employment，education
 - [ ] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)
 - [ ] 4.translation 在提交之前上传文件
 - [ ] 5.在确认邮件里增加一个支付按钮。
+- [x] email 里提醒大家 reply all。
 - [x] status 页面，把支付按钮放到最上面。
 - [x] 6.单独显示 first name， last name， middle name
-- [ ] sf 邮箱要确认一下！！！
+- [x] sf 邮箱要确认一下！！！
 
 ## Features
 

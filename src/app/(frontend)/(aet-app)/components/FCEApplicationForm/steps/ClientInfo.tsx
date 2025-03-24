@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel } from '../constants'
+import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel, PURPOSE_OPTIONS } from '../constants'
 import { FormData } from '../types'
 
 export function ClientInfo() {
@@ -269,6 +269,44 @@ export function ClientInfo() {
           </FormItem>
         )}
       />
+
+      <FormField
+        control={form.control}
+        name="purpose"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Service Type</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select service type" />
+              </SelectTrigger>
+              <SelectContent>
+                {PURPOSE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {form.watch('purpose') === 'other' && (
+        <FormField
+          control={form.control}
+          name="purposeOther"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Please specify other purpose" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
     </div>
   )
 }

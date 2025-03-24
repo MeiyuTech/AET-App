@@ -21,7 +21,7 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
   fax: '',
   email: '',
   office: undefined,
-  purpose: 'evaluation',
+  purpose: undefined,
   purposeOther: '',
   pronouns: undefined,
   firstName: '',
@@ -100,7 +100,14 @@ export interface DatabaseApplication {
   email: string
   office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
   // purpose: 'immigration' | 'employment' | 'education' | 'other'
-  purpose: 'translation' | 'evaluation' | 'interpretation' | 'visa' | 'other'
+  purpose:
+    | 'translation'
+    | 'evaluation-immigration'
+    | 'evaluation-employment'
+    | 'evaluation-education'
+    | 'interpretation'
+    | 'visa'
+    | 'other'
   purpose_other: string | null
 
   // Evaluee Information
