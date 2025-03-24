@@ -30,7 +30,7 @@
 - [ ] 4.translation 在提交之前上传文件
 - [ ] 5.在确认邮件里增加一个支付按钮。
 - [ ] status 页面，把支付按钮放到最上面。
-- [ ] 6.单独显示 first name， last name， middle name
+- [x] 6.单独显示 first name， last name， middle name
 
 ## Features
 

@@ -435,15 +435,33 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
             </CardHeader>
             <CardContent>
               <dl className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <dt className="font-medium">Name</dt>
                   <dd className="text-muted-foreground">
                     {[application.firstName, application.middleName, application.lastName]
                       .filter(Boolean)
                       .join(' ') || 'Not provided'}
                   </dd>
-                </div>
+                </div> */}
 
+                <div>
+                  <dt className="font-medium">First Name</dt>
+                  <dd className="text-muted-foreground">
+                    {application.firstName || 'Not provided'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-medium">Middle Name</dt>
+                  <dd className="text-muted-foreground">
+                    {application.middleName || 'Not provided'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-medium">Last Name</dt>
+                  <dd className="text-muted-foreground">
+                    {application.lastName || 'Not provided'}
+                  </dd>
+                </div>
                 <div>
                   <dt className="font-medium">Date of Birth</dt>
                   <dd className="text-muted-foreground">
