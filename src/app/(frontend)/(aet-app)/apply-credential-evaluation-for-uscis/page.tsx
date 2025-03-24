@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import FCEApplicationForm from '../components/FCEApplicationForm'
 
 export const metadata: Metadata = {
-  title: 'H-1B Credential Evaluation Application | AET Service Application',
-  description: 'AET Service Application for H-1B Credential Evaluation',
+  title: 'Credential Evaluation Application | AET Service Application',
+  description: 'AET Service Application for Credential Evaluation',
 }
 
 export default function ApplyFCEPage() {
