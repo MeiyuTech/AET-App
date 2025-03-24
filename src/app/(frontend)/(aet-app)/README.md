@@ -10,7 +10,7 @@
 - [x] Email sending
 - [ ] clean up payment code!!!
 - [x] Upload file for each user
-- [ ] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
+- [x] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
 - [x] Add 'payment_amount' in supabase
 - [x] Add 'office' in supabase
 - [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
