@@ -23,6 +23,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 
 interface ApplicationData extends Partial<FormData> {
   status: string
@@ -939,9 +940,49 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   <CardTitle>Upload Documents to {application.office} Office</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    You can upload additional documents related to your application here.
+                  <p className="text-sm text-muted-foreground mb-2">
+                    You can upload additional documents related to your application:
+                    <br />
+                    <br />
                   </p>
+                  <div className="mb-2">
+                    For example,
+                    <br />
+                    <HoverCard>
+                      <HoverCardTrigger asChild>
+                        <div>
+                          <span className="inline-flex items-center gap-1 cursor-pointer text-gray-500 hover:text-blue-900 transition-colors">
+                            <strong>Evaluation</strong>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="text-gray-500"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <path d="M12 16v-4" />
+                              <path d="M12 8h.01" />
+                            </svg>
+                          </span>
+                        </div>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-120">
+                        <div className="space-y-2">
+                          <p className="text-sm text-muted-foreground">
+                            - Scanned copies of your <strong>degree(s)</strong> and
+                            <strong>transcript(s)</strong>
+                            <br />- Official or <strong>certified English translations</strong>
+                          </p>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
                   <Uploader
                     office={application.office}
                     applicationId={applicationId}

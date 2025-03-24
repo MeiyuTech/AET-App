@@ -24,6 +24,7 @@
   - [x] miami： 翻译公证，学历评估，口译，签证
 - [ ] email 里提醒大家 reply all。
 - [x] status 界面增加 instruction
+- [x] status 增加hover card，说明所需上传文件
 - [ ] 123
 - [ ] 1.单独建立五个申请卡片，对应 general，translation，evaluation和 visa
 - [ ] 2.其中 evaluation 要分： immigration，employment，education
