@@ -3,7 +3,7 @@ import { Country, State } from 'country-state-city'
 // Application configuration settings
 export const CONFIG = {
   // Feature flag to control the Service Selection step
-  SHOW_SERVICE_SELECTION: false,
+  SHOW_SERVICE_SELECTION: true,
 }
 
 export const COUNTRIES = Country.getAllCountries().map((country) => ({

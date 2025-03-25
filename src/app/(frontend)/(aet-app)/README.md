@@ -27,10 +27,12 @@
 - [x] status 界面增加 instruction
 - [x] status 增加hover card，说明所需上传文件
 - [ ] 1.单独建立五个申请卡片，对应 general，translation，evaluation和 visa
-- [ ] 2.其中 evaluation 要分： immigration，employment，education
-- [ ] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)
+- [x] 2.其中 evaluation 要分： immigration，employment，education
+- [x] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
 - [ ] 4.translation 在提交之前上传文件
 - [ ] 5.在确认邮件里增加一个支付按钮。
+- [ ] 加急付款只能用 zelle，提到 stripe 有手续费
+- [x] 默认要pdf。
 - [x] email 里提醒大家 reply all。
 - [x] status 页面，把支付按钮放到最上面。
 - [x] 6.单独显示 first name， last name， middle name

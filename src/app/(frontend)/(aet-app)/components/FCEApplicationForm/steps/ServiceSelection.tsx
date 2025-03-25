@@ -48,23 +48,6 @@ export function ServiceSelection() {
           {errors.serviceType && (
             <p className="text-sm text-destructive mb-4">Please select at least one service</p>
           )}
-          {/* Customized Service */}
-          <div className="mb-6">
-            <h4 className="font-medium mb-3">Customized Service</h4>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="customized-service-required"
-                onCheckedChange={(checked) => {
-                  setValue('serviceType.customizedService.required', checked)
-                }}
-                checked={watch('serviceType.customizedService.required')}
-              />
-              <Label htmlFor="customized-service-required" className="flex justify-between w-full">
-                <span>Customized Service Required</span>
-                <span className="text-muted-foreground">Price varies by document</span>
-              </Label>
-            </div>
-          </div>
 
           {/* Foreign Credential Evaluation Report */}
           <div className="mb-6">
@@ -356,6 +339,10 @@ export function ServiceSelection() {
                 </Label>
               </div>
             ))}
+          </div>
+          {/* Add note at bottom of card */}
+          <div className="mt-6 text-xs text-muted-foreground">
+            * By default, <strong>PDF Report Only</strong> is selected.
           </div>
         </CardContent>
       </Card>
