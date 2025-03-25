@@ -45,7 +45,7 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
   ],
   serviceType: {
     // If wanna skip service selection, set customizedService to true
-    customizedService: { required: true },
+    customizedService: { required: false },
     foreignCredentialEvaluation: {
       firstDegree: { speed: undefined },
       secondDegrees: 0,
@@ -59,11 +59,11 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
     translation: { required: false },
   },
   deliveryMethod: 'no_delivery_needed',
-  additionalServices: [],
+  additionalServices: ['pdf_only'],
   additionalServicesQuantity: {
     extra_copy: 0,
     pdf_with_hard_copy: 0,
-    pdf_only: 0,
+    pdf_only: 1,
   },
 }
 
