@@ -365,12 +365,20 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       return (
                         service && (
                           <>
-                            <div>First Degree: {service.label}</div>
+                            <div>
+                              First Degree: {service.label} - ${service.price}
+                            </div>
                             {application.serviceType.foreignCredentialEvaluation.secondDegrees >
                               0 && (
                               <div>
-                                Additional Degrees:{' '}
-                                {application.serviceType.foreignCredentialEvaluation.secondDegrees}
+                                Second Degree:{' '}
+                                {application.serviceType.foreignCredentialEvaluation.secondDegrees}{' '}
+                                × $
+                                {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price}{' '}
+                                = $
+                                {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day']
+                                  .price *
+                                  application.serviceType.foreignCredentialEvaluation.secondDegrees}
                               </div>
                             )}
                           </>
@@ -393,11 +401,17 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       return (
                         service && (
                           <>
-                            <div>First Degree: {service.label}</div>
+                            <div>
+                              First Degree: {service.label} - ${service.price}
+                            </div>
                             {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                               <div>
-                                Additional Degrees:{' '}
-                                {application.serviceType.coursebyCourse.secondDegrees}
+                                Second Degree:{' '}
+                                {application.serviceType.coursebyCourse.secondDegrees} × $
+                                {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} =
+                                $
+                                {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price *
+                                  application.serviceType.coursebyCourse.secondDegrees}
                               </div>
                             )}
                           </>
@@ -408,6 +422,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 </div>
               )}
 
+              {/* Professional Experience */}
               {/* Expert Opinion Letter */}
               {application.serviceType?.professionalExperience?.speed && (
                 <div>
@@ -416,7 +431,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     {(() => {
                       const speed = application.serviceType.professionalExperience.speed
                       const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
-                      return service ? service.label : null
+                      return service ? `${service.label} - $${service.price}` : null
                     })()}
                   </div>
                 </div>
@@ -430,7 +445,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     {(() => {
                       const speed = application.serviceType.positionEvaluation.speed
                       const service = speed && EVALUATION_SERVICES.POSITION[speed]
-                      return service ? service.label : null
+                      return service ? `${service.label} - $${service.price}` : null
                     })()}
                   </div>
                 </div>
@@ -453,7 +468,9 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       const method = application.deliveryMethod
                       const service =
                         method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
-                      return service ? service.label : 'No Delivery Needed'
+                      return service
+                        ? `${service.label} - $${service.price.toFixed(2)}`
+                        : 'No Delivery Needed - Free'
                     })()}
                   </div>
                 </div>
@@ -472,11 +489,16 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                           const quantity = application.additionalServicesQuantity.extra_copy
                           return (
                             <div key={serviceId}>
-                              {service.label} × {quantity}
+                              {service.label} × {quantity} = $
+                              {(service.price * quantity).toFixed(2)}
                             </div>
                           )
                         } else {
-                          return <div key={serviceId}>{service.label}</div>
+                          return (
+                            <div key={serviceId}>
+                              {service.label} - ${service.price.toFixed(2)}
+                            </div>
+                          )
                         }
                       }
                       return null
