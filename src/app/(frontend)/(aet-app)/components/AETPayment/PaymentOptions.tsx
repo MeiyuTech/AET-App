@@ -6,7 +6,7 @@ import { createPayment } from '../../utils/stripe/actions'
 import ZellePaymentOption from './ZellePaymentOption'
 import PaymentMethodSelector from './PaymentMethodSelector'
 import { Button } from '@/components/ui/button'
-import { CreditCard, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { CreditCard, ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react'
 
 interface ApplicationData {
   office?: string
@@ -29,7 +29,7 @@ export default function PaymentOptions({
   const [paymentMethod, setPaymentMethod] = useState<'zelle' | 'stripe'>('zelle')
   const [showZelleDetails, setShowZelleDetails] = useState(false)
 
-  const handleStripePayment = async () => {
+  const createStripePayment = async () => {
     try {
       const amount = application?.due_amount
         ? (application.due_amount as number).toString()
@@ -53,21 +53,21 @@ export default function PaymentOptions({
     }
   }
 
-  // Handle payment based on office location
-  const handleOfficePaymentAction = () => {
-    if (!application || !application.office) {
-      console.log('No application or office found')
-      return
-    }
-
-    window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-  }
-
   const handlePaymentProceed = () => {
     if (paymentMethod === 'zelle') {
       setShowZelleDetails(true)
     } else {
-      handleStripePayment()
+      if (application.office === 'New York' || application.office === 'Chicago') {
+        window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+      } else if (
+        application.office === 'San Francisco' ||
+        application.office === 'Los Angeles' ||
+        application.office === 'Miami'
+      ) {
+        createStripePayment()
+      } else {
+        window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
+      }
     }
   }
 
@@ -122,6 +122,7 @@ export default function PaymentOptions({
           <ZellePaymentOption office={application.office} />
 
           <Button variant="outline" onClick={() => setShowZelleDetails(false)} className="mt-4">
+            <ArrowLeft className="h-4 w-4" />
             Back to Payment Options
           </Button>
         </>
