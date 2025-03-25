@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-// import { useToast } from '@/hooks/use-toast'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+
 import {
   PURPOSE_OPTIONS,
   PRONOUN_OPTIONS,
@@ -14,16 +14,10 @@ import {
 } from '../components/ApplicationForm/constants'
 import { FormData } from '../components/ApplicationForm/types'
 import Uploader from '../components/Dropbox/Uploader'
-import StripeInlinePricingWithID from '../components/Stripe/InlinePricingWithID'
 import { verifyApplication } from '../utils/actions'
-// import { createPayment } from '../utils/stripe/actions'
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from '@/components/ui/accordion'
+
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import PaymentOptions from '../components/AETPayment/PaymentOptions'
 
 interface ApplicationData extends Partial<FormData> {
   status: string
@@ -67,7 +61,6 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
-  // const { toast } = useToast()
 
   const updateURL = (id: string) => {
     const url = new URL(window.location.href)
@@ -121,131 +114,85 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     updateURL(applicationId)
   }
 
-  // const calculateTotalPrice = () => {
-  //   if (!application) return '0.00'
+  const calculateTotalPrice = () => {
+    if (!application) return '0.00'
 
-  //   let total = 0
+    let total = 0
 
-  //   if (application.serviceType) {
-  //     // Foreign Credential Evaluation
-  //     const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
-  //     const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
-  //     if (fceService) {
-  //       total += fceService.price
+    if (application.serviceType) {
+      // Foreign Credential Evaluation
+      const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
+      const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
+      if (fceService) {
+        total += fceService.price
 
-  //       // Second Degrees
-  //       if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-  //         const secondDegreePrice =
-  //           fceSpeed === '7day'
-  //             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-  //             : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+        // Second Degrees
+        if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
+          const secondDegreePrice =
+            fceSpeed === '7day'
+              ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+              : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-  //         total +=
-  //           secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
-  //       }
-  //     }
+          total +=
+            secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
+        }
+      }
 
-  //     // Course by Course Evaluation
-  //     const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
-  //     const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
-  //     if (cbeService) {
-  //       total += cbeService.price
+      // Course by Course Evaluation
+      const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
+      const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
+      if (cbeService) {
+        total += cbeService.price
 
-  //       // Second Degrees
-  //       if (application.serviceType.coursebyCourse.secondDegrees > 0) {
-  //         const secondDegreePrice =
-  //           cbeSpeed === '8day'
-  //             ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-  //             : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+        // Second Degrees
+        if (application.serviceType.coursebyCourse.secondDegrees > 0) {
+          const secondDegreePrice =
+            cbeSpeed === '8day'
+              ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+              : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 
-  //         total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
-  //       }
-  //     }
+          total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
+        }
+      }
 
-  //     // Professional Experience Evaluation
-  //     const profExpSpeed = application.serviceType.professionalExperience?.speed
-  //     const profExpService =
-  //       profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
-  //     if (profExpService) {
-  //       total += profExpService.price
-  //     }
+      // Professional Experience Evaluation
+      const profExpSpeed = application.serviceType.professionalExperience?.speed
+      const profExpService =
+        profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
+      if (profExpService) {
+        total += profExpService.price
+      }
 
-  //     // Position Evaluation
-  //     const posEvalSpeed = application.serviceType.positionEvaluation?.speed
-  //     const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
-  //     if (posEvalService) {
-  //       total += posEvalService.price
-  //     }
-  //   }
-
-  //   // Delivery
-  //   const deliveryService =
-  //     application.deliveryMethod &&
-  //     DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
-  //   if (deliveryService) {
-  //     total += deliveryService.price
-  //   }
-
-  //   // Additional Services
-  //   application.additionalServices?.forEach((serviceId) => {
-  //     const service = ADDITIONAL_SERVICES[serviceId]
-  //     if (service) {
-  //       if ('quantity' in service) {
-  //         const quantity = application.additionalServicesQuantity?.[serviceId] || 0
-  //         total += service.price * quantity
-  //       } else {
-  //         total += service.price
-  //       }
-  //     }
-  //   })
-
-  //   return total.toFixed(2)
-  // }
-
-  // const handlePayment = async () => {
-  //   try {
-  //     const amount = application?.due_amount
-  //       ? (application.due_amount as number).toString()
-  //       : calculateTotalPrice()
-  //     const response = await createPayment({ amount, applicationId })
-
-  //     const data = await response.json()
-
-  //     if (!response.ok) {
-  //       throw new Error(data.error || 'Payment creation failed')
-  //     }
-
-  //     window.location.href = data.url
-  //   } catch (error) {
-  //     console.error('Payment creation failed:', error)
-  //     toast({
-  //       variant: 'destructive',
-  //       title: 'Error',
-  //       description: error instanceof Error ? error.message : 'Payment creation failed',
-  //     })
-  //   }
-  // }
-
-  // Handle payment based on office location
-  const handleOfficePaymentAction = () => {
-    if (!application || !application.office) {
-      console.log('No application or office found')
-      return
+      // Position Evaluation
+      const posEvalSpeed = application.serviceType.positionEvaluation?.speed
+      const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
+      if (posEvalService) {
+        total += posEvalService.price
+      }
     }
 
-    window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-    // // Direct payment link for Boston and New York offices
-    // if (['Boston', 'New York'].includes(application.office)) {
-    //   // Replace with actual payment link for Boston/ New York
-    //   window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-    // } else if (['Los Angeles', 'San Francisco', 'Miami'].includes(application.office)) {
-    //   // Use Stripe payment flow for Los Angeles, San Francisco, and Miami offices
-    //   window.open('/stripe-test', '_blank')
-    // } else {
-    //   // Default behavior for unknown offices
-    //   console.log('Unknown office:', application.office)
-    //   window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-    // }
+    // Delivery
+    const deliveryService =
+      application.deliveryMethod &&
+      DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
+    if (deliveryService) {
+      total += deliveryService.price
+    }
+
+    // Additional Services
+    application.additionalServices?.forEach((serviceId) => {
+      const service = ADDITIONAL_SERVICES[serviceId]
+      if (service) {
+        if ('quantity' in service) {
+          const quantity = application.additionalServicesQuantity?.[serviceId] || 0
+          total += service.price * quantity
+        } else {
+          total += service.price
+        }
+      }
+    })
+
+    return total.toFixed(2)
   }
 
   return (
@@ -365,12 +312,20 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       return (
                         service && (
                           <>
-                            <div>First Degree: {service.label}</div>
+                            <div>
+                              First Degree: {service.label} - ${service.price}
+                            </div>
                             {application.serviceType.foreignCredentialEvaluation.secondDegrees >
                               0 && (
                               <div>
-                                Additional Degrees:{' '}
-                                {application.serviceType.foreignCredentialEvaluation.secondDegrees}
+                                Second Degree:{' '}
+                                {application.serviceType.foreignCredentialEvaluation.secondDegrees}{' '}
+                                × $
+                                {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price}{' '}
+                                = $
+                                {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day']
+                                  .price *
+                                  application.serviceType.foreignCredentialEvaluation.secondDegrees}
                               </div>
                             )}
                           </>
@@ -393,11 +348,17 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       return (
                         service && (
                           <>
-                            <div>First Degree: {service.label}</div>
+                            <div>
+                              First Degree: {service.label} - ${service.price}
+                            </div>
                             {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                               <div>
-                                Additional Degrees:{' '}
-                                {application.serviceType.coursebyCourse.secondDegrees}
+                                Second Degree:{' '}
+                                {application.serviceType.coursebyCourse.secondDegrees} × $
+                                {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} =
+                                $
+                                {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price *
+                                  application.serviceType.coursebyCourse.secondDegrees}
                               </div>
                             )}
                           </>
@@ -409,14 +370,15 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
               )}
 
               {/* Professional Experience */}
+              {/* Expert Opinion Letter */}
               {application.serviceType?.professionalExperience?.speed && (
                 <div>
-                  <div className="font-medium">Professional Experience Evaluation</div>
+                  <div className="font-medium">Expert Opinion Letter</div>
                   <div className="pl-4">
                     {(() => {
                       const speed = application.serviceType.professionalExperience.speed
                       const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
-                      return service ? service.label : null
+                      return service ? `${service.label} - $${service.price}` : null
                     })()}
                   </div>
                 </div>
@@ -430,7 +392,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     {(() => {
                       const speed = application.serviceType.positionEvaluation.speed
                       const service = speed && EVALUATION_SERVICES.POSITION[speed]
-                      return service ? service.label : null
+                      return service ? `${service.label} - $${service.price}` : null
                     })()}
                   </div>
                 </div>
@@ -453,7 +415,9 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       const method = application.deliveryMethod
                       const service =
                         method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
-                      return service ? service.label : 'No Delivery Needed'
+                      return service
+                        ? `${service.label} - $${service.price.toFixed(2)}`
+                        : 'No Delivery Needed - Free'
                     })()}
                   </div>
                 </div>
@@ -472,11 +436,16 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                           const quantity = application.additionalServicesQuantity.extra_copy
                           return (
                             <div key={serviceId}>
-                              {service.label} × {quantity}
+                              {service.label} × {quantity} = $
+                              {(service.price * quantity).toFixed(2)}
                             </div>
                           )
                         } else {
-                          return <div key={serviceId}>{service.label}</div>
+                          return (
+                            <div key={serviceId}>
+                              {service.label} - ${service.price.toFixed(2)}
+                            </div>
+                          )
                         }
                       }
                       return null
@@ -487,445 +456,36 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
               {/* Total Price */}
               <div className="pt-4 border-t">
-                {/* <div className="font-medium">
-                  <div className="font-medium">
-                    Estimated Total:{' '}
-                    {application.serviceType?.translation?.required ||
-                    application.serviceType?.customizedService?.required
-                      ? application.due_amount
-                        ? `$${application.due_amount}`
-                        : 'Due amount is not set yet'
-                      : `$${calculateTotalPrice()}`}
-                  </div>
+                <div className="font-medium">
+                  {application.due_amount ? (
+                    <div className="font-medium">Due Amount: ${application.due_amount}</div>
+                  ) : (
+                    <div className="font-medium">
+                      Estimated Total:{' '}
+                      {application.serviceType?.translation?.required ||
+                      application.serviceType?.customizedService?.required
+                        ? application.due_amount
+                          ? `$${application.due_amount}`
+                          : 'Due amount is not set yet'
+                        : `$${calculateTotalPrice()}`}
+                    </div>
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  * Actual price may vary. We will provide an official quote based on your specific
+                  * Due amount may vary. We will provide an official quote based on your specific
                   situation.
-                </div> */}
+                </div>
 
                 {/* Add payment button if not paid */}
-                {(application.office === 'Boston' || application.office === 'New York') &&
-                  application.payment_status !== 'paid' && (
-                    <>
-                      <div className="mt-4">
-                        <Accordion type="single" collapsible>
-                          <AccordionItem
-                            value="zelle"
-                            className="border rounded-lg overflow-hidden"
-                          >
-                            <AccordionTrigger className="px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 flex items-center gap-2">
-                              <div className="flex items-center gap-2 text-blue-700">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="lucide lucide-credit-card"
-                                >
-                                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                                  <line x1="2" x2="22" y1="10" y2="10" />
-                                </svg>
-                                <span className="font-medium">
-                                  We Recommend Using Zelle for Payment
-                                </span>
-                              </div>
-                              <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                                No Fees & Instant Transfer
-                              </span>
-                            </AccordionTrigger>
-                            <AccordionContent className="px-6 py-4 bg-white">
-                              <div className="space-y-6">
-                                {/* Payment Steps */}
-                                <div className="border rounded-lg p-4 bg-gray-50">
-                                  <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="lucide lucide-list-checks"
-                                    >
-                                      <path d="m3 17 2 2 4-4" />
-                                      <path d="m3 7 2 2 4-4" />
-                                      <path d="M13 6h8" />
-                                      <path d="M13 12h8" />
-                                      <path d="M13 18h8" />
-                                    </svg>
-                                    Payment Steps
-                                  </h4>
-                                  <ol className="space-y-3 pl-0">
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        1
-                                      </div>
-                                      <div>
-                                        Login to your bank account that participates in Zelle (via
-                                        computer or mobile app).
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        2
-                                      </div>
-                                      <div>
-                                        Select &quot;Transfer Zelle&quot; → Select &quot;Manage
-                                        Recipients&quot; → &quot;Add New Recipient&quot; →
-                                        &quot;Business&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        3
-                                      </div>
-                                      <div>
-                                        Fill in the recipient information:
-                                        {/* Office Information Cards */}
-                                        <div className="grid grid-cols-1 gap-4">
-                                          <div className="border rounded-lg p-4 bg-gray-50">
-                                            <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                              <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                className="lucide lucide-building"
-                                              >
-                                                <rect
-                                                  width="16"
-                                                  height="20"
-                                                  x="4"
-                                                  y="2"
-                                                  rx="2"
-                                                  ry="2"
-                                                />
-                                                <path d="M9 22v-4h6v4" />
-                                                <path d="M8 6h.01" />
-                                                <path d="M16 6h.01" />
-                                                <path d="M8 10h.01" />
-                                                <path d="M16 10h.01" />
-                                                <path d="M8 14h.01" />
-                                                <path d="M16 14h.01" />
-                                              </svg>
-                                              Bank Information
-                                            </h4>
-                                            <div className="space-y-2 text-sm">
-                                              <p>
-                                                <span className="font-medium">Bank Name:</span> Bank
-                                                of America
-                                              </p>
-                                              <p>
-                                                <span className="font-medium">Business Name:</span>{' '}
-                                                American Education and Translation Services
-                                              </p>
-                                              <p>
-                                                <span className="font-medium">Zelle Email:</span>{' '}
-                                                <span className="font-bold text-blue-700">
-                                                  boston@aet21.com
-                                                </span>
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        4
-                                      </div>
-                                      <div>
-                                        After successfully adding the recipient, return to the main
-                                        menu and select &quot;Send&quot; → select &quot;American
-                                        Education and Translation Services&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        5
-                                      </div>
-                                      <div>
-                                        Enter the transfer amount → select &quot;Continue&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        6
-                                      </div>
-                                      <div>Select &quot;Confirm&quot; to complete the payment.</div>
-                                    </li>
-                                  </ol>
-                                </div>
-
-                                {/* Note */}
-                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm flex gap-2">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-info text-amber-600 flex-shrink-0 mt-0.5"
-                                  >
-                                    <circle cx="12" cy="12" r="10" />
-                                    <path d="M12 16v-4" />
-                                    <path d="M12 8h.01" />
-                                  </svg>
-                                  <div>
-                                    For a list of Zelle participating banks, visit{' '}
-                                    <a
-                                      href="https://www.zellepay.com/get-started?gclid=CjwKCAjw1f_pBRAEEiwApp0JKHk9NkE_GIAIZ94xfCkOru_WzsJQbjO0ddVzu0Trjk8yiRmX9uTSyxoCfa0QAvD_BwE"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-blue-600 hover:text-blue-800 underline"
-                                    >
-                                      Zelle&apos;s official website
-                                    </a>
-                                    .
-                                  </div>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        </Accordion>
-                      </div>
-                      <div className="mt-4">
-                        <button
-                          onClick={handleOfficePaymentAction}
-                          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-                        >
-                          Proceed to Payment
-                        </button>
-                      </div>
-                    </>
-                  )}
-
-                {(application.office === 'San Francisco' ||
-                  application.office === 'Los Angeles' ||
-                  application.office === 'Miami') &&
-                  application.payment_status !== 'paid' && (
-                    <>
-                      <div className="mt-4">
-                        <Accordion type="single" collapsible>
-                          <AccordionItem
-                            value="zelle"
-                            className="border rounded-lg overflow-hidden"
-                          >
-                            <AccordionTrigger className="px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 flex items-center gap-2">
-                              <div className="flex items-center gap-2 text-blue-700">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="lucide lucide-credit-card"
-                                >
-                                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                                  <line x1="2" x2="22" y1="10" y2="10" />
-                                </svg>
-                                <span className="font-medium">
-                                  We Recommend Using Zelle for Payment
-                                </span>
-                              </div>
-                              <span className="ml-auto text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                                No Fees & Instant Transfer
-                              </span>
-                            </AccordionTrigger>
-                            <AccordionContent className="px-6 py-4 bg-white">
-                              <div className="space-y-6">
-                                {/* Payment Steps */}
-                                <div className="border rounded-lg p-4 bg-gray-50">
-                                  <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="lucide lucide-list-checks"
-                                    >
-                                      <path d="m3 17 2 2 4-4" />
-                                      <path d="m3 7 2 2 4-4" />
-                                      <path d="M13 6h8" />
-                                      <path d="M13 12h8" />
-                                      <path d="M13 18h8" />
-                                    </svg>
-                                    Payment Steps
-                                  </h4>
-                                  <ol className="space-y-3 pl-0">
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        1
-                                      </div>
-                                      <div>
-                                        Login to your bank account that participates in Zelle (via
-                                        computer or mobile app).
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        2
-                                      </div>
-                                      <div>
-                                        Select &quot;Transfer Zelle&quot; → Select &quot;Manage
-                                        Recipients&quot; → &quot;Add New Recipient&quot; →
-                                        &quot;Business&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        3
-                                      </div>
-                                      <div>
-                                        Fill in the recipient information:
-                                        {/* Office Information Cards */}
-                                        <div className="grid grid-cols-1 gap-4">
-                                          <div className="border rounded-lg p-4 bg-gray-50">
-                                            <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                                              <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                className="lucide lucide-building"
-                                              >
-                                                <rect
-                                                  width="16"
-                                                  height="20"
-                                                  x="4"
-                                                  y="2"
-                                                  rx="2"
-                                                  ry="2"
-                                                />
-                                                <path d="M9 22v-4h6v4" />
-                                                <path d="M8 6h.01" />
-                                                <path d="M16 6h.01" />
-                                                <path d="M8 10h.01" />
-                                                <path d="M16 10h.01" />
-                                                <path d="M8 14h.01" />
-                                                <path d="M16 14h.01" />
-                                              </svg>
-                                              Bank Information
-                                            </h4>
-                                            <div className="space-y-2 text-sm">
-                                              <p>
-                                                <span className="font-medium">Bank Name:</span>{' '}
-                                                Chase
-                                              </p>
-                                              <p>
-                                                <span className="font-medium">Business Name:</span>{' '}
-                                                American Education and Translation Services
-                                              </p>
-                                              <p>
-                                                <span className="font-medium">Zelle Email:</span>{' '}
-                                                <span className="font-bold text-blue-700">
-                                                  info@aet21.com
-                                                </span>
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        4
-                                      </div>
-                                      <div>
-                                        After successfully adding the recipient, return to the main
-                                        menu and select &quot;Send&quot; → select &quot;American
-                                        Education and Translation Services&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        5
-                                      </div>
-                                      <div>
-                                        Enter the transfer amount → select &quot;Continue&quot;.
-                                      </div>
-                                    </li>
-                                    <li className="flex gap-3 items-start">
-                                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
-                                        6
-                                      </div>
-                                      <div>Select &quot;Confirm&quot; to complete the payment.</div>
-                                    </li>
-                                  </ol>
-                                </div>
-
-                                {/* Note */}
-                                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm flex gap-2">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-info text-amber-600 flex-shrink-0 mt-0.5"
-                                  >
-                                    <circle cx="12" cy="12" r="10" />
-                                    <path d="M12 16v-4" />
-                                    <path d="M12 8h.01" />
-                                  </svg>
-                                  <div>
-                                    For a list of Zelle participating banks, visit{' '}
-                                    <a
-                                      href="https://www.zellepay.com/get-started?gclid=CjwKCAjw1f_pBRAEEiwApp0JKHk9NkE_GIAIZ94xfCkOru_WzsJQbjO0ddVzu0Trjk8yiRmX9uTSyxoCfa0QAvD_BwE"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-blue-600 hover:text-blue-800 underline"
-                                    >
-                                      Zelle&apos;s official website
-                                    </a>
-                                    .
-                                  </div>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        </Accordion>
-                      </div>
-                      <div className="mt-4">
-                        <StripeInlinePricingWithID applicationId={applicationId} />
-                      </div>
-                    </>
-                  )}
+                {application.payment_status !== 'paid' && (
+                  <PaymentOptions
+                    office={application.office}
+                    payment_status={application.payment_status}
+                    due_amount={application.due_amount}
+                    applicationId={applicationId}
+                    calculateTotalPrice={calculateTotalPrice}
+                  />
+                )}
               </div>
             </CardContent>
           </Card>
