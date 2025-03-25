@@ -8,20 +8,18 @@ import PaymentMethodSelector from './PaymentMethodSelector'
 import { Button } from '@/components/ui/button'
 import { CreditCard, ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react'
 
-interface ApplicationData {
-  office?: string
-  payment_status?: 'pending' | 'paid' | 'failed' | 'expired'
-  due_amount?: number
-}
-
 interface PaymentOptionsProps {
-  application: ApplicationData
+  office: string | undefined
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  due_amount: number | undefined
   applicationId: string
   calculateTotalPrice: () => string
 }
 
 export default function PaymentOptions({
-  application,
+  office,
+  payment_status,
+  due_amount,
   applicationId,
   calculateTotalPrice,
 }: PaymentOptionsProps) {
@@ -31,9 +29,7 @@ export default function PaymentOptions({
 
   const createStripePayment = async () => {
     try {
-      const amount = application?.due_amount
-        ? (application.due_amount as number).toString()
-        : calculateTotalPrice()
+      const amount = due_amount ? (due_amount as number).toString() : calculateTotalPrice()
       const response = await createPayment({ amount, applicationId })
 
       const data = await response.json()
@@ -57,13 +53,9 @@ export default function PaymentOptions({
     if (paymentMethod === 'zelle') {
       setShowZelleDetails(true)
     } else {
-      if (application.office === 'New York' || application.office === 'Chicago') {
+      if (office === 'New York' || office === 'Chicago') {
         window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-      } else if (
-        application.office === 'San Francisco' ||
-        application.office === 'Los Angeles' ||
-        application.office === 'Miami'
-      ) {
+      } else if (office === 'San Francisco' || office === 'Los Angeles' || office === 'Miami') {
         createStripePayment()
       } else {
         window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
@@ -71,7 +63,7 @@ export default function PaymentOptions({
     }
   }
 
-  if (application.payment_status === 'paid') {
+  if (payment_status === 'paid') {
     return null
   }
 
@@ -119,7 +111,7 @@ export default function PaymentOptions({
             </p>
           </div>
 
-          <ZellePaymentOption office={application.office} />
+          <ZellePaymentOption office={office} />
 
           <Button variant="outline" onClick={() => setShowZelleDetails(false)} className="mt-4">
             <ArrowLeft className="h-4 w-4" />
