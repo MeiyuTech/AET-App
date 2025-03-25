@@ -60,7 +60,9 @@ function generateServiceDescription(serviceType: FormData['serviceType']) {
 
   // Professional Experience
   if (serviceType.professionalExperience.speed) {
-    let service: string = 'Professional Experience Evaluation'
+    // TODO: rename to Expert Opinion Letter
+    // let service: string = 'Professional Experience Evaluation'
+    let service: string = 'Expert Opinion Letter'
     const speedMap = {
       '3day': '3 business days',
       '7day': '7 business days',

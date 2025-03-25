@@ -408,10 +408,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 </div>
               )}
 
-              {/* Professional Experience */}
+              {/* Expert Opinion Letter */}
               {application.serviceType?.professionalExperience?.speed && (
                 <div>
-                  <div className="font-medium">Professional Experience Evaluation</div>
+                  <div className="font-medium">Expert Opinion Letter</div>
                   <div className="pl-4">
                     {(() => {
                       const speed = application.serviceType.professionalExperience.speed

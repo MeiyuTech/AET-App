@@ -310,10 +310,10 @@ export function Review() {
               </div>
             )}
 
-            {/* Professional Experience */}
+            {/* Expert Opinion Letter */}
             {formData.serviceType?.professionalExperience?.speed && (
               <div>
-                <div className="font-medium">Professional Experience Evaluation</div>
+                <div className="font-medium">Expert Opinion Letter</div>
                 <div className="pl-4">
                   {(() => {
                     const speed = formData.serviceType.professionalExperience.speed

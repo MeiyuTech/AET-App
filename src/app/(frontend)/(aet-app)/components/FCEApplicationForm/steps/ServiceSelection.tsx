@@ -167,9 +167,9 @@ export function ServiceSelection() {
             )}
           </div>
 
-          {/* Professional Experience Evaluation */}
+          {/* Expert Opinion Letter */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">Professional Experience Evaluation</h4>
+            <h4 className="font-medium mb-3">Expert Opinion Letter</h4>
             <Select
               onValueChange={(value) => {
                 setValue(
