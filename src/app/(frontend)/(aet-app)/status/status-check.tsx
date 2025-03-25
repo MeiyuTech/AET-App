@@ -121,86 +121,86 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     updateURL(applicationId)
   }
 
-  // const calculateTotalPrice = () => {
-  //   if (!application) return '0.00'
+  const calculateTotalPrice = () => {
+    if (!application) return '0.00'
 
-  //   let total = 0
+    let total = 0
 
-  //   if (application.serviceType) {
-  //     // Foreign Credential Evaluation
-  //     const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
-  //     const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
-  //     if (fceService) {
-  //       total += fceService.price
+    if (application.serviceType) {
+      // Foreign Credential Evaluation
+      const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
+      const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
+      if (fceService) {
+        total += fceService.price
 
-  //       // Second Degrees
-  //       if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-  //         const secondDegreePrice =
-  //           fceSpeed === '7day'
-  //             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-  //             : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+        // Second Degrees
+        if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
+          const secondDegreePrice =
+            fceSpeed === '7day'
+              ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+              : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-  //         total +=
-  //           secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
-  //       }
-  //     }
+          total +=
+            secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
+        }
+      }
 
-  //     // Course by Course Evaluation
-  //     const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
-  //     const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
-  //     if (cbeService) {
-  //       total += cbeService.price
+      // Course by Course Evaluation
+      const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
+      const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
+      if (cbeService) {
+        total += cbeService.price
 
-  //       // Second Degrees
-  //       if (application.serviceType.coursebyCourse.secondDegrees > 0) {
-  //         const secondDegreePrice =
-  //           cbeSpeed === '8day'
-  //             ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-  //             : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+        // Second Degrees
+        if (application.serviceType.coursebyCourse.secondDegrees > 0) {
+          const secondDegreePrice =
+            cbeSpeed === '8day'
+              ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+              : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 
-  //         total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
-  //       }
-  //     }
+          total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
+        }
+      }
 
-  //     // Professional Experience Evaluation
-  //     const profExpSpeed = application.serviceType.professionalExperience?.speed
-  //     const profExpService =
-  //       profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
-  //     if (profExpService) {
-  //       total += profExpService.price
-  //     }
+      // Professional Experience Evaluation
+      const profExpSpeed = application.serviceType.professionalExperience?.speed
+      const profExpService =
+        profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
+      if (profExpService) {
+        total += profExpService.price
+      }
 
-  //     // Position Evaluation
-  //     const posEvalSpeed = application.serviceType.positionEvaluation?.speed
-  //     const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
-  //     if (posEvalService) {
-  //       total += posEvalService.price
-  //     }
-  //   }
+      // Position Evaluation
+      const posEvalSpeed = application.serviceType.positionEvaluation?.speed
+      const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
+      if (posEvalService) {
+        total += posEvalService.price
+      }
+    }
 
-  //   // Delivery
-  //   const deliveryService =
-  //     application.deliveryMethod &&
-  //     DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
-  //   if (deliveryService) {
-  //     total += deliveryService.price
-  //   }
+    // Delivery
+    const deliveryService =
+      application.deliveryMethod &&
+      DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
+    if (deliveryService) {
+      total += deliveryService.price
+    }
 
-  //   // Additional Services
-  //   application.additionalServices?.forEach((serviceId) => {
-  //     const service = ADDITIONAL_SERVICES[serviceId]
-  //     if (service) {
-  //       if ('quantity' in service) {
-  //         const quantity = application.additionalServicesQuantity?.[serviceId] || 0
-  //         total += service.price * quantity
-  //       } else {
-  //         total += service.price
-  //       }
-  //     }
-  //   })
+    // Additional Services
+    application.additionalServices?.forEach((serviceId) => {
+      const service = ADDITIONAL_SERVICES[serviceId]
+      if (service) {
+        if ('quantity' in service) {
+          const quantity = application.additionalServicesQuantity?.[serviceId] || 0
+          total += service.price * quantity
+        } else {
+          total += service.price
+        }
+      }
+    })
 
-  //   return total.toFixed(2)
-  // }
+    return total.toFixed(2)
+  }
 
   // const handlePayment = async () => {
   //   try {
@@ -487,7 +487,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
               {/* Total Price */}
               <div className="pt-4 border-t">
-                {/* <div className="font-medium">
+                <div className="font-medium">
                   <div className="font-medium">
                     Estimated Total:{' '}
                     {application.serviceType?.translation?.required ||
@@ -501,7 +501,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 <div className="text-xs text-muted-foreground mt-1">
                   * Actual price may vary. We will provide an official quote based on your specific
                   situation.
-                </div> */}
+                </div>
 
                 {/* Add payment button if not paid */}
                 {(application.office === 'Boston' || application.office === 'New York') &&
