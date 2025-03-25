@@ -457,18 +457,22 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
               {/* Total Price */}
               <div className="pt-4 border-t">
                 <div className="font-medium">
-                  <div className="font-medium">
-                    Estimated Total:{' '}
-                    {application.serviceType?.translation?.required ||
-                    application.serviceType?.customizedService?.required
-                      ? application.due_amount
-                        ? `$${application.due_amount}`
-                        : 'Due amount is not set yet'
-                      : `$${calculateTotalPrice()}`}
-                  </div>
+                  {application.due_amount ? (
+                    <div className="font-medium">Due Amount: ${application.due_amount}</div>
+                  ) : (
+                    <div className="font-medium">
+                      Estimated Total:{' '}
+                      {application.serviceType?.translation?.required ||
+                      application.serviceType?.customizedService?.required
+                        ? application.due_amount
+                          ? `$${application.due_amount}`
+                          : 'Due amount is not set yet'
+                        : `$${calculateTotalPrice()}`}
+                    </div>
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  * Actual price may vary. We will provide an official quote based on your specific
+                  * Due amount may vary. We will provide an official quote based on your specific
                   situation.
                 </div>
 
