@@ -291,6 +291,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
               <CardTitle>Selected Services</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div>
+                <div className="font-medium">Purpose:</div>
+                <div className="pl-4">{application.purpose}</div>
+              </div>
               {/* Customized Service */}
               {application.serviceType?.customizedService?.required && (
                 <div>
