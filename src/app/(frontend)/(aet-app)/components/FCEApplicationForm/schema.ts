@@ -204,24 +204,18 @@ export const formSchema = z.object({
       }
     }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
-  office: z.union(
-    [z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami']), z.undefined()],
-    {
-      required_error: 'Please select office',
-    }
-  ),
-  purpose: z.union(
+  office: z.enum(['Boston', 'New York', 'San Francisco', 'Los Angeles', 'Miami'], {
+    required_error: 'Please select office',
+  }),
+  purpose: z.enum(
     [
-      z.enum([
-        'translation',
-        'evaluation-immigration',
-        'evaluation-employment',
-        'evaluation-education',
-        'interpretation',
-        'visa',
-        'other',
-      ]),
-      z.undefined(),
+      'translation',
+      'evaluation-immigration',
+      'evaluation-employment',
+      'evaluation-education',
+      'interpretation',
+      'visa',
+      'other',
     ],
     {
       required_error: 'Please select evaluation purpose',
