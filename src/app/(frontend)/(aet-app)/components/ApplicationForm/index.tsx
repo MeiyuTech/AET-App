@@ -37,6 +37,8 @@ import { CONFIG } from './constants'
 
 // Import other step components...
 
+// TODO: remove this component in future versions.
+// @deprecated This component is deprecated and will be removed in future versions.
 export default function ApplicationForm() {
   const { toast } = useToast()
   const router = useRouter()
@@ -165,14 +167,18 @@ export default function ApplicationForm() {
       case FormStep.CLIENT_INFO:
         return [
           'name',
+          'country',
           'streetAddress',
+          'streetAddress2',
           'city',
           'region',
           'zipCode',
           'phone',
+          'fax',
           'email',
           'office',
           'purpose',
+          'purposeOther',
         ]
       case FormStep.EVALUEE_INFO:
         return ['pronouns', 'firstName', 'lastName', 'dateOfBirth', 'educations']
