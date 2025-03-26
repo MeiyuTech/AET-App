@@ -477,15 +477,17 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 </div>
 
                 {/* Add payment button if not paid */}
-                {application.payment_status !== 'paid' && (
-                  <PaymentOptions
-                    office={application.office}
-                    payment_status={application.payment_status}
-                    due_amount={application.due_amount}
-                    applicationId={applicationId}
-                    calculateTotalPrice={calculateTotalPrice}
-                  />
-                )}
+                {application.payment_status !== 'paid' &&
+                  application.due_amount &&
+                  application.due_amount !== 0 && (
+                    <PaymentOptions
+                      office={application.office}
+                      payment_status={application.payment_status}
+                      due_amount={application.due_amount}
+                      applicationId={applicationId}
+                      calculateTotalPrice={calculateTotalPrice}
+                    />
+                  )}
               </div>
             </CardContent>
           </Card>
