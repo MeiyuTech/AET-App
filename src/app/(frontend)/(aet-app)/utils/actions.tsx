@@ -104,7 +104,7 @@ function getCCAddress(office: string) {
     case 'Los Angeles':
       return ['ca2@aet21.com']
     case 'Miami':
-      return ['info@americantranslationservice.com', 'ca2@aet21.com']
+      return ['info@americantranslationservice.com']
     default:
       return ['ca2@aet21.com']
   }
