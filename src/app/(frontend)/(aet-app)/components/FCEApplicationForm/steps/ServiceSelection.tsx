@@ -44,7 +44,9 @@ export function ServiceSelection() {
     <div className="space-y-6">
       <Card>
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">Service Selection</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Service Selection<span className="text-red-500">*</span>
+          </h3>
           {errors.serviceType && (
             <p className="text-sm text-destructive mb-4">Please select at least one service</p>
           )}
@@ -263,7 +265,9 @@ export function ServiceSelection() {
       {/* Type of Delivery */}
       <Card>
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">Type of Delivery</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Type of Delivery<span className="text-red-500">*</span>
+          </h3>
           <Select
             onValueChange={(value) => {
               setValue('deliveryMethod', value)
@@ -295,7 +299,9 @@ export function ServiceSelection() {
       {/* Additional Services */}
       <Card>
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">Additional Services</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Additional Services<span className="text-red-500">*</span>
+          </h3>
           <div className="space-y-3">
             {Object.entries(ADDITIONAL_SERVICES).map(([value, service]) => (
               <div key={value} className="flex items-center space-x-2">

@@ -60,7 +60,9 @@ export function ClientInfo() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company/Individual Name</FormLabel>
+              <FormLabel>
+                Company/Individual Name<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -74,7 +76,9 @@ export function ClientInfo() {
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Country</FormLabel>
+              <FormLabel>
+                Country<span className="text-red-500">*</span>
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select country" />
@@ -99,7 +103,9 @@ export function ClientInfo() {
           name="streetAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Street Address</FormLabel>
+              <FormLabel>
+                Street Address<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="1234 Main St" {...field} />
               </FormControl>
@@ -131,7 +137,9 @@ export function ClientInfo() {
           name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>City</FormLabel>
+              <FormLabel>
+                City<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -145,7 +153,10 @@ export function ClientInfo() {
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{regionLabel.label}</FormLabel>
+              <FormLabel>
+                {regionLabel.label}
+                <span className="text-red-500">*</span>
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger>
                   <SelectValue placeholder={`Select ${regionLabel.label}`} />
@@ -170,7 +181,9 @@ export function ClientInfo() {
           name="zipCode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Zip Code</FormLabel>
+              <FormLabel>
+                Zip Code<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="12345" maxLength={10} {...field} />
               </FormControl>
@@ -213,7 +226,9 @@ export function ClientInfo() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone</FormLabel>
+              <FormLabel>
+                Phone<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="123-456-7890"
@@ -237,7 +252,9 @@ export function ClientInfo() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                Email<span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input type="email" placeholder="your@email.com" {...field} />
               </FormControl>
@@ -252,7 +269,9 @@ export function ClientInfo() {
         name="office"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Office</FormLabel>
+            <FormLabel>
+              Office<span className="text-red-500">*</span>
+            </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
                 <SelectValue placeholder="Select office" />
@@ -275,7 +294,9 @@ export function ClientInfo() {
         name="purpose"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Service Type</FormLabel>
+            <FormLabel>
+              Service Type<span className="text-red-500">*</span>
+            </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
