@@ -164,11 +164,25 @@ export default function FCEApplicationForm() {
   const getFieldsToValidate = (step: FormStep): (keyof FormData)[] => {
     switch (step) {
       case FormStep.CLIENT_INFO:
-        return ['name', 'streetAddress', 'city', 'region', 'zipCode', 'phone', 'email', 'purpose']
+        return [
+          'name',
+          'country',
+          'streetAddress',
+          'streetAddress2',
+          'city',
+          'region',
+          'zipCode',
+          'phone',
+          'fax',
+          'email',
+          'office',
+          'purpose',
+          'purposeOther',
+        ]
       case FormStep.EVALUEE_INFO:
-        return ['pronouns', 'firstName', 'lastName', 'dateOfBirth', 'educations']
+        return ['pronouns', 'firstName', 'lastName', 'middleName', 'dateOfBirth', 'educations']
       case FormStep.SERVICE_SELECTION:
-        return ['serviceType']
+        return ['serviceType', 'deliveryMethod', 'additionalServices', 'additionalServicesQuantity']
       case FormStep.REVIEW:
         // Validate all required fields in Review step (excluding optional fields)
         return [
@@ -179,16 +193,23 @@ export default function FCEApplicationForm() {
           'region',
           'zipCode',
           'phone',
+          'fax',
           'email',
+          'office',
           'purpose',
+          'purposeOther',
           // Evaluee Info
           'pronouns',
           'firstName',
           'lastName',
+          'middleName',
           'dateOfBirth',
           'educations',
           // Service Selection
           'serviceType',
+          'deliveryMethod',
+          'additionalServices',
+          'additionalServicesQuantity',
         ]
       default:
         return []

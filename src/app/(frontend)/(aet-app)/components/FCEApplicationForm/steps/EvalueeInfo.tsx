@@ -306,7 +306,9 @@ export function EvalueeInfo() {
           name="pronouns"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pronouns</FormLabel>
+              <FormLabel>
+                Pronouns <span className="text-red-500">*</span>
+              </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your pronouns" />
@@ -330,7 +332,9 @@ export function EvalueeInfo() {
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>
+                  First Name <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -344,7 +348,9 @@ export function EvalueeInfo() {
             name="lastName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel>
+                  Last Name <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -373,7 +379,9 @@ export function EvalueeInfo() {
 
         {/* Date of Birth */}
         <div className="space-y-2">
-          <FormLabel>Date of Birth</FormLabel>
+          <FormLabel>
+            Date of Birth <span className="text-red-500">*</span>
+          </FormLabel>
           <div className="grid grid-cols-3 gap-4">
             <FormField
               control={form.control}
@@ -450,7 +458,9 @@ export function EvalueeInfo() {
       {/* Education Information */}
       <div className="space-y-4 pt-6">
         <div className="flex justify-between items-center">
-          <h3 className="font-medium">Education Information</h3>
+          <h3 className="font-medium">
+            Education Information<span className="text-red-500">*</span>
+          </h3>
 
           <Button
             type="button"

@@ -37,6 +37,8 @@ import { CONFIG } from './constants'
 
 // Import other step components...
 
+// TODO: remove this component in future versions.
+// @deprecated This component is deprecated and will be removed in future versions.
 export default function ApplicationForm() {
   const { toast } = useToast()
   const router = useRouter()
@@ -163,9 +165,24 @@ export default function ApplicationForm() {
   const getFieldsToValidate = (step: FormStep): (keyof FormData)[] => {
     switch (step) {
       case FormStep.CLIENT_INFO:
-        return ['name', 'streetAddress', 'city', 'region', 'zipCode', 'phone', 'email', 'purpose']
+        return [
+          'name',
+          'country',
+          'streetAddress',
+          'streetAddress2',
+          'city',
+          'region',
+          'zipCode',
+          'phone',
+          'fax',
+          'email',
+          'office',
+          'purpose',
+          'purposeOther',
+        ]
       case FormStep.EVALUEE_INFO:
         return ['pronouns', 'firstName', 'lastName', 'dateOfBirth', 'educations']
+      // TODO: if we dont need it, remove it
       case FormStep.SERVICE_SELECTION:
         return ['serviceType']
       case FormStep.REVIEW:
@@ -179,6 +196,7 @@ export default function ApplicationForm() {
           'zipCode',
           'phone',
           'email',
+          'office',
           'purpose',
           // Evaluee Info
           'pronouns',
