@@ -21,7 +21,7 @@ export default function HomePage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Application Form Card */}
-          <Link
+          {/* <Link
             href="/apply"
             className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
           >
@@ -29,7 +29,7 @@ export default function HomePage() {
             <p className="text-gray-600">
               Fill out the application form to start your AET service request
             </p>
-          </Link>
+          </Link> */}
 
           {/* Application Status Card */}
           <Link
