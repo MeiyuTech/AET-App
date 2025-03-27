@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/FCEApplicationForm/types'
+import { DeliveryMethod, FormData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
@@ -110,18 +110,7 @@ function getCCAddress(office: string) {
   }
 }
 
-function getDeliveryMethod(
-  deliveryMethod:
-    | 'no_delivery_needed'
-    | 'usps_first_class_domestic'
-    | 'usps_first_class_international'
-    | 'usps_priority_domestic'
-    | 'usps_express_domestic'
-    | 'ups_express_domestic'
-    | 'usps_express_international'
-    | 'fedex_express_international'
-    | undefined
-): string {
+function getDeliveryMethod(deliveryMethod: DeliveryMethod): string {
   const deliveryMethodMap: { [key: string]: string } = {
     no_delivery_needed: 'No Delivery Needed',
     usps_first_class_domestic: 'USPS First Class Domestic',
@@ -136,6 +125,16 @@ function getDeliveryMethod(
   return deliveryMethod ? deliveryMethodMap[deliveryMethod] : 'No Delivery Method Selected'
 }
 
+/**
+ * Submit AET application:
+ * 1. Convert form data to database format
+ * 2. Insert application data into database
+ * 3. Insert education data into database
+ * 4. Send confirmation email
+ * @param formData - Form data
+ * @returns - { success: true, applicationId: string }
+ * @throws - Error if failed to submit application
+ */
 export async function submitAETApplication(formData: FormData) {
   try {
     const client = await createClient()
@@ -204,66 +203,35 @@ export async function submitAETApplication(formData: FormData) {
   }
 }
 
+/**
+ * Verify AET application:
+ * 1. Get application data from database
+ * 2. Get education data from database
+ * 3. Transform database field names to frontend field names
+ * @param applicationId - Application ID
+ * @returns - { exists: true, application: formattedData }
+ * @throws - Error if failed to verify application
+ */
 export async function verifyApplication(applicationId: string) {
   try {
     const client = await createClient()
 
     // get the application data
-    const { data, error } = await client
+    const { data: applicationData, error: applicationError } = await client
       .from('fce_applications')
-      .select(
-        `
-        id,
-        status,
-        submitted_at,
-        name,
-        country,
-        street_address,
-        street_address2,
-        city,
-        region,
-        zip_code,
-        fax,
-        phone,
-        email,
-        office,
-        purpose,
-        purpose_other,
-        pronouns,
-        first_name,
-        middle_name,
-        last_name,
-        date_of_birth,
-        service_type,
-        delivery_method,
-        additional_services,
-        additional_services_quantity,
-        payment_status,
-        payment_id,
-        paid_at,
-        due_amount
-      `
-      )
+      .select('*')
       .eq('id', applicationId)
       .single()
 
-    if (error) {
-      console.error('Error verifying application:', error)
+    if (applicationError) {
+      console.error('Error verifying application:', applicationError)
       return { exists: false }
     }
 
     // get the education data
     const { data: educationsData, error: educationsError } = await client
       .from('fce_educations')
-      .select(
-        `
-        country_of_study,
-        degree_obtained,
-        school_name,
-        study_start_date,
-        study_end_date
-      `
-      )
+      .select('*')
       .eq('application_id', applicationId)
 
     if (educationsError) {
@@ -274,51 +242,14 @@ export async function verifyApplication(applicationId: string) {
     // Transform database field names to frontend field names
     const formattedData = {
       // Status Info
-      status: data.status,
-      submitted_at: data.submitted_at,
-      due_amount: data.due_amount,
-      payment_status: data.payment_status,
-      payment_id: data.payment_id,
-      paid_at: data.paid_at,
-
-      // Client Info
-      name: data.name,
-      country: data.country,
-      streetAddress: data.street_address,
-      streetAddress2: data.street_address2,
-      city: data.city,
-      region: data.region,
-      zipCode: data.zip_code,
-      fax: data.fax,
-      phone: data.phone,
-      office: data.office,
-      email: data.email,
-      purpose: data.purpose,
-      purposeOther: data.purpose_other,
-
-      // Evaluee Info
-      pronouns: data.pronouns,
-      firstName: data.first_name,
-      middleName: data.middle_name,
-      lastName: data.last_name,
-      dateOfBirth: data.date_of_birth,
-
-      // Service Info
-      serviceType: data.service_type,
-      deliveryMethod: data.delivery_method,
-      additionalServices: data.additional_services,
-      additionalServicesQuantity: data.additional_services_quantity,
-
-      // Education Info
-      educations: educationsData.map((edu: any) => ({
-        countryOfStudy: edu.country_of_study,
-        degreeObtained: edu.degree_obtained,
-        schoolName: edu.school_name,
-        studyDuration: {
-          startDate: edu.study_start_date,
-          endDate: edu.study_end_date,
-        },
-      })),
+      status: applicationData.status,
+      submitted_at: applicationData.submitted_at,
+      due_amount: applicationData.due_amount,
+      payment_status: applicationData.payment_status,
+      payment_id: applicationData.payment_id,
+      paid_at: applicationData.paid_at,
+      ...formatUtils.toFormData(applicationData),
+      educations: educationsData.map((edu) => formatUtils.toEducationFormData(edu)),
     }
 
     return {

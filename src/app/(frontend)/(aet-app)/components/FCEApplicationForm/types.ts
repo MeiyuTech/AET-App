@@ -1,5 +1,5 @@
 import * as z from 'zod'
-import { formSchema, EducationSchema } from './schema'
+import { formSchema, educationSchema } from './schema'
 
 export enum FormStep {
   CLIENT_INFO = 0, // Client Information
@@ -17,6 +17,7 @@ export type DeliveryMethod =
   | 'ups_express_domestic'
   | 'usps_express_international'
   | 'fedex_express_international'
+  | undefined
 
 export type AdditionalService = 'extra_copy' | 'pdf_with_hard_copy' | 'pdf_only'
 
@@ -94,8 +95,11 @@ export interface FormDraft {
   updated_at: string
 }
 
-// Re-export EducationSchema type
-export type { EducationSchema }
+/**
+ * Frontend form education data type
+ * For form data that user input
+ */
+export type EducationFormData = z.infer<typeof educationSchema>
 
 /**
  * Application data type

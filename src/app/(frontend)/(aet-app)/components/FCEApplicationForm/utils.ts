@@ -1,10 +1,18 @@
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import { FormData, ApplicationData } from './types'
+
 import { EVALUATION_SERVICES, DELIVERY_OPTIONS, ADDITIONAL_SERVICES } from './constants'
-import { DatabaseApplication, DatabaseEducation, DeliveryMethod, AdditionalService } from './types'
-import { EducationSchema, FormStep } from './types'
+import {
+  FormStep,
+  FormData,
+  EducationFormData,
+  ApplicationData,
+  DatabaseApplication,
+  DatabaseEducation,
+  DeliveryMethod,
+  AdditionalService,
+} from './types'
 
 dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
@@ -210,7 +218,7 @@ export const formatUtils = {
 
   // Convert education data to database format
   toEducationDatabase(
-    education: EducationSchema
+    education: EducationFormData
   ): Omit<DatabaseEducation, 'id' | 'application_id'> {
     return {
       country_of_study: education.countryOfStudy || '',
@@ -232,7 +240,7 @@ export const formatUtils = {
   },
 
   // Convert database education data to frontend format
-  toEducationFormData(dbEducation: DatabaseEducation): EducationSchema {
+  toEducationFormData(dbEducation: DatabaseEducation): EducationFormData {
     return {
       countryOfStudy: dbEducation.country_of_study,
       degreeObtained: dbEducation.degree_obtained,
