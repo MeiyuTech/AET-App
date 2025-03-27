@@ -4,7 +4,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 
 dayjs.extend(customParseFormat)
 
-const educationSchema = z
+export const educationSchema = z
   .object({
     countryOfStudy: z.string().nonempty({ message: 'Please fill in the country of study' }),
     degreeObtained: z.string().nonempty({ message: 'Please fill in the degree obtained' }),

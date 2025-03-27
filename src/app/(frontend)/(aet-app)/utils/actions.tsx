@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/FCEApplicationForm/types'
+import { DeliveryMethod, FormData, DatabaseEducation } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
@@ -110,18 +110,7 @@ function getCCAddress(office: string) {
   }
 }
 
-function getDeliveryMethod(
-  deliveryMethod:
-    | 'no_delivery_needed'
-    | 'usps_first_class_domestic'
-    | 'usps_first_class_international'
-    | 'usps_priority_domestic'
-    | 'usps_express_domestic'
-    | 'ups_express_domestic'
-    | 'usps_express_international'
-    | 'fedex_express_international'
-    | undefined
-): string {
+function getDeliveryMethod(deliveryMethod: DeliveryMethod): string {
   const deliveryMethodMap: { [key: string]: string } = {
     no_delivery_needed: 'No Delivery Needed',
     usps_first_class_domestic: 'USPS First Class Domestic',
@@ -136,6 +125,16 @@ function getDeliveryMethod(
   return deliveryMethod ? deliveryMethodMap[deliveryMethod] : 'No Delivery Method Selected'
 }
 
+/**
+ * Submit AET application:
+ * 1. Convert form data to database format
+ * 2. Insert application data into database
+ * 3. Insert education data into database
+ * 4. Send confirmation email
+ * @param formData - Form data
+ * @returns - { success: true, applicationId: string }
+ * @throws - Error if failed to submit application
+ */
 export async function submitAETApplication(formData: FormData) {
   try {
     const client = await createClient()
@@ -204,6 +203,15 @@ export async function submitAETApplication(formData: FormData) {
   }
 }
 
+/**
+ * Verify AET application:
+ * 1. Get application data from database
+ * 2. Get education data from database
+ * 3. Transform database field names to frontend field names
+ * @param applicationId - Application ID
+ * @returns - { exists: true, application: FormData }
+ * @throws - Error if failed to verify application
+ */
 export async function verifyApplication(applicationId: string) {
   try {
     const client = await createClient()
@@ -310,7 +318,7 @@ export async function verifyApplication(applicationId: string) {
       additionalServicesQuantity: data.additional_services_quantity,
 
       // Education Info
-      educations: educationsData.map((edu: any) => ({
+      educations: educationsData.map((edu: DatabaseEducation) => ({
         countryOfStudy: edu.country_of_study,
         degreeObtained: edu.degree_obtained,
         schoolName: edu.school_name,
