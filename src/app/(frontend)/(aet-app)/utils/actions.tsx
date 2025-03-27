@@ -217,7 +217,7 @@ export async function verifyApplication(applicationId: string) {
     const client = await createClient()
 
     // get the application data
-    const { data, error } = await client
+    const { data: applicationData, error: applicationError } = await client
       .from('fce_applications')
       .select(
         `
@@ -255,8 +255,8 @@ export async function verifyApplication(applicationId: string) {
       .eq('id', applicationId)
       .single()
 
-    if (error) {
-      console.error('Error verifying application:', error)
+    if (applicationError) {
+      console.error('Error verifying application:', applicationError)
       return { exists: false }
     }
 
@@ -282,40 +282,40 @@ export async function verifyApplication(applicationId: string) {
     // Transform database field names to frontend field names
     const formattedData = {
       // Status Info
-      status: data.status,
-      submitted_at: data.submitted_at,
-      due_amount: data.due_amount,
-      payment_status: data.payment_status,
-      payment_id: data.payment_id,
-      paid_at: data.paid_at,
+      status: applicationData.status,
+      submitted_at: applicationData.submitted_at,
+      due_amount: applicationData.due_amount,
+      payment_status: applicationData.payment_status,
+      payment_id: applicationData.payment_id,
+      paid_at: applicationData.paid_at,
 
       // Client Info
-      name: data.name,
-      country: data.country,
-      streetAddress: data.street_address,
-      streetAddress2: data.street_address2,
-      city: data.city,
-      region: data.region,
-      zipCode: data.zip_code,
-      fax: data.fax,
-      phone: data.phone,
-      office: data.office,
-      email: data.email,
-      purpose: data.purpose,
-      purposeOther: data.purpose_other,
+      name: applicationData.name,
+      country: applicationData.country,
+      streetAddress: applicationData.street_address,
+      streetAddress2: applicationData.street_address2,
+      city: applicationData.city,
+      region: applicationData.region,
+      zipCode: applicationData.zip_code,
+      fax: applicationData.fax,
+      phone: applicationData.phone,
+      office: applicationData.office,
+      email: applicationData.email,
+      purpose: applicationData.purpose,
+      purposeOther: applicationData.purpose_other,
 
       // Evaluee Info
-      pronouns: data.pronouns,
-      firstName: data.first_name,
-      middleName: data.middle_name,
-      lastName: data.last_name,
-      dateOfBirth: data.date_of_birth,
+      pronouns: applicationData.pronouns,
+      firstName: applicationData.first_name,
+      middleName: applicationData.middle_name,
+      lastName: applicationData.last_name,
+      dateOfBirth: applicationData.date_of_birth,
 
       // Service Info
-      serviceType: data.service_type,
-      deliveryMethod: data.delivery_method,
-      additionalServices: data.additional_services,
-      additionalServicesQuantity: data.additional_services_quantity,
+      serviceType: applicationData.service_type,
+      deliveryMethod: applicationData.delivery_method,
+      additionalServices: applicationData.additional_services,
+      additionalServicesQuantity: applicationData.additional_services_quantity,
 
       // Education Info
       educations: educationsData.map((edu: DatabaseEducation) => ({
