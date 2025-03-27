@@ -380,8 +380,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  * Due amount may vary. We will provide an official quote based on your specific
-                  situation.
+                  * This fee applies to most applications but it may vary for some applicants. We
+                  will reconfirm your service details during the evaluation process. If any
+                  adjustments are needed, we will contact you—any overpayment will be refunded, and
+                  underpayment will be collected. Thank you for your trust!
                 </div>
 
                 {/* Add payment button if not paid */}
