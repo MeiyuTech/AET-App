@@ -29,7 +29,23 @@ export default function PaymentOptions({
 
   const createStripePayment = async () => {
     try {
-      const amount = due_amount ? (due_amount as number).toString() : calculateTotalPrice()
+      let amountNumber = 0
+
+      if (due_amount) {
+        amountNumber = due_amount
+      } else {
+        const calculatedAmount = parseFloat(calculateTotalPrice())
+        if (isNaN(calculatedAmount) || calculatedAmount === 0) {
+          throw new Error('Cannot process payment: Invalid amount')
+        }
+        amountNumber = calculatedAmount
+      }
+
+      if (amountNumber <= 0) {
+        throw new Error('Cannot process payment: Amount must be greater than 0')
+      }
+
+      const amount = amountNumber.toString()
       const response = await createPayment({ amount, applicationId })
 
       const data = await response.json()
@@ -43,7 +59,7 @@ export default function PaymentOptions({
       console.error('Payment creation failed:', error)
       toast({
         variant: 'destructive',
-        title: 'Error',
+        title: 'Payment Error',
         description: error instanceof Error ? error.message : 'Payment creation failed',
       })
     }
@@ -61,6 +77,14 @@ export default function PaymentOptions({
         window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
       }
     }
+  }
+
+  const isPaymentDisabled = () => {
+    if (due_amount) {
+      return due_amount <= 0
+    }
+    const calculatedAmount = parseFloat(calculateTotalPrice())
+    return isNaN(calculatedAmount) || calculatedAmount <= 0
   }
 
   if (payment_status === 'paid') {
@@ -81,6 +105,7 @@ export default function PaymentOptions({
                 : 'bg-blue-600 hover:bg-blue-700'
             }`}
             size="lg"
+            disabled={isPaymentDisabled()}
           >
             {paymentMethod === 'zelle' ? (
               <>
@@ -94,6 +119,10 @@ export default function PaymentOptions({
               </>
             )}
           </Button>
+
+          {isPaymentDisabled() && (
+            <p className="text-sm text-red-600">Payment cannot be processed: Invalid amount</p>
+          )}
 
           <p className="text-center text-xs text-gray-500">
             By proceeding with payment, you agree to our terms of service.

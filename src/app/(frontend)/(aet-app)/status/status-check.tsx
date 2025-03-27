@@ -468,9 +468,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       Estimated Total:{' '}
                       {application.serviceType?.translation?.required ||
                       application.serviceType?.customizedService?.required
-                        ? application.due_amount
-                          ? `$${application.due_amount}`
-                          : 'Due amount is not set yet'
+                        ? 'Due amount is not set yet'
                         : `$${calculateTotalPrice()}`}
                     </div>
                   )}
@@ -481,17 +479,35 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 </div>
 
                 {/* Add payment button if not paid */}
-                {application.payment_status !== 'paid' &&
-                  application.due_amount &&
-                  application.due_amount !== 0 && (
-                    <PaymentOptions
-                      office={application.office}
-                      payment_status={application.payment_status}
-                      due_amount={application.due_amount}
-                      applicationId={applicationId}
-                      calculateTotalPrice={calculateTotalPrice}
-                    />
-                  )}
+                {/* Amount validation */}
+                {application.payment_status !== 'paid' && (
+                  <>
+                    {!application.serviceType?.translation?.required &&
+                    !application.serviceType?.customizedService?.required ? (
+                      <PaymentOptions
+                        office={application.office}
+                        payment_status={application.payment_status}
+                        due_amount={application.due_amount}
+                        applicationId={applicationId}
+                        calculateTotalPrice={calculateTotalPrice}
+                      />
+                    ) : application.due_amount ? (
+                      <PaymentOptions
+                        office={application.office}
+                        payment_status={application.payment_status}
+                        due_amount={application.due_amount}
+                        applicationId={applicationId}
+                        calculateTotalPrice={calculateTotalPrice}
+                      />
+                    ) : (
+                      <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                        <p className="text-sm text-yellow-700">
+                          Payment is not available until the due amount is set by our staff.
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
