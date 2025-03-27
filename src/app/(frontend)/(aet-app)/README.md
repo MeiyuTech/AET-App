@@ -37,7 +37,8 @@
 - [x] status 页面，把支付按钮放到最上面。
 - [x] 6.单独显示 first name， last name， middle name
 - [x] sf 邮箱要确认一下！！！
-- [ ] Old ApplicationForm is kinda **deprecated**
+- [x] Old ApplicationForm is kinda **deprecated**
+- [ ] Add a button to dropbox folder for each order.
 
 ## Features
 
