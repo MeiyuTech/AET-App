@@ -79,6 +79,10 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
   },
 }
 
+/**
+ * Frontend form data type
+ * For form data that user input
+ */
 export type FormData = z.infer<typeof formSchema>
 
 export interface FormDraft {
@@ -93,7 +97,29 @@ export interface FormDraft {
 // Re-export EducationSchema type
 export type { EducationSchema }
 
-// Add database format type definition
+/**
+ * Application data type
+ * For application data that use in frontend and backend
+ */
+export interface ApplicationData extends Partial<FormData> {
+  status: string
+  submitted_at: string
+  due_amount: number
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_id: string | null
+  paid_at: string | null
+  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
+  additionalServicesQuantity: {
+    extra_copy: number
+    pdf_with_hard_copy: number
+    pdf_only: number
+  }
+}
+
+/**
+ * Database application type
+ * For application data that stored in database
+ */
 export interface DatabaseApplication {
   id: string
   status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
@@ -163,20 +189,5 @@ export interface DatabaseEducation {
   study_end_date: {
     month: string
     year: string
-  }
-}
-
-export interface ApplicationData extends Partial<FormData> {
-  status: string
-  submitted_at: string
-  due_amount: number
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
-  payment_id: string | null
-  paid_at: string | null
-  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
-  additionalServicesQuantity: {
-    extra_copy: number
-    pdf_with_hard_copy: number
-    pdf_only: number
   }
 }
