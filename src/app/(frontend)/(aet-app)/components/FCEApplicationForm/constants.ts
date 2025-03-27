@@ -1,5 +1,4 @@
 import { Country, State } from 'country-state-city'
-import { BoxSelect } from 'lucide-react'
 
 // Application configuration settings
 export const CONFIG = {

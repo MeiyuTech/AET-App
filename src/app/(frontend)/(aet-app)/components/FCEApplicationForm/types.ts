@@ -8,6 +8,18 @@ export enum FormStep {
   REVIEW = 3, // Review Information
 }
 
+export type DeliveryMethod =
+  | 'no_delivery_needed'
+  | 'usps_first_class_domestic'
+  | 'usps_first_class_international'
+  | 'usps_priority_domestic'
+  | 'usps_express_domestic'
+  | 'ups_express_domestic'
+  | 'usps_express_international'
+  | 'fedex_express_international'
+
+export type AdditionalService = 'extra_copy' | 'pdf_with_hard_copy' | 'pdf_only'
+
 // Default form values constant that can be reused across components
 export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
   name: '',
@@ -154,14 +166,17 @@ export interface DatabaseEducation {
   }
 }
 
-export type DeliveryMethod =
-  | 'no_delivery_needed'
-  | 'usps_first_class_domestic'
-  | 'usps_first_class_international'
-  | 'usps_priority_domestic'
-  | 'usps_express_domestic'
-  | 'ups_express_domestic'
-  | 'usps_express_international'
-  | 'fedex_express_international'
-
-export type AdditionalService = 'extra_copy' | 'pdf_with_hard_copy' | 'pdf_only'
+export interface ApplicationData extends Partial<FormData> {
+  status: string
+  submitted_at: string
+  due_amount: number
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_id: string | null
+  paid_at: string | null
+  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
+  additionalServicesQuantity: {
+    extra_copy: number
+    pdf_with_hard_copy: number
+    pdf_only: number
+  }
+}
