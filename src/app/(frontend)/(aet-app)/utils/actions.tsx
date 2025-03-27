@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { DeliveryMethod, FormData, DatabaseEducation } from '../components/FCEApplicationForm/types'
+import { DeliveryMethod, FormData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
@@ -209,7 +209,7 @@ export async function submitAETApplication(formData: FormData) {
  * 2. Get education data from database
  * 3. Transform database field names to frontend field names
  * @param applicationId - Application ID
- * @returns - { exists: true, application: FormData }
+ * @returns - { exists: true, application: formattedData }
  * @throws - Error if failed to verify application
  */
 export async function verifyApplication(applicationId: string) {
@@ -219,39 +219,7 @@ export async function verifyApplication(applicationId: string) {
     // get the application data
     const { data: applicationData, error: applicationError } = await client
       .from('fce_applications')
-      .select(
-        `
-        id,
-        status,
-        submitted_at,
-        name,
-        country,
-        street_address,
-        street_address2,
-        city,
-        region,
-        zip_code,
-        fax,
-        phone,
-        email,
-        office,
-        purpose,
-        purpose_other,
-        pronouns,
-        first_name,
-        middle_name,
-        last_name,
-        date_of_birth,
-        service_type,
-        delivery_method,
-        additional_services,
-        additional_services_quantity,
-        payment_status,
-        payment_id,
-        paid_at,
-        due_amount
-      `
-      )
+      .select('*')
       .eq('id', applicationId)
       .single()
 
@@ -263,15 +231,7 @@ export async function verifyApplication(applicationId: string) {
     // get the education data
     const { data: educationsData, error: educationsError } = await client
       .from('fce_educations')
-      .select(
-        `
-        country_of_study,
-        degree_obtained,
-        school_name,
-        study_start_date,
-        study_end_date
-      `
-      )
+      .select('*')
       .eq('application_id', applicationId)
 
     if (educationsError) {
@@ -288,45 +248,8 @@ export async function verifyApplication(applicationId: string) {
       payment_status: applicationData.payment_status,
       payment_id: applicationData.payment_id,
       paid_at: applicationData.paid_at,
-
-      // Client Info
-      name: applicationData.name,
-      country: applicationData.country,
-      streetAddress: applicationData.street_address,
-      streetAddress2: applicationData.street_address2,
-      city: applicationData.city,
-      region: applicationData.region,
-      zipCode: applicationData.zip_code,
-      fax: applicationData.fax,
-      phone: applicationData.phone,
-      office: applicationData.office,
-      email: applicationData.email,
-      purpose: applicationData.purpose,
-      purposeOther: applicationData.purpose_other,
-
-      // Evaluee Info
-      pronouns: applicationData.pronouns,
-      firstName: applicationData.first_name,
-      middleName: applicationData.middle_name,
-      lastName: applicationData.last_name,
-      dateOfBirth: applicationData.date_of_birth,
-
-      // Service Info
-      serviceType: applicationData.service_type,
-      deliveryMethod: applicationData.delivery_method,
-      additionalServices: applicationData.additional_services,
-      additionalServicesQuantity: applicationData.additional_services_quantity,
-
-      // Education Info
-      educations: educationsData.map((edu: DatabaseEducation) => ({
-        countryOfStudy: edu.country_of_study,
-        degreeObtained: edu.degree_obtained,
-        schoolName: edu.school_name,
-        studyDuration: {
-          startDate: edu.study_start_date,
-          endDate: edu.study_end_date,
-        },
-      })),
+      ...formatUtils.toFormData(applicationData),
+      educations: educationsData.map((edu) => formatUtils.toEducationFormData(edu)),
     }
 
     return {
