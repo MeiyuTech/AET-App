@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import { FormData } from './types'
-import { EVALUATION_SERVICES } from './constants'
+import { FormData, ApplicationData } from './types'
+import { EVALUATION_SERVICES, DELIVERY_OPTIONS, ADDITIONAL_SERVICES } from './constants'
 import { DatabaseApplication, DatabaseEducation, DeliveryMethod, AdditionalService } from './types'
 import { EducationSchema, FormStep } from './types'
 
@@ -40,38 +40,84 @@ export const dateUtils = {
   },
 }
 
-export function calculateTotalPrice(formData: FormData): number {
+export function calculateTotalPrice(application: ApplicationData | null): string {
+  if (!application) return '0.00'
+
   let total = 0
 
-  // Foreign Credential Evaluation
-  const fceSpeed = formData.serviceType.foreignCredentialEvaluation.firstDegree.speed
-  if (fceSpeed) {
-    total += EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed].price
+  if (application.serviceType) {
+    // Foreign Credential Evaluation
+    const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
+    const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
+    if (fceService) {
+      total += fceService.price
 
-    // Add second degree prices
-    const secondDegreePrice =
-      fceSpeed === '7day'
-        ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-        : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+      // Second Degrees
+      if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
+        const secondDegreePrice =
+          fceSpeed === '7day'
+            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
 
-    total += secondDegreePrice * formData.serviceType.foreignCredentialEvaluation.secondDegrees
+        total +=
+          secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
+      }
+    }
+
+    // Course by Course Evaluation
+    const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
+    const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
+    if (cbeService) {
+      total += cbeService.price
+
+      // Second Degrees
+      if (application.serviceType.coursebyCourse.secondDegrees > 0) {
+        const secondDegreePrice =
+          cbeSpeed === '8day'
+            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+
+        total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
+      }
+    }
+
+    // Professional Experience Evaluation
+    const profExpSpeed = application.serviceType.professionalExperience?.speed
+    const profExpService = profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
+    if (profExpService) {
+      total += profExpService.price
+    }
+
+    // Position Evaluation
+    const posEvalSpeed = application.serviceType.positionEvaluation?.speed
+    const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
+    if (posEvalService) {
+      total += posEvalService.price
+    }
   }
 
-  // Course Evaluation
-  const cbeSpeed = formData.serviceType.coursebyCourse.firstDegree.speed
-  if (cbeSpeed) {
-    total += EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed].price
-
-    // Add second degree prices
-    const secondDegreePrice =
-      cbeSpeed === '8day'
-        ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-        : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
-
-    total += secondDegreePrice * formData.serviceType.coursebyCourse.secondDegrees
+  // Delivery
+  const deliveryService =
+    application.deliveryMethod &&
+    DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
+  if (deliveryService) {
+    total += deliveryService.price
   }
 
-  return total
+  // Additional Services
+  application.additionalServices?.forEach((serviceId) => {
+    const service = ADDITIONAL_SERVICES[serviceId]
+    if (service) {
+      if ('quantity' in service) {
+        const quantity = application.additionalServicesQuantity?.[serviceId] || 0
+        total += service.price * quantity
+      } else {
+        total += service.price
+      }
+    }
+  })
+
+  return total.toFixed(2)
 }
 
 export const formatUtils = {

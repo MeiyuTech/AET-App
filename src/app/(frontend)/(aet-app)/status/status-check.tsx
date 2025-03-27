@@ -11,28 +11,15 @@ import {
   DELIVERY_OPTIONS,
   getCountryLabel,
   ADDITIONAL_SERVICES,
-} from '../components/ApplicationForm/constants'
-import { FormData } from '../components/ApplicationForm/types'
+} from '../components/FCEApplicationForm/constants'
+import { ApplicationData } from '../components/FCEApplicationForm/types'
+import { calculateTotalPrice } from '../components/FCEApplicationForm/utils'
+
 import Uploader from '../components/Dropbox/Uploader'
 import { verifyApplication } from '../utils/actions'
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import PaymentOptions from '../components/AETPayment/PaymentOptions'
-
-interface ApplicationData extends Partial<FormData> {
-  status: string
-  submitted_at: string
-  due_amount: number
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
-  payment_id: string | null
-  paid_at: string | null
-  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
-  additionalServicesQuantity: {
-    extra_copy: number
-    pdf_with_hard_copy: number
-    pdf_only: number
-  }
-}
 
 interface StatusCheckProps {
   initialApplicationId?: string
@@ -112,87 +99,6 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     }
 
     updateURL(applicationId)
-  }
-
-  const calculateTotalPrice = () => {
-    if (!application) return '0.00'
-
-    let total = 0
-
-    if (application.serviceType) {
-      // Foreign Credential Evaluation
-      const fceSpeed = application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed
-      const fceService = fceSpeed && EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE[fceSpeed]
-      if (fceService) {
-        total += fceService.price
-
-        // Second Degrees
-        if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-          const secondDegreePrice =
-            fceSpeed === '7day'
-              ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-              : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
-
-          total +=
-            secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
-        }
-      }
-
-      // Course by Course Evaluation
-      const cbeSpeed = application.serviceType.coursebyCourse?.firstDegree?.speed
-      const cbeService = cbeSpeed && EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE[cbeSpeed]
-      if (cbeService) {
-        total += cbeService.price
-
-        // Second Degrees
-        if (application.serviceType.coursebyCourse.secondDegrees > 0) {
-          const secondDegreePrice =
-            cbeSpeed === '8day'
-              ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-              : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
-
-          total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
-        }
-      }
-
-      // Professional Experience Evaluation
-      const profExpSpeed = application.serviceType.professionalExperience?.speed
-      const profExpService =
-        profExpSpeed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[profExpSpeed]
-      if (profExpService) {
-        total += profExpService.price
-      }
-
-      // Position Evaluation
-      const posEvalSpeed = application.serviceType.positionEvaluation?.speed
-      const posEvalService = posEvalSpeed && EVALUATION_SERVICES.POSITION[posEvalSpeed]
-      if (posEvalService) {
-        total += posEvalService.price
-      }
-    }
-
-    // Delivery
-    const deliveryService =
-      application.deliveryMethod &&
-      DELIVERY_OPTIONS[application.deliveryMethod as keyof typeof DELIVERY_OPTIONS]
-    if (deliveryService) {
-      total += deliveryService.price
-    }
-
-    // Additional Services
-    application.additionalServices?.forEach((serviceId) => {
-      const service = ADDITIONAL_SERVICES[serviceId]
-      if (service) {
-        if ('quantity' in service) {
-          const quantity = application.additionalServicesQuantity?.[serviceId] || 0
-          total += service.price * quantity
-        } else {
-          total += service.price
-        }
-      }
-    })
-
-    return total.toFixed(2)
   }
 
   return (
@@ -469,7 +375,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       {application.serviceType?.translation?.required ||
                       application.serviceType?.customizedService?.required
                         ? 'Due amount is not set yet'
-                        : `$${calculateTotalPrice()}`}
+                        : `$${calculateTotalPrice(application)}`}
                     </div>
                   )}
                 </div>
@@ -484,21 +390,9 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   <>
                     {!application.serviceType?.translation?.required &&
                     !application.serviceType?.customizedService?.required ? (
-                      <PaymentOptions
-                        office={application.office}
-                        payment_status={application.payment_status}
-                        due_amount={application.due_amount}
-                        applicationId={applicationId}
-                        calculateTotalPrice={calculateTotalPrice}
-                      />
+                      <PaymentOptions application={application} applicationId={applicationId} />
                     ) : application.due_amount ? (
-                      <PaymentOptions
-                        office={application.office}
-                        payment_status={application.payment_status}
-                        due_amount={application.due_amount}
-                        applicationId={applicationId}
-                        calculateTotalPrice={calculateTotalPrice}
-                      />
+                      <PaymentOptions application={application} applicationId={applicationId} />
                     ) : (
                       <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                         <p className="text-sm text-yellow-700">

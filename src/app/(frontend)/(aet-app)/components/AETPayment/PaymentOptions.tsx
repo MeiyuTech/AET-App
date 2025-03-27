@@ -1,28 +1,24 @@
 'use client'
 
 import { useState } from 'react'
+import { CreditCard, ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+
+import { Button } from '@/components/ui/button'
+
 import { createPayment } from '../../utils/stripe/actions'
 import ZellePaymentOption from './ZellePaymentOption'
 import PaymentMethodSelector from './PaymentMethodSelector'
-import { Button } from '@/components/ui/button'
-import { CreditCard, ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react'
+
+import { ApplicationData } from '../FCEApplicationForm/types'
+import { calculateTotalPrice } from '../FCEApplicationForm/utils'
 
 interface PaymentOptionsProps {
-  office: string | undefined
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
-  due_amount: number | undefined
+  application: ApplicationData
   applicationId: string
-  calculateTotalPrice: () => string
 }
 
-export default function PaymentOptions({
-  office,
-  payment_status,
-  due_amount,
-  applicationId,
-  calculateTotalPrice,
-}: PaymentOptionsProps) {
+export default function PaymentOptions({ application, applicationId }: PaymentOptionsProps) {
   const { toast } = useToast()
   const [paymentMethod, setPaymentMethod] = useState<'zelle' | 'stripe'>('zelle')
   const [showZelleDetails, setShowZelleDetails] = useState(false)
@@ -31,10 +27,10 @@ export default function PaymentOptions({
     try {
       let amountNumber = 0
 
-      if (due_amount) {
-        amountNumber = due_amount
+      if (application.due_amount) {
+        amountNumber = application.due_amount
       } else {
-        const calculatedAmount = parseFloat(calculateTotalPrice())
+        const calculatedAmount = parseFloat(calculateTotalPrice(application))
         if (isNaN(calculatedAmount) || calculatedAmount === 0) {
           throw new Error('Cannot process payment: Invalid amount')
         }
@@ -69,9 +65,13 @@ export default function PaymentOptions({
     if (paymentMethod === 'zelle') {
       setShowZelleDetails(true)
     } else {
-      if (office === 'New York' || office === 'Chicago') {
+      if (application.office === 'New York' || application.office === 'Boston') {
         window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
-      } else if (office === 'San Francisco' || office === 'Los Angeles' || office === 'Miami') {
+      } else if (
+        application.office === 'San Francisco' ||
+        application.office === 'Los Angeles' ||
+        application.office === 'Miami'
+      ) {
         createStripePayment()
       } else {
         window.open('https://www.americantranslationservice.com/e_pay.html', '_blank')
@@ -80,14 +80,14 @@ export default function PaymentOptions({
   }
 
   const isPaymentDisabled = () => {
-    if (due_amount) {
-      return due_amount <= 0
+    if (application.due_amount) {
+      return application.due_amount <= 0
     }
-    const calculatedAmount = parseFloat(calculateTotalPrice())
+    const calculatedAmount = parseFloat(calculateTotalPrice(application))
     return isNaN(calculatedAmount) || calculatedAmount <= 0
   }
 
-  if (payment_status === 'paid') {
+  if (application.payment_status === 'paid') {
     return null
   }
 
@@ -140,7 +140,7 @@ export default function PaymentOptions({
             </p>
           </div>
 
-          <ZellePaymentOption office={office} />
+          <ZellePaymentOption office={application.office} />
 
           <Button variant="outline" onClick={() => setShowZelleDetails(false)} className="mt-4">
             <ArrowLeft className="h-4 w-4" />
