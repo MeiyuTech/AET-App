@@ -1,8 +1,8 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/ApplicationForm/types'
-import { formatUtils } from '../components/ApplicationForm/utils'
+import { FormData } from '../components/FCEApplicationForm/types'
+import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
 

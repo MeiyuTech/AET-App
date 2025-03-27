@@ -29,7 +29,7 @@ import {
 import {
   DatabaseApplication,
   DatabaseEducation,
-} from '@/app/(frontend)/(aet-app)/components/ApplicationForm/types'
+} from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
 import { EducationDetailsDialog } from './education-details-dialog'
 import { formatDateTime } from '../utils/dateFormat'
 import {
