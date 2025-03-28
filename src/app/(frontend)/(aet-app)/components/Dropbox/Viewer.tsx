@@ -44,11 +44,17 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
         queryParams.append('applicationId', applicationId)
       }
 
-      const response = await fetch(`/api/dropbox/view?${queryParams.toString()}`, {
+      const response = await fetch(`/api/dropbox/viewFilesListFolder?${queryParams.toString()}`, {
         method: 'GET',
       })
 
       const data = await response.json()
+
+      if (data.notice === 'User has not uploaded any files yet') {
+        setError(data.notice)
+        return
+      }
+
       if (data.success && data.result) {
         const fileEntries = data.result.result.entries
         console.log(fileEntries)
@@ -67,10 +73,9 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
         setError(data.error || 'Failed to fetch files')
       }
     } catch (err) {
-      setError('Error fetching files, please try again later')
       console.error(err)
+      setError('Error fetching files, please try again later')
     } finally {
-      // 始终设置 loading 为 false，无论成功或失败
       setLoading(false)
     }
   }
