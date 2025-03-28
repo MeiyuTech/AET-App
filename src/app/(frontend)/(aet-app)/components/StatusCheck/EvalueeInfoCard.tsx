@@ -1,8 +1,15 @@
 'use client'
 
+import countryList from 'react-select-country-list'
+
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
 import { PRONOUN_OPTIONS } from '../FCEApplicationForm/constants'
+
+function getCountryName(code: string) {
+  const countries = countryList().getData()
+  return countries.find((c) => c.value === code)?.label || code
+}
 
 interface EvalueeInfoCardProps {
   application: ApplicationData
@@ -57,7 +64,7 @@ export default function EvalueeInfoCard({ application }: EvalueeInfoCardProps) {
                     <dl className="grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <dt className="text-muted-foreground">Country</dt>
-                        <dd>{education.countryOfStudy || 'Not provided'}</dd>
+                        <dd>{getCountryName(education.countryOfStudy) || 'Not provided'}</dd>
                       </div>
                       <div>
                         <dt className="text-muted-foreground">Degree</dt>

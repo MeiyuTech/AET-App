@@ -4,19 +4,18 @@ import { useState, useEffect } from 'react'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
-import { ApplicationData } from '../FCEApplicationForm/types'
-
-import Uploader from '../Dropbox/Uploader'
 import { verifyApplication } from '../../utils/actions'
 
 import PaymentOptions from '../AETPayment/PaymentOptions'
+import Uploader from '../Dropbox/Uploader'
+import { ApplicationData } from '../FCEApplicationForm/types'
 
-import { formatUUID, isValidUUID } from './utils'
 import ApplicationStatusCard from './ApplicationStatusCard'
-import InfoHoverCard from './InfoHoverCard'
 import ClientInfoCard from './ClientInfoCard'
 import EvalueeInfoCard from './EvalueeInfoCard'
+import InfoHoverCard from './InfoHoverCard'
 import SelectedServicesCard from './SelectedServicesCard'
+import { formatUUID, isValidUUID } from './utils'
 
 interface StatusCheckProps {
   initialApplicationId?: string
@@ -179,18 +178,29 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     <br />
                   </p>
                   <div className="mb-2">
-                    For example,
-                    <br />
                     <InfoHoverCard
-                      title="Credential Evaluation"
+                      title="For Credential Evaluation:"
                       content={
                         <p className="text-sm text-muted-foreground">
-                          - Scanned copies of your <strong>degree(s)</strong> and
-                          <strong>transcript(s)</strong>
-                          <br />- Official or <strong>certified English translations</strong>
+                          Foreign Credential Evaluation is a service that assesses educational
+                          backgrounds and qualifications obtained outside the United States. It is
+                          crucial for foreign nationals seeking work authorization (H1B),
+                          immigration status, employment, education, or military recruitment in the
+                          U.S.
+                          <br />
+                          <br />
                         </p>
                       }
                     />
+                    <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
+                      <li>
+                        Scanned copies of your <strong>degree(s)</strong> and{' '}
+                        <strong>transcript(s)</strong>
+                      </li>
+                      <li>
+                        <strong>Official or certified English translations</strong>
+                      </li>
+                    </ul>
                   </div>
                   <Uploader
                     office={application.office}

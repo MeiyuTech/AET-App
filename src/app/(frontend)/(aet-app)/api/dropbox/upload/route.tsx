@@ -1,79 +1,10 @@
 'use server'
 
-import fetch from 'node-fetch'
 import { NextRequest, NextResponse } from 'next/server'
-import { Dropbox } from 'dropbox'
 
-import { DROPBOX_TOKENS, TOKEN_REFRESH } from '../../../utils/dropbox/config.server'
+import { DROPBOX_TOKENS } from '../../../utils/dropbox/config.server'
 import { getOfficeTokenType } from '../../../utils/dropbox/config.client'
-
-async function getAccessToken(tokenType: 'AET_App' | 'AET_App_East') {
-  const { refreshToken, appKey, appSecret } = DROPBOX_TOKENS[tokenType]
-
-  try {
-    const token = await refreshAccessToken(refreshToken, appKey, appSecret)
-    console.log(`success to get access token (${tokenType})`)
-    return token
-  } catch (error) {
-    console.error('failed to get access token:', error)
-    throw error
-  }
-}
-
-async function refreshAccessToken(
-  refreshToken: string | undefined,
-  appKey: string | undefined,
-  appSecret: string | undefined
-) {
-  try {
-    if (!refreshToken || !appKey || !appSecret) {
-      throw new Error(
-        'Refresh token or app key or app secret is undefined: \n' +
-          JSON.stringify({ refreshToken, appKey, appSecret })
-      )
-    }
-
-    const response = await fetch(TOKEN_REFRESH.DROPBOX_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-        client_id: appKey,
-        client_secret: appSecret,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorData = await response.text()
-      throw new Error(`failed to refresh token: ${response.status} ${errorData}`)
-    }
-
-    const data = (await response.json()) as {
-      access_token: string
-      expires_in: number
-      token_type: string
-    }
-
-    return data.access_token
-  } catch (error) {
-    console.error('failed to refresh access token:', error)
-    throw error
-  }
-}
-
-function createDropboxClient(accessToken: string, namespaceId: string | null) {
-  return new Dropbox({
-    accessToken: accessToken,
-    fetch: fetch,
-    pathRoot: JSON.stringify({
-      '.tag': 'namespace_id',
-      namespace_id: namespaceId,
-    }),
-  })
-}
+import { getAccessToken, createDropboxClient } from '../../../utils/dropbox/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -96,14 +27,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const accessToken = await getAccessToken(tokenType)
     let folderPath = `${basePath}/${officeName}`
     if (applicationId && fullName) {
       folderPath = `${basePath}/${officeName}/${fullName} - ${applicationId}`
+    } else {
+      throw new Error('Application ID or full name is undefined')
     }
+
     const buffer = await file.arrayBuffer()
     const path = `${folderPath}/${file.name}`
 
+    const accessToken = await getAccessToken(tokenType)
     const dbx = createDropboxClient(accessToken, namespaceId)
 
     try {
