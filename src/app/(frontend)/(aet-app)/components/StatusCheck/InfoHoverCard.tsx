@@ -34,7 +34,7 @@ export default function InfoHoverCard({ title, content }: InfoHoverCardProps) {
           </span>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-120">
+      <HoverCardContent className="w-80">
         <div className="space-y-2">{content}</div>
       </HoverCardContent>
     </HoverCard>
