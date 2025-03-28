@@ -9,6 +9,8 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
+import FileList from './FileList'
+
 interface FileData {
   id: string
   name: string
@@ -119,23 +121,6 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
     }
   }, [applicationId, office])
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + ' B'
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
-  }
-
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
-
   if (!applicationId) {
     return null
   }
@@ -167,83 +152,8 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-      ) : files.length === 0 ? (
-        <Card className="flex items-center justify-center p-6 bg-gray-50">
-          <p className="text-sm text-gray-500">No uploaded files yet</p>
-        </Card>
       ) : (
-        <>
-          {/* Desktop Table View */}
-          <div className="hidden md:block border rounded-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">
-                    File Name
-                  </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Size
-                  </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Uploaded Time
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {files.map((file) => (
-                  <tr key={file.id}>
-                    <td className="px-4 py-3 text-sm text-gray-900">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="truncate max-w-[200px] cursor-default">{file.name}</div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{file.name}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{formatFileSize(file.size)}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
-                      {formatDate(file.uploadedAt)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile Card View */}
-          <div className="md:hidden space-y-2">
-            {files.map((file) => (
-              <Card key={file.id} className="p-3">
-                <div className="flex items-start space-x-3">
-                  <FileText className="h-8 w-8 text-blue-500 flex-shrink-0 mt-1" />
-                  <div className="min-w-0 flex-1">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <h4 className="text-sm font-medium text-gray-900 line-clamp-2 cursor-default">
-                            {file.name}
-                          </h4>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs break-words">{file.name}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <div className="mt-1 flex items-center text-xs text-gray-500">
-                      <span>{formatFileSize(file.size)}</span>
-                      <span className="mx-1">•</span>
-                      <span>{formatDate(file.uploadedAt)}</span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </>
+        <FileList files={files} />
       )}
     </div>
   )
