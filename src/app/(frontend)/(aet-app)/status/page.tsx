@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
-import StatusCheck from './status-check'
+// import StatusCheck from '../components/status-check'
+import StatusCheck from '../components/StatusCheck'
 import { Card, CardContent } from '@/components/ui/card'
 
 export const metadata: Metadata = {
