@@ -31,7 +31,7 @@
 - [x] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
 - [ ] 4.translation 在提交之前上传文件
 - [ ] 5.在确认邮件里增加一个支付按钮。
-- [ ] 加急付款只能用 zelle，提到 stripe 有手续费
+- [x] 加急付款只能用 zelle，提到 stripe 有手续费
 - [x] 默认要pdf。
 - [x] email 里提醒大家 reply all。
 - [x] status 页面，把支付按钮放到最上面。
