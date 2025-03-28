@@ -8,6 +8,7 @@ import { verifyApplication } from '../../utils/actions'
 
 import PaymentOptions from '../AETPayment/PaymentOptions'
 import Uploader from '../Dropbox/Uploader'
+import Viewer from '../Dropbox/Viewer'
 import { ApplicationData } from '../FCEApplicationForm/types'
 
 import ApplicationStatusCard from './ApplicationStatusCard'
@@ -202,6 +203,20 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       </li>
                     </ul>
                   </div>
+
+                  {/* 添加已上传文件查看器 */}
+                  <div className="mb-6">
+                    <Viewer
+                      office={application.office}
+                      applicationId={applicationId}
+                      fullName={
+                        [application.firstName, application.middleName, application.lastName]
+                          .filter(Boolean)
+                          .join(' ') || 'Not provided'
+                      }
+                    />
+                  </div>
+
                   <Uploader
                     office={application.office}
                     applicationId={applicationId}

@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { createClient } from '../utils/supabase/client'
+import { ChevronDown, Eye, Edit } from 'lucide-react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,7 +13,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, Eye, Edit } from 'lucide-react'
+import { toast } from '@/hooks/use-toast'
+
+import Link from 'next/link'
+
+import { createClient } from '../utils/supabase/client'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,10 +29,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  DatabaseApplication,
-  DatabaseEducation,
-} from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
+import { DatabaseApplication, DatabaseEducation } from '../components/FCEApplicationForm/types'
+
 import { EducationDetailsDialog } from './education-details-dialog'
 import { formatDateTime } from '../utils/dateFormat'
 import {
@@ -40,7 +41,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { toast } from '@/hooks/use-toast'
 import {
   AlertDialog,
   AlertDialogAction,
