@@ -142,6 +142,7 @@ export const formatUtils = {
       current_step: currentStep,
 
       // Payment related fields (default values)
+      due_amount: null,
       payment_status: 'pending',
       payment_id: null,
 
