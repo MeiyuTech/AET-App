@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
@@ -28,6 +28,8 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
 
+  // Helper function to update URL with the applicationId parameter
+  // This keeps the URL in sync with the current application being viewed
   const updateURL = (id: string) => {
     const url = new URL(window.location.href)
     if (id) {
@@ -38,31 +40,34 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     window.history.pushState({}, '', url)
   }
 
+  // Handle changes to the input field, formatting the UUID as user types
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatUUID(e.target.value)
     setApplicationId(formatted)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Core function to fetch and validate application status
+  // Extracted as a separate function to be reused in multiple places
+  const checkApplicationStatus = async (id: string) => {
+    // Skip if application ID is empty
+    if (!id.trim()) {
+      return
+    }
+
+    // Validate the format of the application ID
+    if (!isValidUUID(id)) {
+      setError('Please enter a valid application ID')
+      return
+    }
+
+    // Reset state before fetching
     setError('')
     setIsLoading(true)
     setApplication(null)
 
-    if (!applicationId.trim()) {
-      setError('Please enter an application ID')
-      setIsLoading(false)
-      return
-    }
-
-    if (!isValidUUID(applicationId)) {
-      setError('Please enter a valid application ID')
-      setIsLoading(false)
-      return
-    }
-
     try {
-      const result = await verifyApplication(applicationId)
+      // Fetch application data from server
+      const result = await verifyApplication(id)
 
       if (result.exists && result.application) {
         setApplication(result.application as unknown as ApplicationData)
@@ -76,9 +81,22 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
     } finally {
       setIsLoading(false)
     }
+  }
 
+  // Handle form submission when user clicks the "Check Status" button
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    checkApplicationStatus(applicationId)
     updateURL(applicationId)
   }
+
+  // Auto-load application data when component mounts or when initialApplicationId changes
+  // This enables automatic data loading when the page is loaded with a applicationId in the URL
+  useEffect(() => {
+    if (initialApplicationId && isValidUUID(initialApplicationId)) {
+      checkApplicationStatus(initialApplicationId)
+    }
+  }, [initialApplicationId]) // Only re-run effect if initialApplicationId changes
 
   return (
     <div className="space-y-6">
