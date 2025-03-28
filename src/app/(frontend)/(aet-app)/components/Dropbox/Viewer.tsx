@@ -1,12 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AlertCircle, Download, Trash2, RefreshCw } from 'lucide-react'
+import { AlertCircle, Download, Trash2, RefreshCw, FileText } from 'lucide-react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
+import FileList from './FileList'
 
 interface FileData {
   id: string
@@ -44,11 +47,17 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
         queryParams.append('applicationId', applicationId)
       }
 
-      const response = await fetch(`/api/dropbox/view?${queryParams.toString()}`, {
+      const response = await fetch(`/api/dropbox/viewFilesListFolder?${queryParams.toString()}`, {
         method: 'GET',
       })
 
       const data = await response.json()
+
+      if (data.notice === 'User has not uploaded any files yet') {
+        setError(data.notice)
+        return
+      }
+
       if (data.success && data.result) {
         const fileEntries = data.result.result.entries
         console.log(fileEntries)
@@ -67,10 +76,9 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
         setError(data.error || 'Failed to fetch files')
       }
     } catch (err) {
-      setError('Error fetching files, please try again later')
       console.error(err)
+      setError('Error fetching files, please try again later')
     } finally {
-      // 始终设置 loading 为 false，无论成功或失败
       setLoading(false)
     }
   }
@@ -113,23 +121,6 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
     }
   }, [applicationId, office])
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + ' B'
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
-  }
-
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
-
   if (!applicationId) {
     return null
   }
@@ -161,62 +152,8 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-      ) : files.length === 0 ? (
-        <Card className="flex items-center justify-center p-6 bg-gray-50">
-          <p className="text-sm text-gray-500">No uploaded files yet</p>
-        </Card>
       ) : (
-        <div className="border rounded-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  File Name
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Size
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Uploaded Time
-                </th>
-                {/* <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th> */}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {files.map((file) => (
-                <tr key={file.id}>
-                  <td className="px-4 py-3 text-sm text-gray-900">{file.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{formatFileSize(file.size)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{formatDate(file.uploadedAt)}</td>
-                  <td className="px-4 py-3 text-sm text-right">
-                    {/* <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDownload(file.id)}
-                        className="h-8 px-2 text-blue-600"
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(file.id)}
-                        className="h-8 px-2 text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
-                      </Button>
-                    </div> */}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <FileList files={files} />
       )}
     </div>
   )
