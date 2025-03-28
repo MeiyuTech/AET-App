@@ -6,6 +6,7 @@ import {
   EVALUATION_SERVICES,
   DELIVERY_OPTIONS,
   ADDITIONAL_SERVICES,
+  PURPOSE_OPTIONS,
 } from '../FCEApplicationForm/constants'
 import { calculateTotalPrice } from '../FCEApplicationForm/utils'
 
@@ -23,9 +24,16 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Purpose */}
         <div>
           <div className="font-medium">Purpose:</div>
-          <div className="pl-4">{application.purpose}</div>
+          <div className="pl-4">
+            {' '}
+            {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
+          </div>
         </div>
-
+        {/* Service Notes */}
+        <div>
+          <div className="font-medium">Service Notes:</div>
+          <div className="pl-4">{application.purposeOther}</div>
+        </div>
         {/* Customized Service */}
         {application.serviceType?.customizedService?.required && (
           <div>

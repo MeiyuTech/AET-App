@@ -31,7 +31,7 @@
 - [x] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
 - [ ] 4.translation 在提交之前上传文件
 - [ ] 5.在确认邮件里增加一个支付按钮。
-- [ ] 加急付款只能用 zelle，提到 stripe 有手续费
+- [x] 加急付款只能用 zelle，提到 stripe 有手续费
 - [x] 默认要pdf。
 - [x] email 里提醒大家 reply all。
 - [x] status 页面，把支付按钮放到最上面。
@@ -40,11 +40,11 @@
 - [x] Old ApplicationForm is kinda **deprecated**
 - [ ] Add a button to dropbox folder for each order.
 - [x] Add a Loading button for payment
-- [ ] use components for Reviews
+- [x] use components for Reviews
 - [ ] Better layout for Status page
 - [ ] any way for Status page to pre load???
-- [ ] user add comments for their services
-- [ ] show files uploaded.
+- [x] user add comments for their services
+- [x] show files uploaded.
 
 ## Features
 

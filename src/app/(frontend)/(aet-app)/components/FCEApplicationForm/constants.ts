@@ -39,7 +39,7 @@ export const PURPOSE_OPTIONS = [
   { value: 'evaluation-immigration', label: 'Evaluation-Immigration' },
   { value: 'evaluation-employment', label: 'Evaluation-Employment' },
   { value: 'evaluation-education', label: 'Evaluation-Education' },
-  { value: 'other', label: 'Other' },
+  // { value: 'other', label: 'Other' },
 ] as const
 
 export const OFFICE_OPTIONS = [
