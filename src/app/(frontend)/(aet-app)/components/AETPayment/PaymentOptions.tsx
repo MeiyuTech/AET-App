@@ -22,8 +22,10 @@ export default function PaymentOptions({ application, applicationId }: PaymentOp
   const { toast } = useToast()
   const [paymentMethod, setPaymentMethod] = useState<'zelle' | 'stripe'>('zelle')
   const [showZelleDetails, setShowZelleDetails] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const createStripePayment = async () => {
+    setIsLoading(true)
     try {
       let amountNumber = 0
 
@@ -58,6 +60,8 @@ export default function PaymentOptions({ application, applicationId }: PaymentOp
         title: 'Payment Error',
         description: error instanceof Error ? error.message : 'Payment creation failed',
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -105,9 +109,11 @@ export default function PaymentOptions({ application, applicationId }: PaymentOp
                 : 'bg-blue-600 hover:bg-blue-700'
             }`}
             size="lg"
-            disabled={isPaymentDisabled()}
+            disabled={isPaymentDisabled() || isLoading}
           >
-            {paymentMethod === 'zelle' ? (
+            {isLoading ? (
+              'Processing...'
+            ) : paymentMethod === 'zelle' ? (
               <>
                 Continue with Zelle Payment
                 <ArrowRight className="h-4 w-4" />
