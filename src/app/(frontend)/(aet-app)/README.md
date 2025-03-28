@@ -44,7 +44,7 @@
 - [ ] Better layout for Status page
 - [ ] any way for Status page to pre load???
 - [ ] user add comments for their services
-- [ ] show files uploaded.
+- [x] show files uploaded.
 
 ## Features
 
