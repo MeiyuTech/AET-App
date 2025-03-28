@@ -39,6 +39,10 @@
 - [x] sf 邮箱要确认一下！！！
 - [x] Old ApplicationForm is kinda **deprecated**
 - [ ] Add a button to dropbox folder for each order.
+- [ ] Add a Loading button for payment
+- [ ] use components for Reviews
+- [ ] Better layout for Status page
+- [ ] any way for Status page to pre load???
 
 ## Features
 
