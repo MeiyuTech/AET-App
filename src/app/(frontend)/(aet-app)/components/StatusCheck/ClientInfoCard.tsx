@@ -78,6 +78,11 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
             </dd>
           </div>
         </dl>
+        {/* Service Notes */}
+        <div className="mt-4">
+          <dt className="font-medium">Service Notes</dt>
+          <dd className="text-muted-foreground">{application.purposeOther}</dd>
+        </div>
       </CardContent>
     </Card>
   )

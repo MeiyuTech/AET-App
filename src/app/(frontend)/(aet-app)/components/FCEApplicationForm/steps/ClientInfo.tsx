@@ -3,7 +3,14 @@
 import { useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { State } from 'country-state-city'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -12,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
+import { Textarea } from '@/components/ui/textarea'
 import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel, PURPOSE_OPTIONS } from '../constants'
 import { FormData } from '../types'
 
@@ -314,7 +321,7 @@ export function ClientInfo() {
         )}
       />
 
-      {form.watch('purpose') === 'other' && (
+      {/* {form.watch('purpose') === 'other' && (
         <FormField
           control={form.control}
           name="purposeOther"
@@ -327,7 +334,36 @@ export function ClientInfo() {
             </FormItem>
           )}
         />
-      )}
+      )} */}
+
+      <FormField
+        control={form.control}
+        name="purposeOther"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              Service Notes
+              <span className="text-sm text-gray-500 ml-2">(Optional)</span>
+            </FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="e.g. I am applying for an H1B visa and need my bachelor's degree evaluated. The report will be submitted to USCIS."
+                {...field}
+              />
+            </FormControl>
+            <FormDescription>
+              Please provide details about your evaluation request. Include the purpose (e.g.,
+              employment, education, visa), the documents you’d like us to evaluate (e.g.,
+              bachelor’s degree, transcripts), and the organization or individual who will receive
+              the evaluation.
+              <br />
+              <br />
+              The more details you provide, the faster and more accurately we can assist you.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   )
 }

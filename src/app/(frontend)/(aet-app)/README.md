@@ -40,10 +40,10 @@
 - [x] Old ApplicationForm is kinda **deprecated**
 - [ ] Add a button to dropbox folder for each order.
 - [x] Add a Loading button for payment
-- [ ] use components for Reviews
+- [x] use components for Reviews
 - [ ] Better layout for Status page
 - [ ] any way for Status page to pre load???
-- [ ] user add comments for their services
+- [x] user add comments for their services
 - [x] show files uploaded.
 
 ## Features
