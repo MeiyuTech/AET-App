@@ -210,9 +210,9 @@ export async function submitAETApplication(formData: FormData) {
  * 3. Transform database field names to frontend field names
  * @param applicationId - Application ID
  * @returns - { exists: true, application: formattedData }
- * @throws - Error if failed to verify application
+ * @throws - Error if failed to fetch application
  */
-export async function verifyApplication(applicationId: string) {
+export async function fetchApplication(applicationId: string) {
   try {
     const client = await createClient()
 
