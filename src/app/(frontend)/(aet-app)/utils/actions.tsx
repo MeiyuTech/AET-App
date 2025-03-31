@@ -6,7 +6,7 @@ import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
 
-function generateServiceDescription(serviceType: FormData['serviceType']) {
+function getServiceDescription(serviceType: FormData['serviceType']) {
   const services: string[] = []
 
   // Customized Service
@@ -173,7 +173,7 @@ export async function submitAETApplication(formData: FormData) {
       html: getApplicationConfirmationEmailHTML(
         formData.firstName,
         formData.lastName,
-        generateServiceDescription(formData.serviceType),
+        getServiceDescription(formData.serviceType),
         getDeliveryMethod(formData.deliveryMethod),
         // TODO: use 'additionalServicesQuantity'
         formData.additionalServices,
