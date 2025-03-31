@@ -6,12 +6,6 @@ import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
 
-export async function createAETSubmission(formData: FormData) {
-  const client = await createClient()
-  const { error } = await client.from('fce_applications').insert(formData)
-  if (error) throw error
-}
-
 function generateServiceDescription(serviceType: FormData['serviceType']) {
   const services: string[] = []
 
