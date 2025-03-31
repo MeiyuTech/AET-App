@@ -176,11 +176,11 @@ export const EVALUATION_SERVICES = {
 
 // Delivery Options
 export const DELIVERY_OPTIONS = {
-  usps_domestic: {
+  usps_first_class_domestic: {
     label: 'USPS First Class Mail (Domestic)',
     price: 7,
   },
-  usps_international: {
+  usps_first_class_international: {
     label: 'USPS First Class Mail (International)',
     price: 13,
   },

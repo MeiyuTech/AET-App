@@ -45,6 +45,12 @@
 - [ ] any way for Status page to pre load???
 - [x] user add comments for their services
 - [x] show files uploaded.
+- [ ] 付款倒计时！
+- [x] delete "valid_purpose_other":
+      ((((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))))
+      to avoid:
+      new row for relation "fce_applications" violates check constraint "valid_purpose_other"
+- [ ]
 
 ## Features
 
