@@ -175,6 +175,7 @@ export interface DatabaseApplication {
   submitted_at: string | null
 
   // Payment related fields
+  due_amount: number | null
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null

@@ -6,13 +6,7 @@ import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML } from './email/config'
 import { sendEmail } from './email/actions'
 
-export async function createAETSubmission(formData: FormData) {
-  const client = await createClient()
-  const { error } = await client.from('fce_applications').insert(formData)
-  if (error) throw error
-}
-
-function generateServiceDescription(serviceType: FormData['serviceType']) {
+function getServiceDescription(serviceType: FormData['serviceType']) {
   const services: string[] = []
 
   // Customized Service
@@ -179,7 +173,7 @@ export async function submitAETApplication(formData: FormData) {
       html: getApplicationConfirmationEmailHTML(
         formData.firstName,
         formData.lastName,
-        generateServiceDescription(formData.serviceType),
+        getServiceDescription(formData.serviceType),
         getDeliveryMethod(formData.deliveryMethod),
         // TODO: use 'additionalServicesQuantity'
         formData.additionalServices,
@@ -210,9 +204,9 @@ export async function submitAETApplication(formData: FormData) {
  * 3. Transform database field names to frontend field names
  * @param applicationId - Application ID
  * @returns - { exists: true, application: formattedData }
- * @throws - Error if failed to verify application
+ * @throws - Error if failed to fetch application
  */
-export async function verifyApplication(applicationId: string) {
+export async function fetchApplication(applicationId: string) {
   try {
     const client = await createClient()
 
