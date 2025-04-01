@@ -50,7 +50,7 @@
       ((((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))))
       to avoid:
       new row for relation "fce_applications" violates check constraint "valid_purpose_other"
-- [ ]
+- [x] 有两个邮寄选项选不上啊 ！！！已修复
 
 ## Features
 

@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# General Cursor AI Instructions
+description: General guidance for AI interactions with this codebase
+globs: *
+
+You are working in a Next.js application with TypeScript. This application serves as a frontend and backend for the American Evaluation and Translation Service (AET).
+
+## Key principles:
+- Write clean, type-safe TypeScript code
+- Use functional components and React hooks
+- Follow existing code patterns and conventions
+- Prefer @shadcn/ui components when working with UI
+- Keep page.tsx files only for routing and layouts; extract logic to components
+- When writing unit tests, use Vitest with the following principles:
+  - Write tests in a separate file with the same name as the file being tested + .test.ts(x)
+  - Use describe blocks to group related tests
+  - Use it blocks for individual test cases
+  - Follow AAA pattern (Arrange, Act, Assert)
+  - Mock external dependencies
+  - Test edge cases
