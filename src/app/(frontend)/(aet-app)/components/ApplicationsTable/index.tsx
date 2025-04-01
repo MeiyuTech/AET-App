@@ -45,7 +45,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DatabaseApplication, DatabaseEducation } from '../FCEApplicationForm/types'
+import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
