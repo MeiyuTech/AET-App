@@ -46,49 +46,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DatabaseApplication, DatabaseEducation } from '../FCEApplicationForm/types'
+import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
 import { formatDateTime } from '../../utils/dateFormat'
 import { createClient } from '../../utils/supabase/client'
-
-// Extend DatabaseApplication but override/add specific fields needed for the table
-interface Application extends Omit<DatabaseApplication, 'service_type' | 'educations'> {
-  // Override service_type to match the structure we're getting from the database
-  service_type: {
-    id: string
-    name: string
-    description?: string
-    price: number
-  }
-
-  // Override educations to use DatabaseEducation type
-  educations?: DatabaseEducation[]
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
-  payment_id: string | null
-  paid_at: string | null
-  due_amount: number | null
-}
-
-function getStatusColor(status: string) {
-  const colors = {
-    draft: 'text-yellow-600',
-    submitted: 'text-blue-600',
-    processing: 'text-purple-600',
-    completed: 'text-green-600',
-    cancelled: 'text-red-600',
-  }
-  return colors[status as keyof typeof colors] || 'text-gray-600'
-}
-
-function getPaymentStatusColor(status: string) {
-  const colors = {
-    pending: 'text-yellow-600',
-    paid: 'text-green-600',
-    failed: 'text-red-600',
-    expired: 'text-gray-600',
-  }
-  return colors[status as keyof typeof colors] || 'text-gray-600'
-}
+import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
