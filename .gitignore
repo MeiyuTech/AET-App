@@ -10,6 +10,8 @@ node_modules
 *.docx
 *.pptx
 
+# test coverage
+coverage/
 
 # Payload default media upload directory
 public/media/
