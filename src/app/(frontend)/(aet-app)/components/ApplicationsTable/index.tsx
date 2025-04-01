@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { ChevronDown, Eye, Edit } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
+import { ChevronDown, Eye, Edit, ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -76,6 +76,20 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   } | null>(null)
   const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
   const supabase = createClient()
+
+  const tableContainerRef = useRef<HTMLDivElement>(null)
+
+  const handleScrollLeft = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft -= 200
+    }
+  }
+
+  const handleScrollRight = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft += 200
+    }
+  }
 
   const handleOfficeChange = async (id: string, office: string | null) => {
     try {
@@ -940,41 +954,65 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         />
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-base">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-base">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+      <div className="relative">
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full shadow-md bg-white/80 hover:bg-white"
+          onClick={handleScrollLeft}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full shadow-md bg-white/80 hover:bg-white"
+          onClick={handleScrollRight}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+
+        <div
+          ref={tableContainerRef}
+          className="rounded-md border overflow-x-auto scrollbar-hide"
+          style={{ scrollBehavior: 'smooth' }}
+        >
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id} className="text-base">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-base">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="text-base">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center text-base">
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <div className="flex items-center justify-end space-x-2 py-4">
