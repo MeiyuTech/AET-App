@@ -17,16 +17,6 @@ import Link from 'next/link'
 
 import { toast } from '@/hooks/use-toast'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -49,6 +39,11 @@ import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
+import {
+  DueAmountConfirmDialog,
+  StatusConfirmDialog,
+  PaymentStatusConfirmDialog,
+} from './ConfirmationDialogs'
 import { formatDateTime } from '../../utils/dateFormat'
 import { createClient } from '../../utils/supabase/client'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
@@ -1007,75 +1002,30 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         educations={selectedEducations}
       />
 
-      <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-500">Confirm Due Amount Change</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to change the due amount to
-              {pendingDueAmount?.amount !== null
-                ? ` $${pendingDueAmount?.amount.toFixed(2)}`
-                : ' none'}
-              ?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (pendingDueAmount) {
-                  handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
-                }
-              }}
-            >
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DueAmountConfirmDialog
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+        pendingDueAmount={pendingDueAmount}
+        onConfirm={() => {
+          if (pendingDueAmount) {
+            handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+          }
+        }}
+      />
 
-      <AlertDialog open={statusConfirmDialogOpen} onOpenChange={setStatusConfirmDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-500">Confirm Status Change</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to change the status from &quot;
-              {pendingStatusChange?.currentStatus}&quot; to &quot;{pendingStatusChange?.status}
-              &quot;? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmStatusChange}>Confirm</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <StatusConfirmDialog
+        open={statusConfirmDialogOpen}
+        onOpenChange={setStatusConfirmDialogOpen}
+        pendingChange={pendingStatusChange}
+        onConfirm={confirmStatusChange}
+      />
 
-      <AlertDialog
+      <PaymentStatusConfirmDialog
         open={paymentStatusConfirmDialogOpen}
         onOpenChange={setPaymentStatusConfirmDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-500">
-              Confirm Payment Status Change
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to change the payment status from &quot;
-              {pendingPaymentStatusChange?.currentStatus}&quot; to &quot;
-              {pendingPaymentStatusChange?.status}
-              &quot;? This action cannot be undone.
-              <br />
-              <br />
-              Payment date will be set to current time.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmPaymentStatusChange}>Confirm</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        pendingChange={pendingPaymentStatusChange}
+        onConfirm={confirmPaymentStatusChange}
+      />
     </div>
   )
 }

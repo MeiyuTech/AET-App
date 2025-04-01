@@ -4,6 +4,33 @@ import '@testing-library/jest-dom'
 import { ApplicationsTable } from './index'
 import { toast } from '@/hooks/use-toast'
 
+/**
+ * 注意：这个测试文件会产生React act()警告，这是因为ApplicationsTable组件
+ * 包含异步操作（useEffect中的supabase调用）和状态更新，而当前的测试方法
+ * 没有完全处理这些异步流程。
+ *
+ * 这些警告不会影响测试的通过，但表明有些组件行为没有被完全测试到：
+ * 1. 异步数据加载完成后的UI更新
+ * 2. 用户交互导致的状态更新（如筛选、排序、更改状态等）
+ * 3. 对话框的打开和关闭逻辑
+ *
+ * 这些行为需要更复杂的测试方法（如使用@testing-library/user-event和等待异步操作完成），
+ * 当前测试主要验证组件能否正常渲染和基本功能是否正常。
+ *
+ * Note: This test file will produce React act() warnings, because the ApplicationsTable component
+ * contains asynchronous operations (supabase calls in useEffect) and state updates, and the current
+ * test method does not fully handle these asynchronous processes.
+ *
+ * These warnings will not affect the test pass, but they indicate that some component behaviors are
+ * not fully tested:
+ * 1. UI updates after asynchronous data loading is complete
+ * 2. State updates triggered by user interactions (such as filtering, sorting, changing status, etc.)
+ * 3. Dialog opening and closing logic
+ *
+ * These behaviors require more complex test methods (such as using @testing-library/user-event and waiting for asynchronous operations to complete),
+ * and the current test mainly verifies whether the component can render normally and whether the basic functions are normal.
+ */
+
 // mock react useEffect
 vi.mock('react', async () => {
   const actual = await vi.importActual('react')
@@ -143,4 +170,13 @@ describe('ApplicationsTable', () => {
     // this test is to ensure our mock is correct
     expect(vi.isMockFunction(toast)).toBe(true)
   })
+
+  /**
+   * TODO: 未来可以添加更多测试来覆盖以下功能：
+   * 1. 表格筛选和排序功能
+   * 2. 点击教育信息按钮显示对话框
+   * 3. 更改办公室、应用状态和付款状态的功能
+   * 4. 输入和更新应付金额的功能
+   * 需要使用适当的测试工具来处理用户事件和异步操作
+   */
 })
