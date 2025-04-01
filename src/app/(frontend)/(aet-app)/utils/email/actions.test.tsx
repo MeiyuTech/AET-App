@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { sendEmail, sendTestEmail } from './actions'
+import { sendEmail } from './actions'
 import { getPayload } from 'payload'
 
 // Mock payload-config
@@ -23,6 +23,22 @@ describe('Email Actions', () => {
   const mockSendEmail = vi.fn()
   const mockPayload = {
     sendEmail: mockSendEmail,
+    auth: {},
+    authStrategies: [],
+    collections: [],
+    config: {},
+    db: {},
+    email: {},
+    endpoints: [],
+    express: {},
+    globals: [],
+    local: {},
+    logger: {},
+    preferences: {},
+    router: {},
+    secret: '',
+    telemetry: {},
+    versions: {},
   }
 
   beforeEach(() => {
@@ -39,7 +55,8 @@ describe('Email Actions', () => {
     vi.clearAllMocks()
 
     // Setup the mock implementation
-    vi.mocked(getPayload).mockResolvedValue(mockPayload as any)
+    //
+    vi.mocked(getPayload).mockResolvedValue(mockPayload as unknown as import('payload').Payload)
     mockSendEmail.mockResolvedValue({ success: true })
   })
 
@@ -136,35 +153,6 @@ describe('Email Actions', () => {
           html: '<p>Test</p>',
         })
       ).rejects.toThrow('Failed to send email')
-    })
-  })
-
-  describe('sendTestEmail', () => {
-    it('should send a test email successfully', async () => {
-      // Act
-      const result = await sendTestEmail()
-
-      // Assert
-      expect(mockSendEmail).toHaveBeenCalledWith({
-        from: 'Test Sender <test@example.com>',
-        to: 'nietsemorej@gmail.com',
-        cc: 'cc@example.com',
-        bcc: 'bcc@example.com',
-        subject: 'Test Email',
-        html: '<p>This is a test email from your application.</p>',
-      })
-      expect(result).toEqual({ success: true, message: 'Email sent successfully' })
-    })
-
-    it('should handle errors when sending test email', async () => {
-      // Arrange
-      mockSendEmail.mockRejectedValue(new Error('Test error'))
-
-      // Act
-      const result = await sendTestEmail()
-
-      // Assert
-      expect(result).toEqual({ success: false, message: 'Failed to send email' })
     })
   })
 })
