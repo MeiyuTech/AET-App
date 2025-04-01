@@ -55,7 +55,7 @@ export async function submitAETApplication(formData: FormData) {
     // Send confirmation email using the new email content generator
     const { success: emailSuccess, message: sendEmailMessage } = await sendEmail({
       to: formData.email,
-      cc: getCCAddress(application.office),
+      cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
       html: await getApplicationConfirmationEmailHTML(

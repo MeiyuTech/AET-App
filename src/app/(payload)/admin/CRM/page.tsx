@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/applications-table'
+// import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/applications-table'
+import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
 
 export const metadata: Metadata = {
   title: 'AET Service Application ｜ AET CRM',
