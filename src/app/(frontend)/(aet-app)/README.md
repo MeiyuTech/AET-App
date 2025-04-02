@@ -52,7 +52,7 @@
       new row for relation "fce_applications" violates check constraint "valid_purpose_other"
 - [x] 有两个邮寄选项选不上啊 ！！！已修复
 - [x] 取消 3% 手续费的提示
-- [ ] 把 payment 放到上传文件下面
+- [x] 把 payment 放到上传文件下面
 - [ ] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
 - [ ] 调整邮件格式，增加更明显的用户引导
 - [ ] 在用户上传文件后，后台可以 check 他的文件是否正确，确认后发送邮件
