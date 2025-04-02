@@ -120,7 +120,8 @@ export default function PaymentOptions({ application, applicationId }: PaymentOp
               </>
             ) : (
               <>
-                Proceed to Online Payment (3% fee)
+                {/* Proceed to Online Payment (3% fee) */}
+                Proceed to Online Payment
                 <CreditCard className="h-4 w-4" />
               </>
             )}
