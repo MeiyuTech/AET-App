@@ -27,6 +27,19 @@ interface GetColumnsProps {
   setDialogOpen: (open: boolean) => void
 }
 
+// get the dropbox link for the office
+const getOfficeDropboxLink = (office: string | null): string => {
+  if (!office) return '#'
+
+  const officeLinks: Record<string, string> = {
+    Miami: 'https://www.dropbox.com/work/Team%20Files/WebsitesDev/Miami',
+    'San Francisco': 'https://www.dropbox.com/work/Team%20Files/WebsitesDev/San%20Francisco',
+    'Los Angeles': 'https://www.dropbox.com/work/Team%20Files/WebsitesDev/Los%20Angeles',
+  }
+
+  return officeLinks[office] || `https://www.dropbox.com/work/Team%20Files/WebsitesDev`
+}
+
 export const getColumns = ({
   handleOfficeChange,
   handleStatusChange,
@@ -121,7 +134,17 @@ export const getColumns = ({
 
       return (
         <div className="flex items-center">
-          <span className="mr-2">{office || 'N/A'}</span>
+          {office ? (
+            <Link
+              href={getOfficeDropboxLink(office)}
+              className="text-blue-500 hover:underline mr-2"
+              target="_blank"
+            >
+              {office}
+            </Link>
+          ) : (
+            <span className="mr-2">N/A</span>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" disabled={!isEditable}>
