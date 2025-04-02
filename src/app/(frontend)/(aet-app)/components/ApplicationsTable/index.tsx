@@ -360,7 +360,6 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     }
   }
 
-  // 使用封装的列定义
   const columns = getColumns({
     handleOfficeChange,
     handleStatusChange,
