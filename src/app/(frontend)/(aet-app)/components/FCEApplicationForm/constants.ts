@@ -45,9 +45,9 @@ export const PURPOSE_OPTIONS = [
 export const OFFICE_OPTIONS = [
   // { value: 'Boston', label: 'Boston' },
   // { value: 'New York', label: 'New York' },
-  { value: 'San Francisco', label: 'San Francisco' },
   { value: 'Los Angeles', label: 'Los Angeles' },
   { value: 'Miami', label: 'Miami' },
+  { value: 'San Francisco', label: 'San Francisco' },
 ] as const
 
 export const PRONOUN_OPTIONS = [
