@@ -20,7 +20,7 @@
 - [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
 - [ ] 上传文件路径调整（支付前后，文件夹变化）
 - [x] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
-- [x] 增加一个字段（‘purpose’？）记录对应服务。
+- [x] 增加一个字段（'purpose'？）记录对应服务。
 
   - [x] miami： 翻译公证，学历评估，口译，签证
 
@@ -51,6 +51,14 @@
       to avoid:
       new row for relation "fce_applications" violates check constraint "valid_purpose_other"
 - [x] 有两个邮寄选项选不上啊 ！！！已修复
+- [x] 取消 3% 手续费的提示
+- [x] 把 payment 放到上传文件下面
+- [ ] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
+- [ ] 调整邮件格式，增加更明显的用户引导
+- [ ] 在用户上传文件后，后台可以 check 他的文件是否正确，确认后发送邮件
+- [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
+- [ ] 增加付款的倒计时（暂时设置成半小时）
+- [ ]
 
 ## Features
 

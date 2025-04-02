@@ -139,31 +139,6 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
       {application && (
         <>
           <ApplicationStatusCard application={application} />
-          <SelectedServicesCard application={application} />
-
-          {/* Payment Card */}
-          {application.payment_status !== 'paid' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {!application.serviceType?.translation?.required &&
-                !application.serviceType?.customizedService?.required ? (
-                  <PaymentOptions application={application} applicationId={applicationId} />
-                ) : application.due_amount ? (
-                  <PaymentOptions application={application} applicationId={applicationId} />
-                ) : (
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                    <p className="text-sm text-yellow-700">
-                      Payment is not available until the due amount is set by our staff.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
           {/* File Upload Section */}
           {application.status &&
             ['submitted', 'processing'].includes(application.status.toLowerCase()) &&
@@ -229,6 +204,31 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 </CardContent>
               </Card>
             )}
+
+          <SelectedServicesCard application={application} />
+
+          {/* Payment Card */}
+          {application.payment_status !== 'paid' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {!application.serviceType?.translation?.required &&
+                !application.serviceType?.customizedService?.required ? (
+                  <PaymentOptions application={application} applicationId={applicationId} />
+                ) : application.due_amount ? (
+                  <PaymentOptions application={application} applicationId={applicationId} />
+                ) : (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <p className="text-sm text-yellow-700">
+                      Payment is not available until the due amount is set by our staff.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <ClientInfoCard application={application} />
           <EvalueeInfoCard application={application} />

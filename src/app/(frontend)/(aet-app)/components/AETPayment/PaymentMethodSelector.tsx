@@ -92,10 +92,10 @@ export default function PaymentMethodSelector({
                 Qucik & Easy. Supports a variety of flexible payment options.
               </p>
 
-              <div className="flex items-center text-xs text-orange-600 mt-2">
+              {/* <div className="flex items-center text-xs text-orange-600 mt-2">
                 <AlertCircle className="h-3 w-3 mr-1" />
                 <span>Additional 3% processing fee applies</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
