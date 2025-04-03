@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { FileText, GraduationCap } from 'lucide-react'
 import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel, PURPOSE_OPTIONS } from '../constants'
 import { FormData } from '../types'
 
@@ -360,6 +361,35 @@ export function ClientInfo() {
               <br />
               The more details you provide, the faster and more accurately we can assist you.
             </FormDescription>
+
+            <div className="mt-2 text-sm text-gray-700">
+              <p className="mb-1">Check out our sample reports</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-blue-600" />
+                  <a
+                    href="https://www.americantranslationservice.com/evaluation_report.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline flex items-center"
+                  >
+                    Degree Credential Evaluation Report
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                  <a
+                    href="https://www.americantranslationservice.com/cbcevaluation_report.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline flex items-center"
+                  >
+                    Course by Course Evaluation Report
+                  </a>
+                </li>
+              </ul>
+            </div>
+
             <FormMessage />
           </FormItem>
         )}
