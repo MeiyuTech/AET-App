@@ -144,6 +144,7 @@ export interface DatabaseApplication {
   // purpose: 'immigration' | 'employment' | 'education' | 'other'
   purpose:
     | 'translation'
+    | 'evaluation-uscis'
     | 'evaluation-immigration'
     | 'evaluation-employment'
     | 'evaluation-education'

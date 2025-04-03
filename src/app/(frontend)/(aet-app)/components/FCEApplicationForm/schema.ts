@@ -210,6 +210,7 @@ export const formSchema = z.object({
   purpose: z.enum(
     [
       'translation',
+      'evaluation-uscis',
       'evaluation-immigration',
       'evaluation-employment',
       'evaluation-education',
