@@ -1,11 +1,11 @@
 ---
 description: 
-globs: 
+globs: e2e/**,**.spec.ts,playwright.config.ts
 alwaysApply: false
 ---
 # E2E Testing with Playwright
 description: Best practices and conventions for end-to-end testing with Playwright
-globs: e2e/**
+globs: e2e/**, **.spec.ts, playwright.config.ts
 
 ## Overview
 When writing E2E tests with Playwright, follow these guidelines to ensure consistent, maintainable, and reliable tests.
@@ -26,6 +26,7 @@ When writing E2E tests with Playwright, follow these guidelines to ensure consis
 - Avoid test interdependencies
 
 ## Best Practices
+- Use Latin in code and comments
 - Use page objects or component objects for better abstraction
 - Prefer role-based selectors (getByRole, getByLabel) over CSS selectors
 - Use data-testid attributes when role-based selectors aren't suitable
