@@ -1,8 +1,11 @@
 'use client'
 
 import { useMemo } from 'react'
+import { FileText, GraduationCap } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
+
 import { State } from 'country-state-city'
+
 import {
   FormControl,
   FormField,
@@ -20,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { FileText, GraduationCap } from 'lucide-react'
+
 import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel, PURPOSE_OPTIONS } from '../constants'
 import { FormData } from '../types'
 
