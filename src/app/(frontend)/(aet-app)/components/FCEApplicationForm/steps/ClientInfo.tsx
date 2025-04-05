@@ -1,10 +1,7 @@
 'use client'
 
-import { useMemo } from 'react'
 import { FileText, GraduationCap } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
-
-import { State } from 'country-state-city'
 
 import {
   FormControl,
@@ -33,33 +30,8 @@ export function ClientInfo() {
   // Get selected country
   const selectedCountry = form.watch('country')
 
-  // Get region type based on selected country
-  const regionConfig = useMemo(() => {
-    if (!selectedCountry) {
-      return { label: 'Region', options: [] }
-    }
-    const states = State.getStatesOfCountry(selectedCountry)
-    const regionLabels: Record<string, string> = {
-      US: 'State',
-      CN: 'Province',
-      CA: 'Province',
-      GB: 'County',
-      AU: 'State',
-      NZ: 'Region',
-      // Add more countries here
-    }
-
-    return {
-      label: regionLabels[selectedCountry] || 'Region',
-      options: states.map((state) => ({
-        value: state.isoCode,
-        label: state.name,
-      })),
-    }
-  }, [selectedCountry])
-
-  const country = form.watch('country')
-  const regionLabel = getRegionLabel(country)
+  // use constants.ts to get region config
+  const regionConfig = getRegionLabel(selectedCountry || '')
 
   return (
     <div className="space-y-4">
@@ -165,12 +137,12 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="region-select">
-                {regionLabel.label}
+                {regionConfig.label}
                 <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger id="region-select" data-testid="region-select">
-                  <SelectValue placeholder={`Select ${regionLabel.label}`} />
+                  <SelectValue placeholder={`Select ${regionConfig.label}`} />
                 </SelectTrigger>
                 <SelectContent>
                   {regionConfig.options.map((option) => (

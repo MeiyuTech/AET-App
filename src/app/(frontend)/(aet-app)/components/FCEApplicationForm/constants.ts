@@ -21,6 +21,10 @@ export const getRegionLabel = (countryCode: string) => {
   const regionLabels: Record<string, string> = {
     US: 'State',
     CN: 'Province',
+    CA: 'Province',
+    GB: 'County',
+    NZ: 'Region',
+    AU: 'State',
   }
 
   return {
