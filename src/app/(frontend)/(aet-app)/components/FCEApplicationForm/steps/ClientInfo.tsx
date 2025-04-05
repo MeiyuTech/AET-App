@@ -87,11 +87,11 @@ export function ClientInfo() {
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel htmlFor="country-select">
                 Country<span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
+                <SelectTrigger id="country-select" data-testid="country-select">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
@@ -164,12 +164,12 @@ export function ClientInfo() {
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel htmlFor="region-select">
                 {regionLabel.label}
                 <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
+                <SelectTrigger id="region-select" data-testid="region-select">
                   <SelectValue placeholder={`Select ${regionLabel.label}`} />
                 </SelectTrigger>
                 <SelectContent>
@@ -280,11 +280,11 @@ export function ClientInfo() {
         name="office"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
+            <FormLabel htmlFor="office-select">
               Office<span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger>
+              <SelectTrigger id="office-select" data-testid="office-select">
                 <SelectValue placeholder="Select office" />
               </SelectTrigger>
               <SelectContent>
@@ -305,11 +305,11 @@ export function ClientInfo() {
         name="purpose"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
+            <FormLabel htmlFor="purpose-select">
               Service Type<span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger>
+              <SelectTrigger id="purpose-select" data-testid="purpose-select">
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
@@ -357,9 +357,9 @@ export function ClientInfo() {
             </FormControl>
             <FormDescription>
               Please provide details about your evaluation request. Include the purpose (e.g.,
-              employment, education, visa), the documents you’d like us to evaluate (e.g.,
-              bachelor’s degree, transcripts), and the organization or individual who will receive
-              the evaluation.
+              employment, education, visa), the documents you&apos;d like us to evaluate (e.g.,
+              bachelor&apos;s degree, transcripts), and the organization or individual who will
+              receive the evaluation.
               <br />
               <br />
               The more details you provide, the faster and more accurately we can assist you.

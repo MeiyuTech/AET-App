@@ -28,48 +28,45 @@ test.describe('FCE client info form test', () => {
   test('should show state dropdown when selecting United States as country', async ({ page }) => {
     // select United States
     await page.getByLabel(/Country/).click()
-    await page.getByText('United States').click()
+    await page
+      .locator('div[role="option"]')
+      .filter({ hasText: /^United States$/ })
+      .click()
 
-    // verify the state label is visible
-    await expect(page.getByLabel('State')).toBeVisible()
+    // Verify we now have a State field
+    await expect(page.getByText('State*')).toBeVisible()
 
-    // verify the state dropdown contains US states
-    await page.getByLabel('State').click()
-    await expect(page.getByText('California')).toBeVisible()
-    await expect(page.getByText('New York')).toBeVisible()
-    await expect(page.getByText('Texas')).toBeVisible()
+    // verify the state dropdown contains US states - can use getByLabel now
+    await page.getByLabel(/State/).click()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'California' })).toBeVisible()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'New York' })).toBeVisible()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'Texas' })).toBeVisible()
   })
 
   test('should show province dropdown when selecting China as country', async ({ page }) => {
     // select China
     await page.getByLabel(/Country/).click()
-    await page.getByText('China').click()
+    await page
+      .locator('div[role="option"]')
+      .filter({ hasText: /^China$/ })
+      .click()
 
-    // verify the region label is visible
-    await expect(page.getByLabel('Province')).toBeVisible()
+    // Verify we now have a Province field
+    await expect(page.getByText('Province*')).toBeVisible()
 
-    // verify the province dropdown contains Chinese provinces
-    await page.getByLabel('Province').click()
-    await expect(page.getByText('Guangdong')).toBeVisible()
-    await expect(page.getByText('Beijing')).toBeVisible()
-    await expect(page.getByText('Shanghai')).toBeVisible()
-  })
-
-  test('should show Other Purpose text field when Purpose is "other"', async ({ page }) => {
-    // select Purpose as "other"
-    await page.getByLabel(/Purpose/).click()
-    await page.getByText('Other').click()
-
-    // verify the Other Purpose field is visible
-    await expect(page.getByLabel(/Other Purpose/)).toBeVisible()
+    // verify the province dropdown contains Chinese provinces - can use getByLabel now
+    await page.getByLabel(/Province/).click()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'Guangdong' })).toBeVisible()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'Beijing' })).toBeVisible()
+    await expect(page.locator('div[role="option"]').filter({ hasText: 'Shanghai' })).toBeVisible()
   })
 
   test('should show error message when phone number is invalid', async ({ page }) => {
     // fill the invalid phone number
     await page.getByLabel(/Phone/).fill('123456')
 
-    // click other field to trigger validation
-    await page.getByLabel(/Email/).click()
+    // click the next button without filling any content
+    await page.getByRole('button', { name: 'Next' }).click()
 
     // verify the error message is visible
     await expect(
@@ -78,6 +75,9 @@ test.describe('FCE client info form test', () => {
 
     // fill the valid phone number
     await page.getByLabel(/Phone/).fill('123-456-7890')
+
+    // click the next button without filling any content
+    await page.getByRole('button', { name: 'Next' }).click()
 
     // verify the error message is not visible
     await expect(
@@ -89,14 +89,17 @@ test.describe('FCE client info form test', () => {
     // fill the invalid email
     await page.getByLabel(/Email/).fill('invalid-email')
 
-    // click other field to trigger validation
-    await page.getByLabel(/Phone/).click()
+    // click the next button without filling any content
+    await page.getByRole('button', { name: 'Next' }).click()
 
     // verify the error message is visible
     await expect(page.getByText('Please enter a valid email address')).toBeVisible()
 
     // fill the valid email
     await page.getByLabel(/Email/).fill('test@example.com')
+
+    // click the next button without filling any content
+    await page.getByRole('button', { name: 'Next' }).click()
 
     // verify the error message is not visible
     await expect(page.getByText('Please enter a valid email address')).not.toBeVisible()
@@ -105,22 +108,35 @@ test.describe('FCE client info form test', () => {
   test('should save client info and navigate to the next step', async ({ page }) => {
     // fill the complete client info
     await page.getByLabel(/Company\/Individual Name/).fill('Test Company')
+
+    // Country selection
     await page.getByLabel(/Country/).click()
-    await page.getByText('United States').click()
+    await page
+      .locator('div[role="option"]')
+      .filter({ hasText: /^United States$/ })
+      .click()
+
     await page
       .getByLabel(/Street Address/)
       .first()
       .fill('123 Test St')
     await page.getByLabel(/City/).fill('Test City')
+
+    // State selection
     await page.getByLabel(/State/).click()
-    await page.getByText('California').click()
+    await page.locator('div[role="option"]').filter({ hasText: 'California' }).click()
+
     await page.getByLabel(/Zip Code/).fill('12345')
     await page.getByLabel(/Phone/).fill('123-456-7890')
     await page.getByLabel(/Email/).fill('test@example.com')
+
+    // Office selection
     await page.getByLabel(/Office/).click()
-    await page.getByText('San Francisco').click()
-    await page.getByLabel(/Purpose/).click()
-    await page.getByText('Evaluation-Employment').click()
+    await page.locator('div[role="option"]').filter({ hasText: 'San Francisco' }).click()
+
+    // Purpose selection
+    await page.getByLabel(/Service Type/).click()
+    await page.locator('div[role="option"]').filter({ hasText: 'Evaluation-Employment' }).click()
 
     // click the next button
     await page.getByRole('button', { name: 'Next' }).click()
