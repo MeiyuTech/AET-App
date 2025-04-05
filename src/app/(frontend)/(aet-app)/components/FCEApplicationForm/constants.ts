@@ -27,6 +27,13 @@ export const getRegionLabel = (countryCode: string) => {
     AU: 'State',
   }
 
+  if (states.length === 0) {
+    return {
+      label: 'Region',
+      options: [{ value: 'no_region', label: 'Not Applicable' }],
+    }
+  }
+
   return {
     label: regionLabels[countryCode] || 'Region',
     options: states.map((state) => ({
