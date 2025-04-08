@@ -21,6 +21,17 @@ export const getRegionLabel = (countryCode: string) => {
   const regionLabels: Record<string, string> = {
     US: 'State',
     CN: 'Province',
+    CA: 'Province',
+    GB: 'County',
+    NZ: 'Region',
+    AU: 'State',
+  }
+
+  if (states.length === 0) {
+    return {
+      label: 'Region',
+      options: [{ value: 'no_region', label: 'Not Applicable' }],
+    }
   }
 
   return {

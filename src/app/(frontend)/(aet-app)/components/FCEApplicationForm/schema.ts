@@ -177,15 +177,19 @@ const serviceTypeSchema = z
 export const formSchema = z.object({
   // 1. CLIENT INFORMATION
   name: z.string().min(2, { message: 'Please enter company/individual name' }),
-  country: z.string({
-    required_error: 'Please select country',
-  }),
+  country: z
+    .string({
+      required_error: 'Please select country',
+    })
+    .nonempty({ message: 'Please select country' }),
   streetAddress: z.string().min(5, { message: 'Please enter street address' }),
   streetAddress2: z.string().optional(),
   city: z.string().min(2, { message: 'Please enter city name' }),
-  region: z.string({
-    required_error: 'Please select region',
-  }),
+  region: z
+    .string({
+      required_error: 'Please select region',
+    })
+    .nonempty({ message: 'Please select region' }),
   zipCode: z.string().regex(/^\d{5}(-\d{4})?$/, { message: 'Please enter a valid ZIP code' }),
   phone: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, {
     message: 'Please enter a valid phone number in format: 123-456-7890',
@@ -225,9 +229,11 @@ export const formSchema = z.object({
   purposeOther: z.string().optional(),
 
   // 2. EVALUEE INFORMATION
-  pronouns: z.union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
-    required_error: 'Please select your pronouns',
-  }),
+  pronouns: z
+    .union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
+      required_error: 'Please select your pronouns',
+    })
+    .refine((val) => val !== undefined, { message: 'Please select your pronouns' }),
   firstName: z
     .string()
     .min(1, { message: 'First name cannot be empty' })
@@ -239,9 +245,15 @@ export const formSchema = z.object({
   middleName: z.string().optional(),
   dateOfBirth: z
     .object({
-      month: z.string({ required_error: 'Please select month' }),
-      date: z.string({ required_error: 'Please select date' }),
-      year: z.string({ required_error: 'Please select year' }),
+      month: z
+        .string({ required_error: 'Please select month' })
+        .nonempty({ message: 'Please select month' }),
+      date: z
+        .string({ required_error: 'Please select date' })
+        .nonempty({ message: 'Please select date' }),
+      year: z
+        .string({ required_error: 'Please select year' })
+        .nonempty({ message: 'Please select year' }),
     })
     .superRefine((data, ctx) => {
       const { year, month, date } = data

@@ -1,0 +1,57 @@
+---
+description: 
+globs: src/app/(frontend)/(aet-app)/components/FCEApplicationForm/**
+alwaysApply: false
+---
+# FCEApplicationForm Module
+description: Foreign Credential Evaluation Application Form Component
+<!--
+Not 'src/app/(frontend)/(aet-app)/components/FCEApplicationForm/*'
+• * matches only files/directories in the current folder (not recursive).
+• ** matches all files/directories recursively at any depth. 
+-->
+globs: src/app/(frontend)/(aet-app)/components/FCEApplicationForm/**
+
+## Overview
+FCEApplicationForm is a multi-step form component for processing Foreign Credential Evaluation applications. It handles client information, evaluee information, service selection, and final review before submission.
+
+## Structure
+- `index.tsx`: Main component that orchestrates the multi-step form
+- `types.ts`: TypeScript type definitions for form data and state
+- `schema.ts`: Zod validation schemas for form fields
+- `constants.ts`: Constants including configuration, options, pricing, etc.
+- `store.ts`: Zustand state management for form data and navigation
+- `utils.ts`: Utility functions for date handling, pricing calculation, data formatting
+- `StepIndicator.tsx`: UI component for showing current step in form progress
+- `steps/`: Folder containing individual step components
+  - `ClientInfo.tsx`: First step for client contact information
+  - `EvalueeInfo.tsx`: Second step for evaluee personal and education details
+  - `ServiceSelection.tsx`: Third step for selecting evaluation services
+  - `Review.tsx`: Final step for reviewing all information before submission
+
+## Key Components
+- Uses multi-step form architecture with client-side validation
+- Form data persisted in Zustand store with localStorage persistence
+- Comprehensive validation using Zod schemas
+- Education records can be dynamically added/removed
+- Price calculation based on selected services
+- Responsive UI using Shadcn/UI components
+
+## Best Practices
+- Keep all form-related logic within the component folder
+- Use Zod for all validation needs
+- Follow the established pattern for adding new form fields:
+  1. Add field to schema.ts
+  2. Add corresponding type in types.ts
+  3. Add UI elements in the appropriate step component
+  4. Update utils.ts if data transformation is needed
+- When adding new services or options, update constants.ts
+- For feature flags, use the CONFIG object in constants.ts
+
+## Developers Guidelines
+- All form steps should be implemented in the steps/ directory
+- Use the formStore for state management
+- Always validate input using the defined schemas
+- Price calculation should be handled by utility functions
+- Follow existing patterns for adding new form fields or options
+- Use available UI components from Shadcn/UI when possible

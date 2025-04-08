@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { FileText, GraduationCap } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
-import { State } from 'country-state-city'
+
 import {
   FormControl,
   FormField,
@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { FileText, GraduationCap } from 'lucide-react'
+
 import { OFFICE_OPTIONS, COUNTRIES, getRegionLabel, PURPOSE_OPTIONS } from '../constants'
 import { FormData } from '../types'
 
@@ -30,33 +30,8 @@ export function ClientInfo() {
   // Get selected country
   const selectedCountry = form.watch('country')
 
-  // Get region type based on selected country
-  const regionConfig = useMemo(() => {
-    if (!selectedCountry) {
-      return { label: 'Region', options: [] }
-    }
-    const states = State.getStatesOfCountry(selectedCountry)
-    const regionLabels: Record<string, string> = {
-      US: 'State',
-      CN: 'Province',
-      CA: 'Province',
-      GB: 'County',
-      AU: 'State',
-      NZ: 'Region',
-      // Add more countries here
-    }
-
-    return {
-      label: regionLabels[selectedCountry] || 'Region',
-      options: states.map((state) => ({
-        value: state.isoCode,
-        label: state.name,
-      })),
-    }
-  }, [selectedCountry])
-
-  const country = form.watch('country')
-  const regionLabel = getRegionLabel(country)
+  // use constants.ts to get region config
+  const regionConfig = getRegionLabel(selectedCountry || '')
 
   return (
     <div className="space-y-4">
@@ -84,11 +59,11 @@ export function ClientInfo() {
           name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel htmlFor="country-select">
                 Country<span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
+                <SelectTrigger id="country-select" data-testid="country-select">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,13 +136,13 @@ export function ClientInfo() {
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {regionLabel.label}
+              <FormLabel htmlFor="region-select">
+                {regionConfig.label}
                 <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
-                  <SelectValue placeholder={`Select ${regionLabel.label}`} />
+                <SelectTrigger id="region-select" data-testid="region-select">
+                  <SelectValue placeholder={`Select ${regionConfig.label}`} />
                 </SelectTrigger>
                 <SelectContent>
                   {regionConfig.options.map((option) => (
@@ -277,11 +252,11 @@ export function ClientInfo() {
         name="office"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
+            <FormLabel htmlFor="office-select">
               Office<span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger>
+              <SelectTrigger id="office-select" data-testid="office-select">
                 <SelectValue placeholder="Select office" />
               </SelectTrigger>
               <SelectContent>
@@ -302,11 +277,11 @@ export function ClientInfo() {
         name="purpose"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
+            <FormLabel htmlFor="purpose-select">
               Service Type<span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger>
+              <SelectTrigger id="purpose-select" data-testid="purpose-select">
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
@@ -354,9 +329,9 @@ export function ClientInfo() {
             </FormControl>
             <FormDescription>
               Please provide details about your evaluation request. Include the purpose (e.g.,
-              employment, education, visa), the documents you’d like us to evaluate (e.g.,
-              bachelor’s degree, transcripts), and the organization or individual who will receive
-              the evaluation.
+              employment, education, visa), the documents you&apos;d like us to evaluate (e.g.,
+              bachelor&apos;s degree, transcripts), and the organization or individual who will
+              receive the evaluation.
               <br />
               <br />
               The more details you provide, the faster and more accurately we can assist you.
