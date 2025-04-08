@@ -6,6 +6,7 @@ export const DROPBOX_TOKENS = {
     appSecret: process.env.DROPBOX_AET_App_SECRET,
     namespaceId: process.env.DROPBOX_AET_App_NAMESPACE_ID,
     basePath: '/Team Files/WebsitesDev', // Base path for AET App
+    LA_Path: '/Team Files/AET ALL Offices/AET Services/2-Foreign Credential Evaluation',
   },
   AET_App_East: {
     refreshToken: process.env.DROPBOX_AET_App_East_REFRESH_TOKEN,
