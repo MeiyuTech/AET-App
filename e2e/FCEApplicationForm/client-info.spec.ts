@@ -145,14 +145,26 @@ test.describe('FCE client info form test', () => {
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).toBeVisible()
 
+    // wait for the client info page to be ready
+    await expect(page.getByText('Client Information')).toBeVisible()
+
+    // ensure the form is in a stable state
+    await page.waitForLoadState('networkidle')
+
     // Test valid 5-digit format
-    await page.getByTestId('zip-code-input').fill('12345')
+    const zipCodeInput = page.getByTestId('zip-code-input')
+    await expect(zipCodeInput).toBeVisible()
+    await zipCodeInput.fill('12345')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
     await page.getByTestId('form-previous-button').click()
 
+    // wait for the client info page to be ready
+    await expect(page.getByText('Client Information')).toBeVisible()
+
     // Test valid extended format
-    await page.getByTestId('zip-code-input').fill('12345-6789')
+    await expect(zipCodeInput).toBeVisible()
+    await zipCodeInput.fill('12345-6789')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
   })
@@ -191,14 +203,16 @@ test.describe('FCE client info form test', () => {
 
     // wait for the next page to load
     await expect(page.getByText('Evaluee Information')).toBeVisible()
+    await page.waitForLoadState('networkidle')
 
     // ensure the previous button is visible and interactive
     const previousButton = page.getByTestId('form-previous-button')
-    await previousButton.waitFor({ state: 'visible' })
-    // add a short delay to ensure the button is fully interactive
-    await previousButton.click()
+    await previousButton.scrollIntoViewIfNeeded()
+    await previousButton.waitFor({ state: 'visible', timeout: 5000 })
+    await previousButton.click({ force: true })
 
-    // wait for the client info page to load
+    // wait for the client info page to load and be interactive
+    await page.waitForLoadState('networkidle')
     await expect(page.getByText('Client Information')).toBeVisible()
 
     // verify the form data persistence
