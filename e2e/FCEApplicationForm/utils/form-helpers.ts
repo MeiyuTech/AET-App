@@ -178,15 +178,15 @@ export async function fillServiceSelectionForm(page: Page) {
 export async function fillCompleteForm(page: Page) {
   // fill the client info
   await fillClientInfo(page)
-  await page.getByRole('button', { name: 'Next' }).click()
+  await page.getByRole('button', { name: /Next/ }).click()
 
   // fill the evaluee info
   await fillEvalueeInfo(page)
-  await page.getByRole('button', { name: 'Next' }).click()
+  await page.getByRole('button', { name: /Next/ }).click()
 
   // fill the service selection (if the step exists)
   if (await page.getByText('Service Selection').isVisible()) {
     await fillServiceSelectionForm(page)
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
   }
 }

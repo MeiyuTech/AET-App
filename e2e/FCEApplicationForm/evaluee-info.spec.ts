@@ -6,7 +6,7 @@ test.describe('FCE evaluee info form test', () => {
     // navigate to the form page and complete the client info step
     await page.goto('/apply-credential-evaluation-for-uscis')
     await fillClientInfo(page)
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
 
     // verify the evaluee info step is visible
     await expect(page.getByText('Evaluee Information')).toBeVisible()
@@ -14,7 +14,7 @@ test.describe('FCE evaluee info form test', () => {
 
   test('should show validation error when required fields are empty', async ({ page }) => {
     // navigate to the next step without filling any fields
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
 
     // verify the error message is visible
     await expect(page.getByRole('main').getByText('Please fill in all required')).toBeVisible()
@@ -68,7 +68,7 @@ test.describe('FCE evaluee info form test', () => {
       .click()
 
     // click the next button, confirm there is no error message
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
     await expect(page.getByText('Please enter first name')).not.toBeVisible()
   })
 
@@ -230,10 +230,10 @@ test.describe('FCE evaluee info form test', () => {
     })
 
     // navigate to the next step
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
 
     // navigate back to the evaluee info page
-    await page.getByRole('button', { name: 'Previous' }).click()
+    await page.getByRole('button', { name: /Previous/ }).click()
 
     // verify the data is retained
     await expect(page.getByLabel(/First Name/)).toHaveValue('John')
@@ -254,7 +254,7 @@ test.describe('FCE evaluee info form test', () => {
 
     // fill in the client info and navigate to the evaluee info page
     await fillClientInfo(page)
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
 
     // verify the form fields are reset
     await expect(page.getByLabel(/First Name/)).toHaveValue('')
@@ -266,7 +266,7 @@ test.describe('FCE evaluee info form test', () => {
     await fillEvalueeInfo(page)
 
     // submit the form and navigate to the next step
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByRole('button', { name: /Next/ }).click()
 
     await expect(page.getByText('Service Selection')).toBeVisible()
   })

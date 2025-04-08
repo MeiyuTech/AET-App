@@ -8,9 +8,6 @@ import { defineConfig, devices } from '@playwright/test'
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// disable Next.js devtools
-process.env.NEXT_DISABLE_DEVTOOLS = '1'
-
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
