@@ -109,6 +109,7 @@ test.describe('FCE client info form test', () => {
       .first()
       .fill('123 Test St')
     await page.getByLabel(/City/).fill('Mata-Utu')
+    await page.getByLabel(/Zip Code/).scrollIntoViewIfNeeded()
     await page.getByLabel(/Zip Code/).fill('12345')
     await page.getByLabel(/Phone/).fill('123-456-7890')
     await page.getByLabel(/Email/).fill('test@example.com')
@@ -124,22 +125,22 @@ test.describe('FCE client info form test', () => {
 
   test('should validate input fields and show appropriate error messages', async ({ page }) => {
     // Test 1: Phone number validation
-    await page.getByLabel(/Phone/).fill('123456')
+    await page.getByTestId('phone-input').fill('123456')
     await page.getByTestId('form-next-button').click()
     await expect(
       page.getByText('Please enter a valid phone number in format: 123-456-7890')
     ).toBeVisible()
-    await page.getByLabel(/Phone/).fill('123-456-7890')
+    await page.getByTestId('phone-input').fill('123-456-7890')
     await page.getByTestId('form-next-button').click()
     await expect(
       page.getByText('Please enter a valid phone number in format: 123-456-7890')
     ).not.toBeVisible()
 
     // Test 2: Email validation
-    await page.getByLabel(/Email/).fill('invalid-email')
+    await page.getByTestId('email-input').fill('invalid-email')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid email address')).toBeVisible()
-    await page.getByLabel(/Email/).fill('test@example.com')
+    await page.getByTestId('email-input').fill('test@example.com')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid email address')).not.toBeVisible()
 
@@ -149,13 +150,14 @@ test.describe('FCE client info form test', () => {
     await expect(page.getByText('Please enter a valid ZIP code')).toBeVisible()
 
     // Test valid 5-digit format
-    await page.getByLabel(/Zip Code/).fill('12345')
+    await page.getByTestId('zip-code-input').scrollIntoViewIfNeeded()
+    await page.getByTestId('zip-code-input').fill('12345')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
     await page.getByTestId('form-previous-button').click()
 
     // Test valid extended format
-    await page.getByLabel(/Zip Code/).fill('12345-6789')
+    await page.getByTestId('zip-code-input').fill('12345-6789')
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
   })
@@ -166,12 +168,12 @@ test.describe('FCE client info form test', () => {
     await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
     await page.getByTestId('form-previous-button').click()
-    await expect(page.getByLabel(/Company\/Individual Name/)).toHaveValue('Test Company')
-    await expect(page.getByLabel(/Street Address/).first()).toHaveValue('123 Test St')
-    await expect(page.getByLabel(/City/)).toHaveValue('Test City')
-    await expect(page.getByLabel(/Zip Code/)).toHaveValue('12345')
-    await expect(page.getByLabel(/Phone/)).toHaveValue('123-456-7890')
-    await expect(page.getByLabel(/Email/)).toHaveValue('test@example.com')
+    await expect(page.getByTestId('client-name-input')).toHaveValue('Test Company')
+    await expect(page.getByTestId('street-address-input')).toHaveValue('123 Test St')
+    await expect(page.getByTestId('city-input')).toHaveValue('Test City')
+    await expect(page.getByTestId('zip-code-input')).toHaveValue('12345')
+    await expect(page.getByTestId('phone-input')).toHaveValue('123-456-7890')
+    await expect(page.getByTestId('email-input')).toHaveValue('test@example.com')
 
     // Test 2: Complete form with additional fields
     await fillClientInfo(page, {

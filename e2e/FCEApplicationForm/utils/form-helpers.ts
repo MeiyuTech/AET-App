@@ -32,40 +32,37 @@ export async function fillClientInfo(
   } = options
 
   // Fill company name
-  await page.getByLabel(/Company\/Individual Name/).fill(companyName)
+  await page.getByTestId('client-name-input').fill(companyName)
 
   // Select country
-  await page.getByLabel(/Country/).click()
+  await page.getByTestId('country-select').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: new RegExp(`^${country}$`) })
     .click()
 
   // Fill address
-  await page
-    .getByLabel(/Street Address/)
-    .first()
-    .fill(address)
-  await page.getByLabel(/City/).fill(city)
+  await page.getByTestId('street-address-input').fill(address)
+  await page.getByTestId('city-input').fill(city)
 
   // Select region if provided
   if (region) {
     // match all possible region labels
-    await page.getByLabel(/(State|Province|County|Region)\*/).click()
+    await page.getByTestId('region-select').click()
     await page.locator('div[role="option"]').filter({ hasText: region }).click()
   }
 
   // Fill other fields
-  await page.getByLabel(/Zip Code/).fill(zipCode)
-  await page.getByLabel(/Phone/).fill(phone)
-  await page.getByLabel(/Email/).fill(email)
+  await page.getByTestId('zip-code-input').fill(zipCode)
+  await page.getByTestId('phone-input').fill(phone)
+  await page.getByTestId('email-input').fill(email)
 
   // Select office
-  await page.getByLabel(/Office/).click()
+  await page.getByTestId('office-select').click()
   await page.locator('div[role="option"]').filter({ hasText: office }).click()
 
   // Select service type
-  await page.getByLabel(/Service Type/).click()
+  await page.getByTestId('purpose-select').click()
   await page.locator('div[role="option"]').filter({ hasText: serviceType }).click()
 }
 

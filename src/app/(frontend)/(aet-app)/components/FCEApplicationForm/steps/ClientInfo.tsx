@@ -47,7 +47,7 @@ export function ClientInfo() {
                 Company/Individual Name<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input data-testid="client-name-input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,7 +90,7 @@ export function ClientInfo() {
                 Street Address<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="1234 Main St" {...field} />
+                <Input data-testid="street-address-input" placeholder="1234 Main St" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -106,7 +106,11 @@ export function ClientInfo() {
                 Street Address 2<span className="text-sm text-gray-500 ml-2">(Optional)</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Apartment, suite, unit, etc." {...field} />
+                <Input
+                  data-testid="street-address2-input"
+                  placeholder="Apartment, suite, unit, etc."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -124,7 +128,7 @@ export function ClientInfo() {
                 City<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input data-testid="city-input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -168,7 +172,7 @@ export function ClientInfo() {
                 Zip Code<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="12345" maxLength={10} {...field} />
+                <Input data-testid="zip-code-input" placeholder="12345" maxLength={10} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -186,6 +190,7 @@ export function ClientInfo() {
               </FormLabel>
               <FormControl>
                 <Input
+                  data-testid="fax-input"
                   placeholder="123-456-7890"
                   {...field}
                   onChange={(e) => {
@@ -214,6 +219,7 @@ export function ClientInfo() {
               </FormLabel>
               <FormControl>
                 <Input
+                  data-testid="phone-input"
                   placeholder="123-456-7890"
                   {...field}
                   onChange={(e) => {
@@ -239,7 +245,12 @@ export function ClientInfo() {
                 Email<span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input type="email" placeholder="your@email.com" {...field} />
+                <Input
+                  data-testid="email-input"
+                  type="email"
+                  placeholder="your@email.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -323,6 +334,7 @@ export function ClientInfo() {
             </FormLabel>
             <FormControl>
               <Textarea
+                data-testid="service-notes-input"
                 placeholder="e.g. I am applying for an H1B visa and need my bachelor's degree evaluated. The report will be submitted to USCIS."
                 {...field}
               />
