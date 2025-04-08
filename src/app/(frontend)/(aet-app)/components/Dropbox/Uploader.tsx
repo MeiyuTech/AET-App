@@ -7,11 +7,17 @@ type UploadStatus = keyof typeof STATUS_STYLES
 
 interface DropboxUploaderProps {
   office: string
+  submittedAt: string | null
   applicationId: string | null
   fullName: string | null
 }
 
-export default function DropboxUploader({ office, applicationId, fullName }: DropboxUploaderProps) {
+export default function DropboxUploader({
+  office,
+  submittedAt,
+  applicationId,
+  fullName,
+}: DropboxUploaderProps) {
   const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
@@ -88,6 +94,9 @@ export default function DropboxUploader({ office, applicationId, fullName }: Dro
 
           // Add office information
           formData.append('officeName', office)
+          if (submittedAt) {
+            formData.append('submittedAt', submittedAt)
+          }
           if (fullName) {
             formData.append('fullName', fullName)
           }

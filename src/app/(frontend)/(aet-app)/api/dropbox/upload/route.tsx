@@ -1,5 +1,7 @@
 'use server'
 
+import dayjs from 'dayjs'
+
 import { NextRequest, NextResponse } from 'next/server'
 
 import { DROPBOX_TOKENS } from '../../../utils/dropbox/config.server'
@@ -11,6 +13,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('file') as File
     const officeName = formData.get('officeName') as string
+    const submittedAt = formData.get('submittedAt') as string
     const applicationId = formData.get('applicationId') as string
     const fullName = formData.get('fullName') as string
     const tokenType = getOfficeTokenType(officeName)
@@ -56,6 +59,41 @@ export async function POST(request: NextRequest) {
         errorResponse: uploadError.error,
       })
       throw uploadError
+    }
+
+    if (officeName === 'Los Angeles') {
+      const laPath = DROPBOX_TOKENS[tokenType as 'AET_App'].LA_Path
+      if (!laPath) {
+        console.warn('LA_Path not found in configuration')
+        return NextResponse.json({ success: true })
+      }
+
+      // Get Time
+      const submittedYear = submittedAt.split('-')[0]
+      const submittedMonthNumber = submittedAt.split('-')[1]
+      const submittedMonth = dayjs(submittedMonthNumber, 'MM').format('MMMM')
+
+      // Additional upload for LA office to LA_Path
+      const laFolderPath = `${laPath}/${submittedYear}/${submittedMonth}/${fullName} - ${applicationId}`
+      const laFilePath = `${laFolderPath}/${file.name}`
+
+      try {
+        await dbx.filesUpload({
+          path: laFilePath,
+          contents: buffer,
+          mode: { '.tag': 'add' },
+          autorename: true,
+          client_modified: new Date().toISOString().split('.')[0] + 'Z',
+        })
+      } catch (laUploadError) {
+        console.error('LA additional upload error:', {
+          error: laUploadError,
+          errorMessage: laUploadError.message,
+          errorStatus: laUploadError.status,
+          errorResponse: laUploadError.error,
+        })
+        // We don't throw here to ensure the main upload is not affected
+      }
     }
 
     return NextResponse.json({ success: true })

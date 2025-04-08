@@ -179,7 +179,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     </ul>
                   </div>
 
-                  {/* 添加已上传文件查看器 */}
+                  {/* Add uploaded files viewer */}
                   <div className="mb-6">
                     <Viewer
                       office={application.office}
@@ -192,8 +192,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     />
                   </div>
 
+                  {/* Add file uploader */}
                   <Uploader
                     office={application.office}
+                    submittedAt={application.submitted_at}
                     applicationId={applicationId}
                     fullName={
                       [application.firstName, application.middleName, application.lastName]
