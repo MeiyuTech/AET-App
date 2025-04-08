@@ -1,3 +1,5 @@
+# Playwright 自动化测试工作流配置
+# 该工作流在推送到 main/master 分支或创建 PR 时触发
 name: Playwright Tests
 on:
   push:
@@ -6,23 +8,43 @@ on:
     branches: [main, master]
 jobs:
   test:
+    # 设置任务超时时间为 60 分钟
     timeout-minutes: 60
+    # 在 Ubuntu 最新版本上运行
     runs-on: ubuntu-latest
     steps:
+      # checkout the code
       - uses: actions/checkout@v4
+
+      # setup the node environment
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
+      # need to add: install pnpm
+      # since the project uses pnpm as the package manager, we need to install pnpm first
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      # install the project dependencies
+      # need to change npm ci to pnpm install
       - name: Install dependencies
         run: pnpm install
+
+      # install the playwright browsers
+      # need to change npx to pnpm
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
+
+      # run the playwright tests
+      # need to change npx to pnpm
       - name: Run Playwright tests
         run: pnpm playwright test
+
+      # upload the test report as a build artifact
+      # even if the tests fail, the report will be uploaded, but not if the workflow is manually cancelled
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
