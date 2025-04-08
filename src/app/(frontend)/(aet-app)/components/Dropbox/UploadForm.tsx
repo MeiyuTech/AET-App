@@ -13,6 +13,7 @@ export default function DropboxUploadForm() {
       {selectedOffice && (
         <DropboxUploader
           office={selectedOffice.name}
+          submittedAt={'test_submittedAt'}
           applicationId={'test_applicationId'}
           fullName={'test_fullName'}
         />
