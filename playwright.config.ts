@@ -8,6 +8,9 @@ import { defineConfig, devices } from '@playwright/test'
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+// disable Next.js devtools
+process.env.NEXT_DISABLE_DEVTOOLS = '1'
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -20,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Configure number of parallel workers */
-  workers: process.env.CI ? '50%' : '50%',
+  workers: process.env.CI ? '75%' : '50%',
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
