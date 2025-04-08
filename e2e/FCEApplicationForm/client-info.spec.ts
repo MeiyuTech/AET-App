@@ -1,75 +1,12 @@
 import { test, expect } from '@playwright/test'
+import { fillClientInfo } from './utils/form-helpers'
 
 test.describe('FCE client info form test', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/apply-credential-evaluation-for-uscis')
+    // verify the client info step is visible
+    await expect(page.getByText('Client Information')).toBeVisible()
   })
-
-  async function fillBasicInfo(
-    page,
-    options: {
-      companyName?: string
-      country?: string
-      address?: string
-      city?: string
-      region?: string
-      zipCode?: string
-      phone?: string
-      email?: string
-      office?: string
-      serviceType?: string
-    } = {}
-  ) {
-    const {
-      companyName = 'Test Company',
-      country = 'United States',
-      address = '123 Test St',
-      city = 'Test City',
-      region = 'California',
-      zipCode = '12345',
-      phone = '123-456-7890',
-      email = 'test@example.com',
-      office = 'Los Angeles',
-      serviceType = 'Evaluation-USCIS',
-    } = options
-
-    // Fill company name
-    await page.getByLabel(/Company\/Individual Name/).fill(companyName)
-
-    // Select country
-    await page.getByLabel(/Country/).click()
-    await page
-      .locator('div[role="option"]')
-      .filter({ hasText: new RegExp(`^${country}$`) })
-      .click()
-
-    // Fill address
-    await page
-      .getByLabel(/Street Address/)
-      .first()
-      .fill(address)
-    await page.getByLabel(/City/).fill(city)
-
-    // Select region if provided
-    if (region) {
-      // match all possible region labels
-      await page.getByLabel(/(State|Province|County|Region)\*/).click()
-      await page.locator('div[role="option"]').filter({ hasText: region }).click()
-    }
-
-    // Fill other fields
-    await page.getByLabel(/Zip Code/).fill(zipCode)
-    await page.getByLabel(/Phone/).fill(phone)
-    await page.getByLabel(/Email/).fill(email)
-
-    // Select office
-    await page.getByLabel(/Office/).click()
-    await page.locator('div[role="option"]').filter({ hasText: office }).click()
-
-    // Select service type
-    await page.getByLabel(/Service Type/).click()
-    await page.locator('div[role="option"]').filter({ hasText: serviceType }).click()
-  }
 
   test('should show validation error when required fields are empty', async ({ page }) => {
     // click the next button without filling any content
@@ -162,7 +99,9 @@ test.describe('FCE client info form test', () => {
 
     // Select "Not Applicable" option
     await page.locator('div[role="option"]').filter({ hasText: 'Not Applicable' }).click()
-    await page.getByText('Client Information').click() // Close dropdown
+    // Clicking on 'Client Information' to close the dropdown
+    // Using { force: true } to ensure the click action is executed even if the element is not visible or interactable
+    await page.getByText('Client Information').click({ force: true })
 
     // Fill remaining required fields and test submission
     await page
@@ -205,7 +144,7 @@ test.describe('FCE client info form test', () => {
     await expect(page.getByText('Please enter a valid email address')).not.toBeVisible()
 
     // Test 3: ZIP code validation
-    await fillBasicInfo(page, { zipCode: '123' })
+    await fillClientInfo(page, { zipCode: '123' })
     await page.getByRole('button', { name: 'Next' }).click()
     await expect(page.getByText('Please enter a valid ZIP code')).toBeVisible()
 
@@ -223,7 +162,7 @@ test.describe('FCE client info form test', () => {
 
   test('should handle form data persistence and navigation', async ({ page }) => {
     // Test 1: Basic form completion and navigation
-    await fillBasicInfo(page)
+    await fillClientInfo(page)
     await page.getByRole('button', { name: 'Next' }).click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
     await page.getByRole('button', { name: 'Previous' }).click()
@@ -235,7 +174,7 @@ test.describe('FCE client info form test', () => {
     await expect(page.getByLabel(/Email/)).toHaveValue('test@example.com')
 
     // Test 2: Complete form with additional fields
-    await fillBasicInfo(page, {
+    await fillClientInfo(page, {
       companyName: 'Data Persistence Test',
       address: '456 Persistence Ave',
       city: 'Persistence City',
@@ -304,7 +243,7 @@ test.describe('FCE client info form test', () => {
 
   test('should handle different service type selections', async ({ page }) => {
     // Fill in required fields except purpose
-    await fillBasicInfo(page, { serviceType: undefined }) // Skip service type selection
+    await fillClientInfo(page, { serviceType: undefined }) // Skip service type selection
 
     // Try different service types
     // 1. USCIS Evaluation

@@ -3,71 +3,153 @@ import { Page } from '@playwright/test'
 /**
  * fill the client info form
  */
-export async function fillClientInfoForm(page: Page) {
-  // fill the company/individual name
-  await page.getByLabel(/Company\/Individual Name/).fill('Test Company')
+export async function fillClientInfo(
+  page,
+  options: {
+    companyName?: string
+    country?: string
+    address?: string
+    city?: string
+    region?: string
+    zipCode?: string
+    phone?: string
+    email?: string
+    office?: string
+    serviceType?: string
+  } = {}
+) {
+  const {
+    companyName = 'Test Company',
+    country = 'United States',
+    address = '123 Test St',
+    city = 'Test City',
+    region = 'California',
+    zipCode = '12345',
+    phone = '123-456-7890',
+    email = 'test@example.com',
+    office = 'Los Angeles',
+    serviceType = 'Evaluation-USCIS',
+  } = options
 
-  // select the country
+  // Fill company name
+  await page.getByLabel(/Company\/Individual Name/).fill(companyName)
+
+  // Select country
   await page.getByLabel(/Country/).click()
-  await page.getByText('United States').click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: new RegExp(`^${country}$`) })
+    .click()
 
-  // fill the address info
+  // Fill address
   await page
     .getByLabel(/Street Address/)
     .first()
-    .fill('123 Test St')
-  await page.getByLabel(/City/).fill('Test City')
+    .fill(address)
+  await page.getByLabel(/City/).fill(city)
 
-  // select the state/province
-  await page.getByLabel(/State/).click()
-  await page.getByText('California').click()
+  // Select region if provided
+  if (region) {
+    // match all possible region labels
+    await page.getByLabel(/(State|Province|County|Region)\*/).click()
+    await page.locator('div[role="option"]').filter({ hasText: region }).click()
+  }
 
-  // fill the zip code, phone and email
-  await page.getByLabel(/Zip Code/).fill('12345')
-  await page.getByLabel(/Phone/).fill('1234567890')
-  await page.getByLabel(/Email/).fill('test@example.com')
+  // Fill other fields
+  await page.getByLabel(/Zip Code/).fill(zipCode)
+  await page.getByLabel(/Phone/).fill(phone)
+  await page.getByLabel(/Email/).fill(email)
 
-  // select the office
+  // Select office
   await page.getByLabel(/Office/).click()
-  await page.getByText('San Francisco').click()
+  await page.locator('div[role="option"]').filter({ hasText: office }).click()
 
-  // select the purpose
-  await page.getByLabel(/Purpose/).click()
-  await page.getByText('Evaluation for Employment').click()
+  // Select service type
+  await page.getByLabel(/Service Type/).click()
+  await page.locator('div[role="option"]').filter({ hasText: serviceType }).click()
 }
 
 /**
  * fill the evaluee info form
  */
-export async function fillEvalueeInfoForm(page: Page) {
-  // select the pronouns
+export async function fillEvalueeInfo(
+  page: Page,
+  options: {
+    firstName?: string
+    lastName?: string
+    middleName?: string
+    schoolName?: string
+    degreeObtained?: string
+  } = {}
+) {
+  const {
+    firstName = 'John',
+    lastName = 'Doe',
+    middleName = 'A',
+    schoolName = 'Harvard University',
+    degreeObtained = 'Bachelor of Science',
+  } = options
+  // test pronoun selection
   await page.getByLabel(/Pronouns/).click()
-  await page.getByText('Mr.').click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^Mr. \(he\/him\)$/ })
+    .click()
 
-  // fill the name
-  await page.getByLabel(/First Name/).fill('John')
-  await page.getByLabel(/Last Name/).fill('Doe')
-  await page.getByLabel(/Middle Name/).fill('A')
+  // test first name and last name fields
+  await page.getByLabel(/First Name/).fill(firstName)
+  await page.getByLabel(/Last Name/).fill(lastName)
+  await page.getByLabel(/Middle Name/).fill(middleName)
 
-  // fill the birth date
-  await page.getByLabel(/Month/).click()
-  await page.getByText('January').click()
-  await page.getByLabel(/Date/).fill('1')
-  await page.getByLabel(/Year/).fill('1990')
+  // test birthday information
+  await page.getByLabel(/Birth Month/).click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^January$/ })
+    .click()
+
+  // after selecting the month, the date should be visible
+  await page.getByLabel(/Birth Day/).click()
+  await page.locator('div[role="option"]').filter({ hasText: /^15$/ }).click()
+
+  await page.getByLabel(/Birth Year/).click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^1990$/ })
+    .click()
 
   // fill the education info
-  await page.getByLabel(/Country of Study/).click()
-  await page.getByText('China').click()
-  await page.getByLabel(/School Name/).fill('Test University')
-  await page.getByLabel(/Degree Obtained/).fill('Bachelor of Science')
+  // fill in the first education record
+  await page.getByLabel(/School Name/).fill(schoolName)
+  await page.getByLabel(/Study Country/).click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^United States$/ })
+    .click()
+  await page.getByLabel(/Degree Obtained/).fill(degreeObtained)
 
-  // fill the study time
+  // fill in the study duration
   await page.getByLabel(/Start Month/).click()
-  await page.getByText('September').click()
-  await page.getByLabel(/Start Year/).fill('2010')
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^September$/ })
+    .click()
+  await page.getByLabel(/Start Year/).click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^2014$/ })
+    .click()
+
   await page.getByLabel(/End Month/).click()
-  await page.getByText('June').click()
-  await page.getByLabel(/End Year/).fill('2014')
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^June$/ })
+    .click()
+  await page.getByLabel(/End Year/).click()
+  await page
+    .locator('div[role="option"]')
+    .filter({ hasText: /^2016$/ })
+    .click()
 }
 
 /**
@@ -95,11 +177,11 @@ export async function fillServiceSelectionForm(page: Page) {
  */
 export async function fillCompleteForm(page: Page) {
   // fill the client info
-  await fillClientInfoForm(page)
+  await fillClientInfo(page)
   await page.getByRole('button', { name: 'Next' }).click()
 
   // fill the evaluee info
-  await fillEvalueeInfoForm(page)
+  await fillEvalueeInfo(page)
   await page.getByRole('button', { name: 'Next' }).click()
 
   // fill the service selection (if the step exists)

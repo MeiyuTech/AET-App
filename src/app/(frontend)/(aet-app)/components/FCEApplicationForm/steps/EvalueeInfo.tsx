@@ -31,6 +31,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           variant="ghost"
           size="icon"
           className="absolute right-2 top-2"
+          data-testid={`remove-education-button-${index}`}
           onClick={onRemove}
         >
           <Trash2 className="h-4 w-4" />
@@ -58,10 +59,13 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           name={`educations.${index}.countryOfStudy`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Study Country</FormLabel>
+              <FormLabel htmlFor={`study-country-select-${index}`}>Study Country</FormLabel>
               <div className="relative">
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    id={`study-country-select-${index}`}
+                    data-testid={`study-country-select-${index}`}
+                  >
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
                   <SelectContent>
@@ -114,17 +118,21 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
         <div className="grid grid-cols-2 gap-4">
           {/* Start Date */}
           <div className="space-y-2">
-            <FormLabel className="text-sm text-gray-500">Start Date</FormLabel>
+            <FormLabel className="text-sm text-gray-500"></FormLabel>
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name={`educations.${index}.studyDuration.startDate.month`}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel htmlFor={`start-date-month-select-${index}`}>Start Month</FormLabel>
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Month" />
+                        <SelectTrigger
+                          id={`start-date-month-select-${index}`}
+                          data-testid={`start-date-month-select-${index}`}
+                        >
+                          <SelectValue placeholder="Select month" />
                         </SelectTrigger>
                         <SelectContent>
                           {MONTH_OPTIONS.map((month) => (
@@ -159,10 +167,14 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.startDate.year`}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel htmlFor={`start-date-year-select-${index}`}>Start Year</FormLabel>
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Year" />
+                        <SelectTrigger
+                          id={`start-date-year-select-${index}`}
+                          data-testid={`start-date-year-select-${index}`}
+                        >
+                          <SelectValue placeholder="Select year" />
                         </SelectTrigger>
                         <SelectContent>
                           {YEAR_OPTIONS.map((year) => (
@@ -196,17 +208,21 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
 
           {/* End Date */}
           <div className="space-y-2">
-            <FormLabel className="text-sm text-gray-500">End Date</FormLabel>
+            <FormLabel className="text-sm text-gray-500"></FormLabel>
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name={`educations.${index}.studyDuration.endDate.month`}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel htmlFor={`end-date-month-select-${index}`}>End Month</FormLabel>
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Month" />
+                        <SelectTrigger
+                          id={`end-date-month-select-${index}`}
+                          data-testid={`end-date-month-select-${index}`}
+                        >
+                          <SelectValue placeholder="Select month" />
                         </SelectTrigger>
                         <SelectContent>
                           {MONTH_OPTIONS.map((month) => (
@@ -241,10 +257,14 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                 name={`educations.${index}.studyDuration.endDate.year`}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel htmlFor={`end-date-year-select-${index}`}>End Year</FormLabel>
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Year" />
+                        <SelectTrigger
+                          id={`end-date-year-select-${index}`}
+                          data-testid={`end-date-year-select-${index}`}
+                        >
+                          <SelectValue placeholder="Select year" />
                         </SelectTrigger>
                         <SelectContent>
                           {YEAR_OPTIONS.map((year) => (
@@ -306,11 +326,11 @@ export function EvalueeInfo() {
           name="pronouns"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Pronouns <span className="text-red-500">*</span>
+              <FormLabel htmlFor="pronouns-select">
+                Pronouns<span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger>
+                <SelectTrigger id="pronouns-select" data-testid="pronouns-select">
                   <SelectValue placeholder="Select your pronouns" />
                 </SelectTrigger>
                 <SelectContent>
@@ -379,18 +399,20 @@ export function EvalueeInfo() {
 
         {/* Date of Birth */}
         <div className="space-y-2">
-          <FormLabel>
-            Date of Birth <span className="text-red-500">*</span>
-          </FormLabel>
+          <FormLabel></FormLabel>
           <div className="grid grid-cols-3 gap-4">
             <FormField
               control={form.control}
               name="dateOfBirth.month"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel htmlFor="date-of-birth-month-select">Birth Month</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Month" />
+                    <SelectTrigger
+                      id="date-of-birth-month-select"
+                      data-testid="date-of-birth-month-select"
+                    >
+                      <SelectValue placeholder="Select month" />
                     </SelectTrigger>
                     <SelectContent>
                       {MONTH_OPTIONS.map((month) => (
@@ -410,9 +432,13 @@ export function EvalueeInfo() {
               name="dateOfBirth.date"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel htmlFor="date-of-birth-day-select">Birth Day</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value} disabled={!birthMonth}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Day" />
+                    <SelectTrigger
+                      id="date-of-birth-day-select"
+                      data-testid="date-of-birth-day-select"
+                    >
+                      <SelectValue placeholder="Select day" />
                     </SelectTrigger>
                     <SelectContent>
                       {Array.from({ length: daysInMonth }, (_, i) => {
@@ -435,9 +461,13 @@ export function EvalueeInfo() {
               name="dateOfBirth.year"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel htmlFor="date-of-birth-year-select">Birth Year</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Year" />
+                    <SelectTrigger
+                      id="date-of-birth-year-select"
+                      data-testid="date-of-birth-year-select"
+                    >
+                      <SelectValue placeholder="Select year" />
                     </SelectTrigger>
                     <SelectContent>
                       {YEAR_OPTIONS.map((year) => (

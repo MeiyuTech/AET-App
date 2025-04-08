@@ -229,9 +229,11 @@ export const formSchema = z.object({
   purposeOther: z.string().optional(),
 
   // 2. EVALUEE INFORMATION
-  pronouns: z.union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
-    required_error: 'Please select your pronouns',
-  }),
+  pronouns: z
+    .union([z.enum(['mr', 'ms', 'mx']), z.undefined()], {
+      required_error: 'Please select your pronouns',
+    })
+    .refine((val) => val !== undefined, { message: 'Please select your pronouns' }),
   firstName: z
     .string()
     .min(1, { message: 'First name cannot be empty' })
