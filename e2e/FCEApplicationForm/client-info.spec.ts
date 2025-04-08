@@ -118,54 +118,54 @@ test.describe('FCE client info form test', () => {
     await page.locator('div[role="option"]').filter({ hasText: 'Evaluation-USCIS' }).click()
 
     // Click next and verify it proceeds to the next step
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
   })
 
   test('should validate input fields and show appropriate error messages', async ({ page }) => {
     // Test 1: Phone number validation
     await page.getByLabel(/Phone/).fill('123456')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(
       page.getByText('Please enter a valid phone number in format: 123-456-7890')
     ).toBeVisible()
     await page.getByLabel(/Phone/).fill('123-456-7890')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(
       page.getByText('Please enter a valid phone number in format: 123-456-7890')
     ).not.toBeVisible()
 
     // Test 2: Email validation
     await page.getByLabel(/Email/).fill('invalid-email')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid email address')).toBeVisible()
     await page.getByLabel(/Email/).fill('test@example.com')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid email address')).not.toBeVisible()
 
     // Test 3: ZIP code validation
     await fillClientInfo(page, { zipCode: '123' })
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).toBeVisible()
 
     // Test valid 5-digit format
     await page.getByLabel(/Zip Code/).fill('12345')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-previous-button').click()
 
     // Test valid extended format
     await page.getByLabel(/Zip Code/).fill('12345-6789')
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter a valid ZIP code')).not.toBeVisible()
   })
 
   test('should handle form data persistence and navigation', async ({ page }) => {
     // Test 1: Basic form completion and navigation
     await fillClientInfo(page)
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-previous-button').click()
     await expect(page.getByLabel(/Company\/Individual Name/)).toHaveValue('Test Company')
     await expect(page.getByLabel(/Street Address/).first()).toHaveValue('123 Test St')
     await expect(page.getByLabel(/City/)).toHaveValue('Test City')
@@ -190,8 +190,8 @@ test.describe('FCE client info form test', () => {
     await page.getByLabel(/Service Notes/).fill(testNote)
 
     // Navigate and check persistence
-    await page.getByRole('button', { name: /Next/ }).click()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-next-button').click()
+    await page.getByTestId('form-previous-button').click()
     await expect(page.getByLabel(/Company\/Individual Name/)).toHaveValue('Data Persistence Test')
     await expect(page.getByLabel(/Street Address/).first()).toHaveValue('456 Persistence Ave')
     await expect(page.getByLabel(/Street Address 2/)).toHaveValue('Suite 789')
@@ -206,8 +206,8 @@ test.describe('FCE client info form test', () => {
     const longNote =
       'This is a detailed note about the evaluation needed. I am applying for employment at a tech company and need my Computer Science degree from Beijing University evaluated. I graduated in 2015 with honors and need this verification for my employer.'
     await page.getByLabel(/Service Notes/).fill(longNote)
-    await page.getByRole('button', { name: /Next/ }).click()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-next-button').click()
+    await page.getByTestId('form-previous-button').click()
     await expect(page.getByLabel(/Service Notes/)).toHaveValue(longNote)
   })
 
@@ -249,21 +249,21 @@ test.describe('FCE client info form test', () => {
     // 1. USCIS Evaluation
     await page.getByLabel(/Service Type/).click()
     await page.locator('div[role="option"]').filter({ hasText: 'Evaluation-USCIS' }).click()
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-previous-button').click()
 
     // 2. Employment Evaluation
     await page.getByLabel(/Service Type/).click()
     await page.locator('div[role="option"]').filter({ hasText: 'Evaluation-Employment' }).click()
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
-    await page.getByRole('button', { name: /Previous/ }).click()
+    await page.getByTestId('form-previous-button').click()
 
     // 3. Education Evaluation
     await page.getByLabel(/Service Type/).click()
     await page.locator('div[role="option"]').filter({ hasText: 'Evaluation-Education' }).click()
-    await page.getByRole('button', { name: /Next/ }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Evaluee Information')).toBeVisible()
   })
 })

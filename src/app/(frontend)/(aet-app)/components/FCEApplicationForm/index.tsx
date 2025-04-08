@@ -378,6 +378,7 @@ export default function FCEApplicationForm() {
             variant="outline"
             onClick={handlePrevious}
             disabled={currentStep === FormStep.CLIENT_INFO}
+            data-testid="form-previous-button"
           >
             Previous
           </Button>
@@ -388,7 +389,12 @@ export default function FCEApplicationForm() {
                 {isSaving ? 'Submitting...' : 'Submit Application'}
               </Button>
             ) : (
-              <Button type="button" onClick={handleNext} disabled={isSaving}>
+              <Button
+                type="button"
+                onClick={handleNext}
+                disabled={isSaving}
+                data-testid="form-next-button"
+              >
                 {isSaving ? 'Saving...' : 'Next'}
               </Button>
             )}

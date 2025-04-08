@@ -15,7 +15,7 @@
 //     await expect(page.getByRole('button', { name: 'Next' })).toBeVisible()
 
 //     // verify the previous button is not visible or disabled
-//     await expect(page.getByRole('button', { name: 'Previous' })).not.toBeVisible()
+//     await expect(page.getByTestId('form-previous-button')).not.toBeVisible()
 //   })
 
 //   test('should show validation error when clicking next without filling required fields', async ({
@@ -41,7 +41,7 @@
 //     await expect(page.getByText('Evaluee Information')).toBeVisible()
 
 //     // verify the previous button is visible
-//     await expect(page.getByRole('button', { name: 'Previous' })).toBeVisible()
+//     await expect(page.getByTestId('form-previous-button')).toBeVisible()
 //   })
 
 //   test('should navigate back to the client info step after clicking the previous button', async ({
@@ -55,7 +55,7 @@
 //     await expect(page.getByText('Evaluee Information')).toBeVisible()
 
 //     // click the previous button
-//     await page.getByRole('button', { name: 'Previous' }).click()
+//     await page.getByTestId('form-previous-button').click()
 
 //     // verify the client info step is visible
 //     await expect(page.getByText('Client Information')).toBeVisible()
