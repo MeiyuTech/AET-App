@@ -87,29 +87,29 @@ export async function fillEvalueeInfo(
     degreeObtained = 'Bachelor of Science',
   } = options
   // test pronoun selection
-  await page.getByLabel(/Pronouns/).click()
+  await page.getByTestId('pronouns-select').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^Mr. \(he\/him\)$/ })
     .click()
 
   // test first name and last name fields
-  await page.getByLabel(/First Name/).fill(firstName)
-  await page.getByLabel(/Last Name/).fill(lastName)
-  await page.getByLabel(/Middle Name/).fill(middleName)
+  await page.getByTestId('first-name-input').fill(firstName)
+  await page.getByTestId('last-name-input').fill(lastName)
+  await page.getByTestId('middle-name-input').fill(middleName)
 
   // test birthday information
-  await page.getByLabel(/Birth Month/).click()
+  await page.getByTestId('date-of-birth-month-select').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^January$/ })
     .click()
 
   // after selecting the month, the date should be visible
-  await page.getByLabel(/Birth Day/).click()
+  await page.getByTestId('date-of-birth-day-select').click()
   await page.locator('div[role="option"]').filter({ hasText: /^15$/ }).click()
 
-  await page.getByLabel(/Birth Year/).click()
+  await page.getByTestId('date-of-birth-year-select').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^1990$/ })
@@ -117,32 +117,32 @@ export async function fillEvalueeInfo(
 
   // fill the education info
   // fill in the first education record
-  await page.getByLabel(/School Name/).fill(schoolName)
-  await page.getByLabel(/Study Country/).click()
+  await page.getByTestId('school-name-input-0').fill(schoolName)
+  await page.getByTestId('study-country-select-0').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^United States$/ })
     .click()
-  await page.getByLabel(/Degree Obtained/).fill(degreeObtained)
+  await page.getByTestId('degree-obtained-input-0').fill(degreeObtained)
 
   // fill in the study duration
-  await page.getByLabel(/Start Month/).click()
+  await page.getByTestId('start-date-month-select-0').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^September$/ })
     .click()
-  await page.getByLabel(/Start Year/).click()
+  await page.getByTestId('start-date-year-select-0').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^2014$/ })
     .click()
 
-  await page.getByLabel(/End Month/).click()
+  await page.getByTestId('end-date-month-select-0').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^June$/ })
     .click()
-  await page.getByLabel(/End Year/).click()
+  await page.getByTestId('end-date-year-select-0').click()
   await page
     .locator('div[role="option"]')
     .filter({ hasText: /^2016$/ })
