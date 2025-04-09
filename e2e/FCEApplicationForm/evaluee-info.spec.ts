@@ -6,7 +6,7 @@ test.describe('FCE evaluee info form test', () => {
     // navigate to the form page and complete the client info step
     await page.goto('/apply-credential-evaluation-for-uscis')
     await fillClientInfo(page)
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
 
     // verify the evaluee info step is visible
     await expect(page.getByText('Evaluee Information')).toBeVisible()
@@ -14,7 +14,7 @@ test.describe('FCE evaluee info form test', () => {
 
   test('should show validation error when required fields are empty', async ({ page }) => {
     // navigate to the next step without filling any fields
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
 
     // verify the error message is visible
     await expect(page.getByRole('main').getByText('Please fill in all required')).toBeVisible()
@@ -39,61 +39,61 @@ test.describe('FCE evaluee info form test', () => {
 
   test('should correctly fill and validate personal information fields', async ({ page }) => {
     // test pronoun selection
-    await page.getByLabel(/Pronouns/).click()
+    await page.getByTestId('pronouns-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^Mr. \(he\/him\)$/ })
       .click()
 
     // test first name and last name fields
-    await page.getByLabel(/First Name/).fill('John')
-    await page.getByLabel(/Last Name/).fill('Doe')
-    await page.getByLabel(/Middle Name/).fill('A')
+    await page.getByTestId('first-name-input').fill('John')
+    await page.getByTestId('last-name-input').fill('Doe')
+    await page.getByTestId('middle-name-input').fill('A')
 
     // test birthday information
-    await page.getByLabel(/Birth Month/).click()
+    await page.getByTestId('date-of-birth-month-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^January$/ })
       .click()
 
     // after selecting the month, the date should be visible
-    await page.getByLabel(/Birth Day/).click()
+    await page.getByTestId('date-of-birth-day-select').click()
     await page.locator('div[role="option"]').filter({ hasText: /^15$/ }).click()
 
-    await page.getByLabel(/Birth Year/).click()
+    await page.getByTestId('date-of-birth-year-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^1990$/ })
       .click()
 
     // click the next button, confirm there is no error message
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
     await expect(page.getByText('Please enter first name')).not.toBeVisible()
   })
 
   test('should validate date of birth correctly', async ({ page }) => {
     // fill in other required fields to correctly test birthday validation
-    await page.getByLabel(/Pronouns/).click()
+    await page.getByTestId('pronouns-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^Mr. \(he\/him\)$/ })
       .click()
-    await page.getByLabel(/First Name/).fill('John')
-    await page.getByLabel(/Last Name/).fill('Doe')
+    await page.getByTestId('first-name-input').fill('John')
+    await page.getByTestId('last-name-input').fill('Doe')
 
     // test 1: select the month of February, ensure the correct number of days (28 days for non-leap year)
-    await page.getByLabel(/Birth Month/).click()
+    await page.getByTestId('date-of-birth-month-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^February$/ })
       .click()
-    await page.getByLabel(/Birth Year/).click()
+    await page.getByTestId('date-of-birth-year-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2023$/ })
       .click()
-    await page.getByLabel(/Birth Day/).click()
+    await page.getByTestId('date-of-birth-day-select').click()
     await expect(page.locator('div[role="option"]').filter({ hasText: /^29$/ })).not.toBeVisible()
     await expect(page.locator('div[role="option"]').filter({ hasText: /^28$/ })).toBeVisible()
 
@@ -101,122 +101,101 @@ test.describe('FCE evaluee info form test', () => {
     // Clicking on 'Evaluee Information' to close the dropdown
     // Using { force: true } to ensure the click action is executed even if the element is not visible or interactable
     await page.getByText('Evaluee Information').click({ force: true })
-    await page.getByLabel(/Birth Year/).click()
+    await page.getByTestId('date-of-birth-year-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2020$/ })
       .click()
-    await page.getByLabel(/Birth Day/).click()
+    await page.getByTestId('date-of-birth-day-select').click()
     await expect(page.locator('div[role="option"]').filter({ hasText: /^29$/ })).toBeVisible()
 
     // test 3: select a month with 31 days
     await page.getByText('Evaluee Information').click({ force: true })
-    await page.getByLabel(/Birth Month/).click()
+    await page.getByTestId('date-of-birth-month-select').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^January$/ })
       .click()
-    await page.getByLabel(/Birth Day/).click()
+    await page.getByTestId('date-of-birth-day-select').click()
     await expect(page.locator('div[role="option"]').filter({ hasText: /^31$/ })).toBeVisible()
   })
 
   test('should handle education records correctly', async ({ page }) => {
     // fill in the first education record
-    await page.getByLabel(/School Name/).fill('Harvard University')
-    await page.getByLabel(/Study Country/).click()
+    await page.getByTestId('school-name-input-0').fill('Harvard University')
+    await page.getByTestId('study-country-select-0').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^United States$/ })
       .click()
-    await page.getByLabel(/Degree Obtained/).fill('Bachelor of Science')
+    await page.getByTestId('degree-obtained-input-0').fill('Bachelor of Science')
 
     // fill in the study duration
-    await page.getByLabel(/Start Month/).click()
+    await page.getByTestId('start-date-month-select-0').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^September$/ })
       .click()
-    await page.getByLabel(/Start Year/).click()
+    await page.getByTestId('start-date-year-select-0').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2014$/ })
       .click()
 
-    await page.getByLabel(/End Month/).click()
+    await page.getByTestId('end-date-month-select-0').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^June$/ })
       .click()
-    await page.getByLabel(/End Year/).click()
+    await page.getByTestId('end-date-year-select-0').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2016$/ })
       .click()
 
     // click the add education button
-    await page.getByRole('button', { name: 'Add Education' }).click()
+    await page.getByTestId('add-education-button').click()
 
     // verify the new education record fields are visible
-    await expect(page.getByLabel(/School Name/).nth(1)).toBeVisible()
+    await expect(page.getByTestId('school-name-input-1')).toBeVisible()
 
     // fill in the second education record
-    await page
-      .getByLabel(/School Name/)
-      .nth(1)
-      .fill('MIT')
-    await page
-      .getByLabel(/Study Country/)
-      .nth(1)
-      .click()
+    await page.getByTestId('school-name-input-1').fill('MIT')
+    await page.getByTestId('study-country-select-1').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^United States$/ })
       .click()
-    await page
-      .getByLabel(/Degree Obtained/)
-      .nth(1)
-      .fill('Master of Science')
+    await page.getByTestId('degree-obtained-input-1').fill('Master of Science')
 
     // fill in the study duration of the second record
-    await page
-      .getByLabel(/Start Month/)
-      .nth(1)
-      .click()
+    await page.getByTestId('start-date-month-select-1').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^September$/ })
       .click()
-    await page
-      .getByLabel(/Start Year/)
-      .nth(1)
-      .click()
+    await page.getByTestId('start-date-year-select-1').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2017$/ })
       .click()
 
-    await page
-      .getByLabel(/End Month/)
-      .nth(1)
-      .click()
+    await page.getByTestId('end-date-month-select-1').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^June$/ })
       .click()
-    await page
-      .getByLabel(/End Year/)
-      .nth(1)
-      .click()
+    await page.getByTestId('end-date-year-select-1').click()
     await page
       .locator('div[role="option"]')
       .filter({ hasText: /^2019$/ })
       .click()
 
     // test the delete education record function
-    await page.getByTestId(/remove-education-button-1/).click()
+    await page.getByTestId('remove-education-button-1').click()
 
     // verify the second record has been deleted
-    await expect(page.getByLabel(/School Name/).nth(1)).not.toBeVisible()
+    await expect(page.getByTestId('school-name-input-1')).not.toBeVisible()
   })
 
   test('should maintain state when navigating between steps', async ({ page }) => {
@@ -230,23 +209,23 @@ test.describe('FCE evaluee info form test', () => {
     })
 
     // navigate to the next step
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
 
     // navigate back to the evaluee info page
-    await page.getByRole('button', { name: 'Previous' }).click()
+    await page.getByTestId('form-previous-button').click()
 
     // verify the data is retained
-    await expect(page.getByLabel(/First Name/)).toHaveValue('John')
-    await expect(page.getByLabel(/Last Name/)).toHaveValue('Doe')
-    await expect(page.getByLabel(/Middle Name/)).toHaveValue('A')
-    await expect(page.getByLabel(/School Name/)).toHaveValue('Test University')
-    await expect(page.getByLabel(/Degree Obtained/)).toHaveValue('Bachelor of Science')
+    await expect(page.getByTestId('first-name-input')).toHaveValue('John')
+    await expect(page.getByTestId('last-name-input')).toHaveValue('Doe')
+    await expect(page.getByTestId('middle-name-input')).toHaveValue('A')
+    await expect(page.getByTestId('school-name-input-0')).toHaveValue('Test University')
+    await expect(page.getByTestId('degree-obtained-input-0')).toHaveValue('Bachelor of Science')
   })
 
   test('should reset form when refreshing browser and no draft is saved', async ({ page }) => {
     // fill in the basic info
-    await page.getByLabel(/First Name/).fill('Refresh Test')
-    await page.getByLabel(/Last Name/).fill('User')
+    await page.getByTestId('first-name-input').fill('Refresh Test')
+    await page.getByTestId('last-name-input').fill('User')
 
     // refresh the page
     await page.getByRole('button', { name: 'Reset Application' }).click()
@@ -254,11 +233,11 @@ test.describe('FCE evaluee info form test', () => {
 
     // fill in the client info and navigate to the evaluee info page
     await fillClientInfo(page)
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
 
     // verify the form fields are reset
-    await expect(page.getByLabel(/First Name/)).toHaveValue('')
-    await expect(page.getByLabel(/Last Name/)).toHaveValue('')
+    await expect(page.getByTestId('first-name-input')).toHaveValue('')
+    await expect(page.getByTestId('last-name-input')).toHaveValue('')
   })
 
   test('should complete the form with all fields correctly filled', async ({ page }) => {
@@ -266,7 +245,7 @@ test.describe('FCE evaluee info form test', () => {
     await fillEvalueeInfo(page)
 
     // submit the form and navigate to the next step
-    await page.getByRole('button', { name: 'Next' }).click()
+    await page.getByTestId('form-next-button').click()
 
     await expect(page.getByText('Service Selection')).toBeVisible()
   })

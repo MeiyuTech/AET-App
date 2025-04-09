@@ -29,6 +29,7 @@ test('should navigate to the form page', async ({ page }) => {
       // add code to navigate through the menu here
     }
   } catch (error) {
+    console.error(error)
     console.log('navigation failed, trying to navigate to the form page directly')
     // navigate to the form page directly
     await page.goto('/apply-credential-evaluation-for-uscis')

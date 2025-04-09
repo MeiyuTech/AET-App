@@ -47,7 +47,11 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
             <FormItem>
               <FormLabel>School Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter full school name" {...field} />
+                <Input
+                  data-testid={`school-name-input-${index}`}
+                  placeholder="Enter full school name"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,6 +89,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                     onClick={() => {
                       field.onChange(undefined)
                     }}
+                    data-testid={`clear-study-country-button-${index}`}
                   >
                     <X className="h-4 w-4 text-red-500" />
                     <span className="sr-only">Clear selection</span>
@@ -105,7 +110,11 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           <FormItem>
             <FormLabel>Degree Obtained</FormLabel>
             <FormControl>
-              <Input placeholder="e.g.: Bachelor of Science" {...field} />
+              <Input
+                data-testid={`degree-obtained-input-${index}`}
+                placeholder="e.g.: Bachelor of Science"
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -151,6 +160,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                           onClick={() => {
                             field.onChange(undefined)
                           }}
+                          data-testid={`clear-start-date-month-button-${index}`}
                         >
                           <X className="h-4 w-4 text-red-500" />
                           <span className="sr-only">Clear selection</span>
@@ -193,6 +203,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                           onClick={() => {
                             field.onChange(undefined)
                           }}
+                          data-testid={`clear-start-date-year-button-${index}`}
                         >
                           <X className="h-4 w-4 text-red-500" />
                           <span className="sr-only">Clear selection</span>
@@ -241,6 +252,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                           onClick={() => {
                             field.onChange(undefined)
                           }}
+                          data-testid={`clear-end-date-month-button-${index}`}
                         >
                           <X className="h-4 w-4 text-red-500" />
                           <span className="sr-only">Clear selection</span>
@@ -283,6 +295,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
                           onClick={() => {
                             field.onChange(undefined)
                           }}
+                          data-testid={`clear-end-date-year-button-${index}`}
                         >
                           <X className="h-4 w-4 text-red-500" />
                           <span className="sr-only">Clear selection</span>
@@ -356,7 +369,7 @@ export function EvalueeInfo() {
                   First Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input data-testid="first-name-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -372,7 +385,7 @@ export function EvalueeInfo() {
                   Last Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input data-testid="last-name-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -389,7 +402,7 @@ export function EvalueeInfo() {
                   <span className="text-sm text-gray-500 ml-2">(Optional)</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input data-testid="middle-name-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -496,6 +509,7 @@ export function EvalueeInfo() {
             type="button"
             variant="outline"
             size="sm"
+            data-testid="add-education-button"
             onClick={() =>
               append({
                 countryOfStudy: '',
