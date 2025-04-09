@@ -54,8 +54,9 @@
 - [x] 取消 3% 手续费的提示
 - [x] 把 payment 放到上传文件下面
 - [ ] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
-- [ ] 调整邮件格式，增加更明显的用户引导
+- [x] 调整邮件格式，增加更明显的用户引导
 - [ ] 在用户上传文件后，后台可以 check 他的文件是否正确，确认后发送邮件
+- [ ] 要有邮件发送的倒计时
 - [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
 - [ ] 增加付款的倒计时（暂时设置成半小时）
 - [x] 要增加 sample，在表格第一页！
