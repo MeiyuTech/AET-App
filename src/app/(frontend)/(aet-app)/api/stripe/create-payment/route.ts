@@ -11,8 +11,10 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { amount, currency, applicationId } = body
-    const stripeFee = amount * 0.03
-    const totalAmount = amount + stripeFee
+
+    // Calculate Stripe Fee (2.9% + $0.30)
+    const totalAmount = (amount + 0.3) / (1 - 0.029)
+    const stripeFee = totalAmount - amount
 
     // Convert amount to cents and ensure it's a valid integer
     const unitAmount = Math.round(totalAmount * 100)
@@ -32,7 +34,7 @@ export async function POST(request: Request) {
             currency: currency,
             product_data: {
               name: 'Customized Service Payment',
-              description: `Price: ${amount.toFixed(2)} + Service fee: ${stripeFee.toFixed(2)}`,
+              description: `Price: ${amount.toFixed(2)} + Stripe Fee: ${stripeFee.toFixed(2)}`,
             },
             unit_amount: unitAmount, // Use rounded integer amount
           },
