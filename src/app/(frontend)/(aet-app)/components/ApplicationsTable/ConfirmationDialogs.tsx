@@ -49,7 +49,12 @@ export function DueAmountConfirmDialog({
 interface StatusDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  pendingChange: { id: string; status: string; currentStatus: string } | null
+  pendingChange: {
+    id: string
+    status: string
+    currentStatus: string
+    paymentMethod?: string
+  } | null
   onConfirm: () => void
 }
 
@@ -98,6 +103,13 @@ export function PaymentStatusConfirmDialog({
             <br />
             <br />
             Payment date will be set to current time.
+            {pendingChange?.paymentMethod && (
+              <>
+                <br />
+                <br />
+                Payment method: {pendingChange.paymentMethod === 'zelle' ? 'Zelle' : 'PayPal'}
+              </>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
