@@ -42,6 +42,13 @@ export async function POST(request: Request) {
 
     // Create payment link parameters
     const paymentLinkParams: Stripe.PaymentLinkCreateParams = {
+      payment_method_types: ['card', 'alipay', 'us_bank_account'],
+      // // ACH Direct Debit payment is only available for  Stripe Checkout
+      // payment_method_options: {
+      //   us_bank_account: {
+      //     setup_future_usage: 'on_session',
+      //   },
+      // },
       line_items: [
         {
           price: price.id,
