@@ -3,12 +3,11 @@ import { getServerSideURL } from './getURL'
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description:
-    'AET Service, is an online platform for clients to get Reliable, Convenient and Affordable Translation Services and Credential Evaluations that make your life easy in USA',
+  description: 'Translation & Credential Evaluation Services, making your life easy in USA',
   images: [
     {
       // url: `${getServerSideURL()}/website-template-OG.webp`,
-      url: `${getServerSideURL()}/web-app-manifest-192x192.png`,
+      url: `${getServerSideURL()}/golden-gate-bridge-view.jpg`,
     },
   ],
   siteName: 'AET Service',
