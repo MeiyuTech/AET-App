@@ -44,7 +44,7 @@ export function PaymentLinkDialog({
 
   const createPaymentLink = async () => {
     if (!applicationId || defaultAmount <= 0) {
-      setError('Invalid payment amount or application ID')
+      setError('Invalid payment amount or application ID. Please check your Due Amount Setting. ')
       setIsLoading(false)
       return
     }
