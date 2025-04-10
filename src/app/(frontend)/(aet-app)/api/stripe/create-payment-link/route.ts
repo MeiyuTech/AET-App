@@ -15,9 +15,6 @@ export async function POST(request: Request) {
       currency = 'usd',
       applicationId,
       description = 'Customized Service Payment',
-      expiresAt,
-      afterCompletionType = 'redirect',
-      afterCompletionRedirectUrl,
     } = body
 
     // Calculate Stripe Fee (2.9% + $0.30)
@@ -44,7 +41,7 @@ export async function POST(request: Request) {
     })
 
     // Create payment link parameters
-    const paymentLinkParams: any = {
+    const paymentLinkParams: Stripe.PaymentLinkCreateParams = {
       line_items: [
         {
           price: price.id,
@@ -52,21 +49,19 @@ export async function POST(request: Request) {
         },
       ],
       after_completion: {
-        type: afterCompletionType,
+        type: 'redirect',
         redirect: {
-          url:
-            afterCompletionRedirectUrl ||
-            `${currentUrl}/checkout/success?applicationId=${applicationId}`,
+          url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
         },
       },
       metadata: {
         applicationId: applicationId || '',
       },
-    }
-
-    // Add expiration if provided
-    if (expiresAt) {
-      paymentLinkParams.expires_at = expiresAt
+      restrictions: {
+        completed_sessions: {
+          limit: 1,
+        },
+      },
     }
 
     // Create the payment link
@@ -76,7 +71,6 @@ export async function POST(request: Request) {
       url: paymentLink.url,
       id: paymentLink.id,
       active: paymentLink.active,
-      expiresAt: (paymentLink as any).expires_at,
     })
   } catch (error) {
     console.error(`${stripeConfig.mode} payment link creation error:`, error)
