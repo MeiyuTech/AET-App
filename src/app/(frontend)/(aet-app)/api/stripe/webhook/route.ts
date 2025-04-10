@@ -26,12 +26,13 @@ export async function POST(req: Request) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
 
+        const client_reference_id = session.client_reference_id || session.metadata?.applicationId
         console.log('Session data:', {
-          client_reference_id: session.client_reference_id || session.metadata?.applicationId,
+          client_reference_id: client_reference_id,
           payment_intent: session.payment_intent,
         })
 
-        if (!session.client_reference_id) {
+        if (!client_reference_id) {
           console.error('No client_reference_id in session')
           return new NextResponse('Missing client_reference_id', { status: 400 })
         }
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
         const { data: existingApp } = await client
           .from('fce_applications')
           .select('status, payment_status')
-          .eq('id', session.client_reference_id)
+          .eq('id', client_reference_id)
           .single()
 
         console.log('Current application state:', existingApp)
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
             payment_id: session.payment_intent as string,
             paid_at: new Date().toISOString(),
           })
-          .eq('id', session.client_reference_id)
+          .eq('id', client_reference_id)
 
         if (error) {
           console.error('Error updating application:', {
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
         const { data: updatedApp } = await client
           .from('fce_applications')
           .select('status, payment_status')
-          .eq('id', session.client_reference_id)
+          .eq('id', client_reference_id)
           .single()
 
         console.log('Update result:', {
@@ -86,12 +87,13 @@ export async function POST(req: Request) {
 
       case 'checkout.session.expired': {
         const session = event.data.object as Stripe.Checkout.Session
+        const client_reference_id = session.client_reference_id || session.metadata?.applicationId
 
         console.log('Expired session data:', {
-          client_reference_id: session.client_reference_id,
+          client_reference_id: client_reference_id,
         })
 
-        if (!session.client_reference_id) {
+        if (!client_reference_id) {
           console.error('No client_reference_id in session')
           return new NextResponse('Missing client_reference_id', { status: 400 })
         }
@@ -101,7 +103,7 @@ export async function POST(req: Request) {
           .update({
             payment_status: 'expired',
           })
-          .eq('id', session.client_reference_id)
+          .eq('id', client_reference_id)
           .select()
           .single()
 
