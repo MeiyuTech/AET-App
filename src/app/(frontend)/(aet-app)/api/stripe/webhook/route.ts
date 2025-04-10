@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session
 
         console.log('Session data:', {
-          client_reference_id: session.client_reference_id,
+          client_reference_id: session.client_reference_id || session.metadata?.applicationId,
           payment_intent: session.payment_intent,
         })
 
