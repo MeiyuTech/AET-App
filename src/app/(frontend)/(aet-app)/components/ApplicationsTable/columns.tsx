@@ -20,7 +20,7 @@ import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
   handleStatusChange: (id: string, status: string) => Promise<void>
-  handlePaymentStatusChange: (id: string, status: string) => Promise<void>
+  handlePaymentStatusChange: (id: string, status: string, paymentMethod: string) => Promise<void>
   setPendingDueAmount: (data: { id: string; amount: number | null }) => void
   setConfirmDialogOpen: (open: boolean) => void
   setSelectedEducations: (educations: DatabaseEducation[] | undefined) => void
@@ -512,9 +512,14 @@ export const getColumns = ({
                 <DropdownMenuLabel>Change Payment Status</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => handlePaymentStatusChange(row.original.id, 'paid')}
+                  onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'zelle')}
                 >
-                  Mark as Paid
+                  Mark as Paid via Zelle
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'paypal')}
+                >
+                  Mark as Paid via Paypal
                 </DropdownMenuItem>
               </DropdownMenuContent>
             )}

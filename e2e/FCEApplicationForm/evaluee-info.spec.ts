@@ -154,6 +154,7 @@ test.describe('FCE evaluee info form test', () => {
       .click()
 
     // click the add education button
+    await page.getByText('Evaluee Information').click({ force: true })
     await page.getByTestId('add-education-button').click()
 
     // verify the new education record fields are visible

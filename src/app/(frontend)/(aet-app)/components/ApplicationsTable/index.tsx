@@ -62,6 +62,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     id: string
     status: string
     currentStatus: string
+    paymentMethod: string
   } | null>(null)
   const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
   const supabase = createClient()
@@ -277,7 +278,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     }
   }
 
-  const handlePaymentStatusChange = async (id: string, newStatus: string) => {
+  const handlePaymentStatusChange = async (
+    id: string,
+    newStatus: string,
+    paymentMethod: string
+  ) => {
     try {
       const application = applications.find((app) => app.id === id)
 
@@ -303,6 +308,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         id,
         status: newStatus,
         currentStatus,
+        paymentMethod,
       })
       setPaymentStatusConfirmDialogOpen(true)
     } catch (error) {
@@ -319,9 +325,10 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     if (!pendingPaymentStatusChange) return
 
     try {
-      const { id, status } = pendingPaymentStatusChange
+      const { id, status, paymentMethod } = pendingPaymentStatusChange
       const paid_at = status === 'paid' ? new Date().toISOString() : null
-      const payment_id = 'Marked as Paid'
+      const payment_id =
+        paymentMethod === 'zelle' ? 'Marked as Paid via Zelle' : 'Marked as Paid via Paypal'
 
       // Update both payment_status and paid_at
       const { error } = await supabase
@@ -339,6 +346,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
                 ...app,
                 payment_status: status as 'pending' | 'paid' | 'failed' | 'expired',
                 paid_at,
+                payment_id,
               }
             : app
         )
@@ -346,7 +354,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
       toast({
         title: 'Payment status updated',
-        description: `Payment status has been changed to ${status}.`,
+        description: `Payment status has been changed to ${status} via ${paymentMethod}.`,
       })
     } catch (error) {
       console.error('Error updating payment status:', error)
