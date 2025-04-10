@@ -1,9 +1,11 @@
 import { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-
+import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+
+import { Button } from '@/components/ui/button'
 
 // import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/applications-table'
 import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
@@ -47,6 +49,14 @@ export default async function CRMPage() {
       <h2 className="text-2xl mb-4">
         Welcome <span className="font-bold">{user.email}</span>
       </h2>
+      {/* Payment Link Button */}
+      <Button asChild>
+        <Link href="../../payment-link" target="_blank">
+          Manually Create Payment Link
+        </Link>
+      </Button>
+
+      {/* Applications Table */}
       <ApplicationsTable dataFilter={dataFilter} />
     </div>
   )
