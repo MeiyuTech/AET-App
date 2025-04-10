@@ -25,6 +25,9 @@ interface GetColumnsProps {
   setConfirmDialogOpen: (open: boolean) => void
   setSelectedEducations: (educations: DatabaseEducation[] | undefined) => void
   setDialogOpen: (open: boolean) => void
+  setSelectedApplication: (application: Application | undefined) => void
+  setServicesDialogOpen: (open: boolean) => void
+  createPaymentLink: (id: string, amount: number) => void
 }
 
 // get the dropbox link for the office
@@ -48,6 +51,9 @@ export const getColumns = ({
   setConfirmDialogOpen,
   setSelectedEducations,
   setDialogOpen,
+  setSelectedApplication,
+  setServicesDialogOpen,
+  createPaymentLink,
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
@@ -326,6 +332,24 @@ export const getColumns = ({
     },
   },
   {
+    id: 'services',
+    header: 'Services',
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setSelectedApplication(row.original)
+            setServicesDialogOpen(true)
+          }}
+        >
+          <Eye className="h-4 w-4 mr-2" />
+        </Button>
+      )
+    },
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => {
       return (
@@ -493,6 +517,7 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const paymentStatus = row.getValue('payment_status') as string
+      const dueAmount = row.getValue('due_amount') as number | null
       // Allow changing payment status if it's pending or expired
       const canChangeToPaid = paymentStatus === 'pending' || paymentStatus === 'expired'
 
@@ -503,26 +528,32 @@ export const getColumns = ({
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" disabled={!canChangeToPaid}>
-                <Edit className={`h-4 w-4 ${!canChangeToPaid ? 'opacity-50' : ''}`} />
+              <Button variant="ghost" size="sm">
+                <Edit className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            {canChangeToPaid && (
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Change Payment Status</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'zelle')}
-                >
-                  Mark as Paid via Zelle
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'paypal')}
-                >
-                  Mark as Paid via Paypal
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            )}
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Payment Options</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {canChangeToPaid && (
+                <>
+                  <DropdownMenuItem
+                    onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'zelle')}
+                  >
+                    Mark as Paid via Zelle
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'paypal')}
+                  >
+                    Mark as Paid via Paypal
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem onClick={() => createPaymentLink(row.original.id, dueAmount || 0)}>
+                Create Payment Link With ID
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </DropdownMenu>
         </div>
       )
@@ -548,7 +579,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'payment_id',
-    header: 'Payment ID',
+    header: 'Payment ID (notes）',
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
   },
 ]

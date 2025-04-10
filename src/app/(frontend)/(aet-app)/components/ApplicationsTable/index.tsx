@@ -29,6 +29,7 @@ import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
+import { ServicesDetailsDialog } from './ServicesDetailsDialog'
 import {
   DueAmountConfirmDialog,
   StatusConfirmDialog,
@@ -36,6 +37,7 @@ import {
 } from './ConfirmationDialogs'
 import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
+import { PaymentLinkDialog } from './PaymentLinkDialog'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -47,6 +49,8 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     undefined
   )
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [servicesDialogOpen, setServicesDialogOpen] = useState(false)
+  const [selectedApplication, setSelectedApplication] = useState<Application | undefined>(undefined)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [pendingDueAmount, setPendingDueAmount] = useState<{
     id: string
@@ -65,19 +69,85 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     paymentMethod: string
   } | null>(null)
   const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
+  const [paymentLinkDialogOpen, setPaymentLinkDialogOpen] = useState<boolean>(false)
+  const [selectedApplicationForPayment, setSelectedApplicationForPayment] = useState<{
+    id: string
+    amount: number
+  } | null>(null)
+
   const supabase = createClient()
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    // 检查表格容器的宽度和内容宽度
+    if (tableContainerRef.current) {
+      const container = tableContainerRef.current
+      console.log('Container details:', {
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        offsetWidth: container.offsetWidth,
+        style: container.style,
+        overflowX: getComputedStyle(container).overflowX,
+        parentWidth: container.parentElement?.clientWidth,
+      })
+    }
+  }, [applications])
+
   const handleScrollLeft = () => {
     if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft -= 200
+      const container = tableContainerRef.current
+      const scrollDistance = container.clientWidth - 50
+
+      console.log('Before scroll left:', {
+        scrollLeft: container.scrollLeft,
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        scrollDistance,
+      })
+
+      const newScrollPosition = Math.max(0, container.scrollLeft - scrollDistance)
+      container.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth',
+      })
+
+      setTimeout(() => {
+        console.log('After scroll left (delayed):', {
+          scrollLeft: container.scrollLeft,
+          clientWidth: container.clientWidth,
+          scrollWidth: container.scrollWidth,
+        })
+      }, 100)
     }
   }
 
   const handleScrollRight = () => {
     if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft += 200
+      const container = tableContainerRef.current
+      const scrollDistance = container.clientWidth - 50
+
+      console.log('Before scroll right:', {
+        scrollLeft: container.scrollLeft,
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        scrollDistance,
+      })
+
+      const maxScroll = container.scrollWidth - container.clientWidth
+      const newScrollPosition = Math.min(maxScroll, container.scrollLeft + scrollDistance)
+      container.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth',
+      })
+
+      setTimeout(() => {
+        console.log('After scroll right (delayed):', {
+          scrollLeft: container.scrollLeft,
+          clientWidth: container.clientWidth,
+          scrollWidth: container.scrollWidth,
+        })
+      }, 100)
     }
   }
 
@@ -368,6 +438,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     }
   }
 
+  const handleCreatePaymentLink = (id: string, amount: number) => {
+    setSelectedApplicationForPayment({ id, amount })
+    setPaymentLinkDialogOpen(true)
+  }
+
   const columns = getColumns({
     handleOfficeChange,
     handleStatusChange,
@@ -376,6 +451,9 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setConfirmDialogOpen,
     setSelectedEducations,
     setDialogOpen,
+    setSelectedApplication,
+    setServicesDialogOpen,
+    createPaymentLink: handleCreatePaymentLink,
   })
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -390,7 +468,18 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const table = useReactTable({
     data: applications,
-    columns,
+    columns: getColumns({
+      handleOfficeChange,
+      handleStatusChange,
+      handlePaymentStatusChange,
+      setPendingDueAmount,
+      setConfirmDialogOpen,
+      setSelectedEducations,
+      setDialogOpen,
+      setSelectedApplication,
+      setServicesDialogOpen,
+      createPaymentLink: handleCreatePaymentLink,
+    }),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -461,7 +550,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       <div className="flex items-center py-4">
         <Input
           placeholder="Search all columns..."
@@ -472,63 +561,72 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       </div>
 
       <div className="relative">
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full shadow-md bg-white/80 hover:bg-white"
-          onClick={handleScrollLeft}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full shadow-md bg-white/80 hover:bg-white"
-          onClick={handleScrollRight}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
-
+        <div className="absolute left-8 top-0 h-12 flex items-center z-10">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full shadow-md bg-white/80 hover:bg-white"
+            onClick={handleScrollLeft}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </div>
+        <div className="absolute right-0 top-0 h-12 flex items-center z-10">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full shadow-md bg-white/80 hover:bg-white"
+            onClick={handleScrollRight}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
         <div
           ref={tableContainerRef}
-          className="rounded-md border overflow-x-auto scrollbar-hide"
-          style={{ scrollBehavior: 'smooth' }}
+          className="rounded-md border overflow-x-auto scrollbar-hide w-full"
+          style={{
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch',
+            overflowX: 'auto',
+            position: 'relative',
+          }}
         >
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="text-base">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="text-base">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
+          <div style={{ minWidth: '2800px' }}>
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} className="text-base">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
                     ))}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-base">
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="text-base">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center text-base">
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
 
@@ -556,30 +654,39 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         onOpenChange={setDialogOpen}
         educations={selectedEducations}
       />
-
+      <ServicesDetailsDialog
+        open={servicesDialogOpen}
+        onOpenChange={setServicesDialogOpen}
+        application={selectedApplication}
+      />
       <DueAmountConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
         pendingDueAmount={pendingDueAmount}
-        onConfirm={() => {
+        onConfirm={async () => {
           if (pendingDueAmount) {
-            handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+            await handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+            setPendingDueAmount(null)
           }
         }}
       />
-
       <StatusConfirmDialog
         open={statusConfirmDialogOpen}
         onOpenChange={setStatusConfirmDialogOpen}
         pendingChange={pendingStatusChange}
         onConfirm={confirmStatusChange}
       />
-
       <PaymentStatusConfirmDialog
         open={paymentStatusConfirmDialogOpen}
         onOpenChange={setPaymentStatusConfirmDialogOpen}
         pendingChange={pendingPaymentStatusChange}
         onConfirm={confirmPaymentStatusChange}
+      />
+      <PaymentLinkDialog
+        open={paymentLinkDialogOpen}
+        onOpenChange={setPaymentLinkDialogOpen}
+        applicationId={selectedApplicationForPayment?.id || ''}
+        defaultAmount={selectedApplicationForPayment?.amount || 0}
       />
     </div>
   )
