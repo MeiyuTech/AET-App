@@ -24,7 +24,7 @@ export default async function CRMPage() {
   if (!user) {
     redirect(`/admin/login?redirect=${encodeURIComponent('/admin/CRM')}`)
   }
-  console.log('user:', user)
+  // console.log('user:', user)
 
   let dataFilter = 'office.eq.utopia'
   switch (user.email) {

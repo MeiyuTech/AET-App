@@ -37,6 +37,7 @@ import {
 } from './ConfirmationDialogs'
 import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
+import { PaymentLinkDialog } from './PaymentLinkDialog'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -68,6 +69,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     paymentMethod: string
   } | null>(null)
   const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
+  const [paymentLinkDialogOpen, setPaymentLinkDialogOpen] = useState<boolean>(false)
+  const [selectedApplicationForPayment, setSelectedApplicationForPayment] = useState<{
+    id: string
+    amount: number
+  } | null>(null)
+
   const supabase = createClient()
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
@@ -371,6 +378,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     }
   }
 
+  const handleCreatePaymentLink = (id: string, amount: number) => {
+    setSelectedApplicationForPayment({ id, amount })
+    setPaymentLinkDialogOpen(true)
+  }
+
   const columns = getColumns({
     handleOfficeChange,
     handleStatusChange,
@@ -381,6 +393,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setDialogOpen,
     setSelectedApplication,
     setServicesDialogOpen,
+    createPaymentLink: handleCreatePaymentLink,
   })
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -405,6 +418,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       setDialogOpen,
       setSelectedApplication,
       setServicesDialogOpen,
+      createPaymentLink: handleCreatePaymentLink,
     }),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -598,6 +612,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         onOpenChange={setPaymentStatusConfirmDialogOpen}
         pendingChange={pendingPaymentStatusChange}
         onConfirm={confirmPaymentStatusChange}
+      />
+      <PaymentLinkDialog
+        open={paymentLinkDialogOpen}
+        onOpenChange={setPaymentLinkDialogOpen}
+        applicationId={selectedApplicationForPayment?.id || ''}
+        defaultAmount={selectedApplicationForPayment?.amount || 0}
       />
     </div>
   )
