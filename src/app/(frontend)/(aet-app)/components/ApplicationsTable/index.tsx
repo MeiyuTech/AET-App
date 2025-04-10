@@ -79,15 +79,75 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    // 检查表格容器的宽度和内容宽度
+    if (tableContainerRef.current) {
+      const container = tableContainerRef.current
+      console.log('Container details:', {
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        offsetWidth: container.offsetWidth,
+        style: container.style,
+        overflowX: getComputedStyle(container).overflowX,
+        parentWidth: container.parentElement?.clientWidth,
+      })
+    }
+  }, [applications])
+
   const handleScrollLeft = () => {
     if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft -= 200
+      const container = tableContainerRef.current
+      const scrollDistance = container.clientWidth - 50
+
+      console.log('Before scroll left:', {
+        scrollLeft: container.scrollLeft,
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        scrollDistance,
+      })
+
+      const newScrollPosition = Math.max(0, container.scrollLeft - scrollDistance)
+      container.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth',
+      })
+
+      setTimeout(() => {
+        console.log('After scroll left (delayed):', {
+          scrollLeft: container.scrollLeft,
+          clientWidth: container.clientWidth,
+          scrollWidth: container.scrollWidth,
+        })
+      }, 100)
     }
   }
 
   const handleScrollRight = () => {
     if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft += 200
+      const container = tableContainerRef.current
+      const scrollDistance = container.clientWidth - 50
+
+      console.log('Before scroll right:', {
+        scrollLeft: container.scrollLeft,
+        clientWidth: container.clientWidth,
+        scrollWidth: container.scrollWidth,
+        scrollDistance,
+      })
+
+      const maxScroll = container.scrollWidth - container.clientWidth
+      const newScrollPosition = Math.min(maxScroll, container.scrollLeft + scrollDistance)
+      container.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth',
+      })
+
+      setTimeout(() => {
+        console.log('After scroll right (delayed):', {
+          scrollLeft: container.scrollLeft,
+          clientWidth: container.clientWidth,
+          scrollWidth: container.scrollWidth,
+        })
+      }, 100)
     }
   }
 
@@ -501,32 +561,37 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       </div>
 
       <div className="relative">
+        <div className="absolute left-8 top-0 h-12 flex items-center z-10">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full shadow-md bg-white/80 hover:bg-white"
+            onClick={handleScrollLeft}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </div>
+        <div className="absolute right-0 top-0 h-12 flex items-center z-10">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full shadow-md bg-white/80 hover:bg-white"
+            onClick={handleScrollRight}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
         <div
           ref={tableContainerRef}
-          className="rounded-md border overflow-x-auto scrollbar-hide"
-          style={{ scrollBehavior: 'smooth' }}
+          className="rounded-md border overflow-x-auto scrollbar-hide w-full"
+          style={{
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch',
+            overflowX: 'auto',
+            position: 'relative',
+          }}
         >
-          <div className="relative">
-            <div className="absolute left-8 top-0 h-12 flex items-center z-10">
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full shadow-md bg-white/80 hover:bg-white"
-                onClick={handleScrollLeft}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="absolute right-0 top-0 h-12 flex items-center z-10">
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full shadow-md bg-white/80 hover:bg-white"
-                onClick={handleScrollRight}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
+          <div style={{ minWidth: '2800px' }}>
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
