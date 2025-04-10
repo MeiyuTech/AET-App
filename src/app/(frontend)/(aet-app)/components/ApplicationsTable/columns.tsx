@@ -25,6 +25,8 @@ interface GetColumnsProps {
   setConfirmDialogOpen: (open: boolean) => void
   setSelectedEducations: (educations: DatabaseEducation[] | undefined) => void
   setDialogOpen: (open: boolean) => void
+  setSelectedApplication: (application: Application | undefined) => void
+  setServicesDialogOpen: (open: boolean) => void
 }
 
 // get the dropbox link for the office
@@ -48,6 +50,8 @@ export const getColumns = ({
   setConfirmDialogOpen,
   setSelectedEducations,
   setDialogOpen,
+  setSelectedApplication,
+  setServicesDialogOpen,
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
@@ -326,6 +330,24 @@ export const getColumns = ({
     },
   },
   {
+    id: 'services',
+    header: 'Services',
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setSelectedApplication(row.original)
+            setServicesDialogOpen(true)
+          }}
+        >
+          <Eye className="h-4 w-4 mr-2" />
+        </Button>
+      )
+    },
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => {
       return (
@@ -548,7 +570,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'payment_id',
-    header: 'Payment ID',
+    header: 'Payment ID (notes）',
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
   },
 ]

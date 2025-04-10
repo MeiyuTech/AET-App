@@ -29,6 +29,7 @@ import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
+import { ServicesDetailsDialog } from './ServicesDetailsDialog'
 import {
   DueAmountConfirmDialog,
   StatusConfirmDialog,
@@ -47,6 +48,8 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     undefined
   )
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [servicesDialogOpen, setServicesDialogOpen] = useState(false)
+  const [selectedApplication, setSelectedApplication] = useState<Application | undefined>(undefined)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [pendingDueAmount, setPendingDueAmount] = useState<{
     id: string
@@ -376,6 +379,8 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setConfirmDialogOpen,
     setSelectedEducations,
     setDialogOpen,
+    setSelectedApplication,
+    setServicesDialogOpen,
   })
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -390,7 +395,17 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const table = useReactTable({
     data: applications,
-    columns,
+    columns: getColumns({
+      handleOfficeChange,
+      handleStatusChange,
+      handlePaymentStatusChange,
+      setPendingDueAmount,
+      setConfirmDialogOpen,
+      setSelectedEducations,
+      setDialogOpen,
+      setSelectedApplication,
+      setServicesDialogOpen,
+    }),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -461,7 +476,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       <div className="flex items-center py-4">
         <Input
           placeholder="Search all columns..."
@@ -556,25 +571,28 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         onOpenChange={setDialogOpen}
         educations={selectedEducations}
       />
-
+      <ServicesDetailsDialog
+        open={servicesDialogOpen}
+        onOpenChange={setServicesDialogOpen}
+        application={selectedApplication}
+      />
       <DueAmountConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
         pendingDueAmount={pendingDueAmount}
-        onConfirm={() => {
+        onConfirm={async () => {
           if (pendingDueAmount) {
-            handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+            await handleDueAmountChange(pendingDueAmount.id, pendingDueAmount.amount)
+            setPendingDueAmount(null)
           }
         }}
       />
-
       <StatusConfirmDialog
         open={statusConfirmDialogOpen}
         onOpenChange={setStatusConfirmDialogOpen}
         pendingChange={pendingStatusChange}
         onConfirm={confirmStatusChange}
       />
-
       <PaymentStatusConfirmDialog
         open={paymentStatusConfirmDialogOpen}
         onOpenChange={setPaymentStatusConfirmDialogOpen}
