@@ -1,4 +1,4 @@
-import { PaymentLinkCreator } from '../components/PaymentLinkCreator'
+import { PaymentLinkCreator } from '../components/Stripe/PaymentLinkCreator'
 
 export default function PaymentLinkPage() {
   return (

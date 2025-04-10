@@ -61,6 +61,7 @@
 - [ ] 增加付款的倒计时（暂时设置成半小时）
 - [x] 要增加 sample，在表格第一页！
 - [x] Marked as Paid for Zelle/ Paypal (stripe has payment id)
+- [ ] 参考 SuccessMessage，需要建立 FailedMsg
 - [ ]
 
 ## Features
