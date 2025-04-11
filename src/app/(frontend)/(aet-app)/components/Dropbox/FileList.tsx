@@ -1,16 +1,11 @@
 'use client'
 
 import { FileText } from 'lucide-react'
+import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatFileSize, formatDate } from '../../utils/dropbox/client'
-interface FileData {
-  id: string
-  name: string
-  size: number
-  uploadedAt: string
-  downloadUrl?: string
-}
+import { FileData } from './config'
 
 interface FileListProps {
   files: FileData[]
@@ -50,10 +45,17 @@ export default function FileList({ files }: FileListProps) {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="truncate max-w-[200px] cursor-default">{file.name}</div>
+                        <Link
+                          href={`https://www.dropbox.com/preview/${file.pathDisplay}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="truncate max-w-[200px] block hover:underline text-blue-600"
+                        >
+                          {file.name}
+                        </Link>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>{file.name}</p>
+                        <p className="max-w-xs break-words">{file.name}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -76,9 +78,14 @@ export default function FileList({ files }: FileListProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <h4 className="text-sm font-medium text-gray-900 line-clamp-2 cursor-default">
+                      <Link
+                        href={`https://www.dropbox.com/preview/${file.pathDisplay}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-blue-600 hover:underline line-clamp-2 block"
+                      >
                         {file.name}
-                      </h4>
+                      </Link>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs break-words">{file.name}</p>

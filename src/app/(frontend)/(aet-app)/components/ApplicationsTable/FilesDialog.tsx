@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Application } from './types'
-import DropboxUploader from '../Dropbox/Uploader'
-import DropboxViewer from '../Dropbox/Viewer'
+import Uploader from '../Dropbox/Uploader'
+import Viewer from '../Dropbox/Viewer'
 
 interface FilesDialogProps {
   open: boolean
@@ -16,7 +16,7 @@ interface FilesDialogProps {
 export function FilesDialog({ open, onOpenChange, application }: FilesDialogProps) {
   if (!application) return null
 
-  // 组合用户全名
+  // get full name from application
   const fullName = `${application.first_name} ${application.last_name}`
 
   return (
@@ -33,7 +33,7 @@ export function FilesDialog({ open, onOpenChange, application }: FilesDialogProp
           </TabsList>
 
           <TabsContent value="upload" className="mt-4">
-            <DropboxUploader
+            <Uploader
               office={application.office || ''}
               submittedAt={application.submitted_at}
               applicationId={application.id}
@@ -42,7 +42,7 @@ export function FilesDialog({ open, onOpenChange, application }: FilesDialogProp
           </TabsContent>
 
           <TabsContent value="view" className="mt-4">
-            <DropboxViewer
+            <Viewer
               office={application.office || ''}
               applicationId={application.id}
               fullName={fullName}
