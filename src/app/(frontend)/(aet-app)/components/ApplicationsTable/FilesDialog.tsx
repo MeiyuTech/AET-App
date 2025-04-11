@@ -46,6 +46,7 @@ export function FilesDialog({ open, onOpenChange, application }: FilesDialogProp
               office={application.office || ''}
               applicationId={application.id}
               fullName={fullName}
+              showPreviewLink={true}
             />
           </TabsContent>
         </Tabs>

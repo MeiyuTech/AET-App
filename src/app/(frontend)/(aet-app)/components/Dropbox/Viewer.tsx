@@ -16,9 +16,15 @@ interface ViewerProps {
   office: string
   applicationId: string | null
   fullName: string | null
+  showPreviewLink?: boolean
 }
 
-export default function Viewer({ office, applicationId, fullName }: ViewerProps) {
+export default function Viewer({
+  office,
+  applicationId,
+  fullName,
+  showPreviewLink = false,
+}: ViewerProps) {
   const [files, setFiles] = useState<FileData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -147,7 +153,7 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : (
-        <FileList files={files} />
+        <FileList files={files} showPreviewLink={showPreviewLink} />
       )}
     </div>
   )
