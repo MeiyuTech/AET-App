@@ -1,4 +1,4 @@
-import { ChevronDown, Eye, Edit } from 'lucide-react'
+import { ChevronDown, Eye, Edit, FileText } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
@@ -28,6 +28,7 @@ interface GetColumnsProps {
   setSelectedApplication: (application: Application | undefined) => void
   setServicesDialogOpen: (open: boolean) => void
   createPaymentLink: (id: string, amount: number) => void
+  setFilesDialogOpen: (open: boolean) => void
 }
 
 // get the dropbox link for the office
@@ -54,6 +55,7 @@ export const getColumns = ({
   setSelectedApplication,
   setServicesDialogOpen,
   createPaymentLink,
+  setFilesDialogOpen,
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
@@ -345,6 +347,24 @@ export const getColumns = ({
           }}
         >
           <Eye className="h-4 w-4 mr-2" />
+        </Button>
+      )
+    },
+  },
+  {
+    id: 'files',
+    header: 'Files',
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setSelectedApplication(row.original)
+            setFilesDialogOpen(true)
+          }}
+        >
+          <FileText className="h-4 w-4 mr-2" />
         </Button>
       )
     },
