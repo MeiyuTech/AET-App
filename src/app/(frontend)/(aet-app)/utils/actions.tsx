@@ -3,8 +3,7 @@
 import { createClient } from './supabase/server'
 import { FormData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
-import { getApplicationConfirmationEmailHTML } from './email/actions'
-import { sendEmail } from './email/actions'
+import { getApplicationConfirmationEmailHTML, resendEmail } from './email/actions'
 import { getCCAddress, getDeliveryMethod, getServiceDescription } from './email/utils'
 
 /**
@@ -53,7 +52,7 @@ export async function submitAETApplication(formData: FormData) {
     }
 
     // Send confirmation email using the new email content generator
-    const { success: emailSuccess, message: sendEmailMessage } = await sendEmail({
+    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
       to: formData.email,
       cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
