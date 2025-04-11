@@ -1,0 +1,58 @@
+---
+description: 
+globs: emails/**
+alwaysApply: false
+---
+ ---
+description: Email template development guidelines
+globs: emails/**
+alwaysApply: true
+---
+
+# Email Template Development Guidelines
+
+## Key Principles
+- Use `@react-email/components` for email template development
+- Keep email templates simple and accessible
+- Ensure cross-client compatibility
+- Follow email-specific best practices
+
+## Component Guidelines
+- Place shared email components in `emails/components/`
+- Place email templates in `emails/templates/`
+- Export all components and templates through `emails/index.ts`
+
+## CSS Guidelines
+- Avoid using interactive CSS features like `:hover`, `:active`, etc.
+- Use inline styles or Tailwind classes that are email-client friendly
+- Avoid using complex CSS selectors
+- Use web-safe fonts
+- Use hex color codes instead of named colors
+- Avoid using CSS animations or transitions
+
+## Button Component Guidelines
+- Use the shared `Button` component from `emails/components/Button.tsx`
+- Keep button styles simple and consistent
+- Use clear, action-oriented text for button labels
+- Ensure sufficient padding for touch targets
+- Use high contrast colors for better visibility
+
+## Best Practices
+- Test emails across different email clients
+- Keep email templates responsive
+- Use semantic HTML elements
+- Include fallback fonts
+- Optimize images for email
+- Keep email width under 600px
+- Use tables for layout when necessary
+- Include proper alt text for images
+- Test with images disabled
+- Ensure proper spacing between elements
+
+## Testing
+- Test emails in multiple email clients
+- Verify mobile responsiveness
+- Check dark mode compatibility
+- Validate HTML structure
+- Test with images disabled
+- Verify all links work correctly
