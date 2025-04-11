@@ -10,22 +10,21 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import FileList from './FileList'
-
-interface FileData {
-  id: string
-  name: string
-  size: number
-  uploadedAt: string
-  downloadUrl?: string
-}
+import { FileData } from './config'
 
 interface ViewerProps {
   office: string
   applicationId: string | null
   fullName: string | null
+  showPreviewLink?: boolean
 }
 
-export default function Viewer({ office, applicationId, fullName }: ViewerProps) {
+export default function Viewer({
+  office,
+  applicationId,
+  fullName,
+  showPreviewLink = false,
+}: ViewerProps) {
   const [files, setFiles] = useState<FileData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -68,6 +67,7 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
             name: file.name,
             size: file.size || 0,
             uploadedAt: file.client_modified || new Date().toISOString(),
+            pathDisplay: file.path_display,
             downloadUrl: file.path_lower,
           }))
 
@@ -83,17 +83,17 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
     }
   }
 
-  // 下载文件
+  // TODO: Download file
   const handleDownload = async (fileId: string) => {
-    // 实际下载逻辑将在未来实现
+    // Download file logic will be implemented in the future
     // window.open(`/api/dropbox/download/${fileId}`, '_blank');
     console.log('Download file:', fileId)
   }
 
-  // 删除文件
+  // TODO: Delete file
   const handleDelete = async (fileId: string) => {
     try {
-      // 实际删除逻辑将在未来实现
+      // Delete file logic will be implemented in the future
       // const response = await fetch(`/api/dropbox/files/${fileId}`, {
       //   method: 'DELETE',
       // });
@@ -101,10 +101,10 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
       // if (data.success) {
       //   setFiles(files.filter(file => file.id !== fileId));
       // } else {
-      //   setError(data.message || '删除文件失败');
+      //   setError(data.message || 'Delete file failed');
       // }
 
-      // 临时实现：直接从列表中移除
+      // TODO: Temporary implementation: Remove file from list
       setFiles(files.filter((file) => file.id !== fileId))
     } catch (err) {
       setError('Error deleting file, please try again later')
@@ -153,7 +153,7 @@ export default function Viewer({ office, applicationId, fullName }: ViewerProps)
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : (
-        <FileList files={files} />
+        <FileList files={files} showPreviewLink={showPreviewLink} />
       )}
     </div>
   )

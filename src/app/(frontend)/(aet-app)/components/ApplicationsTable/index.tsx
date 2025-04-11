@@ -30,6 +30,7 @@ import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
 import { ServicesDetailsDialog } from './ServicesDetailsDialog'
+import { FilesDialog } from './FilesDialog'
 import {
   DueAmountConfirmDialog,
   StatusConfirmDialog,
@@ -50,6 +51,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   )
   const [dialogOpen, setDialogOpen] = useState(false)
   const [servicesDialogOpen, setServicesDialogOpen] = useState(false)
+  const [filesDialogOpen, setFilesDialogOpen] = useState(false)
   const [selectedApplication, setSelectedApplication] = useState<Application | undefined>(undefined)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [pendingDueAmount, setPendingDueAmount] = useState<{
@@ -454,6 +456,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setSelectedApplication,
     setServicesDialogOpen,
     createPaymentLink: handleCreatePaymentLink,
+    setFilesDialogOpen,
   })
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -479,6 +482,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       setSelectedApplication,
       setServicesDialogOpen,
       createPaymentLink: handleCreatePaymentLink,
+      setFilesDialogOpen,
     }),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -657,6 +661,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       <ServicesDetailsDialog
         open={servicesDialogOpen}
         onOpenChange={setServicesDialogOpen}
+        application={selectedApplication}
+      />
+      <FilesDialog
+        open={filesDialogOpen}
+        onOpenChange={setFilesDialogOpen}
         application={selectedApplication}
       />
       <DueAmountConfirmDialog

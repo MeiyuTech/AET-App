@@ -1,28 +1,52 @@
 'use client'
 
 import { FileText } from 'lucide-react'
+import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatFileSize, formatDate } from '../../utils/dropbox/client'
-interface FileData {
-  id: string
-  name: string
-  size: number
-  uploadedAt: string
-  downloadUrl?: string
-}
+import { FileData } from './config'
 
 interface FileListProps {
   files: FileData[]
+  showPreviewLink?: boolean
 }
 
-export default function FileList({ files }: FileListProps) {
+export default function FileList({ files, showPreviewLink = false }: FileListProps) {
   if (files.length === 0) {
     return (
       <Card className="flex items-center justify-center p-6 bg-gray-50">
         <p className="text-sm text-gray-500">No uploaded files yet</p>
       </Card>
     )
+  }
+
+  const renderFileName = (file: FileData) => {
+    const fileName = (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {showPreviewLink ? (
+              <Link
+                href={`https://www.dropbox.com/preview/${file.pathDisplay}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="truncate max-w-[200px] block hover:underline text-blue-600"
+              >
+                {file.name}
+              </Link>
+            ) : (
+              <div className="truncate max-w-[200px] text-gray-900">{file.name}</div>
+            )}
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="max-w-xs break-words">{file.name}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+
+    return fileName
   }
 
   return (
@@ -46,18 +70,7 @@ export default function FileList({ files }: FileListProps) {
           <tbody className="bg-white divide-y divide-gray-200">
             {files.map((file) => (
               <tr key={file.id}>
-                <td className="px-4 py-3 text-sm text-gray-900">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="truncate max-w-[200px] cursor-default">{file.name}</div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{file.name}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </td>
+                <td className="px-4 py-3 text-sm text-gray-900">{renderFileName(file)}</td>
                 <td className="px-4 py-3 text-sm text-gray-500">{formatFileSize(file.size)}</td>
                 <td className="px-4 py-3 text-sm text-gray-500">{formatDate(file.uploadedAt)}</td>
               </tr>
@@ -76,9 +89,20 @@ export default function FileList({ files }: FileListProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <h4 className="text-sm font-medium text-gray-900 line-clamp-2 cursor-default">
-                        {file.name}
-                      </h4>
+                      {showPreviewLink ? (
+                        <Link
+                          href={`https://www.dropbox.com/preview/${file.pathDisplay}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-blue-600 hover:underline line-clamp-2 block"
+                        >
+                          {file.name}
+                        </Link>
+                      ) : (
+                        <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
+                          {file.name}
+                        </h4>
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs break-words">{file.name}</p>
