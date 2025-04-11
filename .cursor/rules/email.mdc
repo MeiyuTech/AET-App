@@ -12,7 +12,7 @@ alwaysApply: true
 # Email Template Development Guidelines
 
 ## Key Principles
-- Use `@react-email/components` for email template development
+- Use `@react-email/components` for email template development (https://www.npmjs.com/package/react-email)
 - Keep email templates simple and accessible
 - Ensure cross-client compatibility
 - Follow email-specific best practices
