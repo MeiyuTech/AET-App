@@ -4,10 +4,10 @@ import React from 'react'
 import { render } from '@react-email/render'
 
 import { ApplicationConfirmationEmail } from 'emails'
-
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
+import { ApplicationData } from '../../components/FCEApplicationForm/types'
 import { EmailOptions } from './config'
 
 export async function resendEmail({ to, subject, html, cc, bcc }: EmailOptions) {
@@ -40,22 +40,12 @@ export async function resendEmail({ to, subject, html, cc, bcc }: EmailOptions) 
 }
 
 export async function getApplicationConfirmationEmailHTML(
-  firstName: string,
-  lastName: string,
-  servicesDescription: string[],
-  deliveryMethod: string,
-  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[],
   applicationId: string,
-  submittedAt: string
+  application: ApplicationData
 ): Promise<string> {
   const emailComponent = React.createElement(ApplicationConfirmationEmail, {
-    firstName,
-    lastName,
-    servicesDescription,
-    deliveryMethod,
-    additionalServices,
     applicationId,
-    submittedAt,
+    application,
   })
 
   return render(emailComponent)
