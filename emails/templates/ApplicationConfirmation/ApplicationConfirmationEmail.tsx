@@ -29,7 +29,11 @@ const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> 
 }) => {
   // Format date for display
   const formattedSubmissionDate = new Date(application.submitted_at).toLocaleString()
-
+  console.log('ApplicationConfirmationEmail:')
+  console.log('################################################')
+  console.log('formattedSubmissionDate', formattedSubmissionDate)
+  console.log('application', application)
+  console.log('################################################')
   return (
     <Html lang="en" dir="ltr">
       <Head>

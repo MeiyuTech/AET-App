@@ -129,9 +129,10 @@ export function calculateTotalPrice(application: ApplicationData | null): string
 }
 
 export const formatUtils = {
-  // Convert frontend form data to database format
-  // When fullfilling the form, the status is always 'draft' or 'submitted'
-  // Other statuses are set by the backend
+  /* Convert frontend form data to database format
+   * When fullfilling the form, the status is always 'draft' or 'submitted'
+   * Other statuses are set by the backend
+   */
   toDatabase(
     formData: Partial<FormData>,
     currentStep: FormStep,
@@ -181,9 +182,27 @@ export const formatUtils = {
     }
   },
 
-  // Convert database format back to frontend form data
-  toFormData(dbData: DatabaseApplication): Partial<FormData> {
+  /* Convert database format back to frontend form data
+   * When displaying the form, the status is always 'draft' or 'submitted'
+   * Other statuses are set by the backend
+   */
+  toFormData(
+    dbData: DatabaseApplication,
+    status: string,
+    submitted_at: string,
+    due_amount: number,
+    payment_status: 'pending' | 'paid' | 'failed' | 'expired',
+    payment_id: string,
+    paid_at: string
+  ): ApplicationData {
     return {
+      status: status,
+      submitted_at: submitted_at,
+      due_amount: due_amount,
+      payment_status: payment_status,
+      payment_id: payment_id,
+      paid_at: paid_at,
+
       // Client Information
       name: dbData.name,
       country: dbData.country,

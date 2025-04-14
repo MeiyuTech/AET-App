@@ -51,15 +51,23 @@ export async function submitAETApplication(formData: FormData) {
     }
 
     // Send confirmation email using the new email content generator
+    const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
+      application.id,
+      dbData as unknown as ApplicationData
+    )
+    console.log('################################################')
+    console.log('submitAETApplication:')
+
+    console.log('application.id', application.id)
+    console.log('dbData', dbData)
+    console.log('html', applicationConfirmationEmailHTML)
+    console.log('################################################')
     const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
       to: formData.email,
       cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
-      html: await getApplicationConfirmationEmailHTML(
-        application.id,
-        dbData as unknown as ApplicationData
-      ),
+      html: applicationConfirmationEmailHTML,
     })
 
     if (!emailSuccess) {
@@ -115,14 +123,15 @@ export async function fetchApplication(applicationId: string) {
 
     // Transform database field names to frontend field names
     const formattedData = {
-      // Status Info
-      status: applicationData.status,
-      submitted_at: applicationData.submitted_at,
-      due_amount: applicationData.due_amount,
-      payment_status: applicationData.payment_status,
-      payment_id: applicationData.payment_id,
-      paid_at: applicationData.paid_at,
-      ...formatUtils.toFormData(applicationData),
+      ...formatUtils.toFormData(
+        applicationData,
+        applicationData.status,
+        applicationData.submitted_at,
+        applicationData.due_amount,
+        applicationData.payment_status,
+        applicationData.payment_id,
+        applicationData.paid_at
+      ),
       educations: educationsData.map((edu) => formatUtils.toEducationFormData(edu)),
     }
 

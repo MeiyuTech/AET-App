@@ -118,6 +118,7 @@ export interface ApplicationData extends Partial<FormData> {
     pdf_with_hard_copy: number
     pdf_only: number
   }
+  educationInfo?: EducationFormData[]
 }
 
 /**
@@ -182,6 +183,10 @@ export interface DatabaseApplication {
   paid_at: string | null
 }
 
+/**
+ * Database education type
+ * For education data that stored in database
+ */
 export interface DatabaseEducation {
   id: string
   application_id: string
