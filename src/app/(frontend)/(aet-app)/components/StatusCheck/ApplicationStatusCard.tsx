@@ -4,10 +4,10 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
 
 interface ApplicationStatusCardProps {
-  application: ApplicationData
+  applicationData: ApplicationData
 }
 
-export default function ApplicationStatusCard({ application }: ApplicationStatusCardProps) {
+export default function ApplicationStatusCard({ applicationData }: ApplicationStatusCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -18,14 +18,14 @@ export default function ApplicationStatusCard({ application }: ApplicationStatus
           {/* Status */}
           <div>
             <dt className="font-medium">Status</dt>
-            <dd className="text-muted-foreground">{application.status}</dd>
+            <dd className="text-muted-foreground">{applicationData.status}</dd>
           </div>
 
           {/* Submitted At */}
           <div>
             <dt className="font-medium">Submitted At</dt>
             <dd className="text-muted-foreground">
-              {new Date(application.submitted_at).toLocaleString()}
+              {new Date(applicationData.submitted_at).toLocaleString()}
             </dd>
           </div>
 
@@ -34,16 +34,16 @@ export default function ApplicationStatusCard({ application }: ApplicationStatus
             <dt className="font-medium">Payment Status</dt>
             <dd
               className={`capitalize ${
-                application.payment_status === 'paid'
+                applicationData.payment_status === 'paid'
                   ? 'text-green-600'
-                  : application.payment_status === 'failed'
+                  : applicationData.payment_status === 'failed'
                     ? 'text-red-600'
-                    : application.payment_status === 'expired'
+                    : applicationData.payment_status === 'expired'
                       ? 'text-orange-600'
                       : 'text-yellow-600'
               }`}
             >
-              {application.payment_status}
+              {applicationData.payment_status}
             </dd>
           </div>
 
@@ -51,7 +51,9 @@ export default function ApplicationStatusCard({ application }: ApplicationStatus
           <div>
             <dt className="font-medium">Paid At</dt>
             <dd className="text-muted-foreground">
-              {application.paid_at ? new Date(application.paid_at).toLocaleString() : 'Not Paid'}
+              {applicationData.paid_at
+                ? new Date(applicationData.paid_at).toLocaleString()
+                : 'Not Paid'}
             </dd>
           </div>
         </dl>

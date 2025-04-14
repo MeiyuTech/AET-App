@@ -69,9 +69,9 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
       // Fetch application data from server
       const result = await fetchApplication(id)
 
-      if (result.exists && result.application) {
-        setApplication(result.application as unknown as ApplicationData)
-        console.log(result.application)
+      if (result.success && result.applicationData) {
+        setApplication(result.applicationData)
+        // console.log('result.applicationData', result.applicationData)
       } else {
         setError('Application not found. Please check your application ID.')
       }
@@ -138,7 +138,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
       {application && (
         <>
-          <ApplicationStatusCard application={application} />
+          <ApplicationStatusCard applicationData={application} />
           {/* File Upload Section */}
           {application.status &&
             ['submitted', 'processing'].includes(application.status.toLowerCase()) &&

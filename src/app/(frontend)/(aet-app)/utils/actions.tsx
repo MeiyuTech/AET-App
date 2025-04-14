@@ -3,8 +3,7 @@
 import { createClient } from './supabase/server'
 import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
-import { getApplicationConfirmationEmailHTML, resendEmail } from './email/actions'
-import { getCCAddress } from './email/utils'
+import { sendApplicationConfirmationEmail } from './email/actions'
 
 /**
  * Submit AET application:
@@ -25,7 +24,7 @@ export async function submitAETApplication(formData: FormData) {
     console.log('Converted database data:', dbData)
 
     // Start database transaction
-    const { data: applicationData, error: applicationError } = await client
+    const { data: databaseApplication, error: databaseApplicationError } = await client
       .from('fce_applications')
       .insert({
         ...dbData,
@@ -33,15 +32,15 @@ export async function submitAETApplication(formData: FormData) {
       .select()
       .single()
 
-    if (applicationError) {
-      console.error('Application insert error:', applicationError)
-      throw applicationError
+    if (databaseApplicationError) {
+      console.error('Application insert error:', databaseApplicationError)
+      throw databaseApplicationError
     }
 
     // Insert education records
     const educationPromises = formData.educations?.map((education) =>
       client.from('fce_educations').insert({
-        application_id: applicationData.id,
+        application_id: databaseApplication.id,
         ...formatUtils.toEducationDatabase(education),
       })
     )
@@ -50,25 +49,8 @@ export async function submitAETApplication(formData: FormData) {
       await Promise.all(educationPromises)
     }
 
-    // Send confirmation email using the new email content generator
-
-    const { exists, application } = await fetchApplication(applicationData.id)
-    if (!exists) {
-      throw new Error('Application not found')
-    }
-    const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
-      applicationData.id,
-      application as unknown as ApplicationData
-    )
-
-    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
-      to: formData.email,
-      cc:
-        formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(applicationData.office),
-      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      subject: 'AET Services Application Confirmation',
-      html: applicationConfirmationEmailHTML,
-    })
+    const { success: emailSuccess, message: sendEmailMessage } =
+      await sendApplicationConfirmationEmail(databaseApplication.id)
 
     if (!emailSuccess) {
       console.error('Failed to send confirmation email:', sendEmailMessage)
@@ -77,7 +59,7 @@ export async function submitAETApplication(formData: FormData) {
 
     return {
       success: true,
-      applicationId: applicationData.id,
+      applicationId: databaseApplication.id,
     }
   } catch (error) {
     console.error('Failed to submit AET application:', error)
@@ -86,61 +68,64 @@ export async function submitAETApplication(formData: FormData) {
 }
 
 /**
- * Verify AET application:
+ * Fetch and format AET application data:
  * 1. Get application data from database
  * 2. Get education data from database
  * 3. Transform database field names to frontend field names
  * @param applicationId - Application ID
- * @returns - { exists: true, application: formattedData }
+ * @returns - { success: true, application: formattedData }
  * @throws - Error if failed to fetch application
  */
 export async function fetchApplication(applicationId: string) {
   try {
     const client = await createClient()
 
-    // get the application data
-    const { data: applicationData, error: applicationError } = await client
+    // get the application data from the database
+    const { data: databaseApplication, error: databaseApplicationError } = await client
       .from('fce_applications')
       .select('*')
       .eq('id', applicationId)
       .single()
 
-    if (applicationError) {
-      console.error('Error verifying application:', applicationError)
-      return { exists: false }
+    if (databaseApplicationError) {
+      console.error(
+        'Error verifying and fetching application in database:',
+        databaseApplicationError
+      )
+      return { success: false }
     }
 
-    // get the education data
-    const { data: educationsData, error: educationsError } = await client
+    // get the education data from the database
+    const { data: databaseEducations, error: databaseEducationsError } = await client
       .from('fce_educations')
       .select('*')
       .eq('application_id', applicationId)
 
-    if (educationsError) {
-      console.error('Error fetching educations:', educationsError)
-      return { exists: false }
+    if (databaseEducationsError) {
+      console.error('Error fetching educations:', databaseEducationsError)
+      return { success: false }
     }
 
     // Transform database field names to frontend field names
     const formattedData = {
       ...formatUtils.toFormData(
-        applicationData,
-        applicationData.status,
-        applicationData.submitted_at,
-        applicationData.due_amount,
-        applicationData.payment_status,
-        applicationData.payment_id,
-        applicationData.paid_at
+        databaseApplication,
+        databaseApplication.status,
+        databaseApplication.submitted_at,
+        databaseApplication.due_amount,
+        databaseApplication.payment_status,
+        databaseApplication.payment_id,
+        databaseApplication.paid_at
       ),
-      educations: educationsData.map((edu) => formatUtils.toEducationFormData(edu)),
-    }
+      educations: databaseEducations.map((edu) => formatUtils.toEducationFormData(edu)),
+    } as ApplicationData
 
     return {
-      exists: true,
-      application: formattedData,
+      success: true,
+      applicationData: formattedData,
     }
   } catch (error) {
-    console.error('Failed to verify application:', error)
-    return { exists: false }
+    console.error('Failed to fetch and format application:', error)
+    return { success: false }
   }
 }
