@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/FCEApplicationForm/types'
+import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML, resendEmail } from './email/actions'
 import { getCCAddress, getDeliveryMethod, getServiceDescription } from './email/utils'
@@ -57,16 +57,7 @@ export async function submitAETApplication(formData: FormData) {
       cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
-      html: await getApplicationConfirmationEmailHTML(
-        formData.firstName,
-        formData.lastName,
-        getServiceDescription(formData.serviceType),
-        getDeliveryMethod(formData.deliveryMethod),
-        // TODO: use 'additionalServicesQuantity'
-        formData.additionalServices,
-        application.id,
-        application.submitted_at
-      ),
+      html: await getApplicationConfirmationEmailHTML(application.id, application),
     })
 
     if (!emailSuccess) {
