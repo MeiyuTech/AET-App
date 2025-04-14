@@ -43,11 +43,13 @@ export async function resendEmail({ to, subject, html, cc, bcc }: EmailOptions) 
 
 export async function getApplicationConfirmationEmailHTML(
   applicationId: string,
-  application: ApplicationData
+  application: ApplicationData,
+  paymentLink: string
 ): Promise<string> {
   const emailComponent = React.createElement(ApplicationConfirmationEmail, {
     applicationId,
     application,
+    paymentLink,
   })
 
   return render(emailComponent)
@@ -62,9 +64,14 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
   if (!applicationData) {
     throw new Error('Application data not found')
   }
+
+  // TODO: create the payment link
+  const paymentLink = ''
+
   const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
     applicationId,
-    applicationData
+    applicationData,
+    paymentLink
   )
 
   if (!applicationData.office) {

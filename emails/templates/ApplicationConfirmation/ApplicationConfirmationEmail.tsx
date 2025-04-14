@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { CreditCard } from 'lucide-react'
+
 import {
   Body,
   Container,
@@ -21,11 +23,13 @@ import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplic
 interface ApplicationConfirmationEmailProps {
   applicationId: string
   application: ApplicationData
+  paymentLink: string
 }
 
 const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> = ({
   applicationId,
   application,
+  paymentLink,
 }) => {
   // Format date for display
   const formattedSubmissionDate = new Date(application.submitted_at).toLocaleString()
@@ -62,8 +66,9 @@ const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> 
 
               <Section style={styles.section.card}>
                 <Heading style={styles.heading.h2}>What&apos;s next?</Heading>
-                <Text style={styles.text.default}>
-                  1. Confirm your application by clicking the button below:
+                <Text style={styles.heading.h3}>1. Confirm Your Application</Text>
+                <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
+                  Click the &quot;Check Status&quot; button to confirm your application.
                 </Text>
 
                 <Section style={{ textAlign: 'center', margin: '20px 0' }}>
@@ -74,19 +79,32 @@ const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> 
                   </Button>
                 </Section>
 
-                <Text style={styles.text.default}>
-                  If the button doesn&apos;t work, you can also copy and paste this link into your
-                  browser:
-                </Text>
-                <Text style={styles.text.small}>
-                  {`https://app.americantranslationservice.com/status?applicationId=${applicationId}`}
+                <Text style={styles.heading.h3}>2. Submit All Required Documents</Text>
+                <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
+                  Please submit all required documents as specified in your application.{' '}
                 </Text>
 
-                <Text style={styles.text.default}>
-                  2. Submit all required documents as specified in your application.
-                </Text>
-                <Text style={styles.text.default}>
-                  3. We will begin processing your evaluation once payment is confirmed.
+                <Text style={styles.heading.h3}>3. Make Payment</Text>
+                <Section style={{ textAlign: 'center', margin: '20px 0' }}>
+                  <Button href={paymentLink}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      Proceed to Online Payment
+                      <CreditCard style={{ width: '16px', height: '16px' }} />
+                    </div>
+                  </Button>
+                </Section>
+
+                <Text style={styles.heading.h3}>4. Processing</Text>
+                <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
+                  We will begin processing your evaluation once payment is confirmed and all
+                  required documents are submitted.
                 </Text>
               </Section>
 
