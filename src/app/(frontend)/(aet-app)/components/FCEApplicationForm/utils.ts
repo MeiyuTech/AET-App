@@ -135,12 +135,13 @@ export const formatUtils = {
   toDatabase(
     formData: Partial<FormData>,
     currentStep: FormStep,
-    status: 'draft' | 'submitted' = 'draft'
-  ): Omit<DatabaseApplication, 'id' | 'created_at' | 'updated_at' | 'submitted_at' | 'paid_at'> {
+    status: 'draft' | 'submitted' = 'draft',
+    submittedAt?: string
+  ): Omit<DatabaseApplication, 'id' | 'created_at' | 'updated_at' | 'paid_at'> {
     return {
       status,
       current_step: currentStep,
-
+      submitted_at: submittedAt || null,
       // Payment related fields (default values)
       due_amount: null,
       payment_status: 'pending',

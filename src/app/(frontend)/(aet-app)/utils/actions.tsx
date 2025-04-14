@@ -4,7 +4,7 @@ import { createClient } from './supabase/server'
 import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { getApplicationConfirmationEmailHTML, resendEmail } from './email/actions'
-import { getCCAddress, getDeliveryMethod, getServiceDescription } from './email/utils'
+import { getCCAddress } from './email/utils'
 
 /**
  * Submit AET application:
@@ -21,7 +21,7 @@ export async function submitAETApplication(formData: FormData) {
     const client = await createClient()
 
     console.log('Original form data:', formData)
-    const dbData = formatUtils.toDatabase(formData, 3, 'submitted')
+    const dbData = formatUtils.toDatabase(formData, 3, 'submitted', new Date().toISOString())
     console.log('Converted database data:', dbData)
 
     // Start database transaction
@@ -29,7 +29,6 @@ export async function submitAETApplication(formData: FormData) {
       .from('fce_applications')
       .insert({
         ...dbData,
-        submitted_at: new Date().toISOString(),
       })
       .select()
       .single()
@@ -57,7 +56,10 @@ export async function submitAETApplication(formData: FormData) {
       cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
-      html: await getApplicationConfirmationEmailHTML(application.id, application),
+      html: await getApplicationConfirmationEmailHTML(
+        application.id,
+        dbData as unknown as ApplicationData
+      ),
     })
 
     if (!emailSuccess) {
