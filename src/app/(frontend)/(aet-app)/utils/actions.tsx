@@ -25,7 +25,7 @@ export async function submitAETApplication(formData: FormData) {
     console.log('Converted database data:', dbData)
 
     // Start database transaction
-    const { data: application, error: applicationError } = await client
+    const { data: applicationData, error: applicationError } = await client
       .from('fce_applications')
       .insert({
         ...dbData,
@@ -41,7 +41,7 @@ export async function submitAETApplication(formData: FormData) {
     // Insert education records
     const educationPromises = formData.educations?.map((education) =>
       client.from('fce_educations').insert({
-        application_id: application.id,
+        application_id: applicationData.id,
         ...formatUtils.toEducationDatabase(education),
       })
     )
@@ -51,20 +51,20 @@ export async function submitAETApplication(formData: FormData) {
     }
 
     // Send confirmation email using the new email content generator
-    const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
-      application.id,
-      dbData as unknown as ApplicationData
-    )
-    console.log('################################################')
-    console.log('submitAETApplication:')
 
-    console.log('application.id', application.id)
-    console.log('dbData', dbData)
-    console.log('html', applicationConfirmationEmailHTML)
-    console.log('################################################')
+    const { exists, application } = await fetchApplication(applicationData.id)
+    if (!exists) {
+      throw new Error('Application not found')
+    }
+    const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
+      applicationData.id,
+      application as unknown as ApplicationData
+    )
+
     const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
       to: formData.email,
-      cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
+      cc:
+        formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(applicationData.office),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
       html: applicationConfirmationEmailHTML,
@@ -77,7 +77,7 @@ export async function submitAETApplication(formData: FormData) {
 
     return {
       success: true,
-      applicationId: application.id,
+      applicationId: applicationData.id,
     }
   } catch (error) {
     console.error('Failed to submit AET application:', error)

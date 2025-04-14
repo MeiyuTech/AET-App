@@ -1,4 +1,4 @@
-import { Container, Section, Text, Hr, Heading } from '@react-email/components'
+import { Container, Section, Text, Hr } from '@react-email/components'
 import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
 import {
   EVALUATION_SERVICES,
@@ -23,22 +23,28 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
       {/* Purpose */}
       <Section style={styles.serviceCard.section}>
         <Text style={styles.serviceCard.title}>Purpose:</Text>
-        <Text style={styles.serviceCard.content}>
-          {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
-        </Text>
+        <Container style={styles.serviceCard.indentedContent}>
+          <Text style={styles.serviceCard.content}>
+            {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
+          </Text>
+        </Container>
       </Section>
 
       {/* Service Notes */}
       <Section style={styles.serviceCard.section}>
         <Text style={styles.serviceCard.title}>Service Notes:</Text>
-        <Text style={styles.serviceCard.content}>{application.purposeOther}</Text>
+        <Container style={styles.serviceCard.indentedContent}>
+          <Text style={styles.serviceCard.content}>{application.purposeOther}</Text>
+        </Container>
       </Section>
 
       {/* Customized Service */}
       {application.serviceType?.customizedService?.required && (
         <Section style={styles.serviceCard.section}>
           <Text style={styles.serviceCard.title}>Customized Service</Text>
-          <Text style={styles.serviceCard.content}>Price Will Be Quoted Upon Request</Text>
+          <Container style={styles.serviceCard.indentedContent}>
+            <Text style={styles.serviceCard.content}>Price Will Be Quoted Upon Request</Text>
+          </Container>
         </Section>
       )}
 
@@ -107,13 +113,15 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
       {application.serviceType?.professionalExperience?.speed && (
         <Section style={styles.serviceCard.section}>
           <Text style={styles.serviceCard.title}>Expert Opinion Letter</Text>
-          <Text style={styles.serviceCard.content}>
-            {(() => {
-              const speed = application.serviceType.professionalExperience.speed
-              const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
-              return service ? `${service.label} - $${service.price}` : null
-            })()}
-          </Text>
+          <Container style={styles.serviceCard.indentedContent}>
+            <Text style={styles.serviceCard.content}>
+              {(() => {
+                const speed = application.serviceType.professionalExperience.speed
+                const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
+                return service ? `${service.label} - $${service.price}` : null
+              })()}
+            </Text>
+          </Container>
         </Section>
       )}
 
@@ -121,13 +129,15 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
       {application.serviceType?.positionEvaluation?.speed && (
         <Section style={styles.serviceCard.section}>
           <Text style={styles.serviceCard.title}>Position Evaluation</Text>
-          <Text style={styles.serviceCard.content}>
-            {(() => {
-              const speed = application.serviceType.positionEvaluation.speed
-              const service = speed && EVALUATION_SERVICES.POSITION[speed]
-              return service ? `${service.label} - $${service.price}` : null
-            })()}
-          </Text>
+          <Container style={styles.serviceCard.indentedContent}>
+            <Text style={styles.serviceCard.content}>
+              {(() => {
+                const speed = application.serviceType.positionEvaluation.speed
+                const service = speed && EVALUATION_SERVICES.POSITION[speed]
+                return service ? `${service.label} - $${service.price}` : null
+              })()}
+            </Text>
+          </Container>
         </Section>
       )}
 
@@ -135,7 +145,9 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
       {application.serviceType?.translation?.required && (
         <Section style={styles.serviceCard.section}>
           <Text style={styles.serviceCard.title}>Translation Service</Text>
-          <Text style={styles.serviceCard.content}>Price Will Be Quoted Upon Request</Text>
+          <Container style={styles.serviceCard.indentedContent}>
+            <Text style={styles.serviceCard.content}>Price Will Be Quoted Upon Request</Text>
+          </Container>
         </Section>
       )}
 
@@ -143,15 +155,17 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
       {application.deliveryMethod && (
         <Section style={styles.serviceCard.section}>
           <Text style={styles.serviceCard.title}>Type of Delivery</Text>
-          <Text style={styles.serviceCard.content}>
-            {(() => {
-              const method = application.deliveryMethod
-              const service = method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
-              return service
-                ? `${service.label} - $${service.price.toFixed(2)}`
-                : 'No Delivery Needed - Free'
-            })()}
-          </Text>
+          <Container style={styles.serviceCard.indentedContent}>
+            <Text style={styles.serviceCard.content}>
+              {(() => {
+                const method = application.deliveryMethod
+                const service = method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
+                return service
+                  ? `${service.label} - $${service.price.toFixed(2)}`
+                  : 'No Delivery Needed - Free'
+              })()}
+            </Text>
+          </Container>
         </Section>
       )}
 

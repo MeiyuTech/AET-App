@@ -43,11 +43,6 @@ export async function getApplicationConfirmationEmailHTML(
   applicationId: string,
   application: ApplicationData
 ): Promise<string> {
-  console.log('getApplicationConfirmationEmailHTML:')
-  console.log('################################################')
-  console.log('applicationId', applicationId)
-  console.log('application', application)
-  console.log('################################################')
   const emailComponent = React.createElement(ApplicationConfirmationEmail, {
     applicationId,
     application,
