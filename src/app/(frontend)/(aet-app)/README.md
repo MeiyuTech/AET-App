@@ -55,9 +55,9 @@
 - [x] 把 payment 放到上传文件下面
 - [ ] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
 - [x] 调整邮件格式，增加更明显的用户引导
-- [ ] 在用户上传文件后，后台可以 check 他的文件是否正确，
+- [x] 在用户上传文件后，后台可以 check 他的文件是否正确，
 - [ ] 上传文件后，发送邮件确认 （zhao）
-- [ ] Stripe 完成付款后，发送邮件进行确认。
+- [ ] Stripe 完成付款后，发送邮件进行确认。（tong）
 - [ ] 要有邮件发送的倒计时（zhao）
 - [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
 - [ ] 增加付款的倒计时（暂时设置成半小时）

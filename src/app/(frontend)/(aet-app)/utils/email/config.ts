@@ -1,3 +1,7 @@
+/**
+ * @description Email Config
+ */
+
 export interface EmailOptions {
   to: string | string[]
   subject: string
@@ -6,7 +10,7 @@ export interface EmailOptions {
   bcc?: string | string[]
 }
 
-// Email template styles
+// Application Confirmation Email Template
 export const ApplicationConfirmationEmailStyle = `
   <style>
     body {

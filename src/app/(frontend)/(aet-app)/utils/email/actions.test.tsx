@@ -1,158 +1,186 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { sendEmail } from './actions'
+import { resendEmail, getApplicationConfirmationEmailHTML } from './actions'
 import { getPayload } from 'payload'
+import { render } from '@react-email/render'
+import { ApplicationConfirmationEmail } from 'emails'
+import { ApplicationData } from '../../components/FCEApplicationForm/types'
+import { EmailOptions } from './config'
+import React from 'react'
 
-// Mock payload-config
-vi.mock('@payload-config', () => {
-  return {
-    default: {},
-  }
-})
-
-// Mock payload module
+// Mock dependencies
 vi.mock('payload', () => ({
   getPayload: vi.fn(),
-  buildConfig: vi.fn(),
 }))
 
-// Mock environment variables
-const originalEnv = process.env
+vi.mock('@react-email/render', () => ({
+  render: vi.fn().mockReturnValue('<div>Mocked HTML</div>'),
+}))
+
+vi.mock('emails', () => ({
+  ApplicationConfirmationEmail: vi.fn().mockImplementation(() => null),
+}))
 
 describe('Email Actions', () => {
+  // Store original environment variables
+  const originalEnv = { ...process.env }
+
   // Mock payload instance
-  const mockSendEmail = vi.fn()
   const mockPayload = {
-    sendEmail: mockSendEmail,
-    auth: {},
-    authStrategies: [],
-    collections: [],
-    config: {},
-    db: {},
-    email: {},
-    endpoints: [],
-    express: {},
-    globals: [],
-    local: {},
-    logger: {},
-    preferences: {},
-    router: {},
-    secret: '',
-    telemetry: {},
-    versions: {},
+    sendEmail: vi.fn().mockResolvedValue({ success: true }),
   }
 
   beforeEach(() => {
-    // Setup environment variables before each test
-    process.env = {
-      ...originalEnv,
-      RESEND_DEFAULT_FROM_ADDRESS: 'test@example.com',
-      RESEND_DEFAULT_FROM_NAME: 'Test Sender',
-      RESEND_DEFAULT_CC_ADDRESS: 'cc@example.com',
-      RESEND_DEFAULT_BCC_ADDRESS: 'bcc@example.com',
-    }
-
-    // Reset mocks
+    // Reset mocks before each test
     vi.clearAllMocks()
 
-    // Setup the mock implementation
-    //
-    vi.mocked(getPayload).mockResolvedValue(mockPayload as unknown as import('payload').Payload)
-    mockSendEmail.mockResolvedValue({ success: true })
+    // Set up environment variables for testing
+    process.env.RESEND_DEFAULT_FROM_ADDRESS = 'test@example.com'
+    process.env.RESEND_DEFAULT_FROM_NAME = 'Test Sender'
+    process.env.RESEND_DEFAULT_CC_ADDRESS = 'cc@example.com'
+    process.env.RESEND_DEFAULT_BCC_ADDRESS = 'bcc@example.com'
+
+    // Mock getPayload to return our mock payload instance
+    vi.mocked(getPayload).mockResolvedValue(mockPayload as any)
   })
 
   afterEach(() => {
-    // Restore original environment
-    process.env = originalEnv
+    // Restore original environment variables
+    process.env = { ...originalEnv }
   })
 
-  describe('sendEmail', () => {
+  describe('resendEmail', () => {
     it('should send an email successfully', async () => {
       // Arrange
-      const emailOptions = {
+      const emailOptions: EmailOptions = {
         to: 'recipient@example.com',
         subject: 'Test Subject',
-        html: '<p>Test Content</p>',
+        html: '<p>Test HTML</p>',
       }
 
       // Act
-      const result = await sendEmail(emailOptions)
+      const result = await resendEmail(emailOptions)
 
       // Assert
       expect(getPayload).toHaveBeenCalled()
-      expect(mockSendEmail).toHaveBeenCalledWith({
+      expect(mockPayload.sendEmail).toHaveBeenCalledWith({
         from: 'Test Sender <test@example.com>',
         to: 'recipient@example.com',
         cc: 'cc@example.com',
         bcc: 'bcc@example.com',
         subject: 'Test Subject',
-        html: '<p>Test Content</p>',
+        html: '<p>Test HTML</p>',
       })
       expect(result).toEqual({ success: true, message: 'Email sent successfully' })
     })
 
-    it('should use provided cc and bcc if available', async () => {
+    it('should use provided cc and bcc addresses when specified', async () => {
       // Arrange
-      const emailOptions = {
+      const emailOptions: EmailOptions = {
         to: 'recipient@example.com',
         subject: 'Test Subject',
-        html: '<p>Test Content</p>',
+        html: '<p>Test HTML</p>',
         cc: 'custom-cc@example.com',
         bcc: 'custom-bcc@example.com',
       }
 
       // Act
-      await sendEmail(emailOptions)
+      await resendEmail(emailOptions)
 
       // Assert
-      expect(mockSendEmail).toHaveBeenCalledWith(
-        expect.objectContaining({
-          cc: 'custom-cc@example.com',
-          bcc: 'custom-bcc@example.com',
-        })
+      expect(mockPayload.sendEmail).toHaveBeenCalledWith({
+        from: 'Test Sender <test@example.com>',
+        to: 'recipient@example.com',
+        cc: 'custom-cc@example.com',
+        bcc: 'custom-bcc@example.com',
+        subject: 'Test Subject',
+        html: '<p>Test HTML</p>',
+      })
+    })
+
+    it('should throw an error when RESEND_DEFAULT_FROM_ADDRESS is not set', async () => {
+      // Arrange
+      process.env.RESEND_DEFAULT_FROM_ADDRESS = undefined
+      const emailOptions: EmailOptions = {
+        to: 'recipient@example.com',
+        subject: 'Test Subject',
+        html: '<p>Test HTML</p>',
+      }
+
+      // Act & Assert
+      await expect(resendEmail(emailOptions)).rejects.toThrow(
+        'RESEND_DEFAULT_FROM_ADDRESS is not set'
       )
     })
 
-    it('should throw error if RESEND_DEFAULT_FROM_ADDRESS is not set', async () => {
+    it('should throw an error when RESEND_DEFAULT_FROM_NAME is not set', async () => {
       // Arrange
-      delete process.env.RESEND_DEFAULT_FROM_ADDRESS
+      process.env.RESEND_DEFAULT_FROM_NAME = undefined
+      const emailOptions: EmailOptions = {
+        to: 'recipient@example.com',
+        subject: 'Test Subject',
+        html: '<p>Test HTML</p>',
+      }
 
       // Act & Assert
-      await expect(
-        sendEmail({
-          to: 'test@example.com',
-          subject: 'Test',
-          html: '<p>Test</p>',
-        })
-      ).rejects.toThrow('RESEND_DEFAULT_FROM_ADDRESS is not set')
-    })
-
-    it('should throw error if RESEND_DEFAULT_FROM_NAME is not set', async () => {
-      // Arrange
-      delete process.env.RESEND_DEFAULT_FROM_NAME
-
-      // Act & Assert
-      await expect(
-        sendEmail({
-          to: 'test@example.com',
-          subject: 'Test',
-          html: '<p>Test</p>',
-        })
-      ).rejects.toThrow('RESEND_DEFAULT_FROM_NAME is not set')
+      await expect(resendEmail(emailOptions)).rejects.toThrow('RESEND_DEFAULT_FROM_NAME is not set')
     })
 
     it('should handle errors from payload.sendEmail', async () => {
       // Arrange
-      const error = new Error('Failed to send email')
-      mockSendEmail.mockRejectedValue(error)
+      const error = new Error('Email sending failed')
+      mockPayload.sendEmail.mockRejectedValueOnce(error)
+
+      const emailOptions: EmailOptions = {
+        to: 'recipient@example.com',
+        subject: 'Test Subject',
+        html: '<p>Test HTML</p>',
+      }
 
       // Act & Assert
-      await expect(
-        sendEmail({
-          to: 'test@example.com',
-          subject: 'Test',
-          html: '<p>Test</p>',
-        })
-      ).rejects.toThrow('Failed to send email')
+      await expect(resendEmail(emailOptions)).rejects.toThrow('Email sending failed')
+    })
+  })
+
+  describe('getApplicationConfirmationEmailHTML', () => {
+    it('should generate HTML for application confirmation email', async () => {
+      // Arrange
+      const applicationId = 'test-123'
+      const application: ApplicationData = {
+        firstName: 'John',
+        lastName: 'Doe',
+        status: 'submitted',
+        submitted_at: new Date().toISOString(),
+        due_amount: 100,
+        payment_status: 'pending',
+        payment_id: null,
+        paid_at: null,
+        additionalServices: ['pdf_only'],
+        additionalServicesQuantity: {
+          extra_copy: 0,
+          pdf_with_hard_copy: 0,
+          pdf_only: 1,
+        },
+      }
+
+      // Create a spy on React.createElement
+      const createElementSpy = vi.spyOn(React, 'createElement')
+
+      // Act
+      const result = await getApplicationConfirmationEmailHTML(applicationId, application)
+
+      // Assert
+      // Check that React.createElement was called with the correct arguments
+      expect(createElementSpy).toHaveBeenCalledWith(ApplicationConfirmationEmail, {
+        applicationId,
+        application,
+      })
+
+      // Check that render was called and returned the expected result
+      expect(render).toHaveBeenCalled()
+      expect(result).toBe('<div>Mocked HTML</div>')
+
+      // Restore the spy
+      createElementSpy.mockRestore()
     })
   })
 })

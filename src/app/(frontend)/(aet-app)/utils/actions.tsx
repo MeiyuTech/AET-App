@@ -1,11 +1,9 @@
 'use server'
 
 import { createClient } from './supabase/server'
-import { FormData } from '../components/FCEApplicationForm/types'
+import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
-import { getApplicationConfirmationEmailHTML } from './email/actions'
-import { sendEmail } from './email/actions'
-import { getCCAddress, getDeliveryMethod, getServiceDescription } from './email/utils'
+import { sendApplicationConfirmationEmail } from './email/actions'
 
 /**
  * Submit AET application:
@@ -22,28 +20,27 @@ export async function submitAETApplication(formData: FormData) {
     const client = await createClient()
 
     console.log('Original form data:', formData)
-    const dbData = formatUtils.toDatabase(formData, 3, 'submitted')
+    const dbData = formatUtils.toDatabase(formData, 3, 'submitted', new Date().toISOString())
     console.log('Converted database data:', dbData)
 
     // Start database transaction
-    const { data: application, error: applicationError } = await client
+    const { data: databaseApplication, error: databaseApplicationError } = await client
       .from('fce_applications')
       .insert({
         ...dbData,
-        submitted_at: new Date().toISOString(),
       })
       .select()
       .single()
 
-    if (applicationError) {
-      console.error('Application insert error:', applicationError)
-      throw applicationError
+    if (databaseApplicationError) {
+      console.error('Application insert error:', databaseApplicationError)
+      throw databaseApplicationError
     }
 
     // Insert education records
     const educationPromises = formData.educations?.map((education) =>
       client.from('fce_educations').insert({
-        application_id: application.id,
+        application_id: databaseApplication.id,
         ...formatUtils.toEducationDatabase(education),
       })
     )
@@ -52,23 +49,9 @@ export async function submitAETApplication(formData: FormData) {
       await Promise.all(educationPromises)
     }
 
-    // Send confirmation email using the new email content generator
-    const { success: emailSuccess, message: sendEmailMessage } = await sendEmail({
-      to: formData.email,
-      cc: formData.email === 'tech@meiyugroup.org' ? undefined : getCCAddress(application.office),
-      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      subject: 'AET Services Application Confirmation',
-      html: await getApplicationConfirmationEmailHTML(
-        formData.firstName,
-        formData.lastName,
-        getServiceDescription(formData.serviceType),
-        getDeliveryMethod(formData.deliveryMethod),
-        // TODO: use 'additionalServicesQuantity'
-        formData.additionalServices,
-        application.id,
-        application.submitted_at
-      ),
-    })
+    console.log('Sending application confirmation email...')
+    const { success: emailSuccess, message: sendEmailMessage } =
+      await sendApplicationConfirmationEmail(databaseApplication.id)
 
     if (!emailSuccess) {
       console.error('Failed to send confirmation email:', sendEmailMessage)
@@ -77,7 +60,7 @@ export async function submitAETApplication(formData: FormData) {
 
     return {
       success: true,
-      applicationId: application.id,
+      applicationId: databaseApplication.id,
     }
   } catch (error) {
     console.error('Failed to submit AET application:', error)
@@ -86,60 +69,64 @@ export async function submitAETApplication(formData: FormData) {
 }
 
 /**
- * Verify AET application:
+ * Fetch and format AET application data:
  * 1. Get application data from database
  * 2. Get education data from database
  * 3. Transform database field names to frontend field names
  * @param applicationId - Application ID
- * @returns - { exists: true, application: formattedData }
+ * @returns - { success: true, application: formattedData }
  * @throws - Error if failed to fetch application
  */
 export async function fetchApplication(applicationId: string) {
   try {
     const client = await createClient()
 
-    // get the application data
-    const { data: applicationData, error: applicationError } = await client
+    // get the application data from the database
+    const { data: databaseApplication, error: databaseApplicationError } = await client
       .from('fce_applications')
       .select('*')
       .eq('id', applicationId)
       .single()
 
-    if (applicationError) {
-      console.error('Error verifying application:', applicationError)
-      return { exists: false }
+    if (databaseApplicationError) {
+      console.error(
+        'Error verifying and fetching application in database:',
+        databaseApplicationError
+      )
+      return { success: false }
     }
 
-    // get the education data
-    const { data: educationsData, error: educationsError } = await client
+    // get the education data from the database
+    const { data: databaseEducations, error: databaseEducationsError } = await client
       .from('fce_educations')
       .select('*')
       .eq('application_id', applicationId)
 
-    if (educationsError) {
-      console.error('Error fetching educations:', educationsError)
-      return { exists: false }
+    if (databaseEducationsError) {
+      console.error('Error fetching educations:', databaseEducationsError)
+      return { success: false }
     }
 
     // Transform database field names to frontend field names
     const formattedData = {
-      // Status Info
-      status: applicationData.status,
-      submitted_at: applicationData.submitted_at,
-      due_amount: applicationData.due_amount,
-      payment_status: applicationData.payment_status,
-      payment_id: applicationData.payment_id,
-      paid_at: applicationData.paid_at,
-      ...formatUtils.toFormData(applicationData),
-      educations: educationsData.map((edu) => formatUtils.toEducationFormData(edu)),
-    }
+      ...formatUtils.toFormData(
+        databaseApplication,
+        databaseApplication.status,
+        databaseApplication.submitted_at,
+        databaseApplication.due_amount,
+        databaseApplication.payment_status,
+        databaseApplication.payment_id,
+        databaseApplication.paid_at
+      ),
+      educations: databaseEducations.map((edu) => formatUtils.toEducationFormData(edu)),
+    } as ApplicationData
 
     return {
-      exists: true,
-      application: formattedData,
+      success: true,
+      applicationData: formattedData,
     }
   } catch (error) {
-    console.error('Failed to verify application:', error)
-    return { exists: false }
+    console.error('Failed to fetch and format application:', error)
+    return { success: false }
   }
 }

@@ -10,6 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
+
     const {
       amount,
       currency = 'usd',
@@ -80,10 +81,23 @@ export async function POST(request: Request) {
       active: paymentLink.active,
     })
   } catch (error) {
-    console.error(`${stripeConfig.mode} payment link creation error:`, error)
+    console.error('🔴 [create-payment-link] Error:', error)
+
+    const stripeConfig = await getStripeConfig()
+    console.error(
+      `🔴 [create-payment-link] ${stripeConfig.mode} payment link creation error:`,
+      error
+    )
 
     // Handle Stripe errors
     if (error instanceof Stripe.errors.StripeError) {
+      console.error('🔴 [create-payment-link] Stripe error details:', {
+        message: error.message,
+        code: error.code,
+        type: error.type,
+        statusCode: error.statusCode,
+      })
+
       return NextResponse.json(
         {
           error: error.message || 'Payment link creation failed',
@@ -96,10 +110,12 @@ export async function POST(request: Request) {
     }
 
     // Handle other errors
+    console.error('🔴 [create-payment-link] Non-Stripe error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',
         mode: stripeConfig.mode,
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )

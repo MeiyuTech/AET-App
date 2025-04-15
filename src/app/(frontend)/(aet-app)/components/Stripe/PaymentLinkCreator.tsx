@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { Loader2, CheckCircle, AlertCircle, Info } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,7 +15,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Loader2, CheckCircle, AlertCircle, Info } from 'lucide-react'
+
+import { createPaymentLink } from '../../utils/stripe/actions'
 
 interface PaymentLinkCreatorProps {
   applicationId?: string
@@ -53,18 +56,7 @@ export function PaymentLinkCreator({
     setResult(null)
 
     try {
-      const response = await fetch('/api/stripe/create-payment-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount,
-          currency,
-          applicationId: applicationId || undefined,
-          description,
-        }),
-      })
+      const response = await createPaymentLink(amount, applicationId, description, currency)
 
       const data = await response.json()
 
