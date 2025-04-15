@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X } from 'lucide-react'
+import { X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,7 +12,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+import { createPaymentLink } from '../../utils/stripe/actions'
 
 interface PaymentLinkDialogProps {
   open: boolean
@@ -38,11 +39,11 @@ export function PaymentLinkDialog({
       setResult(null)
       setError(null)
       setIsLoading(true)
-      createPaymentLink()
+      handlePaymentLink()
     }
   }, [open])
 
-  const createPaymentLink = async () => {
+  const handlePaymentLink = async () => {
     if (!applicationId || defaultAmount <= 0) {
       setError('Invalid payment amount or application ID. Please check your Due Amount Setting. ')
       setIsLoading(false)
@@ -50,19 +51,8 @@ export function PaymentLinkDialog({
     }
 
     try {
-      console.log('try...')
-      const response = await fetch('/api/stripe/create-payment-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: defaultAmount,
-          currency: 'usd',
-          applicationId: applicationId,
-          description: `Payment for Application ${applicationId}`,
-        }),
-      })
+      console.log('PaymentLinkDialog: try...')
+      const response = await createPaymentLink(defaultAmount, applicationId)
 
       const data = await response.json()
       console.log('data', data)
