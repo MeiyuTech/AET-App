@@ -7,21 +7,32 @@ export async function createPayment({
   amount: string
   applicationId: string
 }) {
-  const numericAmount = parseFloat(amount || '0')
-
-  const response = await fetch('/api/stripe/create-payment', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      amount: numericAmount,
-      currency: 'usd',
-      applicationId: applicationId,
-    }),
+  console.log('🟠 [createPayment] Creating payment link with params:', {
+    amount,
+    applicationId,
   })
+  const numericAmount = parseFloat(amount || '0')
+  const baseUrl = getClientSideURL()
+  const apiUrl = `${baseUrl}/api/stripe/create-payment`
 
-  return response
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: numericAmount,
+        currency: 'usd',
+        applicationId: applicationId,
+      }),
+    })
+
+    return response
+  } catch (error) {
+    console.error('🔴 [createPayment] Error:', error)
+    throw error
+  }
 }
 
 export async function createPaymentLink(
