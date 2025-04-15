@@ -21,13 +21,7 @@ export async function POST(request: Request) {
 
     // Create inline price and checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'alipay', 'us_bank_account'],
-      // customer: 'hi',
-      payment_method_options: {
-        us_bank_account: {
-          setup_future_usage: 'on_session',
-        },
-      },
+      payment_method_types: ['card', 'alipay'],
       line_items: [
         {
           price_data: {
