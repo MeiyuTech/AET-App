@@ -65,6 +65,8 @@
 - [x] Marked as Paid for Zelle/ Paypal (stripe has payment id)
 - [ ] 需要能手动导入 （批量？） 数据 （tong）
 - [ ] 参考 SuccessMessage，需要建立 FailedMsg
+- [x] Stripe 的 bank transfer 太慢了。 1-3 天。我们取消了。
+- [x] 不能把 paid 重写为 expired
 - [ ]
 
 ## Features

@@ -1,6 +1,8 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
+
+import { fetchApplication } from '../../../utils/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
 
@@ -21,29 +23,33 @@ export async function POST(req: Request) {
     console.log(`Processing ${stripeConfig.mode} webhook event:`, event.type)
 
     const client = await createClient()
+    const session = event.data.object as Stripe.Checkout.Session
+    const applicationId = session.client_reference_id || session.metadata?.applicationId
+
+    if (!applicationId) {
+      console.error('No client_reference_id in session')
+      return new NextResponse('Missing client_reference_id', { status: 400 })
+    }
+
+    const { success, applicationData } = await fetchApplication(applicationId)
+
+    if (!success) {
+      console.error('Error fetching application:', applicationData)
+      return new NextResponse('Error fetching application', { status: 500 })
+    }
+
+    if (!applicationData) {
+      console.error('No application data found')
+      return new NextResponse('No application data found', { status: 400 })
+    }
 
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session
-
-        const client_reference_id = session.client_reference_id || session.metadata?.applicationId
-        console.log('Session data:', {
-          client_reference_id: client_reference_id,
+        console.log('checkout.session.completed data:', {
+          client_reference_id: applicationId,
           payment_intent: session.payment_intent,
+          current_application_data: applicationData,
         })
-
-        if (!client_reference_id) {
-          console.error('No client_reference_id in session')
-          return new NextResponse('Missing client_reference_id', { status: 400 })
-        }
-
-        const { data: existingApp } = await client
-          .from('fce_applications')
-          .select('status, payment_status')
-          .eq('id', client_reference_id)
-          .single()
-
-        console.log('Current application state:', existingApp)
 
         const { error } = await client
           .from('fce_applications')
@@ -53,12 +59,12 @@ export async function POST(req: Request) {
             payment_id: session.payment_intent as string,
             paid_at: new Date().toISOString(),
           })
-          .eq('id', client_reference_id)
+          .eq('id', applicationId)
 
         if (error) {
           console.error('Error updating application:', {
             error,
-            currentState: existingApp,
+            currentState: applicationData,
             attemptedUpdate: {
               status: 'processing',
               payment_status: 'paid',
@@ -67,43 +73,26 @@ export async function POST(req: Request) {
           return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
         }
 
-        const { data: updatedApp } = await client
-          .from('fce_applications')
-          .select('status, payment_status')
-          .eq('id', client_reference_id)
-          .single()
-
-        console.log('Update result:', {
-          before: existingApp,
-          after: updatedApp,
-          changes: {
-            statusChanged: existingApp?.status !== updatedApp?.status,
-            paymentStatusChanged: existingApp?.payment_status !== updatedApp?.payment_status,
-          },
-        })
-
         return new NextResponse('Webhook processed', { status: 200 })
       }
 
       case 'checkout.session.expired': {
-        const session = event.data.object as Stripe.Checkout.Session
-        const client_reference_id = session.client_reference_id || session.metadata?.applicationId
-
-        console.log('Expired session data:', {
-          client_reference_id: client_reference_id,
+        console.log('checkout.session.expired data:', {
+          client_reference_id: applicationId,
+          current_application_data: applicationData,
         })
 
-        if (!client_reference_id) {
-          console.error('No client_reference_id in session')
-          return new NextResponse('Missing client_reference_id', { status: 400 })
+        if (applicationData.payment_status === 'paid') {
+          console.log('Application is paid, skipping update')
+          return new NextResponse('Webhook processed - Skipped paid application', { status: 200 })
         }
 
-        const { error, data } = await client
+        const { error } = await client
           .from('fce_applications')
           .update({
             payment_status: 'expired',
           })
-          .eq('id', client_reference_id)
+          .eq('id', applicationId)
           .select()
           .single()
 
@@ -114,16 +103,16 @@ export async function POST(req: Request) {
           })
         }
 
-        console.log('Successfully updated expired application:', data)
-        break
+        return new NextResponse('Webhook processed - Application marked as expired', {
+          status: 200,
+        })
       }
 
       default: {
         console.log(`Unhandled ${stripeConfig.mode} event type:`, event.type)
+        return new NextResponse(`Unhandled event type: ${event.type}`, { status: 200 })
       }
     }
-
-    return new NextResponse('Webhook processed', { status: 200 })
   } catch (err) {
     console.error(`${stripeConfig.mode} webhook error:`, err)
     return new NextResponse(
