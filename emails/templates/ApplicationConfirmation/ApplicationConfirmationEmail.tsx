@@ -86,19 +86,7 @@ const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> 
 
                 <Text style={styles.heading.h3}>3. Make Payment</Text>
                 <Section style={{ textAlign: 'center', margin: '20px 0' }}>
-                  <Button href={paymentLink}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                      }}
-                    >
-                      Proceed to Online Payment
-                      <CreditCard style={{ width: '16px', height: '16px' }} />
-                    </div>
-                  </Button>
+                  <Button href={paymentLink}>Proceed to Online Payment</Button>
                 </Section>
 
                 <Text style={styles.heading.h3}>4. Processing</Text>

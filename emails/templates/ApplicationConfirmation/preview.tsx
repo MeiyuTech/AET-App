@@ -46,5 +46,11 @@ const previewData: ApplicationData = {
 
 // Export Preview Component
 export default function Preview() {
-  return <ApplicationConfirmationEmail applicationId={applicationId} application={previewData} />
+  return (
+    <ApplicationConfirmationEmail
+      applicationId={applicationId}
+      application={previewData}
+      paymentLink="paymentLink placeholder"
+    />
+  )
 }
