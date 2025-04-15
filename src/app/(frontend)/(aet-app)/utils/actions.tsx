@@ -49,6 +49,7 @@ export async function submitAETApplication(formData: FormData) {
       await Promise.all(educationPromises)
     }
 
+    console.log('Sending application confirmation email...')
     const { success: emailSuccess, message: sendEmailMessage } =
       await sendApplicationConfirmationEmail(databaseApplication.id)
 

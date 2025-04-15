@@ -8,6 +8,10 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { ApplicationData } from '../../components/FCEApplicationForm/types'
+import { calculateTotalPrice } from '../../components/FCEApplicationForm/utils'
+
+import { createPaymentLink } from '../stripe/actions'
+
 import { EmailOptions } from './config'
 import { fetchApplication } from '../actions'
 import { getCCAddress } from './utils'
@@ -56,6 +60,7 @@ export async function getApplicationConfirmationEmailHTML(
 }
 
 export async function sendApplicationConfirmationEmail(applicationId: string) {
+  console.log('Sending application confirmation email...')
   // Send confirmation email using the new email content generator
   const { success, applicationData } = await fetchApplication(applicationId)
   if (!success) {
@@ -65,9 +70,21 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
     throw new Error('Application data not found')
   }
 
-  // TODO: create the payment link
-  const paymentLink = ''
+  const dueAmount =
+    applicationData.serviceType?.translation?.required ||
+    applicationData.serviceType?.customizedService?.required
+      ? 'Due amount is not set yet'
+      : `$${calculateTotalPrice(applicationData)}`
+  console.log('Due amount:', dueAmount)
 
+  let paymentLink = ''
+  if (dueAmount != 'Due amount is not set yet') {
+    const dueAmountNumber = parseFloat(dueAmount.replace('$', ''))
+    const response = await createPaymentLink(dueAmountNumber, applicationId)
+    const data = await response.json()
+    paymentLink = data.url
+  }
+  console.log('Payment link:', paymentLink)
   const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
     applicationId,
     applicationData,

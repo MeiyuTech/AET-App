@@ -240,9 +240,9 @@ export default function FCEApplicationForm() {
     }
 
     try {
-      console.log('Form is valid, submitting data:', data)
+      console.log('FCEApplicationForm index.tsx data:', data)
       const result = await submitForm()
-
+      console.log('FCEApplicationForm index.tsx result:', result)
       if (result?.success) {
         // Reset form after successful submission
         resetFormState()

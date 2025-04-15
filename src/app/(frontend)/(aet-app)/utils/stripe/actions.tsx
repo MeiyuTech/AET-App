@@ -28,6 +28,7 @@ export async function createPaymentLink(
   description?: string,
   currency: string = 'usd'
 ) {
+  console.log('createPaymentLink action:', { amount, applicationId, description, currency })
   const response = await fetch('/api/stripe/create-payment-link', {
     method: 'POST',
     headers: {
@@ -41,5 +42,6 @@ export async function createPaymentLink(
     }),
   })
 
+  console.log('createPaymentLink response:', response)
   return response
 }
