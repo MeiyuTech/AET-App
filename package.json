@@ -23,7 +23,8 @@
     "test:watch": "vitest --watch",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "e2e:debug": "playwright test --debug"
+    "e2e:debug": "playwright test --debug",
+    "email": "email dev --dir \"src/app/(frontend)/(aet-app)/components/Email\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
