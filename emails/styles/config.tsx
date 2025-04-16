@@ -128,6 +128,12 @@ export const styles = {
       borderRadius: borderRadius.sm,
       color: colors.primary,
     },
+    note: {
+      fontSize: fontSizes.sm,
+      marginBottom: spacing.lg,
+      marginLeft: spacing.indent,
+      color: colors.text.secondary,
+    },
   },
 
   // Content Block

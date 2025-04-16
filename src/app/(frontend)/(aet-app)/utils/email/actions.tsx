@@ -3,7 +3,7 @@
 import React from 'react'
 import { render } from '@react-email/render'
 
-import { ApplicationConfirmationEmail } from 'emails'
+import { ApplicationConfirmationEmail } from 'emails/templates/ApplicationConfirmation/ApplicationConfirmationEmail'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 

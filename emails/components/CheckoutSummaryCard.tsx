@@ -6,7 +6,6 @@ import {
   ADDITIONAL_SERVICES,
   PURPOSE_OPTIONS,
 } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/constants'
-import { calculateTotalPrice } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/utils'
 import { styles } from '../styles/config'
 
 interface CheckoutSummaryCardProps {
@@ -15,12 +14,11 @@ interface CheckoutSummaryCardProps {
 }
 
 export default function CheckoutSummaryCard({ application, amount }: CheckoutSummaryCardProps) {
+  const stripeFee = amount * 0.029 + 0.3
+  const price = (amount - stripeFee).toFixed(2)
+
   return (
     <Container>
-      {/* <Heading as="h2" style={styles.heading.h2}>
-        Selected Services
-      </Heading> */}
-
       {/* Purpose */}
       <Section style={styles.serviceCard.section}>
         <Text style={styles.serviceCard.title}>Purpose:</Text>
@@ -209,6 +207,11 @@ export default function CheckoutSummaryCard({ application, amount }: CheckoutSum
         </Section>
       )}
 
+      <Section style={styles.serviceCard.section}>
+        <Text style={styles.serviceCard.totalPrice}>
+          Price: ${price} + Stripe Fee: ${stripeFee.toFixed(2)}
+        </Text>
+      </Section>
       <Hr style={styles.serviceCard.divider} />
 
       {/* Total Price */}
