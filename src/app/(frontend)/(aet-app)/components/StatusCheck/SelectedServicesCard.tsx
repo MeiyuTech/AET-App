@@ -60,8 +60,14 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                         <div>
                           Second Degree:{' '}
                           {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
-                          {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price} = $
-                          {EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price *
+                          {speed === '7day'
+                            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+                            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT
+                                .price}{' '}
+                          = $
+                          {(speed === '7day'
+                            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+                            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price) *
                             application.serviceType.foreignCredentialEvaluation.secondDegrees}
                         </div>
                       )}
@@ -90,8 +96,13 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                       {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                         <div>
                           Second Degree: {application.serviceType.coursebyCourse.secondDegrees} × $
-                          {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} = $
-                          {EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price *
+                          {speed === '8day'
+                            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+                            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price}{' '}
+                          = $
+                          {(speed === '8day'
+                            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+                            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price) *
                             application.serviceType.coursebyCourse.secondDegrees}
                         </div>
                       )}

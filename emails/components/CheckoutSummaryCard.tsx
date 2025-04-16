@@ -9,11 +9,12 @@ import {
 import { calculateTotalPrice } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/utils'
 import { styles } from '../styles/config'
 
-interface SelectedServicesCardProps {
+interface CheckoutSummaryCardProps {
   application: ApplicationData
+  amount: number
 }
 
-export default function SelectedServicesEmailCard({ application }: SelectedServicesCardProps) {
+export default function CheckoutSummaryCard({ application, amount }: CheckoutSummaryCardProps) {
   return (
     <Container>
       {/* <Heading as="h2" style={styles.heading.h2}>
@@ -212,23 +213,7 @@ export default function SelectedServicesEmailCard({ application }: SelectedServi
 
       {/* Total Price */}
       <Section style={styles.serviceCard.section}>
-        {application.due_amount ? (
-          <Text style={styles.serviceCard.totalPrice}>Due Amount: ${application.due_amount}</Text>
-        ) : (
-          <Text style={styles.serviceCard.totalPrice}>
-            Estimated Total:{' '}
-            {application.serviceType?.translation?.required ||
-            application.serviceType?.customizedService?.required
-              ? 'Due amount is not set yet'
-              : `$${calculateTotalPrice(application)}`}
-          </Text>
-        )}
-        <Text style={styles.serviceCard.disclaimer}>
-          * This fee applies to most applications but it may vary for some applicants. We will
-          reconfirm your service details during the evaluation process. If any adjustments are
-          needed, we will contact you—any overpayment will be refunded, and underpayment will be
-          collected. Thank you for your trust!
-        </Text>
+        <Text style={styles.serviceCard.totalPrice}>Payment Amount: ${amount}</Text>
       </Section>
     </Container>
   )
