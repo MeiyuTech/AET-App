@@ -62,6 +62,7 @@ export default function Preview() {
     <PaymentConfirmationEmail
       applicationId={applicationId}
       application={previewData}
+      paidAt={paymentDate}
       paymentAmount={paymentAmount}
       paymentId={transactionId}
       estimatedCompletionDate={estimatedCompletionDate}
