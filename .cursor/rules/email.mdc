@@ -1,26 +1,26 @@
 ---
 description: 
-globs: emails/**
+globs: src/app/(frontend)/(aet-app)/components/Email/**
 alwaysApply: false
 ---
  ---
 description: Email template development guidelines
-globs: emails/**
+globs: src/app/(frontend)/(aet-app)/components/Email/**
 alwaysApply: true
 ---
 
 # Email Template Development Guidelines
 
 ## Key Principles
+- Use `pnpm email` to run the script
 - Use `@react-email/components` for email template development (https://www.npmjs.com/package/react-email)
 - Keep email templates simple and accessible
 - Ensure cross-client compatibility
 - Follow email-specific best practices
 
 ## Component Guidelines
-- Place shared email components in `emails/components/`
-- Place email templates in `emails/templates/`
-- Export all components and templates through `emails/index.ts`
+- Place shared email components in `src/app/(frontend)/(aet-app)/components/Email`
+- Place email templates in `src/app/(frontend)/(aet-app)/components/Email/templates/`
 
 ## CSS Guidelines
 - Avoid using interactive CSS features like `:hover`, `:active`, etc.
@@ -31,7 +31,7 @@ alwaysApply: true
 - Avoid using CSS animations or transitions
 
 ## Button Component Guidelines
-- Use the shared `Button` component from `emails/components/Button.tsx`
+- Use the shared `Button` component from `src/app/(frontend)/(aet-app)/components/Email/Button.tsx`
 - Keep button styles simple and consistent
 - Use clear, action-oriented text for button labels
 - Ensure sufficient padding for touch targets
