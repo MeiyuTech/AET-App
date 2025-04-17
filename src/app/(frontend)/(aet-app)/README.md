@@ -67,6 +67,9 @@
 - [ ] 参考 SuccessMessage，需要建立 FailedMsg
 - [x] Stripe 的 bank transfer 太慢了。 1-3 天。我们取消了。
 - [x] 不能把 paid 重写为 expired
+- [ ] fix `exportinterfaceApplicationextendsOmit<DatabaseApplication,'service_type'|'educations'>`
+- [ ]
+- [ ]
 - [ ]
 
 ## Features
