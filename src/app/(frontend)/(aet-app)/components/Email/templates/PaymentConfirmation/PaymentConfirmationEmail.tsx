@@ -19,48 +19,30 @@ import { styles, colors } from '../../styles/config'
 
 import { ApplicationData } from '../../../FCEApplicationForm/types'
 
-// Extending ApplicationData with additional properties that might not be in the original type
-interface ExtendedApplicationData extends ApplicationData {
-  zipCode?: string
-}
-
 interface PaymentConfirmationEmailProps {
   applicationId: string
-  application: ExtendedApplicationData
+  application: ApplicationData
   paymentAmount: string
-  paymentDate: string
-  transactionId: string
+  paymentId: string
   estimatedCompletionDate?: string
-  customerEmail?: string
-  stripeFee?: string
-  itemName?: string
 }
 
 export const PaymentConfirmationEmail = ({
   applicationId,
   application,
   paymentAmount,
-  paymentDate,
-  transactionId,
+  paymentId,
   estimatedCompletionDate,
-  customerEmail,
-  stripeFee,
-  itemName,
 }: PaymentConfirmationEmailProps) => {
   // Format date for display
-  const formattedPaymentDate = new Date(paymentDate).toLocaleString()
+  if (!application.paid_at) {
+    throw new Error('Application has not been paid')
+  }
+
+  const formattedPaymentDate = new Date(application.paid_at).toLocaleString()
   const formattedCompletionDate = estimatedCompletionDate
     ? new Date(estimatedCompletionDate).toLocaleDateString()
     : 'Estimated processing time will be communicated after review'
-
-  const customerEmailDisplay =
-    customerEmail ||
-    (application?.firstName && application?.lastName
-      ? `${application.firstName.toLowerCase()}.${application.lastName.toLowerCase()}@example.com`
-      : 'customer@example.com')
-  const itemNameDisplay = itemName || 'Customized Service Payment'
-  const basePrice = parseFloat(paymentAmount) - (stripeFee ? parseFloat(stripeFee) : 0)
-  const basePriceStr = basePrice.toFixed(2)
 
   return (
     <Html lang="en" dir="ltr">
@@ -91,7 +73,7 @@ export const PaymentConfirmationEmail = ({
 
                 <Text style={styles.text.default}>
                   <strong>Payment ID:</strong>{' '}
-                  <span style={styles.text.monospace}>{transactionId}</span>
+                  <span style={styles.text.monospace}>{paymentId}</span>
                 </Text>
 
                 <CheckoutSummaryCard application={application} amount={parseFloat(paymentAmount)} />
@@ -159,10 +141,10 @@ PaymentConfirmationEmail.PreviewProps = {
   application: {
     firstName: 'John',
     lastName: 'Doe',
+    paid_at: '2023-01-01',
   },
   paymentAmount: '100.00',
-  paymentDate: '2023-01-01',
-  transactionId: '1234567890',
+  paymentId: '1234567890',
 } as PaymentConfirmationEmailProps
 
 export default PaymentConfirmationEmail

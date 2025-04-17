@@ -4,6 +4,7 @@ import React from 'react'
 import { render } from '@react-email/render'
 
 import { ApplicationConfirmationEmail } from '../../components/Email/templates/ApplicationConfirmation/ApplicationConfirmationEmail'
+import { PaymentConfirmationEmail } from '../../components/Email/templates/PaymentConfirmation/PaymentConfirmationEmail'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
@@ -59,8 +60,12 @@ export async function getApplicationConfirmationEmailHTML(
   return render(emailComponent)
 }
 
+/**
+ * Send an application confirmation email to the applicant.
+ * @param applicationId - The ID of the application.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
 export async function sendApplicationConfirmationEmail(applicationId: string) {
-  console.log('Sending application confirmation email...')
   // Send confirmation email using the new email content generator
   const { success, applicationData } = await fetchApplication(applicationId)
   if (!success) {
@@ -84,7 +89,7 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
     const data = await response.json()
     paymentLink = data.url
   }
-  console.log('Payment link:', paymentLink)
+
   const applicationConfirmationEmailHTML = await getApplicationConfirmationEmailHTML(
     applicationId,
     applicationData,
@@ -101,10 +106,7 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
   try {
     const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
       to: applicationData.email,
-      cc:
-        applicationData.email === 'tech@meiyugroup.org'
-          ? undefined
-          : getCCAddress(applicationData.office),
+      cc: getCCAddress(applicationData.office, applicationData.email),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Services Application Confirmation',
       html: applicationConfirmationEmailHTML,
@@ -113,6 +115,67 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
     return { success: emailSuccess, message: sendEmailMessage }
   } catch (error) {
     console.error('Failed to send application confirmation email:', error)
+    throw error
+  }
+}
+
+export async function getPaymentConfirmationEmailHTML(
+  applicationId: string,
+  application: ApplicationData,
+  paymentAmount: string,
+  paymentId: string,
+  estimatedCompletionDate: string
+): Promise<string> {
+  const emailComponent = React.createElement(PaymentConfirmationEmail, {
+    applicationId,
+    application,
+    paymentAmount,
+    paymentId,
+    estimatedCompletionDate,
+  })
+
+  return render(emailComponent)
+}
+
+/**
+ * Send a payment confirmation email to the applicant.
+ * @param applicationId - The ID of the application.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
+export async function sendPaymentConfirmationEmail(
+  applicationId: string,
+  applicationData: ApplicationData,
+  paymentAmount: string,
+  paymentId: string,
+  estimatedCompletionDate: string
+) {
+  const paymentConfirmationEmailHTML = await getPaymentConfirmationEmailHTML(
+    applicationId,
+    applicationData,
+    paymentAmount,
+    paymentId,
+    estimatedCompletionDate
+  )
+
+  if (!applicationData.office) {
+    throw new Error('Application office not found')
+  }
+  if (!applicationData.email) {
+    throw new Error('Application email not found')
+  }
+
+  try {
+    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
+      to: applicationData.email,
+      cc: getCCAddress(applicationData.office, applicationData.email),
+      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
+      subject: 'AET Services Payment Confirmation',
+      html: paymentConfirmationEmailHTML,
+    })
+
+    return { success: emailSuccess, message: sendEmailMessage }
+  } catch (error) {
+    console.error('Failed to send payment confirmation email:', error)
     throw error
   }
 }

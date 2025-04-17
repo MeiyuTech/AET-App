@@ -15,9 +15,6 @@ const paymentAmount = '268.07'
 const paymentDate = new Date().toISOString()
 const transactionId = 'TXN-987654321'
 const estimatedCompletionDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 14 days from now
-const customerEmail = 'VIPULREDDYK@GMAIL.COM'
-const stripeFee = '8.07'
-const itemName = 'Customized Service Payment'
 
 // Preview data
 const previewData: ExtendedApplicationData = {
@@ -66,12 +63,8 @@ export default function Preview() {
       applicationId={applicationId}
       application={previewData}
       paymentAmount={paymentAmount}
-      paymentDate={paymentDate}
-      transactionId={transactionId}
+      paymentId={transactionId}
       estimatedCompletionDate={estimatedCompletionDate}
-      customerEmail={customerEmail}
-      stripeFee={stripeFee}
-      itemName={itemName}
     />
   )
 }
