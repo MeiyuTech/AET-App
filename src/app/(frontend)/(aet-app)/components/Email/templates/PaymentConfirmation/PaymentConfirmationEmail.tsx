@@ -157,8 +157,8 @@ PaymentConfirmationEmail.PreviewProps = {
   application: {
     firstName: 'John',
     lastName: 'Doe',
-    paid_at: '2023-01-01',
   },
+  paidAt: '2023-01-01',
   paymentAmount: '100.00',
   paymentId: '1234567890',
 } as PaymentConfirmationEmailProps
