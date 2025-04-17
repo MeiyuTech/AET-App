@@ -11,13 +11,13 @@ import {
   Text,
 } from '@react-email/components'
 
-import { Button } from '../../components/Button'
-import { Footer } from '../../components/Footer'
-import { Header } from '../../components/Header'
-import SelectedServicesEmailCard from '../../components/SelectedServicesEmailCard'
+import { Button } from '../../Button'
+import { Footer } from '../..//Footer'
+import { Header } from '../..//Header'
+import SelectedServicesEmailCard from '../../SelectedServicesEmailCard'
 import { styles, colors } from '../../styles/config'
 
-import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
+import { ApplicationData } from '../../../FCEApplicationForm/types'
 
 interface ApplicationConfirmationEmailProps {
   applicationId: string
@@ -25,11 +25,11 @@ interface ApplicationConfirmationEmailProps {
   paymentLink: string
 }
 
-const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> = ({
+export const ApplicationConfirmationEmail = ({
   applicationId,
   application,
   paymentLink,
-}) => {
+}: ApplicationConfirmationEmailProps) => {
   // Format date for display
   const formattedSubmissionDate = new Date(application.submitted_at).toLocaleString()
 
@@ -125,5 +125,14 @@ const ApplicationConfirmationEmail: React.FC<ApplicationConfirmationEmailProps> 
     </Html>
   )
 }
+
+ApplicationConfirmationEmail.PreviewProps = {
+  applicationId: '1234567890',
+  application: {
+    firstName: 'John',
+    lastName: 'Doe',
+  },
+  paymentLink: 'https://app.americantranslationservice.com/status?applicationId=1234567890',
+} as ApplicationConfirmationEmailProps
 
 export default ApplicationConfirmationEmail

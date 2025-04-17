@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { resendEmail, getApplicationConfirmationEmailHTML } from './actions'
 import { getPayload } from 'payload'
 import { render } from '@react-email/render'
-import { ApplicationConfirmationEmail } from 'emails'
+import { ApplicationConfirmationEmail } from '../../components/Email/templates/ApplicationConfirmation/ApplicationConfirmationEmail'
 import { ApplicationData } from '../../components/FCEApplicationForm/types'
 import { EmailOptions } from './config'
 import React from 'react'
@@ -16,6 +16,7 @@ vi.mock('@react-email/render', () => ({
   render: vi.fn().mockReturnValue('<div>Mocked HTML</div>'),
 }))
 
+/* @deprecated */
 vi.mock('emails', () => ({
   ApplicationConfirmationEmail: vi.fn().mockImplementation(() => null),
 }))
@@ -166,7 +167,11 @@ describe('Email Actions', () => {
       const createElementSpy = vi.spyOn(React, 'createElement')
 
       // Act
-      const result = await getApplicationConfirmationEmailHTML(applicationId, application)
+      const result = await getApplicationConfirmationEmailHTML(
+        applicationId,
+        application,
+        'https://app.americantranslationservice.com/status?applicationId=test-123'
+      )
 
       // Assert
       // Check that React.createElement was called with the correct arguments
