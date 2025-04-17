@@ -48,6 +48,11 @@ export const dateUtils = {
   },
 }
 
+export function getEstimatedCompletionDate(application: ApplicationData | null): string {
+  // TODO: Implement this
+  return dayjs().add(1, 'day').format('YYYY-MM-DD')
+}
+
 export function calculateTotalPrice(application: ApplicationData | null): string {
   if (!application) return '0.00'
 

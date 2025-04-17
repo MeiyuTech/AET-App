@@ -2,10 +2,19 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 
+import { getEstimatedCompletionDate } from '../../../components/FCEApplicationForm/utils'
+
 import { fetchApplication } from '../../../utils/actions'
+import { sendPaymentConfirmationEmail } from '../../../utils/email/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
-
+/**
+ * This route handles the Stripe webhook events for the FCE application.
+ * (Only 2 events: checkout.session.completed and checkout.session.expired)
+ * It updates the application status and payment status based on the Stripe event type.
+ * @param req - The request object.
+ * @returns A response object.
+ */
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature')
@@ -51,6 +60,7 @@ export async function POST(req: Request) {
           current_application_data: applicationData,
         })
 
+        // Update the application status and payment status
         const { error } = await client
           .from('fce_applications')
           .update({
@@ -71,6 +81,22 @@ export async function POST(req: Request) {
             },
           })
           return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
+        }
+
+        // Send email to the applicant
+        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
+        const { success: emailSuccess, message: sendEmailMessage } =
+          await sendPaymentConfirmationEmail(
+            applicationId,
+            applicationData,
+            session.amount_total?.toString() || '0',
+            session.payment_intent as string,
+            estimatedCompletionDate
+          )
+
+        if (!emailSuccess) {
+          console.error('Failed to send payment confirmation email:', sendEmailMessage)
+          throw new Error('Failed to send payment confirmation email')
         }
 
         return new NextResponse('Webhook processed', { status: 200 })

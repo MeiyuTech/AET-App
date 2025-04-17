@@ -1,4 +1,14 @@
-export function getCCAddress(office: string) {
+/**
+ * Get the CC address for the email
+ * @param office - The office to send the email from
+ * @param toEmail - The address to send the email to
+ * @returns The CC address for the email
+ */
+export function getCCAddress(office: string, toEmail: string) {
+  if (toEmail === 'tech@meiyugroup.org') {
+    return undefined
+  }
+
   switch (office) {
     case 'Boston':
       return ['boston@aet21.com', 'boston@americantranslationservice.com']
