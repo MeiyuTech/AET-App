@@ -62,7 +62,7 @@ export async function POST(req: Request) {
 
         // Update the application status and payment status
         const paidAt = new Date().toISOString()
-        const { error, data: updatedApplicationData } = await client
+        const { error } = await client
           .from('fce_applications')
           .update({
             status: 'processing',
@@ -96,6 +96,7 @@ export async function POST(req: Request) {
           await sendPaymentConfirmationEmail(
             applicationId,
             applicationData,
+            paidAt,
             paymentAmount,
             session.payment_intent as string,
             estimatedCompletionDate
