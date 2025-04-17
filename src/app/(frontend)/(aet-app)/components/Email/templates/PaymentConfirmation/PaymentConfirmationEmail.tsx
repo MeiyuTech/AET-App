@@ -35,6 +35,7 @@ dayjs.extend(timezone)
 interface PaymentConfirmationEmailProps {
   applicationId: string
   application: ApplicationData
+  paidAt: string
   paymentAmount: string
   paymentId: string
   estimatedCompletionDate?: string
@@ -43,19 +44,18 @@ interface PaymentConfirmationEmailProps {
 export const PaymentConfirmationEmail = ({
   applicationId,
   application,
+  paidAt,
   paymentAmount,
   paymentId,
   estimatedCompletionDate,
 }: PaymentConfirmationEmailProps) => {
   // Format date for display
-  if (!application.paid_at) {
+  if (!paidAt) {
     throw new Error('Application has not been paid')
   }
 
   // use EST to format date
-  const formattedPaymentDate = dayjs(application.paid_at)
-    .tz('America/New_York')
-    .format('YYYY-MM-DD')
+  const formattedPaymentDate = dayjs(paidAt).tz('America/New_York').format('YYYY-MM-DD')
   const formattedCompletionDate = estimatedCompletionDate
     ? dayjs(estimatedCompletionDate).tz('America/New_York').format('YYYY-MM-DD')
     : 'Estimated processing time will be communicated after review'

@@ -122,6 +122,7 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
 export async function getPaymentConfirmationEmailHTML(
   applicationId: string,
   application: ApplicationData,
+  paidAt: string,
   paymentAmount: string,
   paymentId: string,
   estimatedCompletionDate: string
@@ -129,6 +130,7 @@ export async function getPaymentConfirmationEmailHTML(
   const emailComponent = React.createElement(PaymentConfirmationEmail, {
     applicationId,
     application,
+    paidAt,
     paymentAmount,
     paymentId,
     estimatedCompletionDate,
@@ -145,6 +147,7 @@ export async function getPaymentConfirmationEmailHTML(
 export async function sendPaymentConfirmationEmail(
   applicationId: string,
   applicationData: ApplicationData,
+  paidAt: string,
   paymentAmount: string,
   paymentId: string,
   estimatedCompletionDate: string
@@ -152,6 +155,7 @@ export async function sendPaymentConfirmationEmail(
   const paymentConfirmationEmailHTML = await getPaymentConfirmationEmailHTML(
     applicationId,
     applicationData,
+    paidAt,
     paymentAmount,
     paymentId,
     estimatedCompletionDate
