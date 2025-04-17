@@ -1,24 +1,25 @@
 import { Container, Section, Text, Hr } from '@react-email/components'
-import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
+import { ApplicationData } from '../FCEApplicationForm/types'
 import {
   EVALUATION_SERVICES,
   DELIVERY_OPTIONS,
   ADDITIONAL_SERVICES,
   PURPOSE_OPTIONS,
-} from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/constants'
-import { styles } from '../styles/config'
+} from '../FCEApplicationForm/constants'
+import { calculateTotalPrice } from '../FCEApplicationForm/utils'
+import { styles } from './styles/config'
 
-interface CheckoutSummaryCardProps {
+interface SelectedServicesCardProps {
   application: ApplicationData
-  amount: number
 }
 
-export default function CheckoutSummaryCard({ application, amount }: CheckoutSummaryCardProps) {
-  const stripeFee = amount * 0.029 + 0.3
-  const price = (amount - stripeFee).toFixed(2)
-
+export default function SelectedServicesEmailCard({ application }: SelectedServicesCardProps) {
   return (
     <Container>
+      {/* <Heading as="h2" style={styles.heading.h2}>
+        Selected Services
+      </Heading> */}
+
       {/* Purpose */}
       <Section style={styles.serviceCard.section}>
         <Text style={styles.serviceCard.title}>Purpose:</Text>
@@ -207,16 +208,27 @@ export default function CheckoutSummaryCard({ application, amount }: CheckoutSum
         </Section>
       )}
 
-      <Section style={styles.serviceCard.section}>
-        <Text style={styles.serviceCard.totalPrice}>
-          Price: ${price} + Stripe Fee: ${stripeFee.toFixed(2)}
-        </Text>
-      </Section>
       <Hr style={styles.serviceCard.divider} />
 
       {/* Total Price */}
       <Section style={styles.serviceCard.section}>
-        <Text style={styles.serviceCard.totalPrice}>Payment Amount: ${amount}</Text>
+        {application.due_amount ? (
+          <Text style={styles.serviceCard.totalPrice}>Due Amount: ${application.due_amount}</Text>
+        ) : (
+          <Text style={styles.serviceCard.totalPrice}>
+            Estimated Total:{' '}
+            {application.serviceType?.translation?.required ||
+            application.serviceType?.customizedService?.required
+              ? 'Due amount is not set yet'
+              : `$${calculateTotalPrice(application)}`}
+          </Text>
+        )}
+        <Text style={styles.serviceCard.disclaimer}>
+          * This fee applies to most applications but it may vary for some applicants. We will
+          reconfirm your service details during the evaluation process. If any adjustments are
+          needed, we will contact you—any overpayment will be refunded, and underpayment will be
+          collected. Thank you for your trust!
+        </Text>
       </Section>
     </Container>
   )

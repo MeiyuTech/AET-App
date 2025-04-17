@@ -11,13 +11,13 @@ import {
   Text,
 } from '@react-email/components'
 
-import { Button } from '../../components/Button'
-import { Footer } from '../../components/Footer'
-import { Header } from '../../components/Header'
-import CheckoutSummaryCard from '../../components/CheckoutSummaryCard'
+import { Button } from '../../Button'
+import { Footer } from '../../Footer'
+import { Header } from '../../Header'
+import CheckoutSummaryCard from '../../CheckoutSummaryCard'
 import { styles, colors } from '../../styles/config'
 
-import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
+import { ApplicationData } from '../../../FCEApplicationForm/types'
 
 // Extending ApplicationData with additional properties that might not be in the original type
 interface ExtendedApplicationData extends ApplicationData {

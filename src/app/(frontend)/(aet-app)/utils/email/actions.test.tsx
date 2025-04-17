@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { resendEmail, getApplicationConfirmationEmailHTML } from './actions'
 import { getPayload } from 'payload'
 import { render } from '@react-email/render'
-import { ApplicationConfirmationEmail } from 'emails/templates/ApplicationConfirmation/ApplicationConfirmationEmail'
+import { ApplicationConfirmationEmail } from '../../components/Email/templates/ApplicationConfirmation/ApplicationConfirmationEmail'
 import { ApplicationData } from '../../components/FCEApplicationForm/types'
 import { EmailOptions } from './config'
 import React from 'react'
@@ -16,6 +16,7 @@ vi.mock('@react-email/render', () => ({
   render: vi.fn().mockReturnValue('<div>Mocked HTML</div>'),
 }))
 
+/* @deprecated */
 vi.mock('emails', () => ({
   ApplicationConfirmationEmail: vi.fn().mockImplementation(() => null),
 }))

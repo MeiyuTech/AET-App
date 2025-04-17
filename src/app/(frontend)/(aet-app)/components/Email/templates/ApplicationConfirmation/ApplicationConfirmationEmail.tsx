@@ -11,13 +11,13 @@ import {
   Text,
 } from '@react-email/components'
 
-import { Button } from '../../components/Button'
-import { Footer } from '../../components/Footer'
-import { Header } from '../../components/Header'
-import SelectedServicesEmailCard from '../../components/SelectedServicesEmailCard'
+import { Button } from '../../Button'
+import { Footer } from '../..//Footer'
+import { Header } from '../..//Header'
+import SelectedServicesEmailCard from '../../SelectedServicesEmailCard'
 import { styles, colors } from '../../styles/config'
 
-import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
+import { ApplicationData } from '../../../FCEApplicationForm/types'
 
 interface ApplicationConfirmationEmailProps {
   applicationId: string
