@@ -17,7 +17,10 @@ export function FilesDialog({ open, onOpenChange, application }: FilesDialogProp
   if (!application) return null
 
   // get full name from application
-  const fullName = `${application.first_name} ${application.last_name}`
+  const fullName =
+    [application.first_name, application.middle_name, application.last_name]
+      .filter(Boolean)
+      .join(' ') || 'Not provided'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
