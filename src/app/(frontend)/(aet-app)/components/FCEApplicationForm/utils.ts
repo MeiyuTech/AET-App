@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 
 import { EVALUATION_SERVICES, DELIVERY_OPTIONS, ADDITIONAL_SERVICES } from './constants'
 import {
@@ -15,8 +16,17 @@ import {
   AdditionalService,
 } from './types'
 
+// Initialize dayjs plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
+/**
+ * Initialize dayjs plugins in the correct order:
+ * 1. UTC plugin must be initialized first as it provides the base functionality for timezone handling
+ * 2. Timezone plugin depends on UTC plugin for timezone conversions
+ * This order is crucial for proper timezone handling in the email template,
+ * especially when formatting dates for different time zones (e.g., 'America/New_York')
+ */
+dayjs.extend(utc)
 dayjs.extend(timezone)
 
 export const dateUtils = {
