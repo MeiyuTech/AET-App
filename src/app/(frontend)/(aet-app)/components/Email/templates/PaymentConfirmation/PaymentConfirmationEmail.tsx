@@ -1,4 +1,6 @@
 import * as React from 'react'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
 
 import {
   Body,
@@ -18,6 +20,9 @@ import CheckoutSummaryCard from '../../CheckoutSummaryCard'
 import { styles, colors } from '../../styles/config'
 
 import { ApplicationData } from '../../../FCEApplicationForm/types'
+
+// enable timezone plugin
+dayjs.extend(timezone)
 
 interface PaymentConfirmationEmailProps {
   applicationId: string
@@ -39,9 +44,12 @@ export const PaymentConfirmationEmail = ({
     throw new Error('Application has not been paid')
   }
 
-  const formattedPaymentDate = new Date(application.paid_at).toLocaleString()
+  // use EST to format date
+  const formattedPaymentDate = dayjs(application.paid_at)
+    .tz('America/New_York')
+    .format('YYYY-MM-DD')
   const formattedCompletionDate = estimatedCompletionDate
-    ? new Date(estimatedCompletionDate).toLocaleDateString()
+    ? dayjs(estimatedCompletionDate).tz('America/New_York').format('YYYY-MM-DD')
     : 'Estimated processing time will be communicated after review'
 
   return (

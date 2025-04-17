@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import timezone from 'dayjs/plugin/timezone'
 
 import { EVALUATION_SERVICES, DELIVERY_OPTIONS, ADDITIONAL_SERVICES } from './constants'
 import {
@@ -16,6 +17,7 @@ import {
 
 dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
+dayjs.extend(timezone)
 
 export const dateUtils = {
   getDaysInMonth(month?: string, year?: string): number {
@@ -49,8 +51,139 @@ export const dateUtils = {
 }
 
 export function getEstimatedCompletionDate(application: ApplicationData | null): string {
-  // TODO: Implement this
-  return dayjs().add(1, 'day').format('YYYY-MM-DD')
+  // Default to 10 days if no application or service type
+  if (!application || !application.serviceType) {
+    return dayjs().add(10, 'day').format('YYYY-MM-DD')
+  }
+
+  // Get paid date
+  const paidDate = dayjs(application.paid_at)
+
+  // Get EST cutoff time at 1:00 PM
+  const estCutoffTime = paidDate.tz('America/New_York').hour(13).minute(0).second(0)
+
+  // Check if paid date is after EST cutoff time
+  const isAfterCutoff = paidDate.tz('America/New_York').isAfter(estCutoffTime)
+
+  // If paid date is after EST cutoff time, start from the next day
+  const startDate = isAfterCutoff ? paidDate.add(1, 'day') : paidDate
+
+  // Calculate max business days
+  let maxBusinessDays = 0
+
+  // Check foreign credential evaluation service
+  if (application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed) {
+    const speed = application.serviceType.foreignCredentialEvaluation.firstDegree.speed
+    let businessDays = 0
+
+    switch (speed) {
+      case '7day':
+        businessDays = 7
+        break
+      case '3day':
+        businessDays = 3
+        break
+      case '24hour':
+        businessDays = 1
+        break
+      case 'sameday':
+        businessDays = 0
+        break
+    }
+
+    maxBusinessDays = Math.max(maxBusinessDays, businessDays)
+  }
+
+  // Check course by course evaluation service
+  if (application.serviceType.coursebyCourse?.firstDegree?.speed) {
+    const speed = application.serviceType.coursebyCourse.firstDegree.speed
+    let businessDays = 0
+
+    switch (speed) {
+      case '8day':
+        businessDays = 8
+        break
+      case '5day':
+        businessDays = 5
+        break
+      case '3day':
+        businessDays = 3
+        break
+      case '24hour':
+        businessDays = 1
+        break
+    }
+
+    maxBusinessDays = Math.max(maxBusinessDays, businessDays)
+  }
+
+  // Check professional experience evaluation service
+  if (application.serviceType.professionalExperience?.speed) {
+    const speed = application.serviceType.professionalExperience.speed
+    let businessDays = 0
+
+    switch (speed) {
+      case '21day':
+        businessDays = 21
+        break
+      case '7day':
+        businessDays = 7
+        break
+      case '3day':
+        businessDays = 3
+        break
+    }
+
+    maxBusinessDays = Math.max(maxBusinessDays, businessDays)
+  }
+
+  // check position evaluation service
+  if (application.serviceType.positionEvaluation?.speed) {
+    const speed = application.serviceType.positionEvaluation.speed
+    let businessDays = 0
+
+    switch (speed) {
+      case '10day':
+        businessDays = 10
+        break
+      case '5day':
+        businessDays = 5
+        break
+      case '3day':
+        businessDays = 3
+        break
+      case '2day':
+        businessDays = 2
+        break
+    }
+
+    maxBusinessDays = Math.max(maxBusinessDays, businessDays)
+  }
+
+  // If no service is selected, default to 10 days
+  if (maxBusinessDays === 0) {
+    return dayjs().add(10, 'day').format('YYYY-MM-DD')
+  }
+
+  // Calculate estimated completion date
+  let completionDate = startDate
+
+  // If same day service, return today
+  if (maxBusinessDays === 0) {
+    return completionDate.format('YYYY-MM-DD')
+  }
+
+  // Add business days
+  let daysToAdd = maxBusinessDays
+  while (daysToAdd > 0) {
+    completionDate = completionDate.add(1, 'day')
+    // Skip weekends (Saturday and Sunday)
+    if (completionDate.day() !== 0 && completionDate.day() !== 6) {
+      daysToAdd--
+    }
+  }
+
+  return completionDate.format('YYYY-MM-DD')
 }
 
 export function calculateTotalPrice(application: ApplicationData | null): string {
