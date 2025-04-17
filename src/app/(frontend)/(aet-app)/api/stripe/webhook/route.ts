@@ -61,13 +61,14 @@ export async function POST(req: Request) {
         })
 
         // Update the application status and payment status
-        const { error } = await client
+        const paidAt = new Date().toISOString()
+        const { error, data: updatedApplicationData } = await client
           .from('fce_applications')
           .update({
             status: 'processing',
             payment_status: 'paid',
             payment_id: session.payment_intent as string,
-            paid_at: new Date().toISOString(),
+            paid_at: paidAt,
           })
           .eq('id', applicationId)
 
@@ -88,7 +89,8 @@ export async function POST(req: Request) {
           throw new Error('No amount total in session')
         }
 
-        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
+        // This applicationData is not updated yet, so we need to use the old one and `paidAt`
+        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
         const paymentAmount = (session.amount_total / 100).toFixed(2)
         const { success: emailSuccess, message: sendEmailMessage } =
           await sendPaymentConfirmationEmail(

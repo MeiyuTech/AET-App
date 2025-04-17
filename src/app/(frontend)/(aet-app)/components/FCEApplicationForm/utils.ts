@@ -60,14 +60,17 @@ export const dateUtils = {
   },
 }
 
-export function getEstimatedCompletionDate(application: ApplicationData | null): string {
+export function getEstimatedCompletionDate(
+  application: ApplicationData | null,
+  paidAt: string
+): string {
   // Default to 10 days if no application or service type
   if (!application || !application.serviceType) {
     return dayjs().add(10, 'day').format('YYYY-MM-DD')
   }
 
   // Get paid date
-  const paidDate = dayjs(application.paid_at)
+  const paidDate = dayjs(paidAt)
 
   // Get EST cutoff time at 1:00 PM
   const estCutoffTime = paidDate.tz('America/New_York').hour(13).minute(0).second(0)
