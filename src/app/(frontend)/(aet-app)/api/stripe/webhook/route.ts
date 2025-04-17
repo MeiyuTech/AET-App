@@ -83,21 +83,26 @@ export async function POST(req: Request) {
           return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
         }
 
-        // Send email to the applicant
-        // const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
-        // const { success: emailSuccess, message: sendEmailMessage } =
-        //   await sendPaymentConfirmationEmail(
-        //     applicationId,
-        //     applicationData,
-        //     session.amount_total?.toString() || '0',
-        //     session.payment_intent as string,
-        //     estimatedCompletionDate
-        //   )
+        // Send payment confirmation email to the applicant
+        if (!session.amount_total) {
+          throw new Error('No amount total in session')
+        }
 
-        // if (!emailSuccess) {
-        //   console.error('Failed to send payment confirmation email:', sendEmailMessage)
-        //   throw new Error('Failed to send payment confirmation email')
-        // }
+        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
+        const paymentAmount = (session.amount_total / 100).toFixed(2)
+        const { success: emailSuccess, message: sendEmailMessage } =
+          await sendPaymentConfirmationEmail(
+            applicationId,
+            applicationData,
+            paymentAmount,
+            session.payment_intent as string,
+            estimatedCompletionDate
+          )
+
+        if (!emailSuccess) {
+          console.error('Failed to send payment confirmation email:', sendEmailMessage)
+          throw new Error('Failed to send payment confirmation email')
+        }
 
         return new NextResponse('Webhook processed', { status: 200 })
       }
