@@ -84,20 +84,20 @@ export async function POST(req: Request) {
         }
 
         // Send email to the applicant
-        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
-        const { success: emailSuccess, message: sendEmailMessage } =
-          await sendPaymentConfirmationEmail(
-            applicationId,
-            applicationData,
-            session.amount_total?.toString() || '0',
-            session.payment_intent as string,
-            estimatedCompletionDate
-          )
+        // const estimatedCompletionDate = getEstimatedCompletionDate(applicationData)
+        // const { success: emailSuccess, message: sendEmailMessage } =
+        //   await sendPaymentConfirmationEmail(
+        //     applicationId,
+        //     applicationData,
+        //     session.amount_total?.toString() || '0',
+        //     session.payment_intent as string,
+        //     estimatedCompletionDate
+        //   )
 
-        if (!emailSuccess) {
-          console.error('Failed to send payment confirmation email:', sendEmailMessage)
-          throw new Error('Failed to send payment confirmation email')
-        }
+        // if (!emailSuccess) {
+        //   console.error('Failed to send payment confirmation email:', sendEmailMessage)
+        //   throw new Error('Failed to send payment confirmation email')
+        // }
 
         return new NextResponse('Webhook processed', { status: 200 })
       }
