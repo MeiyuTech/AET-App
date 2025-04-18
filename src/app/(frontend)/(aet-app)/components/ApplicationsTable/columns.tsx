@@ -84,17 +84,27 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue('created_at'))
-      return date
-        .toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -113,17 +123,27 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue('updated_at'))
-      return date
-        .toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -244,19 +264,19 @@ export const getColumns = ({
       return [firstName, middleName, lastName].filter(Boolean).join(' ')
     },
   },
-  {
-    accessorKey: 'pronouns',
-    header: 'Pronouns',
-    cell: ({ row }) => {
-      const pronouns = row.getValue('pronouns') as string
-      const pronounsMap = {
-        mr: 'Mr.',
-        ms: 'Ms.',
-        mx: 'Mx.',
-      }
-      return pronounsMap[pronouns as keyof typeof pronounsMap] || pronouns
-    },
-  },
+  // {
+  //   accessorKey: 'pronouns',
+  //   header: 'Pronouns',
+  //   cell: ({ row }) => {
+  //     const pronouns = row.getValue('pronouns') as string
+  //     const pronounsMap = {
+  //       mr: 'Mr.',
+  //       ms: 'Ms.',
+  //       mx: 'Mx.',
+  //     }
+  //     return pronounsMap[pronouns as keyof typeof pronounsMap] || pronouns
+  //   },
+  // },
   {
     accessorKey: 'phone',
     header: 'Phone',
@@ -269,25 +289,25 @@ export const getColumns = ({
     accessorKey: 'email',
     header: 'Email',
   },
-  {
-    accessorKey: 'date_of_birth',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
-        >
-          Birth Date
-          <ChevronDown className="ml-2 h-5 w-5" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const date = new Date(row.getValue('date_of_birth'))
-      return date.toISOString().split('T')[0]
-    },
-  },
+  // {
+  //   accessorKey: 'date_of_birth',
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //         className="text-lg font-semibold hover:bg-gray-100"
+  //       >
+  //         Birth Date
+  //         <ChevronDown className="ml-2 h-5 w-5" />
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => {
+  //     const date = new Date(row.getValue('date_of_birth'))
+  //     return date.toISOString().split('T')[0]
+  //   },
+  // },
   {
     accessorKey: 'country',
     header: 'Address',
