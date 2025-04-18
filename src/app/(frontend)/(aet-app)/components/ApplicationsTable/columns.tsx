@@ -513,20 +513,20 @@ export const getColumns = ({
       const paidAt = application.paid_at
       const status = application.status
 
-      // if status is cancelled or completed, don't show the progress bar
-      if (status === 'cancelled' || status === 'completed') {
+      // if status is cancelled, don't show the progress bar
+      if (status === 'cancelled') {
         return 'N/A'
       }
 
-      if (!paidAt || application.payment_status !== 'paid') {
+      // If there is no payment time, display N/A
+      if (!paidAt) {
         return 'N/A'
       }
 
       try {
         // Use the applicant's existing service_type data
-        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
         const applicationData = {
-          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
+          serviceType: application.service_type as any,
           status: application.status,
           submitted_at: application.submitted_at || '',
           due_amount: application.due_amount || 0,
@@ -535,7 +535,6 @@ export const getColumns = ({
           paid_at: application.paid_at,
           additionalServices: application.additional_services as any[],
           additionalServicesQuantity: application.additional_services_quantity,
-          // Convert DatabaseEducation to EducationFormData format
           educationInfo: application.educations?.map((edu) => ({
             countryOfStudy: edu.country_of_study,
             degreeObtained: edu.degree_obtained,
