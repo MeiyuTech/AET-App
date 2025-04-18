@@ -1,4 +1,4 @@
-import { ChevronDown, Eye, Edit, FileText } from 'lucide-react'
+import { ChevronDown, Eye, Edit, FileText, Calendar as CalendarIcon } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
@@ -18,6 +18,8 @@ import { formatDateTime } from '../../utils/dateFormat'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
 import { CompletionProgressBar } from './CompletionProgressBar'
+import { DatePicker } from '@/components/ui/date-picker'
+import { format } from 'date-fns'
 
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
@@ -31,6 +33,7 @@ interface GetColumnsProps {
   setServicesDialogOpen: (open: boolean) => void
   createPaymentLink: (id: string, amount: number) => void
   setFilesDialogOpen: (open: boolean) => void
+  handlePaidAtChange: (id: string, paidAt: Date | null) => Promise<void>
 }
 
 // get the dropbox link for the office
@@ -58,6 +61,7 @@ export const getColumns = ({
   setServicesDialogOpen,
   createPaymentLink,
   setFilesDialogOpen,
+  handlePaidAtChange,
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
@@ -721,27 +725,63 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const paidAt = row.getValue('paid_at')
-      if (!paidAt) return 'N/A'
+      const paymentStatus = row.getValue('payment_status') as string
+      const isEditable = paymentStatus === 'pending' || paymentStatus === 'expired'
+
+      if (!paidAt) {
+        return (
+          <div className="flex items-center gap-2">
+            <span>N/A</span>
+            {isEditable && (
+              <DatePicker
+                date={undefined}
+                setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
+                className="h-8 w-8 p-0"
+              />
+            )}
+          </div>
+        )
+      }
+
       const date = new Date(paidAt as string)
       return (
-        <div className="space-y-1">
-          <div className="font-medium">
-            {date
-              .toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })
-              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+        <div className="flex items-center gap-2">
+          <div className="space-y-1">
+            <div className="font-medium">
+              {date
+                .toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+            </div>
+            <div className="text-gray-600">
+              {date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+              })}
+            </div>
           </div>
-          <div className="text-gray-600">
-            {date.toLocaleTimeString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false,
-            })}
-          </div>
+          {isEditable && (
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => handlePaidAtChange(row.original.id, null)}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <DatePicker
+                date={date}
+                setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
+                className="h-8 w-8 p-0"
+              />
+            </div>
+          )}
         </div>
       )
     },

@@ -39,6 +39,7 @@ import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
 import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
+import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -76,6 +77,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     id: string
     amount: number
   } | null>(null)
+  const [pendingPaidAtChange, setPendingPaidAtChange] = useState<{
+    id: string
+    paidAt: Date | null
+  } | null>(null)
+  const [paidAtConfirmDialogOpen, setPaidAtConfirmDialogOpen] = useState(false)
 
   const supabase = createClient()
 
@@ -445,6 +451,82 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setPaymentLinkDialogOpen(true)
   }
 
+  const handlePaidAtChange = async (id: string, paidAt: Date | null) => {
+    try {
+      const application = applications.find((app) => app.id === id)
+
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      const paymentStatus = application.payment_status
+      if (paymentStatus !== 'pending' && paymentStatus !== 'expired') {
+        toast({
+          title: 'Operation not allowed',
+          description:
+            'Only applications with payment status "Pending" or "Expired" can be modified.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Open confirmation dialog
+      setPendingPaidAtChange({
+        id,
+        paidAt,
+      })
+      setPaidAtConfirmDialogOpen(true)
+    } catch (error) {
+      console.error('Error preparing paid_at change:', error)
+      toast({
+        title: 'Operation failed',
+        description: 'Could not prepare the paid_at change. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const confirmPaidAtChange = async () => {
+    if (!pendingPaidAtChange) return
+
+    try {
+      const { id, paidAt } = pendingPaidAtChange
+      const paid_at = paidAt ? paidAt.toISOString() : null
+
+      // Update paid_at
+      const { error } = await supabase.from('fce_applications').update({ paid_at }).eq('id', id)
+
+      if (error) throw error
+
+      // Update local state
+      setApplications((apps) =>
+        apps.map((app) =>
+          app.id === id
+            ? {
+                ...app,
+                paid_at,
+              }
+            : app
+        )
+      )
+
+      toast({
+        title: 'Payment date updated',
+        description: `Payment date has been ${paidAt ? 'set' : 'cleared'}.`,
+      })
+    } catch (error) {
+      console.error('Error updating payment date:', error)
+      toast({
+        title: 'Update failed',
+        description: 'Could not update the payment date. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setPendingPaidAtChange(null)
+      setPaidAtConfirmDialogOpen(false)
+    }
+  }
+
   const columns = getColumns({
     handleOfficeChange,
     handleStatusChange,
@@ -457,6 +539,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setServicesDialogOpen,
     createPaymentLink: handleCreatePaymentLink,
     setFilesDialogOpen,
+    handlePaidAtChange,
   })
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
@@ -483,6 +566,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       setServicesDialogOpen,
       createPaymentLink: handleCreatePaymentLink,
       setFilesDialogOpen,
+      handlePaidAtChange,
     }),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -692,6 +776,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         onOpenChange={setPaymentStatusConfirmDialogOpen}
         pendingChange={pendingPaymentStatusChange}
         onConfirm={confirmPaymentStatusChange}
+      />
+      <PaidAtConfirmDialog
+        open={paidAtConfirmDialogOpen}
+        onOpenChange={setPaidAtConfirmDialogOpen}
+        pendingChange={pendingPaidAtChange}
+        onConfirm={confirmPaidAtChange}
       />
       <PaymentLinkDialog
         open={paymentLinkDialogOpen}
