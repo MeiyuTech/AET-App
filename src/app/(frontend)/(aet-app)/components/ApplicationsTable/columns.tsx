@@ -649,7 +649,29 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const paidAt = row.getValue('paid_at')
-      return formatDateTime(paidAt as string)
+      if (!paidAt) return 'N/A'
+      const date = new Date(paidAt as string)
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
