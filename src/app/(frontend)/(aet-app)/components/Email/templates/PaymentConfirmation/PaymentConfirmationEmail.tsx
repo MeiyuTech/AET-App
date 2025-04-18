@@ -36,16 +36,15 @@ dayjs.extend(timezone)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 
-// Helper function to determine if a date is in EDT (Daylight Saving Time)
-const isEDT = (date: dayjs.Dayjs): boolean => {
-  const year = date.year()
-  // EDT starts on the second Sunday in March
-  const edtStart = dayjs.tz(`${year}-03-08`, 'America/New_York').day(7).hour(2)
-  // EDT ends on the first Sunday in November
-  const edtEnd = dayjs.tz(`${year}-11-01`, 'America/New_York').day(7).hour(2)
-  return date.isSameOrAfter(edtStart) && date.isBefore(edtEnd)
-}
-
+/**
+ * PaymentConfirmationEmailProps interface
+ * @param applicationId - The ID of the application
+ * @param application - The application data
+ * @param paidAt - The date and time the application was paid (new Date().toISOString())
+ * @param paymentAmount - The amount of the payment
+ * @param paymentId - The ID of the payment
+ * @param estimatedCompletionDate - The estimated completion date (YYYY-MM-DD, already in EST/EDT)
+ */
 interface PaymentConfirmationEmailProps {
   applicationId: string
   application: ApplicationData
@@ -70,12 +69,11 @@ export const PaymentConfirmationEmail = ({
 
   // Format payment date with exact time in EST/EDT
   const nyTime = dayjs(paidAt).tz('America/New_York')
-  const timeZone = isEDT(nyTime) ? 'EDT' : 'EST'
-  const formattedPaymentDate = nyTime.format('YYYY-MM-DD h:mm A ') + timeZone
+  const formattedPaymentDate = nyTime.format('YYYY-MM-DD h:mm A')
 
   // Format completion date with date only (no time)
   const formattedCompletionDate = estimatedCompletionDate
-    ? dayjs(estimatedCompletionDate).tz('America/New_York').format('YYYY-MM-DD')
+    ? dayjs(estimatedCompletionDate).format('YYYY-MM-DD')
     : 'Estimated processing time will be communicated after review'
 
   return (
@@ -102,7 +100,7 @@ export const PaymentConfirmationEmail = ({
                 <Heading style={styles.heading.h2}>Payment Details</Heading>
 
                 <Text style={styles.text.default}>
-                  <strong>Payment Date:</strong> {formattedPaymentDate}
+                  <strong>Payment Date:</strong> {formattedPaymentDate} (EST/EDT)
                 </Text>
 
                 <Text style={styles.text.default}>
@@ -131,9 +129,8 @@ export const PaymentConfirmationEmail = ({
 
                 <Text style={styles.heading.h3}>2. Processing Time</Text>
                 <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
-                  We have started processing your application.
-                  {/* Estimated completion date:{' '}
-                  {formattedCompletionDate} */}
+                  We have started processing your application. Estimated completion date:{' '}
+                  {formattedCompletionDate}
                 </Text>
                 <Text style={styles.text.note}>
                   Note: The delivery deadline may be adjusted if required materials are not uploaded
@@ -180,6 +177,7 @@ PaymentConfirmationEmail.PreviewProps = {
   paidAt: '2023-01-01T10:00:00.000Z',
   paymentAmount: '100.00',
   paymentId: '1234567890',
+  estimatedCompletionDate: '2023-01-15',
 } as PaymentConfirmationEmailProps
 
 export default PaymentConfirmationEmail

@@ -1,11 +1,6 @@
 import * as React from 'react'
 import PaymentConfirmationEmail from './PaymentConfirmationEmail'
-import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
-
-// Define the extended type that includes zipCode
-interface ExtendedApplicationData extends ApplicationData {
-  zipCode?: string
-}
+import { ApplicationData } from '../../../FCEApplicationForm/types'
 
 // Application ID
 const applicationId = 'AET-12345'
@@ -14,10 +9,11 @@ const applicationId = 'AET-12345'
 const paymentAmount = '268.07'
 const paymentDate = new Date().toISOString()
 const transactionId = 'TXN-987654321'
-const estimatedCompletionDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 14 days from now
+// estimatedCompletionDate is in EST/EDT format
+const estimatedCompletionDate = '2025-04-29'
 
 // Preview data
-const previewData: ExtendedApplicationData = {
+const previewData: ApplicationData = {
   firstName: 'VIPUL',
   lastName: 'KEESARA',
   status: 'in_progress',
