@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import dayjs from 'dayjs'
 import { getEstimatedCompletionDate } from './utils'
 import { ApplicationData } from './types'
 
@@ -191,12 +190,6 @@ describe('getEstimatedCompletionDate', () => {
   })
 
   describe('Edge cases', () => {
-    it('should throw error for null application', () => {
-      expect(() => {
-        getEstimatedCompletionDate(null, '2024-03-18T10:00:00.000Z')
-      }).toThrow('Application is null')
-    })
-
     it('should throw error for application with no service type', () => {
       const application = { serviceType: null } as unknown as ApplicationData
       expect(() => {

@@ -64,12 +64,9 @@ export const dateUtils = {
  * Get the estimated completion date for an application
  * @param application - The application data
  * @param paidAt - The date and time the application was paid (new Date().toISOString())
- * @returns The estimated completion date
+ * @returns The estimated completion date (YYYY-MM-DD, EST/EDT)
  */
-export function getEstimatedCompletionDate(
-  application: ApplicationData | null,
-  paidAt: string
-): string {
+export function getEstimatedCompletionDate(application: ApplicationData, paidAt: string): string {
   if (!application) {
     throw new Error('Application is null')
   }
@@ -77,14 +74,14 @@ export function getEstimatedCompletionDate(
     throw new Error('Service type is null')
   }
 
-  // Get paid date
-  const paidDate = dayjs(paidAt)
+  // Get paid date, in EST/EDT format
+  const paidDate = dayjs(paidAt).tz('America/New_York')
 
   // Get EST cutoff time at 1:00 PM
-  const estCutoffTime = paidDate.tz('America/New_York').hour(13).minute(0).second(0)
+  const estCutoffTime = paidDate.hour(13).minute(0).second(0)
 
   // Check if paid date is after EST cutoff time
-  const isAfterCutoff = paidDate.tz('America/New_York').isAfter(estCutoffTime)
+  const isAfterCutoff = paidDate.isAfter(estCutoffTime)
 
   // If paid date is after EST cutoff time, start from the next day
   const startDate = isAfterCutoff ? paidDate.add(1, 'day') : paidDate
@@ -193,7 +190,7 @@ export function getEstimatedCompletionDate(
 
   // Handle same day service
   if (isSameDayService) {
-    // If it's a weekend, move to next business day
+    // Skip weekend, move to next business day
     while (completionDate.day() === 0 || completionDate.day() === 6) {
       completionDate = completionDate.add(1, 'day')
     }
