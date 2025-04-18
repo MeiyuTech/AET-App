@@ -217,13 +217,20 @@ export const getColumns = ({
     header: () => <div className="text-center">ID</div>,
     cell: ({ row }) => {
       const id = row.getValue('id') as string
+      // Split UUID into three parts for better readability
+      const parts = id.split('-')
+      const firstPart = parts.slice(0, 2).join('-')
+      const secondPart = parts.slice(2, 4).join('-')
+      const thirdPart = parts[4]
       return (
         <Link
           href={`../status?applicationId=${id}`}
           target="_blank"
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline text-sm block w-[140px]"
         >
-          {id}
+          <div>{firstPart}</div>
+          <div>{secondPart}</div>
+          <div>{thirdPart}</div>
         </Link>
       )
     },
@@ -261,7 +268,11 @@ export const getColumns = ({
       const firstName = row.getValue('first_name') as string
       const middleName = row.original.middle_name
       const lastName = row.original.last_name
-      return [firstName, middleName, lastName].filter(Boolean).join(' ')
+      return (
+        <div className="w-[160px] break-words">
+          {[firstName, middleName, lastName].filter(Boolean).join(' ')}
+        </div>
+      )
     },
   },
   // {
@@ -351,7 +362,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'educations',
-    header: () => <div className="text-center">Education Info</div>,
+    header: () => <div className="text-center">Educations</div>,
     cell: ({ row }) => {
       return (
         <Button
@@ -477,6 +488,67 @@ export const getColumns = ({
           </DropdownMenu>
         </div>
       )
+    },
+  },
+  {
+    id: 'estimated_completion_date',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Estimated Completion Date
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const application = row.original
+      const paidAt = application.paid_at
+      const status = application.status
+
+      // if status is cancelled or completed, don't show the progress bar
+      if (status === 'cancelled' || status === 'completed') {
+        return 'N/A'
+      }
+
+      if (!paidAt || application.payment_status !== 'paid') {
+        return 'N/A'
+      }
+
+      try {
+        // Use the applicant's existing service_type data
+        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
+        const applicationData = {
+          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
+          status: application.status,
+          submitted_at: application.submitted_at || '',
+          due_amount: application.due_amount || 0,
+          payment_status: application.payment_status,
+          payment_id: application.payment_id,
+          paid_at: application.paid_at,
+          additionalServices: application.additional_services as any[],
+          additionalServicesQuantity: application.additional_services_quantity,
+          // Convert DatabaseEducation to EducationFormData format
+          educationInfo: application.educations?.map((edu) => ({
+            countryOfStudy: edu.country_of_study,
+            degreeObtained: edu.degree_obtained,
+            schoolName: edu.school_name,
+            studyDuration: {
+              startDate: edu.study_start_date,
+              endDate: edu.study_end_date,
+            },
+          })),
+        }
+
+        const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
+        return <CompletionProgressBar estimatedDate={estimatedDate} />
+      } catch (error) {
+        console.error('Error calculating estimated completion date:', error)
+        return 'N/A'
+      }
     },
   },
   {
@@ -672,67 +744,6 @@ export const getColumns = ({
           </div>
         </div>
       )
-    },
-  },
-  {
-    id: 'estimated_completion_date',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
-        >
-          Estimated Completion
-          <ChevronDown className="ml-2 h-5 w-5" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const application = row.original
-      const paidAt = application.paid_at
-      const status = application.status
-
-      // if status is cancelled or completed, don't show the progress bar
-      if (status === 'cancelled' || status === 'completed') {
-        return 'N/A'
-      }
-
-      if (!paidAt || application.payment_status !== 'paid') {
-        return 'N/A'
-      }
-
-      try {
-        // Use the applicant's existing service_type data
-        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
-        const applicationData = {
-          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
-          status: application.status,
-          submitted_at: application.submitted_at || '',
-          due_amount: application.due_amount || 0,
-          payment_status: application.payment_status,
-          payment_id: application.payment_id,
-          paid_at: application.paid_at,
-          additionalServices: application.additional_services as any[],
-          additionalServicesQuantity: application.additional_services_quantity,
-          // Convert DatabaseEducation to EducationFormData format
-          educationInfo: application.educations?.map((edu) => ({
-            countryOfStudy: edu.country_of_study,
-            degreeObtained: edu.degree_obtained,
-            schoolName: edu.school_name,
-            studyDuration: {
-              startDate: edu.study_start_date,
-              endDate: edu.study_end_date,
-            },
-          })),
-        }
-
-        const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
-        return <CompletionProgressBar estimatedDate={estimatedDate} />
-      } catch (error) {
-        console.error('Error calculating estimated completion date:', error)
-        return 'N/A'
-      }
     },
   },
   {
