@@ -18,7 +18,7 @@ import { formatDateTime } from '../../utils/dateFormat'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
 import { CompletionProgressBar } from './CompletionProgressBar'
-import { DatePicker } from '@/components/ui/date-picker'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { format } from 'date-fns'
 
 interface GetColumnsProps {
@@ -733,7 +733,7 @@ export const getColumns = ({
           <div className="flex items-center gap-2">
             <span>N/A</span>
             {isEditable && (
-              <DatePicker
+              <DateTimePicker
                 date={undefined}
                 setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
                 className="h-8 w-8 p-0"
@@ -775,7 +775,7 @@ export const getColumns = ({
               >
                 <Edit className="h-4 w-4" />
               </Button>
-              <DatePicker
+              <DateTimePicker
                 date={date}
                 setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
                 className="h-8 w-8 p-0"
