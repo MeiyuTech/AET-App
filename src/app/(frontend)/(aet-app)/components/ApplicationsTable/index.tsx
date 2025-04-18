@@ -595,13 +595,13 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
             position: 'relative',
           }}
         >
-          <div style={{ minWidth: '2400px' }}>
+          <div style={{ minWidth: '2200px' }}>
             <Table className="text-base">
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} className="text-lg font-semibold py-6 px-4">
+                      <TableHead key={header.id} className="text-lg font-semibold py-6 px-2">
                         {header.isPlaceholder
                           ? null
                           : flexRender(header.column.columnDef.header, header.getContext())}
@@ -615,7 +615,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
                   table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="text-base py-4 px-4">
+                        <TableCell key={cell.id} className="text-base py-4 px-2">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}

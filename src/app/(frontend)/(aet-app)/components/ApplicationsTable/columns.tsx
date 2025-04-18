@@ -357,7 +357,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedEducations(row.original.educations)
             setDialogOpen(true)
@@ -376,7 +376,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedApplication(row.original)
             setServicesDialogOpen(true)
@@ -395,7 +395,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedApplication(row.original)
             setFilesDialogOpen(true)
@@ -433,7 +433,7 @@ export const getColumns = ({
 
       return (
         <div className="flex items-center">
-          <div className={`capitalize font-medium mr-3 text-base ${getStatusColor(status)}`}>
+          <div className={`capitalize font-medium mr-2 text-base ${getStatusColor(status)}`}>
             {status}
           </div>
           <DropdownMenu>
@@ -441,7 +441,7 @@ export const getColumns = ({
               <Button
                 variant="ghost"
                 size="default"
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 px-1"
                 disabled={!isEditable}
               >
                 <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
@@ -506,7 +506,7 @@ export const getColumns = ({
               <Button
                 variant="ghost"
                 size="default"
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 px-1"
                 disabled={!isEditable}
               >
                 <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
@@ -596,13 +596,13 @@ export const getColumns = ({
       return (
         <div className="flex items-center">
           <div
-            className={`capitalize font-medium mr-3 text-base ${getPaymentStatusColor(paymentStatus)}`}
+            className={`capitalize font-medium mr-2 text-base ${getPaymentStatusColor(paymentStatus)}`}
           >
             {paymentStatus}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="default" className="hover:bg-gray-100">
+              <Button variant="ghost" size="default" className="hover:bg-gray-100 px-1">
                 <Edit className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
@@ -691,6 +691,12 @@ export const getColumns = ({
     cell: ({ row }) => {
       const application = row.original
       const paidAt = application.paid_at
+      const status = application.status
+
+      // if status is cancelled or completed, don't show the progress bar
+      if (status === 'cancelled' || status === 'completed') {
+        return 'N/A'
+      }
 
       if (!paidAt || application.payment_status !== 'paid') {
         return 'N/A'
