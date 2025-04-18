@@ -131,8 +131,9 @@ export const PaymentConfirmationEmail = ({
 
                 <Text style={styles.heading.h3}>2. Processing Time</Text>
                 <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
-                  We have started processing your application. Estimated completion date:{' '}
-                  {formattedCompletionDate}
+                  We have started processing your application.
+                  {/* Estimated completion date:{' '}
+                  {formattedCompletionDate} */}
                 </Text>
                 <Text style={styles.text.note}>
                   Note: The delivery deadline may be adjusted if required materials are not uploaded
