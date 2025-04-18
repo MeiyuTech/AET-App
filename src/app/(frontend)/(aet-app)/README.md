@@ -8,7 +8,7 @@
 - [x] Dropbox refresh token
 - [x] Customized Service
 - [x] Email sending
-- [ ] clean up payment code!!!
+- [x] clean up payment code!!!
 - [x] Upload file for each user
 - [x] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
 - [x] Add 'payment_amount' in supabase
@@ -30,7 +30,7 @@
 - [x] 2.其中 evaluation 要分： immigration，employment，education
 - [x] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
 - [ ] 4.translation 在提交之前上传文件
-- [ ] 5.在确认邮件里增加一个支付按钮。
+- [x] 5.在确认邮件里增加一个支付按钮。
 - [x] 加急付款只能用 zelle，提到 stripe 有手续费
 - [x] 默认要pdf。
 - [x] email 里提醒大家 reply all。
@@ -38,7 +38,7 @@
 - [x] 6.单独显示 first name， last name， middle name
 - [x] sf 邮箱要确认一下！！！
 - [x] Old ApplicationForm is kinda **deprecated**
-- [ ] Add a button to dropbox folder for each order.
+- [x] Add a button to dropbox folder for each order.
 - [x] Add a Loading button for payment
 - [x] use components for Reviews
 - [ ] Better layout for Status page
@@ -57,7 +57,8 @@
 - [x] 调整邮件格式，增加更明显的用户引导
 - [x] 在用户上传文件后，后台可以 check 他的文件是否正确，
 - [ ] 上传文件后，发送邮件确认 （zhao）
-- [ ] Stripe 完成付款后，发送邮件进行确认。（tong）
+- [x] Stripe 完成付款后，发送邮件进行确认。（tong）
+- [x] CRM 处理进度 可视化。
 - [ ] 要有邮件发送的倒计时（zhao）
 - [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
 - [ ] 增加付款的倒计时（暂时设置成半小时）
@@ -68,8 +69,6 @@
 - [x] Stripe 的 bank transfer 太慢了。 1-3 天。我们取消了。
 - [x] 不能把 paid 重写为 expired
 - [ ] fix `exportinterfaceApplicationextendsOmit<DatabaseApplication,'service_type'|'educations'>`
-- [ ]
-- [ ]
 - [ ]
 
 ## Features
