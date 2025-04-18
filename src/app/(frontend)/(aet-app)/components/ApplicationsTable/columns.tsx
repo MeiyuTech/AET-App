@@ -16,6 +16,7 @@ import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
 import { formatDateTime } from '../../utils/dateFormat'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
+import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
 
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
@@ -595,6 +596,73 @@ export const getColumns = ({
     cell: ({ row }) => {
       const paidAt = row.getValue('paid_at')
       return formatDateTime(paidAt as string)
+    },
+  },
+  {
+    id: 'estimated_completion_date',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Estimated Completion
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const application = row.original
+      const paidAt = application.paid_at
+
+      if (!paidAt || application.payment_status !== 'paid') {
+        return 'N/A'
+      }
+
+      try {
+        // Convert Application to ApplicationData format for getEstimatedCompletionDate
+        const applicationData = {
+          // Create a proper serviceType structure
+          serviceType: {
+            customizedService: { required: false },
+            foreignCredentialEvaluation: {
+              firstDegree: { speed: undefined },
+              secondDegrees: 0,
+            },
+            coursebyCourse: {
+              firstDegree: { speed: undefined },
+              secondDegrees: 0,
+            },
+            professionalExperience: { speed: undefined },
+            positionEvaluation: { speed: undefined },
+            translation: { required: false },
+          },
+          status: application.status,
+          submitted_at: application.submitted_at || '',
+          due_amount: application.due_amount || 0,
+          payment_status: application.payment_status,
+          payment_id: application.payment_id,
+          paid_at: application.paid_at,
+          additionalServices: application.additional_services as any[],
+          additionalServicesQuantity: application.additional_services_quantity,
+          // Convert DatabaseEducation to EducationFormData format
+          educationInfo: application.educations?.map((edu) => ({
+            countryOfStudy: edu.country_of_study,
+            degreeObtained: edu.degree_obtained,
+            schoolName: edu.school_name,
+            studyDuration: {
+              startDate: edu.study_start_date,
+              endDate: edu.study_end_date,
+            },
+          })),
+        }
+
+        const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
+        return estimatedDate
+      } catch (error) {
+        console.error('Error calculating estimated completion date:', error)
+        return 'N/A'
+      }
     },
   },
   {

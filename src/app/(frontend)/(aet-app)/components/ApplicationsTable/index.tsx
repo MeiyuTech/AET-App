@@ -30,7 +30,6 @@ import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
 import { ServicesDetailsDialog } from './ServicesDetailsDialog'
-import { FilesDialog } from './FilesDialog'
 import {
   DueAmountConfirmDialog,
   StatusConfirmDialog,
@@ -38,6 +37,7 @@ import {
 } from './ConfirmationDialogs'
 import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
+import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
