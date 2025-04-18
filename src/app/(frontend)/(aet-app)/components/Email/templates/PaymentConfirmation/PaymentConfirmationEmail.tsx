@@ -2,6 +2,8 @@ import * as React from 'react'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 
 import {
   Body,
@@ -31,6 +33,18 @@ import { ApplicationData } from '../../../FCEApplicationForm/types'
  */
 dayjs.extend(utc)
 dayjs.extend(timezone)
+dayjs.extend(isSameOrBefore)
+dayjs.extend(isSameOrAfter)
+
+// Helper function to determine if a date is in EDT (Daylight Saving Time)
+const isEDT = (date: dayjs.Dayjs): boolean => {
+  const year = date.year()
+  // EDT starts on the second Sunday in March
+  const edtStart = dayjs.tz(`${year}-03-08`, 'America/New_York').day(7).hour(2)
+  // EDT ends on the first Sunday in November
+  const edtEnd = dayjs.tz(`${year}-11-01`, 'America/New_York').day(7).hour(2)
+  return date.isSameOrAfter(edtStart) && date.isBefore(edtEnd)
+}
 
 interface PaymentConfirmationEmailProps {
   applicationId: string
@@ -54,8 +68,12 @@ export const PaymentConfirmationEmail = ({
     throw new Error('Application has not been paid')
   }
 
-  // use EST to format date
-  const formattedPaymentDate = dayjs(paidAt).tz('America/New_York').format('YYYY-MM-DD')
+  // Format payment date with exact time in EST/EDT
+  const nyTime = dayjs(paidAt).tz('America/New_York')
+  const timeZone = isEDT(nyTime) ? 'EDT' : 'EST'
+  const formattedPaymentDate = nyTime.format('YYYY-MM-DD h:mm A ') + timeZone
+
+  // Format completion date with date only (no time)
   const formattedCompletionDate = estimatedCompletionDate
     ? dayjs(estimatedCompletionDate).tz('America/New_York').format('YYYY-MM-DD')
     : 'Estimated processing time will be communicated after review'
@@ -158,7 +176,7 @@ PaymentConfirmationEmail.PreviewProps = {
     firstName: 'John',
     lastName: 'Doe',
   },
-  paidAt: '2023-01-01',
+  paidAt: '2023-01-01T10:00:00.000Z',
   paymentAmount: '100.00',
   paymentId: '1234567890',
 } as PaymentConfirmationEmailProps
