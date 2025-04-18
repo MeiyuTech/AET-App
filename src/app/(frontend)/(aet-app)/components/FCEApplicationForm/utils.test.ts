@@ -74,6 +74,15 @@ describe('getEstimatedCompletionDate', () => {
       const result = getEstimatedCompletionDate(application, paidAt)
       expect(result).toBe('2024-03-18') // Next business day (Monday)
     })
+
+    it('should handle same-day service in 2025', () => {
+      const application = createMockApplication({
+        foreignCredentialEvaluation: { firstDegree: { speed: 'sameday' }, secondDegrees: 0 },
+      })
+      const paidAt = '2025-04-17T22:00:00.000Z' // 22:00 UTC (6:00 PM EST, Thursday)
+      const result = getEstimatedCompletionDate(application, paidAt)
+      expect(result).toBe('2025-04-18') // Next business day (Friday)
+    })
   })
 
   describe('Course by Course Evaluation', () => {
