@@ -61,7 +61,7 @@ export const getColumns = ({
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
-    header: '#',
+    header: () => <div className="text-center">#</div>,
     cell: ({ table, row }) => {
       const rows = table.getRowModel().rows
       const index = rows.findIndex((r) => r.id === row.id)
@@ -75,7 +75,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Created At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -114,7 +114,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Updated At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -153,7 +153,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Office
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -214,7 +214,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: () => <div className="text-center">ID</div>,
     cell: ({ row }) => {
       const id = row.getValue('id') as string
       return (
@@ -250,7 +250,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Evaluee Name
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -266,7 +266,7 @@ export const getColumns = ({
   },
   // {
   //   accessorKey: 'pronouns',
-  //   header: 'Pronouns',
+  //   header: () => <div className="text-center">Pronouns</div>,
   //   cell: ({ row }) => {
   //     const pronouns = row.getValue('pronouns') as string
   //     const pronounsMap = {
@@ -277,18 +277,18 @@ export const getColumns = ({
   //     return pronounsMap[pronouns as keyof typeof pronounsMap] || pronouns
   //   },
   // },
-  {
-    accessorKey: 'phone',
-    header: 'Phone',
-    cell: ({ row }) => {
-      const phone = row.getValue('phone') as string
-      return phone || 'N/A'
-    },
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
+  // {
+  //   accessorKey: 'phone',
+  //   header: () => <div className="text-center">Phone</div>,
+  //   cell: ({ row }) => {
+  //     const phone = row.getValue('phone') as string
+  //     return phone || 'N/A'
+  //   },
+  // },
+  // {
+  //   accessorKey: 'email',
+  //   header: () => <div className="text-center">Email</div>,
+  // },
   // {
   //   accessorKey: 'date_of_birth',
   //   header: ({ column }) => {
@@ -308,27 +308,27 @@ export const getColumns = ({
   //     return date.toISOString().split('T')[0]
   //   },
   // },
-  {
-    accessorKey: 'country',
-    header: 'Address',
-    cell: ({ row }) => {
-      const streetAddress = row.original.street_address
-      const streetAddress2 = row.original.street_address2
-      const city = row.original.city
-      const region = row.original.region
-      const zipCode = row.original.zip_code
-      const country = row.getValue('country') as string
+  // {
+  //   accessorKey: 'country',
+  //   header: () => <div className="text-center">Address</div>,
+  //   cell: ({ row }) => {
+  //     const streetAddress = row.original.street_address
+  //     const streetAddress2 = row.original.street_address2
+  //     const city = row.original.city
+  //     const region = row.original.region
+  //     const zipCode = row.original.zip_code
+  //     const country = row.getValue('country') as string
 
-      const addressParts = [
-        streetAddress,
-        streetAddress2,
-        [city, region, zipCode].filter(Boolean).join(' '),
-        country,
-      ]
+  //     const addressParts = [
+  //       streetAddress,
+  //       streetAddress2,
+  //       [city, region, zipCode].filter(Boolean).join(' '),
+  //       country,
+  //     ]
 
-      return addressParts.filter(Boolean).join(', ')
-    },
-  },
+  //     return addressParts.filter(Boolean).join(', ')
+  //   },
+  // },
   {
     accessorKey: 'purpose',
     header: ({ column }) => {
@@ -336,7 +336,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Purpose
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -351,7 +351,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'educations',
-    header: 'Education Info',
+    header: () => <div className="text-center">Education Info</div>,
     cell: ({ row }) => {
       return (
         <Button
@@ -370,7 +370,7 @@ export const getColumns = ({
   },
   {
     id: 'services',
-    header: 'Services',
+    header: () => <div className="text-center">Services</div>,
     cell: ({ row }) => {
       return (
         <Button
@@ -389,7 +389,7 @@ export const getColumns = ({
   },
   {
     id: 'files',
-    header: 'Files',
+    header: () => <div className="text-center">Files</div>,
     cell: ({ row }) => {
       return (
         <Button
@@ -413,7 +413,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Status
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -486,7 +486,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Due Amount
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -580,7 +580,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Payment Status
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -640,7 +640,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Paid At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -681,7 +681,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Estimated Completion
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -731,7 +731,7 @@ export const getColumns = ({
   },
   {
     accessorKey: 'payment_id',
-    header: 'Payment ID (notes）',
+    header: () => <div className="text-center">Payment ID (notes）</div>,
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
   },
 ]

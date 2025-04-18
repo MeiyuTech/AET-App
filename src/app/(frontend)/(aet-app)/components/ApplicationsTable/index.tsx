@@ -595,7 +595,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
             position: 'relative',
           }}
         >
-          <div style={{ minWidth: '3000px' }}>
+          <div style={{ minWidth: '2400px' }}>
             <Table className="text-base">
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
