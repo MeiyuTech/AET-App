@@ -61,7 +61,7 @@ export const getColumns = ({
 }: GetColumnsProps): ColumnDef<Application>[] => [
   {
     id: 'index',
-    header: '#',
+    header: () => <div className="text-center">#</div>,
     cell: ({ table, row }) => {
       const rows = table.getRowModel().rows
       const index = rows.findIndex((r) => r.id === row.id)
@@ -75,7 +75,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Created At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -84,17 +84,27 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue('created_at'))
-      return date
-        .toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -104,7 +114,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Updated At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -113,17 +123,27 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue('updated_at'))
-      return date
-        .toLocaleString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2')
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -133,7 +153,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Office
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -194,16 +214,23 @@ export const getColumns = ({
   },
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: () => <div className="text-center">ID</div>,
     cell: ({ row }) => {
       const id = row.getValue('id') as string
+      // Split UUID into three parts for better readability
+      const parts = id.split('-')
+      const firstPart = parts.slice(0, 2).join('-')
+      const secondPart = parts.slice(2, 4).join('-')
+      const thirdPart = parts[4]
       return (
         <Link
           href={`../status?applicationId=${id}`}
           target="_blank"
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline text-sm block w-[140px]"
         >
-          {id}
+          <div>{firstPart}</div>
+          <div>{secondPart}</div>
+          <div>{thirdPart}</div>
         </Link>
       )
     },
@@ -230,7 +257,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Evaluee Name
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -241,74 +268,78 @@ export const getColumns = ({
       const firstName = row.getValue('first_name') as string
       const middleName = row.original.middle_name
       const lastName = row.original.last_name
-      return [firstName, middleName, lastName].filter(Boolean).join(' ')
-    },
-  },
-  {
-    accessorKey: 'pronouns',
-    header: 'Pronouns',
-    cell: ({ row }) => {
-      const pronouns = row.getValue('pronouns') as string
-      const pronounsMap = {
-        mr: 'Mr.',
-        ms: 'Ms.',
-        mx: 'Mx.',
-      }
-      return pronounsMap[pronouns as keyof typeof pronounsMap] || pronouns
-    },
-  },
-  {
-    accessorKey: 'phone',
-    header: 'Phone',
-    cell: ({ row }) => {
-      const phone = row.getValue('phone') as string
-      return phone || 'N/A'
-    },
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'date_of_birth',
-    header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
-        >
-          Birth Date
-          <ChevronDown className="ml-2 h-5 w-5" />
-        </Button>
+        <div className="w-[160px] break-words">
+          {[firstName, middleName, lastName].filter(Boolean).join(' ')}
+        </div>
       )
     },
-    cell: ({ row }) => {
-      const date = new Date(row.getValue('date_of_birth'))
-      return date.toISOString().split('T')[0]
-    },
   },
-  {
-    accessorKey: 'country',
-    header: 'Address',
-    cell: ({ row }) => {
-      const streetAddress = row.original.street_address
-      const streetAddress2 = row.original.street_address2
-      const city = row.original.city
-      const region = row.original.region
-      const zipCode = row.original.zip_code
-      const country = row.getValue('country') as string
+  // {
+  //   accessorKey: 'pronouns',
+  //   header: () => <div className="text-center">Pronouns</div>,
+  //   cell: ({ row }) => {
+  //     const pronouns = row.getValue('pronouns') as string
+  //     const pronounsMap = {
+  //       mr: 'Mr.',
+  //       ms: 'Ms.',
+  //       mx: 'Mx.',
+  //     }
+  //     return pronounsMap[pronouns as keyof typeof pronounsMap] || pronouns
+  //   },
+  // },
+  // {
+  //   accessorKey: 'phone',
+  //   header: () => <div className="text-center">Phone</div>,
+  //   cell: ({ row }) => {
+  //     const phone = row.getValue('phone') as string
+  //     return phone || 'N/A'
+  //   },
+  // },
+  // {
+  //   accessorKey: 'email',
+  //   header: () => <div className="text-center">Email</div>,
+  // },
+  // {
+  //   accessorKey: 'date_of_birth',
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //         className="text-lg font-semibold hover:bg-gray-100"
+  //       >
+  //         Birth Date
+  //         <ChevronDown className="ml-2 h-5 w-5" />
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => {
+  //     const date = new Date(row.getValue('date_of_birth'))
+  //     return date.toISOString().split('T')[0]
+  //   },
+  // },
+  // {
+  //   accessorKey: 'country',
+  //   header: () => <div className="text-center">Address</div>,
+  //   cell: ({ row }) => {
+  //     const streetAddress = row.original.street_address
+  //     const streetAddress2 = row.original.street_address2
+  //     const city = row.original.city
+  //     const region = row.original.region
+  //     const zipCode = row.original.zip_code
+  //     const country = row.getValue('country') as string
 
-      const addressParts = [
-        streetAddress,
-        streetAddress2,
-        [city, region, zipCode].filter(Boolean).join(' '),
-        country,
-      ]
+  //     const addressParts = [
+  //       streetAddress,
+  //       streetAddress2,
+  //       [city, region, zipCode].filter(Boolean).join(' '),
+  //       country,
+  //     ]
 
-      return addressParts.filter(Boolean).join(', ')
-    },
-  },
+  //     return addressParts.filter(Boolean).join(', ')
+  //   },
+  // },
   {
     accessorKey: 'purpose',
     header: ({ column }) => {
@@ -316,7 +347,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Purpose
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -331,13 +362,13 @@ export const getColumns = ({
   },
   {
     accessorKey: 'educations',
-    header: 'Education Info',
+    header: () => <div className="text-center">Educations</div>,
     cell: ({ row }) => {
       return (
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedEducations(row.original.educations)
             setDialogOpen(true)
@@ -350,13 +381,13 @@ export const getColumns = ({
   },
   {
     id: 'services',
-    header: 'Services',
+    header: () => <div className="text-center">Services</div>,
     cell: ({ row }) => {
       return (
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedApplication(row.original)
             setServicesDialogOpen(true)
@@ -369,13 +400,13 @@ export const getColumns = ({
   },
   {
     id: 'files',
-    header: 'Files',
+    header: () => <div className="text-center">Files</div>,
     cell: ({ row }) => {
       return (
         <Button
           variant="ghost"
           size="default"
-          className="hover:bg-gray-100"
+          className="hover:bg-gray-100 px-1"
           onClick={() => {
             setSelectedApplication(row.original)
             setFilesDialogOpen(true)
@@ -393,7 +424,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Status
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -413,7 +444,7 @@ export const getColumns = ({
 
       return (
         <div className="flex items-center">
-          <div className={`capitalize font-medium mr-3 text-base ${getStatusColor(status)}`}>
+          <div className={`capitalize font-medium mr-2 text-base ${getStatusColor(status)}`}>
             {status}
           </div>
           <DropdownMenu>
@@ -421,7 +452,7 @@ export const getColumns = ({
               <Button
                 variant="ghost"
                 size="default"
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 px-1"
                 disabled={!isEditable}
               >
                 <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
@@ -460,13 +491,74 @@ export const getColumns = ({
     },
   },
   {
+    id: 'estimated_completion_date',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Estimated Completion Date
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const application = row.original
+      const paidAt = application.paid_at
+      const status = application.status
+
+      // if status is cancelled or completed, don't show the progress bar
+      if (status === 'cancelled' || status === 'completed') {
+        return 'N/A'
+      }
+
+      if (!paidAt || application.payment_status !== 'paid') {
+        return 'N/A'
+      }
+
+      try {
+        // Use the applicant's existing service_type data
+        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
+        const applicationData = {
+          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
+          status: application.status,
+          submitted_at: application.submitted_at || '',
+          due_amount: application.due_amount || 0,
+          payment_status: application.payment_status,
+          payment_id: application.payment_id,
+          paid_at: application.paid_at,
+          additionalServices: application.additional_services as any[],
+          additionalServicesQuantity: application.additional_services_quantity,
+          // Convert DatabaseEducation to EducationFormData format
+          educationInfo: application.educations?.map((edu) => ({
+            countryOfStudy: edu.country_of_study,
+            degreeObtained: edu.degree_obtained,
+            schoolName: edu.school_name,
+            studyDuration: {
+              startDate: edu.study_start_date,
+              endDate: edu.study_end_date,
+            },
+          })),
+        }
+
+        const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
+        return <CompletionProgressBar estimatedDate={estimatedDate} />
+      } catch (error) {
+        console.error('Error calculating estimated completion date:', error)
+        return 'N/A'
+      }
+    },
+  },
+  {
     accessorKey: 'due_amount',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Due Amount
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -486,7 +578,7 @@ export const getColumns = ({
               <Button
                 variant="ghost"
                 size="default"
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 px-1"
                 disabled={!isEditable}
               >
                 <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
@@ -560,7 +652,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Payment Status
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -576,13 +668,13 @@ export const getColumns = ({
       return (
         <div className="flex items-center">
           <div
-            className={`capitalize font-medium mr-3 text-base ${getPaymentStatusColor(paymentStatus)}`}
+            className={`capitalize font-medium mr-2 text-base ${getPaymentStatusColor(paymentStatus)}`}
           >
             {paymentStatus}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="default" className="hover:bg-gray-100">
+              <Button variant="ghost" size="default" className="hover:bg-gray-100 px-1">
                 <Edit className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
@@ -620,7 +712,7 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Paid At
           <ChevronDown className="ml-2 h-5 w-5" />
@@ -629,67 +721,34 @@ export const getColumns = ({
     },
     cell: ({ row }) => {
       const paidAt = row.getValue('paid_at')
-      return formatDateTime(paidAt as string)
-    },
-  },
-  {
-    id: 'estimated_completion_date',
-    header: ({ column }) => {
+      if (!paidAt) return 'N/A'
+      const date = new Date(paidAt as string)
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-lg font-semibold hover:bg-gray-100"
-        >
-          Estimated Completion
-          <ChevronDown className="ml-2 h-5 w-5" />
-        </Button>
+        <div className="space-y-1">
+          <div className="font-medium">
+            {date
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
       )
-    },
-    cell: ({ row }) => {
-      const application = row.original
-      const paidAt = application.paid_at
-
-      if (!paidAt || application.payment_status !== 'paid') {
-        return 'N/A'
-      }
-
-      try {
-        // Use the applicant's existing service_type data
-        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
-        const applicationData = {
-          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
-          status: application.status,
-          submitted_at: application.submitted_at || '',
-          due_amount: application.due_amount || 0,
-          payment_status: application.payment_status,
-          payment_id: application.payment_id,
-          paid_at: application.paid_at,
-          additionalServices: application.additional_services as any[],
-          additionalServicesQuantity: application.additional_services_quantity,
-          // Convert DatabaseEducation to EducationFormData format
-          educationInfo: application.educations?.map((edu) => ({
-            countryOfStudy: edu.country_of_study,
-            degreeObtained: edu.degree_obtained,
-            schoolName: edu.school_name,
-            studyDuration: {
-              startDate: edu.study_start_date,
-              endDate: edu.study_end_date,
-            },
-          })),
-        }
-
-        const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
-        return <CompletionProgressBar estimatedDate={estimatedDate} />
-      } catch (error) {
-        console.error('Error calculating estimated completion date:', error)
-        return 'N/A'
-      }
     },
   },
   {
     accessorKey: 'payment_id',
-    header: 'Payment ID (notes）',
+    header: () => <div className="text-center">Payment ID (notes）</div>,
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
   },
 ]

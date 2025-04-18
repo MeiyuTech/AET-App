@@ -71,7 +71,7 @@ export function CompletionProgressBar({ estimatedDate, className }: CompletionPr
         />
       </div>
       <div className="text-base text-gray-600 font-medium">
-        ETD: {estimatedCompletionDate.format('YYYY-MM-DD')}
+        {estimatedCompletionDate.format('YYYY-MM-DD')}
       </div>
     </div>
   )
