@@ -766,21 +766,11 @@ export const getColumns = ({
             </div>
           </div>
           {isEditable && (
-            <div className="flex gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handlePaidAtChange(row.original.id, null)}
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-              <DateTimePicker
-                date={date}
-                setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
-                className="h-8 w-8 p-0"
-              />
-            </div>
+            <DateTimePicker
+              date={date}
+              setDate={(newDate) => handlePaidAtChange(row.original.id, newDate || null)}
+              className="h-8 w-8 p-0"
+            />
           )}
         </div>
       )
