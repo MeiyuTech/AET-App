@@ -25,19 +25,23 @@ export function CompletionProgressBar({ estimatedDate, className }: CompletionPr
   // Determine progress bar status and color
   let status: 'on-track' | 'at-risk' | 'overdue' = 'on-track'
   let progressColor = 'bg-green-500'
+  let textColor = 'text-green-700'
 
   if (daysDifference < 0) {
     // Past the estimated completion date
     status = 'overdue'
     progressColor = 'bg-red-500'
+    textColor = 'text-red-700'
   } else if (daysDifference <= 2) {
     // Approaching deadline
     status = 'at-risk'
     progressColor = 'bg-yellow-500'
+    textColor = 'text-yellow-700'
   } else if (daysDifference > 7) {
     // Plenty of time remaining
     status = 'on-track'
     progressColor = 'bg-green-500'
+    textColor = 'text-green-700'
   }
 
   // Calculate progress percentage (based on estimated completion date)
@@ -47,27 +51,27 @@ export function CompletionProgressBar({ estimatedDate, className }: CompletionPr
   const progressPercentage = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100))
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className="flex justify-between text-xs mb-1">
-        <span className="font-medium">
+    <div className={cn('w-full space-y-2', className)}>
+      <div className="flex justify-between text-base font-medium">
+        <span className={cn('font-semibold', textColor)}>
           {status === 'on-track' && 'In Progress'}
           {status === 'at-risk' && 'Approaching Deadline'}
           {status === 'overdue' && 'Overdue'}
         </span>
-        <span>
+        <span className={cn('font-medium', textColor)}>
           {daysDifference < 0
             ? `${Math.abs(daysDifference)} days overdue`
             : `${daysDifference} days remaining`}
         </span>
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
         <div
           className={`h-full ${progressColor} transition-all duration-300`}
           style={{ width: `${progressPercentage}%` }}
         />
       </div>
-      <div className="text-xs text-gray-500 mt-1">
-        Estimated completion: {estimatedCompletionDate.format('YYYY-MM-DD')}
+      <div className="text-base text-gray-600 font-medium">
+        ETD: {estimatedCompletionDate.format('YYYY-MM-DD')}
       </div>
     </div>
   )

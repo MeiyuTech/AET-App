@@ -75,9 +75,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Created At
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -103,9 +104,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Updated At
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -131,9 +133,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Office
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -157,8 +160,13 @@ export const getColumns = ({
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" disabled={!isEditable}>
-                <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
+              <Button
+                variant="ghost"
+                size="default"
+                disabled={!isEditable}
+                className="hover:bg-gray-100"
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
               </Button>
             </DropdownMenuTrigger>
             {isEditable && (
@@ -200,20 +208,21 @@ export const getColumns = ({
       )
     },
   },
-  {
-    accessorKey: 'name',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Client Name
-          <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
+  // {
+  //   accessorKey: 'name',
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //         className="text-lg font-semibold hover:bg-gray-100"
+  //       >
+  //         Client Name
+  //         <ChevronDown className="ml-2 h-5 w-5" />
+  //       </Button>
+  //     )
+  //   },
+  // },
   {
     accessorKey: 'first_name',
     header: ({ column }) => {
@@ -221,9 +230,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Evaluee Name
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -266,9 +276,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Birth Date
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -305,9 +316,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Purpose
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -324,13 +336,14 @@ export const getColumns = ({
       return (
         <Button
           variant="ghost"
-          size="sm"
+          size="default"
+          className="hover:bg-gray-100"
           onClick={() => {
             setSelectedEducations(row.original.educations)
             setDialogOpen(true)
           }}
         >
-          <Eye className="h-4 w-4 mr-2" />
+          <Eye className="h-5 w-5" />
         </Button>
       )
     },
@@ -342,13 +355,14 @@ export const getColumns = ({
       return (
         <Button
           variant="ghost"
-          size="sm"
+          size="default"
+          className="hover:bg-gray-100"
           onClick={() => {
             setSelectedApplication(row.original)
             setServicesDialogOpen(true)
           }}
         >
-          <Eye className="h-4 w-4 mr-2" />
+          <Eye className="h-5 w-5" />
         </Button>
       )
     },
@@ -360,13 +374,14 @@ export const getColumns = ({
       return (
         <Button
           variant="ghost"
-          size="sm"
+          size="default"
+          className="hover:bg-gray-100"
           onClick={() => {
             setSelectedApplication(row.original)
             setFilesDialogOpen(true)
           }}
         >
-          <FileText className="h-4 w-4 mr-2" />
+          <FileText className="h-5 w-5" />
         </Button>
       )
     },
@@ -378,9 +393,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Status
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -397,11 +413,18 @@ export const getColumns = ({
 
       return (
         <div className="flex items-center">
-          <div className={`capitalize font-medium mr-2 ${getStatusColor(status)}`}>{status}</div>
+          <div className={`capitalize font-medium mr-3 text-base ${getStatusColor(status)}`}>
+            {status}
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" disabled={!isEditable}>
-                <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
               </Button>
             </DropdownMenuTrigger>
             {isEditable && (
@@ -443,9 +466,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Due Amount
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -459,8 +483,13 @@ export const getColumns = ({
           <span className="mr-2">{dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" disabled={!isEditable}>
-                <Edit className={`h-4 w-4 ${!isEditable ? 'opacity-50' : ''}`} />
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
               </Button>
             </DropdownMenuTrigger>
             {isEditable && (
@@ -531,9 +560,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Payment Status
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -545,13 +575,15 @@ export const getColumns = ({
 
       return (
         <div className="flex items-center">
-          <div className={`capitalize font-medium mr-2 ${getPaymentStatusColor(paymentStatus)}`}>
+          <div
+            className={`capitalize font-medium mr-3 text-base ${getPaymentStatusColor(paymentStatus)}`}
+          >
             {paymentStatus}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <Edit className="h-4 w-4" />
+              <Button variant="ghost" size="default" className="hover:bg-gray-100">
+                <Edit className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -588,9 +620,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Paid At
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
@@ -606,9 +639,10 @@ export const getColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100"
         >
           Estimated Completion
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
