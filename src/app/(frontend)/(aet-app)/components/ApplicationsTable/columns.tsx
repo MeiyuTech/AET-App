@@ -17,6 +17,7 @@ import { Application } from './types'
 import { formatDateTime } from '../../utils/dateFormat'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
+import { CompletionProgressBar } from './CompletionProgressBar'
 
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
@@ -620,23 +621,10 @@ export const getColumns = ({
       }
 
       try {
-        // Convert Application to ApplicationData format for getEstimatedCompletionDate
+        // Use the applicant's existing service_type data
+        // Note: Ensure the structure of application.service_type matches the serviceType structure in ApplicationData
         const applicationData = {
-          // Create a proper serviceType structure
-          serviceType: {
-            customizedService: { required: false },
-            foreignCredentialEvaluation: {
-              firstDegree: { speed: undefined },
-              secondDegrees: 0,
-            },
-            coursebyCourse: {
-              firstDegree: { speed: undefined },
-              secondDegrees: 0,
-            },
-            professionalExperience: { speed: undefined },
-            positionEvaluation: { speed: undefined },
-            translation: { required: false },
-          },
+          serviceType: application.service_type as any, // 使用类型断言，因为结构可能不完全匹配
           status: application.status,
           submitted_at: application.submitted_at || '',
           due_amount: application.due_amount || 0,
@@ -658,7 +646,7 @@ export const getColumns = ({
         }
 
         const estimatedDate = getEstimatedCompletionDate(applicationData, paidAt)
-        return estimatedDate
+        return <CompletionProgressBar estimatedDate={estimatedDate} />
       } catch (error) {
         console.error('Error calculating estimated completion date:', error)
         return 'N/A'
