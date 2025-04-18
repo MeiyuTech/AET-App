@@ -60,13 +60,21 @@ export const dateUtils = {
   },
 }
 
+/**
+ * Get the estimated completion date for an application
+ * @param application - The application data
+ * @param paidAt - The date and time the application was paid (new Date().toISOString())
+ * @returns The estimated completion date
+ */
 export function getEstimatedCompletionDate(
   application: ApplicationData | null,
   paidAt: string
 ): string {
-  // Default to 10 days if no application or service type
-  if (!application || !application.serviceType) {
-    return dayjs().add(10, 'day').format('YYYY-MM-DD')
+  if (!application) {
+    throw new Error('Application is null')
+  }
+  if (!application.serviceType) {
+    throw new Error('Service type is null')
   }
 
   // Get paid date
@@ -83,6 +91,7 @@ export function getEstimatedCompletionDate(
 
   // Calculate max business days
   let maxBusinessDays = 0
+  let isSameDayService = false
 
   // Check foreign credential evaluation service
   if (application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed) {
@@ -101,6 +110,7 @@ export function getEstimatedCompletionDate(
         break
       case 'sameday':
         businessDays = 0
+        isSameDayService = true
         break
     }
 
@@ -174,19 +184,23 @@ export function getEstimatedCompletionDate(
   }
 
   // If no service is selected, default to 10 days
-  if (maxBusinessDays === 0) {
+  if (maxBusinessDays === 0 && !isSameDayService) {
     return dayjs().add(10, 'day').format('YYYY-MM-DD')
   }
 
   // Calculate estimated completion date
   let completionDate = startDate
 
-  // If same day service, return today
-  if (maxBusinessDays === 0) {
+  // Handle same day service
+  if (isSameDayService) {
+    // If it's a weekend, move to next business day
+    while (completionDate.day() === 0 || completionDate.day() === 6) {
+      completionDate = completionDate.add(1, 'day')
+    }
     return completionDate.format('YYYY-MM-DD')
   }
 
-  // Add business days
+  // Add business days for other services
   let daysToAdd = maxBusinessDays
   while (daysToAdd > 0) {
     completionDate = completionDate.add(1, 'day')
