@@ -190,9 +190,19 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
 
   // Handle same day service
   if (isSameDayService) {
+    console.log('Debug - Same Day Service Processing:', {
+      startDate: startDate.format(),
+      isAfterCutoff,
+      completionDate: completionDate.format(),
+      dayOfWeek: completionDate.day(),
+    })
     // Skip weekend, move to next business day
     while (completionDate.day() === 0 || completionDate.day() === 6) {
       completionDate = completionDate.add(1, 'day')
+      console.log('Debug - Skipping Weekend:', {
+        newCompletionDate: completionDate.format(),
+        dayOfWeek: completionDate.day(),
+      })
     }
     return completionDate.format('YYYY-MM-DD')
   }

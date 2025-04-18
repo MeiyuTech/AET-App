@@ -90,7 +90,20 @@ export async function POST(req: Request) {
         }
 
         // This applicationData is not updated yet, so we need to use the old one and `paidAt`
+        console.log('Debug - Same Day Service Calculation:', {
+          paidAt,
+          applicationData: {
+            serviceType: applicationData.serviceType,
+            isSameDay:
+              applicationData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed ===
+              'sameday',
+          },
+        })
         const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
+        console.log('Debug - Calculated Completion Date:', {
+          estimatedCompletionDate,
+          paidAt,
+        })
         const paymentAmount = (session.amount_total / 100).toFixed(2)
         const { success: emailSuccess, message: sendEmailMessage } =
           await sendPaymentConfirmationEmail(
