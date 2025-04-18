@@ -513,8 +513,8 @@ export const getColumns = ({
       const paidAt = application.paid_at
       const status = application.status
 
-      // if status is cancelled, don't show the progress bar
-      if (status === 'cancelled') {
+      // if status is cancelled or completed, don't show the progress bar
+      if (status === 'cancelled' || status === 'completed') {
         return 'N/A'
       }
 
