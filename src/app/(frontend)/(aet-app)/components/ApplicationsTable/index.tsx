@@ -30,7 +30,6 @@ import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
 import { ServicesDetailsDialog } from './ServicesDetailsDialog'
-import { FilesDialog } from './FilesDialog'
 import {
   DueAmountConfirmDialog,
   StatusConfirmDialog,
@@ -38,6 +37,7 @@ import {
 } from './ConfirmationDialogs'
 import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
+import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
@@ -595,13 +595,13 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
             position: 'relative',
           }}
         >
-          <div style={{ minWidth: '2800px' }}>
-            <Table>
+          <div style={{ minWidth: '3000px' }}>
+            <Table className="text-base">
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} className="text-base">
+                      <TableHead key={header.id} className="text-lg font-semibold py-6 px-4">
                         {header.isPlaceholder
                           ? null
                           : flexRender(header.column.columnDef.header, header.getContext())}
@@ -613,9 +613,9 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow key={row.id} className="hover:bg-gray-50">
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="text-base">
+                        <TableCell key={cell.id} className="text-base py-4 px-4">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}
@@ -623,7 +623,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center text-base">
+                    <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
                       No results.
                     </TableCell>
                   </TableRow>
@@ -634,20 +634,22 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-4 py-6">
         <Button
           variant="outline"
-          size="sm"
+          size="lg"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="text-base px-6"
         >
           Previous
         </Button>
         <Button
           variant="outline"
-          size="sm"
+          size="lg"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="text-base px-6"
         >
           Next
         </Button>
