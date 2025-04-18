@@ -730,7 +730,7 @@ export const getColumns = ({
 
       if (!paidAt) {
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4 min-w-[200px]">
             <span>N/A</span>
             {isEditable && (
               <DateTimePicker
@@ -745,7 +745,7 @@ export const getColumns = ({
 
       const date = new Date(paidAt as string)
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4 min-w-[200px]">
           <div className="space-y-1">
             <div className="font-medium">
               {date
