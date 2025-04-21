@@ -262,83 +262,65 @@ export function ServiceSelection() {
         </CardContent>
       </Card>
 
-      {/* Type of Delivery */}
-      <Card>
-        <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">
-            Type of Delivery<span className="text-red-500">*</span>
-          </h3>
-          <Select
-            onValueChange={(value) => {
-              setValue('deliveryMethod', value)
-            }}
-            value={watch('deliveryMethod') || 'no_delivery_needed'}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select delivery method" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="no_delivery_needed">
-                <div className="flex justify-between w-full">
-                  <span>No delivery needed</span>
-                </div>
-              </SelectItem>
-              {Object.entries(DELIVERY_OPTIONS).map(([value, { label, price }]) => (
-                <SelectItem key={value} value={value}>
-                  <div className="flex justify-between w-full">
-                    <span>{label}</span>
-                    <span className="text-muted-foreground ml-4">${price}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
       {/* Additional Services */}
       <Card>
-        <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold mb-4">
-            Additional Services<span className="text-red-500">*</span>
-          </h3>
-          <Select
-            onValueChange={(value) => {
-              setValue('additionalServices', [value])
-              // Reset all quantities
-              setValue('additionalServicesQuantity', {
-                extra_copy: 0,
-                pdf_with_hard_copy: 0,
-                pdf_only: 0,
-              })
-              // If extra copy is selected, enable quantity input
-              if (value === 'extra_copy') {
-                setValue('additionalServicesQuantity.extra_copy', 1)
-              }
-            }}
-            value={watch('additionalServices')?.[0] || 'pdf_only'}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select additional service" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(ADDITIONAL_SERVICES).map(([value, service]) => (
-                <SelectItem key={value} value={value}>
+        <CardContent className="pt-6 space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">
+              How Would You Like to Receive Your Report?<span className="text-red-500">*</span>
+            </h3>
+            <Select
+              onValueChange={(value) => {
+                setValue('additionalServices', [value])
+                // Reset all quantities
+                setValue('additionalServicesQuantity', {
+                  extra_copy: 0,
+                  pdf_with_hard_copy: 0,
+                  pdf_only: 0,
+                })
+                // If switching to pdf_only, reset delivery method
+                if (value === 'pdf_only') {
+                  setValue('deliveryMethod', 'no_delivery_needed')
+                } else {
+                  // If switching to hard copy options, set default delivery method
+                  setValue('deliveryMethod', 'usps_first_class_domestic')
+                }
+                // If extra copy is selected, enable quantity input
+                if (value === 'extra_copy') {
+                  setValue('additionalServicesQuantity.extra_copy', 1)
+                }
+              }}
+              value={watch('additionalServices')?.[0] || 'pdf_only'}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select report type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pdf_only">
                   <div className="flex justify-between w-full">
-                    <span>{service.label}</span>
-                    <span className="text-muted-foreground ml-4">
-                      ${service.price}
-                      {'quantity' in service ? ' each' : ''}
-                    </span>
+                    <span>PDF Report Only (No Hard Copy)</span>
+                    <span className="text-muted-foreground ml-4">$10</span>
                   </div>
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                <SelectItem value="pdf_with_hard_copy">
+                  <div className="flex justify-between w-full">
+                    <span>PDF Report with Hard Copy</span>
+                    <span className="text-muted-foreground ml-4">$20</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="extra_copy">
+                  <div className="flex justify-between w-full">
+                    <span>Extra Hard Copy Report</span>
+                    <span className="text-muted-foreground ml-4">$20 each</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* Quantity input for extra copies */}
           {watch('additionalServices')?.[0] === 'extra_copy' && (
-            <div className="mt-4">
+            <div>
               <Label>Number of Extra Copies</Label>
               <Input
                 type="number"
@@ -354,8 +336,37 @@ export function ServiceSelection() {
             </div>
           )}
 
+          {/* Type of Delivery - Only show when hard copy is needed */}
+          {watch('additionalServices')?.[0] !== 'pdf_only' && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4">
+                Type of Delivery<span className="text-red-500">*</span>
+              </h3>
+              <Select
+                onValueChange={(value) => {
+                  setValue('deliveryMethod', value)
+                }}
+                value={watch('deliveryMethod')}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select delivery method" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(DELIVERY_OPTIONS).map(([value, { label, price }]) => (
+                    <SelectItem key={value} value={value}>
+                      <div className="flex justify-between w-full">
+                        <span>{label}</span>
+                        <span className="text-muted-foreground ml-4">${price}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           {/* Add note at bottom of card */}
-          <div className="mt-6 text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground">
             * By default, <strong>PDF Report Only</strong> is selected.
           </div>
         </CardContent>
