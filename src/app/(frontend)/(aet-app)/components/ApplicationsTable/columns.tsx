@@ -223,9 +223,10 @@ export const getColumns = ({
       const id = row.getValue('id') as string
       // Split UUID into three parts for better readability
       const parts = id.split('-')
-      const firstPart = parts.slice(0, 2).join('-')
-      const secondPart = parts.slice(2, 4).join('-')
+      const firstPart = parts.slice(0, 2).join('-') + '-'
+      const secondPart = parts.slice(2, 4).join('-') + '-'
       const thirdPart = parts[4]
+
       return (
         <Link
           href={`../status?applicationId=${id}`}
