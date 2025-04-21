@@ -17,7 +17,7 @@ export default async function StatusPage({ searchParams }: PageProps) {
   const { applicationId } = await searchParams
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-2">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-6 pt-16">
         {/* Left Instruction Section */}
         <div className="space-y-6">

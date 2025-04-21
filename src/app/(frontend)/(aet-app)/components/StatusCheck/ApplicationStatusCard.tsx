@@ -3,6 +3,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
+import PaymentCountdown from './PaymentCountdown'
 
 interface ApplicationStatusCardProps {
   applicationData: ApplicationData
@@ -19,9 +20,7 @@ export default function ApplicationStatusCard({ applicationData }: ApplicationSt
           {/* Status */}
           <div>
             <dt className="font-medium">Status</dt>
-            <dd
-              className={`capitalize text-muted-foreground ${getStatusColor(applicationData.status)}`}
-            >
+            <dd className={`capitalize ${getStatusColor(applicationData.status)}`}>
               {applicationData.status}
             </dd>
           </div>
@@ -52,6 +51,11 @@ export default function ApplicationStatusCard({ applicationData }: ApplicationSt
             </dd>
           </div>
         </dl>
+
+        <PaymentCountdown
+          submittedAt={applicationData.submitted_at}
+          paymentStatus={applicationData.payment_status}
+        />
       </CardContent>
     </Card>
   )
