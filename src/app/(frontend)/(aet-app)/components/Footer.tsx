@@ -12,7 +12,7 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2B3A4D] text-white py-12 px-8">
+    <footer className="bg-[#2B3A4D] text-white py-12 px-8" id="footer">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Los Angeles Office */}
         <div>
