@@ -21,6 +21,8 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
+  // Disable dev indicators Tool
+  devIndicators: false,
   redirects,
 }
 
