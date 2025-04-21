@@ -88,7 +88,6 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // 检查表格容器的宽度和内容宽度
     if (tableContainerRef.current) {
       const container = tableContainerRef.current
       console.log('Container details:', {
