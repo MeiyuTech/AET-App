@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
-import PaymentCountdown from './PaymentCountdown'
+import PaymentCountdown from '../PaymentCountdown'
 
 interface ApplicationStatusCardProps {
   applicationData: ApplicationData
@@ -51,11 +51,6 @@ export default function ApplicationStatusCard({ applicationData }: ApplicationSt
             </dd>
           </div>
         </dl>
-
-        <PaymentCountdown
-          submittedAt={applicationData.submitted_at}
-          paymentStatus={applicationData.payment_status}
-        />
       </CardContent>
     </Card>
   )

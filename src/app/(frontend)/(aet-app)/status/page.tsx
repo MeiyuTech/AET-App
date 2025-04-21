@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import StatusCheck from '../components/StatusCheck'
-import { Card, CardContent } from '@/components/ui/card'
-import NextStepsCard from '../components/StatusCheck/NextStepsCard'
+import NextStepsCard from '../components/NextStepsCard'
 
 export const metadata: Metadata = {
   title: 'AET Service Application Status',
@@ -22,7 +21,7 @@ export default async function StatusPage({ searchParams }: PageProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-6 pt-16">
         {/* Left Instruction Section */}
         <div className="space-y-6">
-          <NextStepsCard />
+          <NextStepsCard initialApplicationId={applicationId} />
         </div>
 
         {/* Right Status Check Section */}

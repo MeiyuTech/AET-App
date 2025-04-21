@@ -30,10 +30,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
   // Helper function to update URL with the applicationId parameter
   // This keeps the URL in sync with the current application being viewed
-  const updateURL = (id: string) => {
+  const updateURL = (ApplicationId: string) => {
     const url = new URL(window.location.href)
-    if (id) {
-      url.searchParams.set('applicationId', id)
+    if (ApplicationId) {
+      url.searchParams.set('applicationId', ApplicationId)
     } else {
       url.searchParams.delete('applicationId')
     }
@@ -48,14 +48,14 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
   // Core function to fetch and validate application status
   // Extracted as a separate function to be reused in multiple places
-  const checkApplicationStatus = async (id: string) => {
+  const checkApplicationStatus = async (ApplicationId: string) => {
     // Skip if application ID is empty
-    if (!id.trim()) {
+    if (!ApplicationId.trim()) {
       return
     }
 
     // Validate the format of the application ID
-    if (!isValidUUID(id)) {
+    if (!isValidUUID(ApplicationId)) {
       setError('Please enter a valid application ID')
       return
     }
@@ -67,11 +67,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
     try {
       // Fetch application data from server
-      const result = await fetchApplication(id)
+      const result = await fetchApplication(ApplicationId)
 
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)
-        // console.log('result.applicationData', result.applicationData)
       } else {
         setError('Application not found. Please check your application ID.')
       }

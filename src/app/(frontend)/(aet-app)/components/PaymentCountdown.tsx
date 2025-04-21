@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { AlertCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { getPaymentDeadline } from './utils'
+import {} from '@/components/ui/button'
+import { getPaymentDeadline } from './StatusCheck/utils'
 interface PaymentCountdownProps {
   submittedAt: string
   paymentStatus: string
-  onPaymentClick?: () => void
-  onSupportClick?: () => void
 }
 
 interface TimeLeft {
@@ -18,12 +16,7 @@ interface TimeLeft {
   totalSeconds: number
 }
 
-export default function PaymentCountdown({
-  submittedAt,
-  paymentStatus,
-  onPaymentClick,
-  onSupportClick,
-}: PaymentCountdownProps) {
+export default function PaymentCountdown({ submittedAt, paymentStatus }: PaymentCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     hours: 0,
     minutes: 0,
@@ -69,7 +62,7 @@ export default function PaymentCountdown({
     }
   }, [submittedAt, paymentStatus])
 
-  if (paymentStatus !== 'pending') {
+  if (paymentStatus === 'completed') {
     return null
   }
 
@@ -81,11 +74,12 @@ export default function PaymentCountdown({
           <h3 className="font-medium text-red-800">Payment Deadline Expired</h3>
         </div>
         <p className="text-sm text-red-700 mb-3">
-          Your payment deadline has expired. Please contact support to reactivate your application.
+          Your payment deadline has expired. You may{' '}
+          <a href="#footer" className="text-amber-500">
+            contact support
+          </a>{' '}
+          to reactivate your application.
         </p>
-        <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={onSupportClick}>
-          Contact Support
-        </Button>
       </div>
     )
   }
@@ -124,13 +118,6 @@ export default function PaymentCountdown({
           <span className="text-xs text-amber-600">Seconds</span>
         </div>
       </div>
-
-      <Button
-        className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-        onClick={onPaymentClick}
-      >
-        Complete Payment Now
-      </Button>
     </div>
   )
 }
