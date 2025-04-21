@@ -279,6 +279,13 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const firstName = (row.getValue(columnId) as string) || ''
+      const middleName = row.original.middle_name || ''
+      const lastName = row.original.last_name || ''
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
+      return fullName.includes(filterValue.toLowerCase())
+    },
   },
   // {
   //   accessorKey: 'pronouns',
@@ -780,5 +787,9 @@ export const getColumns = ({
     accessorKey: 'payment_id',
     header: () => <div className="text-center">Payment ID (notes）</div>,
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
+    filterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId) || 'N/A'
+      return String(value).toLowerCase().includes(filterValue.toLowerCase())
+    },
   },
 ]

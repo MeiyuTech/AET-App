@@ -87,45 +87,16 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (tableContainerRef.current) {
-      const container = tableContainerRef.current
-      console.log('Container details:', {
-        clientWidth: container.clientWidth,
-        scrollWidth: container.scrollWidth,
-        offsetWidth: container.offsetWidth,
-        style: container.style,
-        overflowX: getComputedStyle(container).overflowX,
-        parentWidth: container.parentElement?.clientWidth,
-      })
-    }
-  }, [applications])
-
   const handleScrollLeft = () => {
     if (tableContainerRef.current) {
       const container = tableContainerRef.current
       const scrollDistance = container.clientWidth - 50
-
-      console.log('Before scroll left:', {
-        scrollLeft: container.scrollLeft,
-        clientWidth: container.clientWidth,
-        scrollWidth: container.scrollWidth,
-        scrollDistance,
-      })
 
       const newScrollPosition = Math.max(0, container.scrollLeft - scrollDistance)
       container.scrollTo({
         left: newScrollPosition,
         behavior: 'smooth',
       })
-
-      setTimeout(() => {
-        console.log('After scroll left (delayed):', {
-          scrollLeft: container.scrollLeft,
-          clientWidth: container.clientWidth,
-          scrollWidth: container.scrollWidth,
-        })
-      }, 100)
     }
   }
 
@@ -134,27 +105,12 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       const container = tableContainerRef.current
       const scrollDistance = container.clientWidth - 50
 
-      console.log('Before scroll right:', {
-        scrollLeft: container.scrollLeft,
-        clientWidth: container.clientWidth,
-        scrollWidth: container.scrollWidth,
-        scrollDistance,
-      })
-
       const maxScroll = container.scrollWidth - container.clientWidth
       const newScrollPosition = Math.min(maxScroll, container.scrollLeft + scrollDistance)
       container.scrollTo({
         left: newScrollPosition,
         behavior: 'smooth',
       })
-
-      setTimeout(() => {
-        console.log('After scroll right (delayed):', {
-          scrollLeft: container.scrollLeft,
-          clientWidth: container.clientWidth,
-          scrollWidth: container.scrollWidth,
-        })
-      }, 100)
     }
   }
 
@@ -543,12 +499,43 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
     const itemValue = row.getValue(columnId)
-    if (itemValue == null) return false
+
+    // 对于payment_id特殊处理
+    if (itemValue == null) {
+      if (columnId === 'payment_id') {
+        return 'n/a'.includes(value.toLowerCase())
+      }
+      return false
+    }
+
+    // 对于first_name特殊处理，搜索全名
+    if (columnId === 'first_name') {
+      const firstName = (row.getValue('first_name') as string) || ''
+      const middleName = row.original.middle_name || ''
+      const lastName = row.original.last_name || ''
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
+      return fullName.includes(value.toLowerCase())
+    }
 
     const searchValue = value.toLowerCase()
     const itemString = String(itemValue).toLowerCase()
 
     return itemString.includes(searchValue)
+  }
+
+  const globalFilterFunction = (row: any, columnId: string, value: string) => {
+    // 先检查是否匹配全名
+    const firstName = row.original.first_name || ''
+    const middleName = row.original.middle_name || ''
+    const lastName = row.original.last_name || ''
+    const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
+
+    if (fullName.includes(value.toLowerCase())) {
+      return true
+    }
+
+    // 如果不匹配全名，使用默认的模糊过滤
+    return fuzzyFilter(row, columnId, value, null)
   }
 
   const table = useReactTable({
@@ -576,7 +563,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     filterFns: {
       fuzzy: fuzzyFilter,
     },
-    globalFilterFn: fuzzyFilter,
+    globalFilterFn: globalFilterFunction,
     onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
