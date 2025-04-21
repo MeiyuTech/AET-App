@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
+import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 
 interface ApplicationStatusCardProps {
   applicationData: ApplicationData
@@ -18,7 +19,11 @@ export default function ApplicationStatusCard({ applicationData }: ApplicationSt
           {/* Status */}
           <div>
             <dt className="font-medium">Status</dt>
-            <dd className="text-muted-foreground">{applicationData.status}</dd>
+            <dd
+              className={`capitalize text-muted-foreground ${getStatusColor(applicationData.status)}`}
+            >
+              {applicationData.status}
+            </dd>
           </div>
 
           {/* Submitted At */}
@@ -32,17 +37,7 @@ export default function ApplicationStatusCard({ applicationData }: ApplicationSt
           {/* Payment Status */}
           <div>
             <dt className="font-medium">Payment Status</dt>
-            <dd
-              className={`capitalize ${
-                applicationData.payment_status === 'paid'
-                  ? 'text-green-600'
-                  : applicationData.payment_status === 'failed'
-                    ? 'text-red-600'
-                    : applicationData.payment_status === 'expired'
-                      ? 'text-orange-600'
-                      : 'text-yellow-600'
-              }`}
-            >
+            <dd className={`capitalize ${getPaymentStatusColor(applicationData.payment_status)}`}>
               {applicationData.payment_status}
             </dd>
           </div>

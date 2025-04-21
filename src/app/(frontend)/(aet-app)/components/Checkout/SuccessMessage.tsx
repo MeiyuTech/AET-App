@@ -2,9 +2,11 @@
 
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
+import { getPaymentStatusColor } from '../../utils/statusColors'
+import { ApplicationData } from '../FCEApplicationForm/types'
 
 interface SuccessMessageProps {
-  applicationData: any
+  applicationData: ApplicationData
   applicationId: string
 }
 
@@ -45,14 +47,4 @@ export function SuccessMessage({ applicationData, applicationId }: SuccessMessag
       </Link>
     </div>
   )
-}
-
-function getPaymentStatusColor(status: string) {
-  const colors = {
-    pending: 'text-yellow-600',
-    paid: 'text-green-600',
-    failed: 'text-red-600',
-    expired: 'text-gray-600',
-  }
-  return colors[status as keyof typeof colors] || 'text-gray-600'
 }
