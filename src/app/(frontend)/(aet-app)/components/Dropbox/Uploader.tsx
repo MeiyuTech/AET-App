@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useRef, DragEvent } from 'react'
-import { MAX_FILE_SIZE, ALLOWED_TYPES, STATUS_STYLES } from '../../utils/dropbox/config.client'
+import { MAX_FILE_SIZE, ALLOWED_TYPES } from '../../utils/dropbox/config.client'
+import { getUploadStatusColor } from '../../utils/statusColors'
 
-type UploadStatus = keyof typeof STATUS_STYLES
+type UploadStatus = 'pending' | 'uploading' | 'success' | 'failed' | 'cancelled'
 
 interface DropboxUploaderProps {
   office: string
@@ -198,7 +199,7 @@ export default function DropboxUploader({
                       Cancel
                     </button>
                   )}
-                  <span className={STATUS_STYLES[progress[file.name]?.status || 'pending']}>
+                  <span className={getUploadStatusColor(progress[file.name]?.status || 'pending')}>
                     {progress[file.name]?.status === 'uploading'
                       ? 'Uploading...'
                       : progress[file.name]?.status === 'success'
