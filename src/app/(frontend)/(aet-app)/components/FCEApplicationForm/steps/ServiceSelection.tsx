@@ -302,50 +302,58 @@ export function ServiceSelection() {
           <h3 className="text-lg font-semibold mb-4">
             Additional Services<span className="text-red-500">*</span>
           </h3>
-          <div className="space-y-3">
-            {Object.entries(ADDITIONAL_SERVICES).map(([value, service]) => (
-              <div key={value} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`additional-${value}`}
-                  onCheckedChange={(checked) => {
-                    const currentServices = watch('additionalServices') || []
-                    if (checked) {
-                      setValue('additionalServices', [...currentServices, value])
-                    } else {
-                      setValue(
-                        'additionalServices',
-                        currentServices.filter((s: string) => s !== value)
-                      )
-                    }
-                  }}
-                  checked={(watch('additionalServices') || []).includes(value)}
-                />
-                <Label htmlFor={`additional-${value}`} className="flex justify-between w-full">
-                  <div className="flex-1">
-                    {service.label}
-                    {'quantity' in service && (
-                      <div className="mt-2">
-                        <Input
-                          type="number"
-                          min={0}
-                          defaultValue={0}
-                          className="w-24"
-                          {...register(`additionalServicesQuantity.${value}`, {
-                            valueAsNumber: true,
-                            min: 0,
-                            value: 0,
-                          })}
-                        />
-                      </div>
-                    )}
+          <Select
+            onValueChange={(value) => {
+              setValue('additionalServices', [value])
+              // Reset all quantities
+              setValue('additionalServicesQuantity', {
+                extra_copy: 0,
+                pdf_with_hard_copy: 0,
+                pdf_only: 0,
+              })
+              // If extra copy is selected, enable quantity input
+              if (value === 'extra_copy') {
+                setValue('additionalServicesQuantity.extra_copy', 1)
+              }
+            }}
+            value={watch('additionalServices')?.[0] || 'pdf_only'}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select additional service" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(ADDITIONAL_SERVICES).map(([value, service]) => (
+                <SelectItem key={value} value={value}>
+                  <div className="flex justify-between w-full">
+                    <span>{service.label}</span>
+                    <span className="text-muted-foreground ml-4">
+                      ${service.price}
+                      {'quantity' in service ? ' each' : ''}
+                    </span>
                   </div>
-                  <div className="w-20 text-left text-muted-foreground">
-                    {'quantity' in service ? `$${service.price} each` : `$${service.price}`}
-                  </div>
-                </Label>
-              </div>
-            ))}
-          </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Quantity input for extra copies */}
+          {watch('additionalServices')?.[0] === 'extra_copy' && (
+            <div className="mt-4">
+              <Label>Number of Extra Copies</Label>
+              <Input
+                type="number"
+                min={1}
+                defaultValue={1}
+                className="w-24 mt-2"
+                {...register('additionalServicesQuantity.extra_copy', {
+                  valueAsNumber: true,
+                  min: 1,
+                  value: 1,
+                })}
+              />
+            </div>
+          )}
+
           {/* Add note at bottom of card */}
           <div className="mt-6 text-xs text-muted-foreground">
             * By default, <strong>PDF Report Only</strong> is selected.
