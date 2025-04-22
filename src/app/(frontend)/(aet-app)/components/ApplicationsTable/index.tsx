@@ -500,7 +500,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
     const itemValue = row.getValue(columnId)
 
-    // 对于payment_id特殊处理
+    // for payment_id special handling
     if (itemValue == null) {
       if (columnId === 'payment_id') {
         return 'n/a'.includes(value.toLowerCase())
@@ -508,7 +508,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       return false
     }
 
-    // 对于first_name特殊处理，搜索全名
+    // for first_name special handling, search full name
     if (columnId === 'first_name') {
       const firstName = (row.getValue('first_name') as string) || ''
       const middleName = row.original.middle_name || ''
@@ -524,7 +524,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   }
 
   const globalFilterFunction = (row: any, columnId: string, value: string) => {
-    // 先检查是否匹配全名
+    // check if match full name
     const firstName = row.original.first_name || ''
     const middleName = row.original.middle_name || ''
     const lastName = row.original.last_name || ''
@@ -534,7 +534,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       return true
     }
 
-    // 检查日期格式 - created_at
+    // check created_at format
     const createdAt = row.original.created_at
     if (createdAt) {
       const date = new Date(createdAt)
@@ -561,7 +561,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       }
     }
 
-    // 检查日期格式 - updated_at
+    // check updated_at format
     const updatedAt = row.original.updated_at
     if (updatedAt) {
       const date = new Date(updatedAt)
@@ -588,7 +588,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       }
     }
 
-    // 检查金额格式 - due_amount
+    // check due_amount format
     const dueAmount = row.original.due_amount as number | null
     if (dueAmount !== undefined) {
       // Format the due amount to the user's view: "$123.45" or "N/A"
@@ -599,7 +599,16 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       }
     }
 
-    // 如果不匹配特殊处理的字段，使用默认的模糊过滤
+    // check payment_id format
+    const paymentId = row.original.payment_id
+    // Format payment_id to the user's view: actual value or "N/A"
+    const formattedPaymentId = paymentId || 'N/A'
+
+    if (formattedPaymentId.toLowerCase().includes(value.toLowerCase())) {
+      return true
+    }
+
+    // if not match any special field, use default fuzzy filter
     return fuzzyFilter(row, columnId, value, null)
   }
 

@@ -559,6 +559,17 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const status = row.getValue(columnId) as string
+
+      // 用户看到的显示方式 (首字母大写)
+      const displayStatus = status.charAt(0).toUpperCase() + status.slice(1)
+
+      return (
+        displayStatus.toLowerCase().includes(filterValue.toLowerCase()) ||
+        status.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    },
   },
   {
     id: 'estimated_completion_date',
@@ -780,6 +791,17 @@ export const getColumns = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const paymentStatus = row.getValue(columnId) as string
+
+      // 用户看到的显示方式 (首字母大写)
+      const displayStatus = paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)
+
+      return (
+        displayStatus.toLowerCase().includes(filterValue.toLowerCase()) ||
+        paymentStatus.toLowerCase().includes(filterValue.toLowerCase())
       )
     },
   },
