@@ -16,7 +16,7 @@ export const formatUUID = (input: string): string => {
   return `${cleaned.slice(0, 8)}-${cleaned.slice(8, 12)}-${cleaned.slice(12, 16)}-${cleaned.slice(16, 20)}-${cleaned.slice(20, 32)}`
 }
 
-const PAYMENT_DEADLINE = 48 // 48 hours
+export const PAYMENT_DEADLINE = 48 // 48 hours
 /**
  * Get the payment deadline for an application
  * @param submittedAt - The date and time the application was submitted
