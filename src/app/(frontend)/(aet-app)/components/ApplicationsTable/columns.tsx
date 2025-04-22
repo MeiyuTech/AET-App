@@ -110,6 +110,35 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const dateStr = row.getValue(columnId) as string
+      if (!dateStr) return false
+
+      const date = new Date(dateStr)
+
+      // Format the date to the user's view: YYYY-MM-DD
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      // Format the time to the user's view: HH:MM:SS
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      // Check if the search value matches any part of the date or time
+      return (
+        formattedDate.toLowerCase().includes(filterValue.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    },
   },
   {
     accessorKey: 'updated_at',
@@ -147,6 +176,35 @@ export const getColumns = ({
             })}
           </div>
         </div>
+      )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const dateStr = row.getValue(columnId) as string
+      if (!dateStr) return false
+
+      const date = new Date(dateStr)
+
+      // Format the date to the user's view: YYYY-MM-DD
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      // Format the time to the user's view: HH:MM:SS
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      // Check if the search value matches any part of the date or time
+      return (
+        formattedDate.toLowerCase().includes(filterValue.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(filterValue.toLowerCase())
       )
     },
   },

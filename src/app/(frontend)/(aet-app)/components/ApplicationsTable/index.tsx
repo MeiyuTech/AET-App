@@ -534,7 +534,61 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       return true
     }
 
-    // 如果不匹配全名，使用默认的模糊过滤
+    // 检查日期格式 - created_at
+    const createdAt = row.original.created_at
+    if (createdAt) {
+      const date = new Date(createdAt)
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      if (
+        formattedDate.toLowerCase().includes(value.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(value.toLowerCase())
+      ) {
+        return true
+      }
+    }
+
+    // 检查日期格式 - updated_at
+    const updatedAt = row.original.updated_at
+    if (updatedAt) {
+      const date = new Date(updatedAt)
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      if (
+        formattedDate.toLowerCase().includes(value.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(value.toLowerCase())
+      ) {
+        return true
+      }
+    }
+
+    // 如果不匹配特殊处理的字段，使用默认的模糊过滤
     return fuzzyFilter(row, columnId, value, null)
   }
 
