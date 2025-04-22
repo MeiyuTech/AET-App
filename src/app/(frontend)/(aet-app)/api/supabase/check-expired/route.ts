@@ -3,15 +3,24 @@ import { NextResponse } from 'next/server'
 import { PAYMENT_DEADLINE } from '../../../components/StatusCheck/utils'
 import { headers } from 'next/headers'
 
-const API_KEY = process.env.GITHUB_ACTIONS_API_KEY
+const API_KEY = process.env.API_KEY
 
 export async function POST() {
+  console.log('Received check-expired request')
+
   try {
     // Only check API key in production environment
     if (process.env.NODE_ENV === 'production') {
       const headersList = await headers()
       const authHeader = headersList.get('authorization')
       const token = authHeader?.split(' ')[1]
+
+      console.log('Auth check:', {
+        hasAuthHeader: !!authHeader,
+        hasValidToken: !!token,
+        isValidKey: token === API_KEY,
+        envHasKey: !!API_KEY,
+      })
 
       if (!API_KEY || token !== API_KEY) {
         console.warn('Unauthorized access attempt to check-expired API')
@@ -22,6 +31,12 @@ export async function POST() {
     const client = await createClient()
     const now = new Date()
     const deadline = new Date(now.getTime() - PAYMENT_DEADLINE * 60 * 60 * 1000)
+
+    console.log('Checking for expired applications:', {
+      currentTime: now.toISOString(),
+      deadline: deadline.toISOString(),
+      paymentDeadlineHours: PAYMENT_DEADLINE,
+    })
 
     // Find applications that are:
     // 1. Submitted but not paid（payment_status is pending）
@@ -38,6 +53,15 @@ export async function POST() {
       console.error('Error fetching expired applications:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    console.log('Found applications:', {
+      count: expiredApplications?.length || 0,
+      applications: expiredApplications?.map((app) => ({
+        id: app.id,
+        submitted_at: app.submitted_at,
+        payment_status: app.payment_status,
+      })),
+    })
 
     if (!expiredApplications || expiredApplications.length === 0) {
       return NextResponse.json({ message: 'No applications to expire' })
@@ -63,7 +87,7 @@ export async function POST() {
       expiredApplications,
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('Unexpected error in check-expired API:', error)
     return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 })
   }
 }

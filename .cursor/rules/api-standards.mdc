@@ -1,0 +1,61 @@
+---
+description: API Standards
+globs: 
+alwaysApply: false
+---
+# API Standards Guide
+
+## API Structure
+All API routes should be placed in `src/app/(frontend)/(aet-app)/api/` and follow Next.js App Router conventions.
+
+## Route Organization
+- `api/supabase/` - Database operations
+- `api/stripe/` - Payment processing
+- `api/email/` - Email notifications
+
+## API Design Principles
+1. Use appropriate HTTP methods:
+   - GET for retrieving data
+   - POST for creating/updating data
+   - PUT for full updates
+   - PATCH for partial updates
+   - DELETE for removing data
+
+2. Error Handling:
+   ```typescript
+   try {
+     // Operation logic
+   } catch (error) {
+     console.error('Error description:', error)
+     return NextResponse.json(
+       { error: 'User-friendly error message' },
+       { status: appropriate_status_code }
+     )
+   }
+   ```
+
+3. Authentication:
+   - Use Bearer token for API authentication
+   - Validate tokens in production environment
+   - Use environment variables for sensitive data
+
+4. Response Format:
+   ```typescript
+   // Success response
+   return NextResponse.json({
+     message: 'Operation successful',
+     data: result
+   })
+
+   // Error response
+   return NextResponse.json(
+     { error: 'Error message' },
+     { status: error_code }
+   )
+   ```
+
+## Security Guidelines
+1. Never expose sensitive data in responses
+2. Validate all input data
+3. Use rate limiting for public endpoints
+4. Log security-related events

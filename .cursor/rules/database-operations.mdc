@@ -1,0 +1,85 @@
+---
+description: Database Operations
+globs: 
+alwaysApply: false
+---
+# Database Operations Guide
+
+## Database Structure
+Main tables:
+- `fce_applications` - Stores application data
+- `fce_educations` - Stores education records
+
+## Key Fields
+### fce_applications
+- `status`: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
+- `payment_status`: 'pending' | 'paid' | 'failed' | 'expired'
+- `submitted_at`: Timestamp of submission
+- `paid_at`: Timestamp of payment
+
+## Database Operations
+1. Querying Applications:
+   ```typescript
+   const { data, error } = await supabase
+     .from('fce_applications')
+     .select('*')
+     .eq('status', 'submitted')
+   ```
+
+2. Updating Status:
+   ```typescript
+   const { error } = await supabase
+     .from('fce_applications')
+     .update({ status: 'processing' })
+     .eq('id', applicationId)
+   ```
+
+3. Joining Tables:
+   ```typescript
+   const { data, error } = await supabase
+     .from('fce_applications')
+     .select(`
+       *,
+       fce_educations (*)
+     `)
+   ```
+
+## Best Practices
+1. Always handle database errors:
+   ```typescript
+   if (error) {
+     console.error('Database error:', error)
+     throw error
+   }
+   ```
+
+2. Use transactions for multiple operations
+
+3. Database Backups:
+   ```bash
+   # Backup specific tables
+   pg_dump --clean --if-exists --quote-all-identifiers \
+     --host=db.ProjectID.supabase.co \
+     --port=5432 \
+     --dbname=postgres \
+     --username=postgres \
+     --table=public.TableName1 \
+     --table=public.TableName2 \
+     --file=backup_$(date +%Y%m%d_%H%M%S).sql
+
+   # When prompted for password, enter your database password
+   ```
+
+   Key options explained:
+   - `--clean`: Drop database objects before recreating
+   - `--if-exists`: Use IF EXISTS when dropping objects
+   - `--quote-all-identifiers`: Quote all identifiers
+   - `--table=public.table_name`: Specify tables to backup
+
+4. Validate data before insertion/update
+
+## Security Rules
+1. Use Row Level Security (RLS)
+2. Never expose database credentials
+3. Use prepared statements to prevent SQL injection
+4. Implement proper access control

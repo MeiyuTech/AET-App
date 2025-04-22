@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AET Application Structure Guide
+
+## Project Overview
+The AET (American Evaluation and Translation Service) application is a Next.js application with TypeScript, serving as both frontend and backend.
+
+## Key Directories
+- `src/app/(frontend)/(aet-app)/` - Main application directory
+  - `components/` - Reusable React components
+  - `api/` - API routes and handlers
+  - `utils/` - Utility functions and helpers
+  - `types/` - TypeScript type definitions
+
+## Core Components
+- [components/FCEApplicationForm/index.tsx](mdc:src/app/(frontend)/(aet-app)/components/FCEApplicationForm/index.tsx) - Main application form
+- [components/StatusCheck/index.tsx](mdc:src/app/(frontend)/(aet-app)/components/StatusCheck/index.tsx) - Application status checker
+- [components/ApplicationsTable/index.tsx](mdc:src/app/(frontend)/(aet-app)/components/ApplicationsTable/index.tsx) - Admin dashboard table
+
+## API Routes
+- [api/supabase/check-expired/route.ts](mdc:src/app/(frontend)/(aet-app)/api/supabase/check-expired/route.ts) - Handles expired applications
+- [api/stripe/webhook/route.ts](mdc:src/app/(frontend)/(aet-app)/api/stripe/webhook/route.ts) - Stripe payment webhooks
+
+## Key Principles
+1. Page components (`page.tsx`) should only handle routing and layouts
+2. Business logic should be extracted into separate components
+3. Use @shadcn/ui components for UI elements
+4. Follow TypeScript best practices
+5. Implement proper error handling and logging
