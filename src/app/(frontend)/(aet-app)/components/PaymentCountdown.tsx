@@ -62,7 +62,7 @@ export default function PaymentCountdown({ submittedAt, paymentStatus }: Payment
     }
   }, [submittedAt, paymentStatus])
 
-  if (paymentStatus === 'completed') {
+  if (paymentStatus === 'paid') {
     return null
   }
 
