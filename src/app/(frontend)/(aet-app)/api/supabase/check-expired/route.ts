@@ -3,14 +3,20 @@ import { NextResponse } from 'next/server'
 import { PAYMENT_DEADLINE } from '../../../components/StatusCheck/utils'
 import { headers } from 'next/headers'
 
+const API_KEY = process.env.GITHUB_ACTIONS_API_KEY
+
 export async function POST() {
   try {
-    // Check for authorization header
-    const headersList = await headers()
-    const authHeader = headersList.get('authorization')
+    // Only check API key in production environment
+    if (process.env.NODE_ENV === 'production') {
+      const headersList = await headers()
+      const authHeader = headersList.get('authorization')
+      const token = authHeader?.split(' ')[1]
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      if (!API_KEY || token !== API_KEY) {
+        console.warn('Unauthorized access attempt to check-expired API')
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
     }
 
     const client = await createClient()
@@ -51,6 +57,7 @@ export async function POST() {
       return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
+    console.log(`Successfully marked ${expiredApplications.length} applications as expired`)
     return NextResponse.json({
       message: `Successfully marked ${expiredApplications.length} applications as expired`,
       expiredApplications,
