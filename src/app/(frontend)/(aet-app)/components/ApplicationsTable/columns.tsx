@@ -713,6 +713,15 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const dueAmount = row.getValue(columnId) as number | null
+
+      // Format the due amount to the user's view: "$123.45" or "N/A"
+      const formattedAmount = dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'
+
+      // Check if the search value matches the formatted amount
+      return formattedAmount.toLowerCase().includes(filterValue.toLowerCase())
+    },
   },
   {
     accessorKey: 'payment_status',

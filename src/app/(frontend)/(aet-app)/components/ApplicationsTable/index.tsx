@@ -588,6 +588,17 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       }
     }
 
+    // 检查金额格式 - due_amount
+    const dueAmount = row.original.due_amount as number | null
+    if (dueAmount !== undefined) {
+      // Format the due amount to the user's view: "$123.45" or "N/A"
+      const formattedAmount = dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'
+
+      if (formattedAmount.toLowerCase().includes(value.toLowerCase())) {
+        return true
+      }
+    }
+
     // 如果不匹配特殊处理的字段，使用默认的模糊过滤
     return fuzzyFilter(row, columnId, value, null)
   }
