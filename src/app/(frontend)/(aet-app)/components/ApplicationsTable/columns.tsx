@@ -110,6 +110,35 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const dateStr = row.getValue(columnId) as string
+      if (!dateStr) return false
+
+      const date = new Date(dateStr)
+
+      // Format the date to the user's view: YYYY-MM-DD
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      // Format the time to the user's view: HH:MM:SS
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      // Check if the search value matches any part of the date or time
+      return (
+        formattedDate.toLowerCase().includes(filterValue.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    },
   },
   {
     accessorKey: 'updated_at',
@@ -147,6 +176,35 @@ export const getColumns = ({
             })}
           </div>
         </div>
+      )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const dateStr = row.getValue(columnId) as string
+      if (!dateStr) return false
+
+      const date = new Date(dateStr)
+
+      // Format the date to the user's view: YYYY-MM-DD
+      const formattedDate = date
+        .toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+      // Format the time to the user's view: HH:MM:SS
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+
+      // Check if the search value matches any part of the date or time
+      return (
+        formattedDate.toLowerCase().includes(filterValue.toLowerCase()) ||
+        formattedTime.toLowerCase().includes(filterValue.toLowerCase())
       )
     },
   },
@@ -223,9 +281,10 @@ export const getColumns = ({
       const id = row.getValue('id') as string
       // Split UUID into three parts for better readability
       const parts = id.split('-')
-      const firstPart = parts.slice(0, 2).join('-')
-      const secondPart = parts.slice(2, 4).join('-')
+      const firstPart = parts.slice(0, 2).join('-') + '-'
+      const secondPart = parts.slice(2, 4).join('-') + '-'
       const thirdPart = parts[4]
+
       return (
         <Link
           href={`../status?applicationId=${id}`}
@@ -277,6 +336,13 @@ export const getColumns = ({
           {[firstName, middleName, lastName].filter(Boolean).join(' ')}
         </div>
       )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const firstName = (row.getValue(columnId) as string) || ''
+      const middleName = row.original.middle_name || ''
+      const lastName = row.original.last_name || ''
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
+      return fullName.includes(filterValue.toLowerCase())
     },
   },
   // {
@@ -493,6 +559,17 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const status = row.getValue(columnId) as string
+
+      // 用户看到的显示方式 (首字母大写)
+      const displayStatus = status.charAt(0).toUpperCase() + status.slice(1)
+
+      return (
+        displayStatus.toLowerCase().includes(filterValue.toLowerCase()) ||
+        status.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    },
   },
   {
     id: 'estimated_completion_date',
@@ -647,6 +724,15 @@ export const getColumns = ({
         </div>
       )
     },
+    filterFn: (row, columnId, filterValue) => {
+      const dueAmount = row.getValue(columnId) as number | null
+
+      // Format the due amount to the user's view: "$123.45" or "N/A"
+      const formattedAmount = dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'
+
+      // Check if the search value matches the formatted amount
+      return formattedAmount.toLowerCase().includes(filterValue.toLowerCase())
+    },
   },
   {
     accessorKey: 'payment_status',
@@ -705,6 +791,17 @@ export const getColumns = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const paymentStatus = row.getValue(columnId) as string
+
+      // 用户看到的显示方式 (首字母大写)
+      const displayStatus = paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)
+
+      return (
+        displayStatus.toLowerCase().includes(filterValue.toLowerCase()) ||
+        paymentStatus.toLowerCase().includes(filterValue.toLowerCase())
       )
     },
   },
@@ -779,5 +876,9 @@ export const getColumns = ({
     accessorKey: 'payment_id',
     header: () => <div className="text-center">Payment ID (notes）</div>,
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
+    filterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId) || 'N/A'
+      return String(value).toLowerCase().includes(filterValue.toLowerCase())
+    },
   },
 ]
