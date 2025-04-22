@@ -13,5 +13,21 @@ jobs:
     steps:
       - name: Check for expired applications
         run: |
-          curl -X POST "${{ secrets.API_URL }}/api/supabase/check-expired" \
-            -H "Authorization: Bearer ${{ secrets.API_KEY }}"
+          echo "Starting check-expired job..."
+          echo "Calling API at: ${{ secrets.API_URL }}/api/supabase/check-expired"
+          response=$(curl -X POST "${{ secrets.API_URL }}/api/supabase/check-expired" \
+            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -w "\n%{http_code}" \
+            -s)
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$ d')
+
+          echo "Response status code: $http_code"
+          echo "Response body: $body"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "Error: API call failed"
+            exit 1
+          fi
