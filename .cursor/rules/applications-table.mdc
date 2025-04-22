@@ -1,0 +1,80 @@
+---
+description: 
+globs: src/app/(frontend)/(aet-app)/components/ApplicationsTable/**
+alwaysApply: false
+---
+# Table Search Implementation Guide
+
+This rule explains how search works in the `ApplicationsTable` component.
+
+## Search Implementation Pattern
+
+The search functionality in `[ApplicationsTable/index.tsx](mdc:src/app/(frontend)/(aet-app)/components/ApplicationsTable/index.tsx)` follows a pattern where both column-specific filtering and global search need special handling to match what the user sees in the UI with what's stored in the database.
+
+### Key Components:
+1. `filterFn` - Custom filter function on individual columns 
+2. `fuzzyFilter` - General-purpose fuzzy matching function
+3. `globalFilterFunction` - Function that handles global search across all fields
+
+## Special Field Handling
+
+The following fields require special handling for search:
+
+### ID Fields with NULL values
+Fields like `payment_id` that can be null but are shown as "N/A" in the UI:
+```javascript
+// For column filterFn:
+filterFn: (row, columnId, filterValue) => {
+  const value = row.getValue(columnId) || 'N/A'
+  return String(value).toLowerCase().includes(filterValue.toLowerCase())
+}
+
+// For global search:
+const paymentId = row.original.payment_id
+const formattedPaymentId = paymentId || 'N/A'
+if (formattedPaymentId.toLowerCase().includes(value.toLowerCase())) {
+  return true
+}
+```
+
+### Formatted Date Fields
+Date fields that are displayed in a formatted way:
+```javascript
+const date = new Date(dateStr)
+const formattedDate = date
+  .toLocaleDateString('en-US', {
+    year: 'numeric', 
+    month: '2-digit',
+    day: '2-digit', 
+  })
+  .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+
+const formattedTime = date.toLocaleTimeString('en-US', {...})
+
+return formattedDate.toLowerCase().includes(filterValue.toLowerCase()) || 
+       formattedTime.toLowerCase().includes(filterValue.toLowerCase())
+```
+
+### Composite Fields
+Fields like names that are combined for display:
+```javascript
+const firstName = row.getValue('first_name') || ''
+const middleName = row.original.middle_name || ''
+const lastName = row.original.last_name || ''
+const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
+return fullName.includes(value.toLowerCase())
+```
+
+### Formatted Numerical Values
+For currency or other formatted numbers:
+```javascript
+const dueAmount = row.getValue(columnId) as number | null
+const formattedAmount = dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'
+return formattedAmount.toLowerCase().includes(filterValue.toLowerCase())
+```
+
+## Adding New Searchable Fields
+
+When adding a new field to the table, determine if special handling is needed:
+1. If the displayed format differs from stored format, add a custom `filterFn` to the column definition
+2. If the field should participate in global search, add corresponding handling in `globalFilterFunction`

@@ -41,11 +41,11 @@
 - [x] Add a button to dropbox folder for each order.
 - [x] Add a Loading button for payment
 - [x] use components for Reviews
-- [ ] Better layout for Status page
-- [ ] any way for Status page to pre load???
+- [x] Better layout for Status page
+- [x] any way for Status page to pre load???
 - [x] user add comments for their services
 - [x] show files uploaded.
-- [ ] 付款倒计时！
+- [x] 付款倒计时！
 - [x] delete "valid_purpose_other":
       ((((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))))
       to avoid:
@@ -53,7 +53,7 @@
 - [x] 有两个邮寄选项选不上啊 ！！！已修复
 - [x] 取消 3% 手续费的提示
 - [x] 把 payment 放到上传文件下面
-- [ ] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
+- [x] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
 - [x] 调整邮件格式，增加更明显的用户引导
 - [x] 在用户上传文件后，后台可以 check 他的文件是否正确，
 - [ ] 上传文件后，发送邮件确认 （zhao）
@@ -61,7 +61,7 @@
 - [x] CRM 处理进度 可视化。
 - [ ] 要有邮件发送的倒计时（zhao）
 - [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
-- [ ] 增加付款的倒计时（暂时设置成半小时）
+- [x] 增加付款的倒计时（暂时设置成半小时）
 - [x] 要增加 sample，在表格第一页！
 - [x] Marked as Paid for Zelle/ Paypal (stripe has payment id)
 - [ ] 需要能手动导入 （批量？） 数据 （tong）
