@@ -14,8 +14,8 @@ jobs:
       - name: Check for expired applications
         run: |
           # Store URL parts
-          BASE_URL="${{ secrets.API_URL }}"
-          API_PATH="/api/supabase/check-expired/"
+          BASE_URL="https://app.americantranslationservice.com"
+          API_PATH="/api/supabase/check-expired"
           FULL_URL="${BASE_URL}${API_PATH}"
 
           echo "Starting check-expired job..."
@@ -24,7 +24,7 @@ jobs:
 
           # Add -v for verbose output and -L to follow redirects
           response=$(curl -X POST "${FULL_URL}" \
-            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
+            -H "Authorization: Bearer 0Syjdv2O/gEE29daYYHOq+hmSoRTRq5odOLBuGotJLA1" \
             -H "Content-Type: application/json" \
             -w "\n%{http_code}" \
             -v \
