@@ -88,6 +88,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
+  /**
+   * Import the office change functionality from the custom hook
+   * This provides the ability to update an application's office
+   * while maintaining proper state management and validation
+   */
   const { handleOfficeChange } = useOfficeChange(applications, setApplications)
 
   const handleScrollLeft = () => {
