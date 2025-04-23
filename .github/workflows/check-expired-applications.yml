@@ -2,8 +2,8 @@ name: Check Expired Applications
 
 on:
   schedule:
-    # Run every hour
-    - cron: '0 * * * *'
+    # Run at 12:00 UTC (8:00 AM ET) every day
+    - cron: '0 12 * * *'
   # Allow manual trigger
   workflow_dispatch:
 
@@ -24,7 +24,6 @@ jobs:
 
           # Add -v for verbose output and -L to follow redirects
           response=$(curl -X POST "${FULL_URL}" \
-            -H "Authorization: Bearer 0Syjdv2O/gEE29daYYHOq+hmSoRTRq5odOLBuGotJLA1" \
             -H "Content-Type: application/json" \
             -w "\n%{http_code}" \
             -v \

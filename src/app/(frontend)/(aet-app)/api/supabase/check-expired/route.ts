@@ -1,33 +1,11 @@
 import { createClient } from '../../../utils/supabase/server'
 import { NextResponse } from 'next/server'
 import { PAYMENT_DEADLINE } from '../../../components/StatusCheck/utils'
-import { headers } from 'next/headers'
-
-const API_KEY = process.env.API_KEY
 
 export async function POST() {
   console.log('Received check-expired request')
 
   try {
-    // Only check API key in production environment
-    if (process.env.NODE_ENV === 'production') {
-      const headersList = await headers()
-      const authHeader = headersList.get('authorization')
-      const token = authHeader?.split(' ')[1]
-
-      console.log('Auth check:', {
-        hasAuthHeader: !!authHeader,
-        hasValidToken: !!token,
-        isValidKey: token === API_KEY,
-        envHasKey: !!API_KEY,
-      })
-
-      if (!API_KEY || token !== API_KEY) {
-        console.warn('Unauthorized access attempt to check-expired API')
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-      }
-    }
-
     const client = await createClient()
     const now = new Date()
     const deadline = new Date(now.getTime() - PAYMENT_DEADLINE * 60 * 60 * 1000)
@@ -39,13 +17,13 @@ export async function POST() {
     })
 
     // Find applications that are:
-    // 1. Submitted but not paid（payment_status is pending）
-    // 2. Submitted more than PAYMENT_DEADLINE hours ago
-    // 3. Not already marked as expired
+    // 1. Status is either 'submitted' or 'cancelled'
+    // 2. Payment status is pending
+    // 3. Submitted more than PAYMENT_DEADLINE hours ago
     const { data: expiredApplications, error } = await client
       .from('fce_applications')
-      .select('id, submitted_at, payment_status')
-      .eq('status', 'submitted')
+      .select('id, submitted_at, payment_status, status')
+      .in('status', ['submitted', 'cancelled'])
       .eq('payment_status', 'pending')
       .lt('submitted_at', deadline.toISOString())
 
