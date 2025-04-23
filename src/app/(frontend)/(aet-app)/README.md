@@ -72,6 +72,8 @@
 - [ ] 48小时自动标记 expired
 - [ ] 设置 due amount 后发邮件通知
 - [ ] 付款后，自动更新due amount
+- [ ] 为每笔支付单独新建一个表（zelle Stripe paypal）
+- [ ] evaluee name 加上 proun
 
 ## Features
 
