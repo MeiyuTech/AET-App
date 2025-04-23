@@ -68,8 +68,8 @@ export async function POST(req: Request) {
         // Update the application status and payment status
         const paidAt = new Date().toISOString()
         const amountTotal = session.amount_total / 100
-        const stripeFee = amountTotal * 0.029 + 30
-        const price = amountTotal - stripeFee
+        const stripeFee = Number((amountTotal * 0.029 + 0.3).toFixed(2))
+        const price = Number((amountTotal - stripeFee).toFixed(2))
 
         const currentAmount = applicationData.due_amount
         console.log('currentAmount', currentAmount)
