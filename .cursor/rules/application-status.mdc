@@ -1,0 +1,61 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Application and Payment Status State Machine
+
+## Status Definitions
+
+### Application Status
+- `submitted`: Initial state when application is first submitted
+- `processing`: Application is being processed after payment
+- `completed`: Service is completed (manual state change only)
+- `cancelled`: Application cancelled by user (not allowed if paid)
+
+### Payment Status
+- `pending`: Awaiting payment
+- `paid`: Payment successful
+- `expired`: Payment window expired
+- `refunded`: Payment refunded
+
+## State Transition Rules
+
+### Automatic Transitions
+1. Initial Submission
+   - Application: `submitted`
+   - Payment: `pending`
+
+2. Successful Payment (Stripe webhook)
+   - Application: `processing`
+   - Payment: `paid`
+
+3. Payment Expiration (System task)
+   - Application: `submitted`
+   - Payment: `expired`
+
+4. Refund (Stripe webhook)
+   - Application: Remains `processing`
+   - Payment: `refunded`
+
+### Manual Transitions
+1. Service Completion (Staff only)
+   - Application: `completed`
+   - Payment: Must be `paid`
+
+2. User Cancellation
+   - Application: `cancelled`
+   - Payment: Cannot be `paid`
+
+## Constraints
+- Only paid applications can be marked as completed
+- Cancelled status is not allowed for paid applications
+- All state changes should be logged with timestamp
+- Payment status `pending` allows retry payment
+- Refunded applications remain active in `processing` state
+
+## Implementation Notes
+- State transitions should trigger appropriate notifications
+- Each state change should be recorded in audit logs
+- Stripe webhook handles payment status updates
+- Manual state changes require staff authorization

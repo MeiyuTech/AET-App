@@ -35,6 +35,42 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session
     const applicationId = session.client_reference_id || session.metadata?.applicationId
 
+    // If payment link is valid, handle different event types
+    if (session.payment_link) {
+      console.log('Processing payment link webhook:', event.type)
+      console.log('Payment link:', session.payment_link)
+
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          console.log('Payment link checkout completed:', {
+            payment_link: session.payment_link,
+            payment_intent: session.payment_intent,
+            amount_total: session.amount_total,
+          })
+          return new NextResponse('Payment link checkout completed', { status: 200 })
+        }
+        case 'checkout.session.expired': {
+          console.log('Payment link checkout expired:', {
+            payment_link: session.payment_link,
+          })
+          return new NextResponse('Payment link checkout expired', { status: 200 })
+        }
+        case 'charge.refunded': {
+          console.log('Payment link charge refunded:', {
+            payment_link: session.payment_link,
+            payment_intent: session.payment_intent,
+            amount_refunded: (event.data.object as Stripe.Charge).amount_refunded,
+          })
+          return new NextResponse('Payment link charge refunded', { status: 200 })
+        }
+        default: {
+          console.log('Unhandled payment link event:', event.type)
+          return new NextResponse('Unhandled payment link event', { status: 200 })
+        }
+      }
+    }
+
+    // If there is no payment link, then applicationId is required
     if (!applicationId) {
       console.error('No client_reference_id in session')
       return new NextResponse('Missing client_reference_id', { status: 400 })
@@ -167,6 +203,33 @@ export async function POST(req: Request) {
         }
 
         return new NextResponse('Webhook processed - Application marked as expired', {
+          status: 200,
+        })
+      }
+
+      case 'charge.refunded': {
+        console.log('charge.refunded data:', {
+          client_reference_id: applicationId,
+          payment_intent: session.payment_intent,
+          current_application_data: applicationData,
+          amount_refunded: (event.data.object as Stripe.Charge).amount_refunded,
+        })
+
+        const { error } = await client
+          .from('fce_applications')
+          .update({
+            payment_status: 'refunded',
+          })
+          .eq('id', applicationId)
+
+        if (error) {
+          console.error('Error updating refunded application:', error)
+          return new NextResponse(`Error updating refunded application: ${error.message}`, {
+            status: 500,
+          })
+        }
+
+        return new NextResponse('Webhook processed - Application marked as refunded', {
           status: 200,
         })
       }
