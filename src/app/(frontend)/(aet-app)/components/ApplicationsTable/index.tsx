@@ -41,6 +41,8 @@ import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
 import { useOfficeChange } from './hooks/useOfficeChange'
+import { useTableScroll } from './hooks/useTableScroll'
+import { TableScrollButtons } from './TableScrollButtons'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -89,38 +91,17 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   /**
+   * Import the table scroll functionality from the custom hook
+   * This provides smooth horizontal scrolling for the wide table
+   */
+  const { handleScrollLeft, handleScrollRight } = useTableScroll(tableContainerRef)
+
+  /**
    * Import the office change functionality from the custom hook
    * This provides the ability to update an application's office
    * while maintaining proper state management and validation
    */
   const { handleOfficeChange } = useOfficeChange(applications, setApplications)
-
-  const handleScrollLeft = () => {
-    if (tableContainerRef.current) {
-      const container = tableContainerRef.current
-      const scrollDistance = container.clientWidth - 50
-
-      const newScrollPosition = Math.max(0, container.scrollLeft - scrollDistance)
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  const handleScrollRight = () => {
-    if (tableContainerRef.current) {
-      const container = tableContainerRef.current
-      const scrollDistance = container.clientWidth - 50
-
-      const maxScroll = container.scrollWidth - container.clientWidth
-      const newScrollPosition = Math.min(maxScroll, container.scrollLeft + scrollDistance)
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth',
-      })
-    }
-  }
 
   const handleDueAmountChange = async (id: string, due_amount: number | null) => {
     try {
@@ -669,26 +650,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       </div>
 
       <div className="relative">
-        <div className="absolute left-8 top-0 h-12 flex items-center z-10">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full shadow-md bg-white/80 hover:bg-white"
-            onClick={handleScrollLeft}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="absolute right-0 top-0 h-12 flex items-center z-10">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full shadow-md bg-white/80 hover:bg-white"
-            onClick={handleScrollRight}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
+        <TableScrollButtons onScrollLeft={handleScrollLeft} onScrollRight={handleScrollRight} />
         <div
           ref={tableContainerRef}
           className="rounded-md border overflow-x-auto scrollbar-hide w-full"
