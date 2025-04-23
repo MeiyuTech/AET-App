@@ -24,6 +24,7 @@ jobs:
 
           # Add -v for verbose output and -L to follow redirects
           response=$(curl -X POST "${FULL_URL}" \
+            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
             -H "Content-Type: application/json" \
             -w "\n%{http_code}" \
             -v \
