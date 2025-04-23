@@ -14,7 +14,7 @@ jobs:
       - name: Check for expired applications
         run: |
           # Store URL parts
-          BASE_URL="https://app.americantranslationservice.com"
+          BASE_URL="${{ secrets.API_URL }}"
           API_PATH="/api/supabase/check-expired"
           FULL_URL="${BASE_URL}${API_PATH}"
 
