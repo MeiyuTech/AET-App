@@ -54,6 +54,11 @@ export async function POST(req: Request) {
 
     switch (event.type) {
       case 'checkout.session.completed': {
+        if (!session.amount_total) {
+          console.error('No amount total in session')
+          return new NextResponse('Missing amount total', { status: 400 })
+        }
+
         console.log('checkout.session.completed data:', {
           client_reference_id: applicationId,
           payment_intent: session.payment_intent,
@@ -62,6 +67,15 @@ export async function POST(req: Request) {
 
         // Update the application status and payment status
         const paidAt = new Date().toISOString()
+        const stripeFee = session.amount_total * 0.029 + 30
+        const price = session.amount_total / 100 - stripeFee
+
+        const currentAmount = applicationData.due_amount
+        console.log('currentAmount', currentAmount)
+        console.log('session.amount_total/100', session.amount_total / 100)
+        console.log('stripeFee', stripeFee)
+        console.log('price', price)
+
         const { error } = await client
           .from('fce_applications')
           .update({
@@ -69,6 +83,7 @@ export async function POST(req: Request) {
             payment_status: 'paid',
             payment_id: session.payment_intent as string,
             paid_at: paidAt,
+            due_amount: price,
           })
           .eq('id', applicationId)
 
