@@ -74,7 +74,7 @@ export const ApplicationConfirmationEmail = ({
                   <Button
                     href={`https://app.americantranslationservice.com/status?applicationId=${applicationId}`}
                   >
-                    Check your status
+                    Check Status
                   </Button>
                 </Section>
 

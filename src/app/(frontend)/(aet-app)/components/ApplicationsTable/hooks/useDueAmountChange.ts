@@ -44,7 +44,7 @@ export const useDueAmountChange = (
       setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, due_amount } : app)))
 
       // Send email notification
-      await sendDueAmountChangeEmail(id, due_amount)
+      await sendDueAmountChangeEmail(id)
 
       toast({
         title: 'Due amount updated',

@@ -16,7 +16,17 @@ import { createPaymentLink } from '../stripe/actions'
 import { EmailOptions } from './config'
 import { fetchApplication } from '../actions'
 import { getCCAddress } from './utils'
+import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
 
+/**
+ * Send an email using the Resend API.
+ * @param to - The email address of the recipient.
+ * @param subject - The subject of the email.
+ * @param html - The HTML content of the email.
+ * @param cc - The CC address of the email.
+ * @param bcc - The BCC address of the email.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
 export async function resendEmail({ to, subject, html, cc, bcc }: EmailOptions) {
   if (!process.env.RESEND_DEFAULT_FROM_ADDRESS) {
     throw new Error('RESEND_DEFAULT_FROM_ADDRESS is not set')
@@ -46,6 +56,13 @@ export async function resendEmail({ to, subject, html, cc, bcc }: EmailOptions) 
   }
 }
 
+/**
+ * Get the HTML for an application confirmation email.
+ * @param applicationId - The ID of the application.
+ * @param application - The application data.
+ * @param paymentLink - The payment link.
+ * @returns A promise that resolves to the HTML for the application confirmation email.
+ */
 export async function getApplicationConfirmationEmailHTML(
   applicationId: string,
   application: ApplicationData,
@@ -119,6 +136,16 @@ export async function sendApplicationConfirmationEmail(applicationId: string) {
   }
 }
 
+/**
+ * Get the HTML for a payment confirmation email.
+ * @param applicationId - The ID of the application.
+ * @param application - The application data.
+ * @param paidAt - The date and time the payment was made.
+ * @param paymentAmount - The amount of the payment.
+ * @param paymentId - The ID of the payment.
+ * @param estimatedCompletionDate - The estimated completion date of the application.
+ * @returns A promise that resolves to the HTML for the payment confirmation email.
+ */
 export async function getPaymentConfirmationEmailHTML(
   applicationId: string,
   application: ApplicationData,
@@ -142,6 +169,11 @@ export async function getPaymentConfirmationEmailHTML(
 /**
  * Send a payment confirmation email to the applicant.
  * @param applicationId - The ID of the application.
+ * @param applicationData - The application data.
+ * @param paidAt - The date and time the payment was made.
+ * @param paymentAmount - The amount of the payment.
+ * @param paymentId - The ID of the payment.
+ * @param estimatedCompletionDate - The estimated completion date of the application.
  * @returns A promise that resolves to an object containing the success status and message.
  */
 export async function sendPaymentConfirmationEmail(
@@ -184,31 +216,51 @@ export async function sendPaymentConfirmationEmail(
   }
 }
 
+/**
+ * Get the HTML for a due amount change email.
+ * @param applicationId - The ID of the application.
+ * @param application - The application data.
+ * @param newDueAmount - The new due amount.
+ * @param paymentLink - The payment link.
+ * @returns A promise that resolves to the HTML for the due amount change email.
+ */
 export async function getDueAmountChangeEmailHTML(
   applicationId: string,
   application: ApplicationData,
-  newDueAmount: number | null
+  paymentLink?: string
 ): Promise<string> {
-  // TODO: Replace with actual email template component
-  return `
-    <div>
-      <h1>Due Amount Update Notification</h1>
-      <p>Application ID: ${applicationId}</p>
-      <p>New Due Amount: ${newDueAmount !== null ? `$${newDueAmount.toFixed(2)}` : 'Not set'}</p>
-    </div>
-  `
+  const emailComponent = React.createElement(DueAmountChangeEmail, {
+    applicationId,
+    application,
+    paymentLink,
+  })
+
+  return render(emailComponent)
 }
 
-export async function sendDueAmountChangeEmail(applicationId: string, newDueAmount: number | null) {
+/**
+ * Send a due amount change email to the applicant.
+ * @param applicationId - The ID of the application.
+ * @param newDueAmount - The new due amount.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
+export async function sendDueAmountChangeEmail(applicationId: string) {
   const { success, applicationData } = await fetchApplication(applicationId)
   if (!success || !applicationData) {
     throw new Error('Application not found')
   }
 
+  let paymentLink = ''
+  if (!applicationData.due_amount) {
+    const response = await createPaymentLink(applicationData.due_amount, applicationId)
+    const data = await response.json()
+    paymentLink = data.url
+  }
+
   const dueAmountChangeEmailHTML = await getDueAmountChangeEmailHTML(
     applicationId,
     applicationData,
-    newDueAmount
+    paymentLink
   )
 
   if (!applicationData.office) {
@@ -223,13 +275,13 @@ export async function sendDueAmountChangeEmail(applicationId: string, newDueAmou
       to: applicationData.email,
       cc: getCCAddress(applicationData.office, applicationData.email),
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      subject: 'AET Services Due Amount Update',
+      subject: 'AET Services Service Fee Update',
       html: dueAmountChangeEmailHTML,
     })
 
     return { success: emailSuccess, message: sendEmailMessage }
   } catch (error) {
-    console.error('Failed to send due amount change email:', error)
+    console.error('Failed to send service fee change email:', error)
     throw error
   }
 }
