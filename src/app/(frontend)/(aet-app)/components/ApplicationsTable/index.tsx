@@ -1,19 +1,7 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import {
-  ColumnFiltersState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-
-import { toast } from '@/hooks/use-toast'
+import { useRef } from 'react'
+import { flexRender } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,8 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DatabaseEducation } from '../FCEApplicationForm/types'
-import { Application } from './types'
 
 import { EducationDetailsDialog } from './EducationDetailsDialog'
 import { ServicesDetailsDialog } from './ServicesDetailsDialog'
@@ -35,414 +21,102 @@ import {
   StatusConfirmDialog,
   PaymentStatusConfirmDialog,
 } from './ConfirmationDialogs'
-import { createClient } from '../../utils/supabase/client'
 import { getColumns } from './columns'
 import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
-import { useOfficeChange } from './hooks/useOfficeChange'
+import { TableScrollButtons } from './TableScrollButtons'
+import {
+  useOfficeChange,
+  useTableScroll,
+  useDueAmountChange,
+  useStatusChange,
+  usePaymentStatusChange,
+  usePaidAtChange,
+  useTableConfig,
+  useApplicationState,
+} from './hooks'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [globalFilter, setGlobalFilter] = useState('')
-  const [applications, setApplications] = useState<Application[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedEducations, setSelectedEducations] = useState<DatabaseEducation[] | undefined>(
-    undefined
-  )
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [servicesDialogOpen, setServicesDialogOpen] = useState(false)
-  const [filesDialogOpen, setFilesDialogOpen] = useState(false)
-  const [selectedApplication, setSelectedApplication] = useState<Application | undefined>(undefined)
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-  const [pendingDueAmount, setPendingDueAmount] = useState<{
-    id: string
-    amount: number | null
-  } | null>(null)
-  const [pendingStatusChange, setPendingStatusChange] = useState<{
-    id: string
-    status: string
-    currentStatus: string
-  } | null>(null)
-  const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
-  const [pendingPaymentStatusChange, setPendingPaymentStatusChange] = useState<{
-    id: string
-    status: string
-    currentStatus: string
-    paymentMethod: string
-  } | null>(null)
-  const [paymentStatusConfirmDialogOpen, setPaymentStatusConfirmDialogOpen] = useState(false)
-  const [paymentLinkDialogOpen, setPaymentLinkDialogOpen] = useState<boolean>(false)
-  const [selectedApplicationForPayment, setSelectedApplicationForPayment] = useState<{
-    id: string
-    amount: number
-  } | null>(null)
-  const [pendingPaidAtChange, setPendingPaidAtChange] = useState<{
-    id: string
-    paidAt: Date | null
-  } | null>(null)
-  const [paidAtConfirmDialogOpen, setPaidAtConfirmDialogOpen] = useState(false)
+  const {
+    // Data states
+    applications,
+    setApplications,
+    loading,
 
-  const supabase = createClient()
+    // Dialog states
+    dialogOpen,
+    setDialogOpen,
+    servicesDialogOpen,
+    setServicesDialogOpen,
+    filesDialogOpen,
+    setFilesDialogOpen,
+    confirmDialogOpen,
+    setConfirmDialogOpen,
+    statusConfirmDialogOpen,
+    setStatusConfirmDialogOpen,
+    paymentStatusConfirmDialogOpen,
+    setPaymentStatusConfirmDialogOpen,
+    paymentLinkDialogOpen,
+    setPaymentLinkDialogOpen,
+    paidAtConfirmDialogOpen,
+    setPaidAtConfirmDialogOpen,
+
+    // Selection states
+    selectedEducations,
+    setSelectedEducations,
+    selectedApplication,
+    setSelectedApplication,
+    selectedApplicationForPayment,
+    setSelectedApplicationForPayment,
+
+    // Pending change states
+    pendingDueAmount,
+    setPendingDueAmount,
+    pendingStatusChange,
+    setPendingStatusChange,
+    pendingPaymentStatusChange,
+    setPendingPaymentStatusChange,
+    pendingPaidAtChange,
+    setPendingPaidAtChange,
+  } = useApplicationState(dataFilter)
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
-  /**
-   * Import the office change functionality from the custom hook
-   * This provides the ability to update an application's office
-   * while maintaining proper state management and validation
-   */
+  const { handleScrollLeft, handleScrollRight } = useTableScroll(tableContainerRef)
   const { handleOfficeChange } = useOfficeChange(applications, setApplications)
+  const { handleDueAmountChange } = useDueAmountChange(applications, setApplications)
 
-  const handleScrollLeft = () => {
-    if (tableContainerRef.current) {
-      const container = tableContainerRef.current
-      const scrollDistance = container.clientWidth - 50
+  const { handleStatusChange, confirmStatusChange } = useStatusChange({
+    applications,
+    setApplications,
+    setPendingStatusChange,
+    setStatusConfirmDialogOpen,
+    pendingStatusChange,
+  })
 
-      const newScrollPosition = Math.max(0, container.scrollLeft - scrollDistance)
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth',
-      })
-    }
-  }
+  const { handlePaymentStatusChange, confirmPaymentStatusChange } = usePaymentStatusChange({
+    applications,
+    setApplications,
+    setPendingPaymentStatusChange,
+    setPaymentStatusConfirmDialogOpen,
+    pendingPaymentStatusChange,
+  })
 
-  const handleScrollRight = () => {
-    if (tableContainerRef.current) {
-      const container = tableContainerRef.current
-      const scrollDistance = container.clientWidth - 50
-
-      const maxScroll = container.scrollWidth - container.clientWidth
-      const newScrollPosition = Math.min(maxScroll, container.scrollLeft + scrollDistance)
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  const handleDueAmountChange = async (id: string, due_amount: number | null) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const status = application.status
-      if (status !== 'submitted') {
-        toast({
-          title: 'Operation not allowed',
-          description: 'Only applications with status "Submitted" can be updated.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      const { error } = await supabase.from('fce_applications').update({ due_amount }).eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, due_amount } : app)))
-
-      toast({
-        title: 'Due amount updated',
-        description: `Application due amount has been set to ${due_amount !== null ? `$${due_amount.toFixed(2)}` : 'none'}.`,
-      })
-    } catch (error) {
-      console.error('Error updating due amount:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the due amount. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const handleStatusChange = async (id: string, newStatus: string) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const currentStatus = application.status
-      const paymentStatus = application.payment_status
-
-      // Validate status change based on the rules
-      if (
-        newStatus === 'completed' &&
-        !(currentStatus === 'processing' && paymentStatus === 'paid')
-      ) {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with status "Processing" and payment status "Paid" can be completed.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      if (
-        newStatus === 'cancelled' &&
-        !(
-          (currentStatus === 'processing' && paymentStatus !== 'paid') ||
-          currentStatus === 'submitted'
-        )
-      ) {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with status "Submitted" or "Processing" (if not paid) can be cancelled.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Allow changing from submitted to processing if payment status is paid
-      if (
-        newStatus === 'processing' &&
-        !(currentStatus === 'submitted' && paymentStatus === 'paid')
-      ) {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with status "Submitted" and payment status "Paid" can be marked as processing.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Open confirmation dialog
-      setPendingStatusChange({
-        id,
-        status: newStatus,
-        currentStatus,
-      })
-      setStatusConfirmDialogOpen(true)
-    } catch (error) {
-      console.error('Error preparing status change:', error)
-      toast({
-        title: 'Operation failed',
-        description: 'Could not prepare the status change. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const confirmStatusChange = async () => {
-    if (!pendingStatusChange) return
-
-    try {
-      const { id, status } = pendingStatusChange
-
-      const { error } = await supabase.from('fce_applications').update({ status }).eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) =>
-        apps.map((app) =>
-          app.id === id
-            ? {
-                ...app,
-                status: status as 'completed' | 'cancelled' | 'draft' | 'submitted' | 'processing',
-              }
-            : app
-        )
-      )
-
-      toast({
-        title: 'Status updated',
-        description: `Application status has been changed to ${status}.`,
-      })
-    } catch (error) {
-      console.error('Error updating status:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the status. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setPendingStatusChange(null)
-    }
-  }
-
-  const handlePaymentStatusChange = async (
-    id: string,
-    newStatus: string,
-    paymentMethod: string
-  ) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const currentStatus = application.payment_status
-
-      // Only allow changing from pending or expired to paid
-      if (newStatus === 'paid' && !(currentStatus === 'pending' || currentStatus === 'expired')) {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with payment status "Pending" or "Expired" can be marked as paid.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Open confirmation dialog
-      setPendingPaymentStatusChange({
-        id,
-        status: newStatus,
-        currentStatus,
-        paymentMethod,
-      })
-      setPaymentStatusConfirmDialogOpen(true)
-    } catch (error) {
-      console.error('Error preparing payment status change:', error)
-      toast({
-        title: 'Operation failed',
-        description: 'Could not prepare the payment status change. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const confirmPaymentStatusChange = async () => {
-    if (!pendingPaymentStatusChange) return
-
-    try {
-      const { id, status, paymentMethod } = pendingPaymentStatusChange
-      const paid_at = status === 'paid' ? new Date().toISOString() : null
-      const payment_id =
-        paymentMethod === 'zelle' ? 'Marked as Paid via Zelle' : 'Marked as Paid via Paypal'
-
-      // Update both payment_status and paid_at
-      const { error } = await supabase
-        .from('fce_applications')
-        .update({ payment_status: status, paid_at, payment_id })
-        .eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) =>
-        apps.map((app) =>
-          app.id === id
-            ? {
-                ...app,
-                payment_status: status as 'pending' | 'paid' | 'failed' | 'expired',
-                paid_at,
-                payment_id,
-              }
-            : app
-        )
-      )
-
-      toast({
-        title: 'Payment status updated',
-        description: `Payment status has been changed to ${status} via ${paymentMethod}.`,
-      })
-    } catch (error) {
-      console.error('Error updating payment status:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the payment status. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setPendingPaymentStatusChange(null)
-    }
-  }
+  const { handlePaidAtChange, confirmPaidAtChange } = usePaidAtChange({
+    applications,
+    setApplications,
+    setPendingPaidAtChange,
+    setPaidAtConfirmDialogOpen,
+    pendingPaidAtChange,
+  })
 
   const handleCreatePaymentLink = (id: string, amount: number) => {
     setSelectedApplicationForPayment({ id, amount })
     setPaymentLinkDialogOpen(true)
   }
 
-  const handlePaidAtChange = async (id: string, paidAt: Date | null) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const paymentStatus = application.payment_status
-      if (paymentStatus !== 'pending' && paymentStatus !== 'expired') {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with payment status "Pending" or "Expired" can be modified.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Open confirmation dialog
-      setPendingPaidAtChange({
-        id,
-        paidAt,
-      })
-      setPaidAtConfirmDialogOpen(true)
-    } catch (error) {
-      console.error('Error preparing paid_at change:', error)
-      toast({
-        title: 'Operation failed',
-        description: 'Could not prepare the paid_at change. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const confirmPaidAtChange = async () => {
-    if (!pendingPaidAtChange) return
-
-    try {
-      const { id, paidAt } = pendingPaidAtChange
-      const paid_at = paidAt ? paidAt.toISOString() : null
-
-      // Update paid_at
-      const { error } = await supabase.from('fce_applications').update({ paid_at }).eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) =>
-        apps.map((app) =>
-          app.id === id
-            ? {
-                ...app,
-                paid_at,
-              }
-            : app
-        )
-      )
-
-      toast({
-        title: 'Payment date updated',
-        description: `Payment date has been ${paidAt ? 'set' : 'cleared'}.`,
-      })
-    } catch (error) {
-      console.error('Error updating payment date:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the payment date. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setPendingPaidAtChange(null)
-      setPaidAtConfirmDialogOpen(false)
-    }
-  }
-
-  const columns = getColumns({
+  const columnArgs = {
     handleOfficeChange,
     handleStatusChange,
     handlePaymentStatusChange,
@@ -455,203 +129,13 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     createPaymentLink: handleCreatePaymentLink,
     setFilesDialogOpen,
     handlePaidAtChange,
-  })
-
-  const fuzzyFilter = (row: any, columnId: string, value: string, addMeta: any) => {
-    const itemValue = row.getValue(columnId)
-
-    // for payment_id special handling
-    if (itemValue == null) {
-      if (columnId === 'payment_id') {
-        return 'n/a'.includes(value.toLowerCase())
-      }
-      return false
-    }
-
-    // for first_name special handling, search full name
-    if (columnId === 'first_name') {
-      const firstName = (row.getValue('first_name') as string) || ''
-      const middleName = row.original.middle_name || ''
-      const lastName = row.original.last_name || ''
-      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
-      return fullName.includes(value.toLowerCase())
-    }
-
-    const searchValue = value.toLowerCase()
-    const itemString = String(itemValue).toLowerCase()
-
-    return itemString.includes(searchValue)
   }
 
-  const globalFilterFunction = (row: any, columnId: string, value: string) => {
-    // check if match full name
-    const firstName = row.original.first_name || ''
-    const middleName = row.original.middle_name || ''
-    const lastName = row.original.last_name || ''
-    const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').toLowerCase()
-
-    if (fullName.includes(value.toLowerCase())) {
-      return true
-    }
-
-    // check created_at format
-    const createdAt = row.original.created_at
-    if (createdAt) {
-      const date = new Date(createdAt)
-      const formattedDate = date
-        .toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
-
-      const formattedTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-
-      if (
-        formattedDate.toLowerCase().includes(value.toLowerCase()) ||
-        formattedTime.toLowerCase().includes(value.toLowerCase())
-      ) {
-        return true
-      }
-    }
-
-    // check updated_at format
-    const updatedAt = row.original.updated_at
-    if (updatedAt) {
-      const date = new Date(updatedAt)
-      const formattedDate = date
-        .toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        })
-        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
-
-      const formattedTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-
-      if (
-        formattedDate.toLowerCase().includes(value.toLowerCase()) ||
-        formattedTime.toLowerCase().includes(value.toLowerCase())
-      ) {
-        return true
-      }
-    }
-
-    // check due_amount format
-    const dueAmount = row.original.due_amount as number | null
-    if (dueAmount !== undefined) {
-      // Format the due amount to the user's view: "$123.45" or "N/A"
-      const formattedAmount = dueAmount !== null ? `$${dueAmount.toFixed(2)}` : 'N/A'
-
-      if (formattedAmount.toLowerCase().includes(value.toLowerCase())) {
-        return true
-      }
-    }
-
-    // check payment_id format
-    const paymentId = row.original.payment_id
-    // Format payment_id to the user's view: actual value or "N/A"
-    const formattedPaymentId = paymentId || 'N/A'
-
-    if (formattedPaymentId.toLowerCase().includes(value.toLowerCase())) {
-      return true
-    }
-
-    // if not match any special field, use default fuzzy filter
-    return fuzzyFilter(row, columnId, value, null)
-  }
-
-  const table = useReactTable({
-    data: applications,
-    columns: getColumns({
-      handleOfficeChange,
-      handleStatusChange,
-      handlePaymentStatusChange,
-      setPendingDueAmount,
-      setConfirmDialogOpen,
-      setSelectedEducations,
-      setDialogOpen,
-      setSelectedApplication,
-      setServicesDialogOpen,
-      createPaymentLink: handleCreatePaymentLink,
-      setFilesDialogOpen,
-      handlePaidAtChange,
-    }),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
-    globalFilterFn: globalFilterFunction,
-    onGlobalFilterChange: setGlobalFilter,
-    state: {
-      sorting,
-      columnFilters,
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 100,
-      },
-    },
+  const { table, globalFilter, setGlobalFilter } = useTableConfig({
+    applications,
+    getColumns,
+    columnArgs,
   })
-
-  useEffect(() => {
-    async function fetchApplications(filter: string) {
-      try {
-        const { data: applications, error: applicationsError } = await supabase
-          .from('fce_applications')
-          .select(
-            `
-            *,
-            educations:fce_educations(*)
-          `
-          )
-          .or(filter)
-          .order('created_at', { ascending: false })
-
-        if (applicationsError) throw applicationsError
-        setApplications(applications || [])
-      } catch (error) {
-        console.error('Error fetching applications:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    // Verify if dataFilter is valid
-    const isValidFilter = (filter: string) => {
-      // Add more complex validation logic here
-      return filter && /^[a-zA-Z0-9.,= ]*$/.test(filter) // Only allow letters, numbers, commas, equals, and spaces
-    }
-
-    if (isValidFilter(dataFilter)) {
-      fetchApplications(dataFilter)
-    } else {
-      console.error('Invalid dataFilter:', dataFilter)
-      // Handle invalid filter conditions, e.g. display a message or do not execute the query
-      toast({
-        title: 'Unauthorized User',
-        description: 'Please login with an authorized user',
-        variant: 'destructive',
-      })
-    }
-  }, [dataFilter, supabase])
 
   if (loading) {
     return <div className="p-4">Loading...</div>
@@ -659,6 +143,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   return (
     <div className="space-y-4">
+      {/* Search bar */}
       <div className="flex items-center py-4">
         <Input
           placeholder="Search all columns..."
@@ -668,27 +153,11 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         />
       </div>
 
+      {/* Table container */}
       <div className="relative">
-        <div className="absolute left-8 top-0 h-12 flex items-center z-10">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full shadow-md bg-white/80 hover:bg-white"
-            onClick={handleScrollLeft}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="absolute right-0 top-0 h-12 flex items-center z-10">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full shadow-md bg-white/80 hover:bg-white"
-            onClick={handleScrollRight}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
+        {/* Scroll buttons */}
+        <TableScrollButtons onScrollLeft={handleScrollLeft} onScrollRight={handleScrollRight} />
+        {/* Table */}
         <div
           ref={tableContainerRef}
           className="rounded-md border overflow-x-auto scrollbar-hide w-full"
@@ -727,7 +196,10 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
+                    <TableCell
+                      colSpan={table.getAllColumns().length}
+                      className="h-24 text-center text-lg"
+                    >
                       No results.
                     </TableCell>
                   </TableRow>
@@ -738,6 +210,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         </div>
       </div>
 
+      {/* Pagination */}
       <div className="flex items-center justify-end space-x-4 py-6">
         <Button
           variant="outline"
@@ -759,21 +232,25 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
         </Button>
       </div>
 
+      {/* Education details dialog */}
       <EducationDetailsDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         educations={selectedEducations}
       />
+      {/* Services details dialog */}
       <ServicesDetailsDialog
         open={servicesDialogOpen}
         onOpenChange={setServicesDialogOpen}
         application={selectedApplication}
       />
+      {/* Files dialog */}
       <FilesDialog
         open={filesDialogOpen}
         onOpenChange={setFilesDialogOpen}
         application={selectedApplication}
       />
+      {/* Due Amount confirm dialog */}
       <DueAmountConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
@@ -785,24 +262,28 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
           }
         }}
       />
+      {/* Status confirm dialog */}
       <StatusConfirmDialog
         open={statusConfirmDialogOpen}
         onOpenChange={setStatusConfirmDialogOpen}
         pendingChange={pendingStatusChange}
         onConfirm={confirmStatusChange}
       />
+      {/* Payment Status confirm dialog */}
       <PaymentStatusConfirmDialog
         open={paymentStatusConfirmDialogOpen}
         onOpenChange={setPaymentStatusConfirmDialogOpen}
         pendingChange={pendingPaymentStatusChange}
         onConfirm={confirmPaymentStatusChange}
       />
+      {/* Paid At confirm dialog */}
       <PaidAtConfirmDialog
         open={paidAtConfirmDialogOpen}
         onOpenChange={setPaidAtConfirmDialogOpen}
         pendingChange={pendingPaidAtChange}
         onConfirm={confirmPaidAtChange}
       />
+      {/* Payment Link dialog */}
       <PaymentLinkDialog
         open={paymentLinkDialogOpen}
         onOpenChange={setPaymentLinkDialogOpen}

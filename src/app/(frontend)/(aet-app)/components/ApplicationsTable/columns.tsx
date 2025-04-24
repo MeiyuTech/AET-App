@@ -14,12 +14,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { DatabaseEducation } from '../FCEApplicationForm/types'
 import { Application } from './types'
-import { formatDateTime } from '../../utils/dateFormat'
 import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
 import { CompletionProgressBar } from './CompletionProgressBar'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
-import { format } from 'date-fns'
 
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
