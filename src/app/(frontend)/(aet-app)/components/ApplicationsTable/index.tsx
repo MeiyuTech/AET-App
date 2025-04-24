@@ -25,15 +25,17 @@ import { getColumns } from './columns'
 import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
-import { useOfficeChange } from './hooks/useOfficeChange'
-import { useTableScroll } from './hooks/useTableScroll'
-import { useDueAmountChange } from './hooks/useDueAmountChange'
-import { useStatusChange } from './hooks/useStatusChange'
-import { usePaymentStatusChange } from './hooks/usePaymentStatusChange'
-import { usePaidAtChange } from './hooks/usePaidAtChange'
 import { TableScrollButtons } from './TableScrollButtons'
-import { useTableConfig } from './hooks/useTableConfig'
-import { useApplicationState } from './hooks/useApplicationState'
+import {
+  useOfficeChange,
+  useTableScroll,
+  useDueAmountChange,
+  useStatusChange,
+  usePaymentStatusChange,
+  usePaidAtChange,
+  useTableConfig,
+  useApplicationState,
+} from './hooks'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const {
