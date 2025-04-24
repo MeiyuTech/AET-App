@@ -183,3 +183,53 @@ export async function sendPaymentConfirmationEmail(
     throw error
   }
 }
+
+export async function getDueAmountChangeEmailHTML(
+  applicationId: string,
+  application: ApplicationData,
+  newDueAmount: number | null
+): Promise<string> {
+  // TODO: Replace with actual email template component
+  return `
+    <div>
+      <h1>Due Amount Update Notification</h1>
+      <p>Application ID: ${applicationId}</p>
+      <p>New Due Amount: ${newDueAmount !== null ? `$${newDueAmount.toFixed(2)}` : 'Not set'}</p>
+    </div>
+  `
+}
+
+export async function sendDueAmountChangeEmail(applicationId: string, newDueAmount: number | null) {
+  const { success, applicationData } = await fetchApplication(applicationId)
+  if (!success || !applicationData) {
+    throw new Error('Application not found')
+  }
+
+  const dueAmountChangeEmailHTML = await getDueAmountChangeEmailHTML(
+    applicationId,
+    applicationData,
+    newDueAmount
+  )
+
+  if (!applicationData.office) {
+    throw new Error('Application office not found')
+  }
+  if (!applicationData.email) {
+    throw new Error('Application email not found')
+  }
+
+  try {
+    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
+      to: applicationData.email,
+      cc: getCCAddress(applicationData.office, applicationData.email),
+      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
+      subject: 'AET Services Due Amount Update',
+      html: dueAmountChangeEmailHTML,
+    })
+
+    return { success: emailSuccess, message: sendEmailMessage }
+  } catch (error) {
+    console.error('Failed to send due amount change email:', error)
+    throw error
+  }
+}
