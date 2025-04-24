@@ -4,6 +4,7 @@ import { createClient } from './supabase/server'
 import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
 import { sendApplicationConfirmationEmail } from './email/actions'
+import { Application } from '../components/ApplicationsTable/types'
 
 /**
  * Submit AET application:
@@ -128,5 +129,60 @@ export async function fetchApplication(applicationId: string) {
   } catch (error) {
     console.error('Failed to fetch and format application:', error)
     return { success: false }
+  }
+}
+
+interface FetchApplicationsListResult {
+  success: boolean
+  applications?: Application[]
+  error?: string
+}
+
+/**
+ * Fetch applications list with filter:
+ * 1. Get applications data from database with filter
+ * 2. Get related educations data
+ * @param filter - SQL filter string
+ * @returns - FetchApplicationsListResult
+ */
+export async function fetchApplicationsList(filter: string): Promise<FetchApplicationsListResult> {
+  try {
+    const client = await createClient()
+
+    // Verify if filter is valid
+    const isValidFilter = (filter: string) => {
+      return filter && /^[a-zA-Z0-9.,= ]*$/.test(filter)
+    }
+
+    if (!isValidFilter(filter)) {
+      throw new Error('Invalid filter format')
+    }
+
+    const { data: applications, error: applicationsError } = await client
+      .from('fce_applications')
+      .select(
+        `
+        *,
+        educations:fce_educations(*)
+      `
+      )
+      .or(filter)
+      .order('created_at', { ascending: false })
+
+    if (applicationsError) {
+      console.error('Error fetching applications:', applicationsError)
+      return { success: false, error: 'Failed to fetch applications' }
+    }
+
+    return {
+      success: true,
+      applications: applications || [],
+    }
+  } catch (error) {
+    console.error('Failed to fetch applications:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch applications',
+    }
   }
 }

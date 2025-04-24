@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { toast } from '@/hooks/use-toast'
-import { createClient } from '../../../utils/supabase/client'
 import { Application } from '../types'
 import { DatabaseEducation } from '../../FCEApplicationForm/types'
+import { fetchApplicationsList } from '../../../utils/actions'
 
 interface ApplicationStateResult {
   // Data states
@@ -110,48 +110,36 @@ export const useApplicationState = (dataFilter: string): ApplicationStateResult 
     paidAt: Date | null
   } | null>(null)
 
-  const supabase = createClient()
-
   useEffect(() => {
-    async function fetchApplications(filter: string) {
+    async function loadApplications() {
       try {
-        const { data: applications, error: applicationsError } = await supabase
-          .from('fce_applications')
-          .select(
-            `
-            *,
-            educations:fce_educations(*)
-          `
-          )
-          .or(filter)
-          .order('created_at', { ascending: false })
+        setLoading(true)
+        const result = await fetchApplicationsList(dataFilter)
 
-        if (applicationsError) throw applicationsError
-        setApplications(applications || [])
+        if (!result.success || !result.applications) {
+          toast({
+            title: 'Error',
+            description: result.error || 'Failed to fetch applications',
+            variant: 'destructive',
+          })
+          return
+        }
+
+        setApplications(result.applications)
       } catch (error) {
-        console.error('Error fetching applications:', error)
+        console.error('Error loading applications:', error)
+        toast({
+          title: 'Error',
+          description: 'Failed to load applications. Please try again.',
+          variant: 'destructive',
+        })
       } finally {
         setLoading(false)
       }
     }
 
-    // Verify if dataFilter is valid
-    const isValidFilter = (filter: string) => {
-      // Add more complex validation logic here
-      return filter && /^[a-zA-Z0-9.,= ]*$/.test(filter) // Only allow letters, numbers, commas, equals, and spaces
-    }
-
-    if (isValidFilter(dataFilter)) {
-      fetchApplications(dataFilter)
-    } else {
-      console.error('Invalid dataFilter:', dataFilter)
-      toast({
-        title: 'Unauthorized User',
-        description: 'Please login with an authorized user',
-        variant: 'destructive',
-      })
-    }
-  }, [dataFilter, supabase])
+    loadApplications()
+  }, [dataFilter])
 
   return {
     // Data states
