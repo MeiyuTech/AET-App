@@ -44,6 +44,8 @@ import { useOfficeChange } from './hooks/useOfficeChange'
 import { useTableScroll } from './hooks/useTableScroll'
 import { useDueAmountChange } from './hooks/useDueAmountChange'
 import { useStatusChange } from './hooks/useStatusChange'
+import { usePaymentStatusChange } from './hooks/usePaymentStatusChange'
+import { usePaidAtChange } from './hooks/usePaidAtChange'
 import { TableScrollButtons } from './TableScrollButtons'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
@@ -115,175 +117,25 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     pendingStatusChange,
   })
 
-  const handlePaymentStatusChange = async (
-    id: string,
-    newStatus: string,
-    paymentMethod: string
-  ) => {
-    try {
-      const application = applications.find((app) => app.id === id)
+  const { handlePaymentStatusChange, confirmPaymentStatusChange } = usePaymentStatusChange({
+    applications,
+    setApplications,
+    setPendingPaymentStatusChange,
+    setPaymentStatusConfirmDialogOpen,
+    pendingPaymentStatusChange,
+  })
 
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const currentStatus = application.payment_status
-
-      // Only allow changing from pending or expired to paid
-      if (newStatus === 'paid' && !(currentStatus === 'pending' || currentStatus === 'expired')) {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with payment status "Pending" or "Expired" can be marked as paid.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Open confirmation dialog
-      setPendingPaymentStatusChange({
-        id,
-        status: newStatus,
-        currentStatus,
-        paymentMethod,
-      })
-      setPaymentStatusConfirmDialogOpen(true)
-    } catch (error) {
-      console.error('Error preparing payment status change:', error)
-      toast({
-        title: 'Operation failed',
-        description: 'Could not prepare the payment status change. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const confirmPaymentStatusChange = async () => {
-    if (!pendingPaymentStatusChange) return
-
-    try {
-      const { id, status, paymentMethod } = pendingPaymentStatusChange
-      const paid_at = status === 'paid' ? new Date().toISOString() : null
-      const payment_id =
-        paymentMethod === 'zelle' ? 'Marked as Paid via Zelle' : 'Marked as Paid via Paypal'
-
-      // Update both payment_status and paid_at
-      const { error } = await supabase
-        .from('fce_applications')
-        .update({ payment_status: status, paid_at, payment_id })
-        .eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) =>
-        apps.map((app) =>
-          app.id === id
-            ? {
-                ...app,
-                payment_status: status as 'pending' | 'paid' | 'failed' | 'expired',
-                paid_at,
-                payment_id,
-              }
-            : app
-        )
-      )
-
-      toast({
-        title: 'Payment status updated',
-        description: `Payment status has been changed to ${status} via ${paymentMethod}.`,
-      })
-    } catch (error) {
-      console.error('Error updating payment status:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the payment status. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setPendingPaymentStatusChange(null)
-    }
-  }
+  const { handlePaidAtChange, confirmPaidAtChange } = usePaidAtChange({
+    applications,
+    setApplications,
+    setPendingPaidAtChange,
+    setPaidAtConfirmDialogOpen,
+    pendingPaidAtChange,
+  })
 
   const handleCreatePaymentLink = (id: string, amount: number) => {
     setSelectedApplicationForPayment({ id, amount })
     setPaymentLinkDialogOpen(true)
-  }
-
-  const handlePaidAtChange = async (id: string, paidAt: Date | null) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const paymentStatus = application.payment_status
-      if (paymentStatus !== 'pending' && paymentStatus !== 'expired') {
-        toast({
-          title: 'Operation not allowed',
-          description:
-            'Only applications with payment status "Pending" or "Expired" can be modified.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Open confirmation dialog
-      setPendingPaidAtChange({
-        id,
-        paidAt,
-      })
-      setPaidAtConfirmDialogOpen(true)
-    } catch (error) {
-      console.error('Error preparing paid_at change:', error)
-      toast({
-        title: 'Operation failed',
-        description: 'Could not prepare the paid_at change. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const confirmPaidAtChange = async () => {
-    if (!pendingPaidAtChange) return
-
-    try {
-      const { id, paidAt } = pendingPaidAtChange
-      const paid_at = paidAt ? paidAt.toISOString() : null
-
-      // Update paid_at
-      const { error } = await supabase.from('fce_applications').update({ paid_at }).eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) =>
-        apps.map((app) =>
-          app.id === id
-            ? {
-                ...app,
-                paid_at,
-              }
-            : app
-        )
-      )
-
-      toast({
-        title: 'Payment date updated',
-        description: `Payment date has been ${paidAt ? 'set' : 'cleared'}.`,
-      })
-    } catch (error) {
-      console.error('Error updating payment date:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the payment date. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setPendingPaidAtChange(null)
-      setPaidAtConfirmDialogOpen(false)
-    }
   }
 
   const columns = getColumns({
