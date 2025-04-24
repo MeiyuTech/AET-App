@@ -42,6 +42,7 @@ import { PaymentLinkDialog } from './PaymentLinkDialog'
 import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
 import { useOfficeChange } from './hooks/useOfficeChange'
 import { useTableScroll } from './hooks/useTableScroll'
+import { useDueAmountChange } from './hooks/useDueAmountChange'
 import { TableScrollButtons } from './TableScrollButtons'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
@@ -103,44 +104,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
    */
   const { handleOfficeChange } = useOfficeChange(applications, setApplications)
 
-  const handleDueAmountChange = async (id: string, due_amount: number | null) => {
-    try {
-      const application = applications.find((app) => app.id === id)
-
-      if (!application) {
-        throw new Error('Application not found')
-      }
-
-      const status = application.status
-      if (status !== 'submitted') {
-        toast({
-          title: 'Operation not allowed',
-          description: 'Only applications with status "Submitted" can be updated.',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      const { error } = await supabase.from('fce_applications').update({ due_amount }).eq('id', id)
-
-      if (error) throw error
-
-      // Update local state
-      setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, due_amount } : app)))
-
-      toast({
-        title: 'Due amount updated',
-        description: `Application due amount has been set to ${due_amount !== null ? `$${due_amount.toFixed(2)}` : 'none'}.`,
-      })
-    } catch (error) {
-      console.error('Error updating due amount:', error)
-      toast({
-        title: 'Update failed',
-        description: 'Could not update the due amount. Please try again.',
-        variant: 'destructive',
-      })
-    }
-  }
+  const { handleDueAmountChange } = useDueAmountChange(applications, setApplications)
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
