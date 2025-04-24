@@ -326,12 +326,20 @@ export const getColumns = ({
       )
     },
     cell: ({ row }) => {
+      const pronouns = row.original.pronouns
+      const pronounsMap = {
+        mr: 'Mr.',
+        ms: 'Ms.',
+        mx: 'Mx.',
+      }
       const firstName = row.getValue('first_name') as string
       const middleName = row.original.middle_name
       const lastName = row.original.last_name
       return (
         <div className="w-[160px] break-words">
-          {[firstName, middleName, lastName].filter(Boolean).join(' ')}
+          {[pronounsMap[pronouns as keyof typeof pronounsMap], firstName, middleName, lastName]
+            .filter(Boolean)
+            .join(' ')}
         </div>
       )
     },
