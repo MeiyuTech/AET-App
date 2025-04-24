@@ -881,7 +881,20 @@ export const getColumns = ({
   {
     accessorKey: 'payment_id',
     header: () => <div className="text-center">Payment ID (notes）</div>,
-    cell: ({ row }) => row.getValue('payment_id') || 'N/A',
+    cell: ({ row }) => {
+      const paymentId = row.getValue('payment_id') as string
+      if (!paymentId) return 'N/A'
+
+      return (
+        <Link
+          href={`https://dashboard.stripe.com/payments/${paymentId}`}
+          target="_blank"
+          className="text-blue-500 hover:underline"
+        >
+          {paymentId}
+        </Link>
+      )
+    },
     filterFn: (row, columnId, filterValue) => {
       const value = row.getValue(columnId) || 'N/A'
       return String(value).toLowerCase().includes(filterValue.toLowerCase())
