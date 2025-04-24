@@ -1,6 +1,7 @@
 import { toast } from '@/hooks/use-toast'
 import { createClient } from '../../../utils/supabase/client'
 import { Application } from '../types'
+import { sendDueAmountChangeEmail } from '../../../utils/email/actions'
 
 /**
  * Hook for managing due amount changes in applications
@@ -41,6 +42,9 @@ export const useDueAmountChange = (
 
       // Update local state
       setApplications((apps) => apps.map((app) => (app.id === id ? { ...app, due_amount } : app)))
+
+      // Send email notification
+      await sendDueAmountChangeEmail(id)
 
       toast({
         title: 'Due amount updated',

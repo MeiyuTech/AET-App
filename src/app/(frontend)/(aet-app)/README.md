@@ -70,10 +70,10 @@
 - [x] 不能把 paid 重写为 expired
 - [ ] fix `export interface Application extends Omit<DatabaseApplication,'service_type'|'educations'>`
 - [x] 48小时自动标记 expired （script, Github Action）
-- [ ] 设置 due amount 后发邮件通知
-- [ ] 付款后，自动更新due amount
+- [x] 设置 due amount 后发邮件通知
+- [x] 付款后，自动更新due amount
 - [ ] 为每笔支付单独新建一个表（zelle Stripe paypal）
-- [ ] evaluee name 加上 proun
+- [x] evaluee name 加上 proun
 
 ## Features
 
