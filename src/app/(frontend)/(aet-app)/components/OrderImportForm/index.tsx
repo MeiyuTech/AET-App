@@ -23,8 +23,11 @@ import {
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { CalendarIcon } from 'lucide-react'
+
+// Import types and constants from FCEApplicationForm
+import { OFFICE_OPTIONS, PURPOSE_OPTIONS } from '../FCEApplicationForm/constants'
 
 export function OrderImportForm() {
   const [date, setDate] = useState<Date>()
@@ -32,7 +35,7 @@ export function OrderImportForm() {
     firstName: '',
     middleName: '',
     lastName: '',
-    serviceType: '',
+    purpose: '',
     serviceAmount: '',
     paymentId: '',
     office: '',
@@ -109,20 +112,42 @@ export function OrderImportForm() {
             </div>
           </div>
 
+          {/* Office */}
+          <div className="space-y-2">
+            <Label>Office</Label>
+            <Select
+              value={formData.office}
+              onValueChange={(value) => setFormData({ ...formData, office: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select office" />
+              </SelectTrigger>
+              <SelectContent>
+                {OFFICE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Service Type */}
           <div className="space-y-2">
             <Label>Service Type</Label>
             <Select
-              value={formData.serviceType}
-              onValueChange={(value) => setFormData({ ...formData, serviceType: value })}
+              value={formData.purpose}
+              onValueChange={(value) => setFormData({ ...formData, purpose: value })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="translation">Translation Service</SelectItem>
-                <SelectItem value="evaluation">Evaluation Service</SelectItem>
-                <SelectItem value="authentication">Authentication Service</SelectItem>
+                {PURPOSE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -150,23 +175,6 @@ export function OrderImportForm() {
               onChange={(e) => setFormData({ ...formData, paymentId: e.target.value })}
               required
             />
-          </div>
-
-          {/* Office */}
-          <div className="space-y-2">
-            <Label>Office</Label>
-            <Select
-              value={formData.office}
-              onValueChange={(value) => setFormData({ ...formData, office: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select office" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ny">New York Office</SelectItem>
-                <SelectItem value="ca">California Office</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
 
