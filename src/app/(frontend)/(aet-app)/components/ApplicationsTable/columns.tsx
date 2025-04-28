@@ -1,6 +1,7 @@
 import { ChevronDown, Eye, Edit, FileText } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
+import { cn } from '@/utilities/cn'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -568,7 +569,7 @@ export const getColumns = ({
     filterFn: (row, columnId, filterValue) => {
       const status = row.getValue(columnId) as string
 
-      // 用户看到的显示方式 (首字母大写)
+      // User sees the status with the first letter capitalized
       const displayStatus = status.charAt(0).toUpperCase() + status.slice(1)
 
       return (
@@ -898,6 +899,38 @@ export const getColumns = ({
     filterFn: (row, columnId, filterValue) => {
       const value = row.getValue(columnId) || 'N/A'
       return String(value).toLowerCase().includes(filterValue.toLowerCase())
+    },
+  },
+  {
+    accessorKey: 'source',
+    header: () => <div className="text-center">Source</div>,
+    cell: ({ row }) => {
+      const source = row.getValue('source') as string
+      return (
+        <div className="text-center">
+          <span
+            className={cn(
+              'px-2 py-1 rounded-full text-xs font-medium',
+              source === 'external' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+            )}
+          >
+            {source === 'external' ? 'External' : 'Internal'}
+          </span>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'notes',
+    header: () => <div className="text-center">Notes</div>,
+    cell: ({ row }) => {
+      const notes = row.getValue('notes') as string | null
+      if (!notes) return 'N/A'
+      return (
+        <div className="max-w-[200px] truncate" title={notes}>
+          {notes}
+        </div>
+      )
     },
   },
 ]
