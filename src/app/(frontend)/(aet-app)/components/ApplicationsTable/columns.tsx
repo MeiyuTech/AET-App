@@ -278,12 +278,26 @@ export const getColumns = ({
     header: () => <div className="text-center">ID</div>,
     cell: ({ row }) => {
       const id = row.getValue('id') as string
+      const source = row.original.source as 'internal' | 'external'
+
       // Split UUID into three parts for better readability
       const parts = id.split('-')
       const firstPart = parts.slice(0, 2).join('-') + '-'
       const secondPart = parts.slice(2, 4).join('-') + '-'
       const thirdPart = parts[4]
 
+      // For external orders, just display the ID without link
+      if (source === 'external') {
+        return (
+          <div className="text-sm w-[140px]">
+            <div>{firstPart}</div>
+            <div>{secondPart}</div>
+            <div>{thirdPart}</div>
+          </div>
+        )
+      }
+
+      // For internal orders, display with link
       return (
         <Link
           href={`../status?applicationId=${id}`}

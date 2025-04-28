@@ -48,10 +48,18 @@ export default async function CRMPage() {
       <h2 className="text-2xl mb-4">
         Welcome <span className="font-bold">{user.email}</span>
       </h2>
+
       {/* Payment Link Button */}
       <Button asChild>
         <Link href="../../payment-link" target="_blank">
           Manually Create Payment Link
+        </Link>
+      </Button>
+
+      {/* Import Orders Button */}
+      <Button asChild>
+        <Link href="/admin/order" target="_blank">
+          Import Orders
         </Link>
       </Button>
 

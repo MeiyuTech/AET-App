@@ -950,6 +950,8 @@ export const fceExternalOrders = pgTable("fce_external_orders", {
 	office: text().notNull(),
 	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }).notNull(),
 	notes: text(),
+	status: text().default('processing').notNull(),
+	paymentStatus: text("payment_status").default('completed'),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => {

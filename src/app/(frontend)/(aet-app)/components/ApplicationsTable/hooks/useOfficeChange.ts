@@ -3,7 +3,6 @@
  * This hook encapsulates all the logic for updating an application's office
  * including validation, database updates, and local state management
  */
-
 import { toast } from '@/hooks/use-toast'
 import { createClient } from '../../../utils/supabase/client'
 import { Application } from '../types'

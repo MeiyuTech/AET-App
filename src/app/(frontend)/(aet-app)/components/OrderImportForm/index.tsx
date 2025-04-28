@@ -86,7 +86,9 @@ export function OrderImportForm() {
         <CardContent className="space-y-4">
           {/* Office */}
           <div className="space-y-2">
-            <Label>Office</Label>
+            <Label>
+              Office<span className="text-red-500">*</span>
+            </Label>
             <Select
               value={form.watch('office')}
               onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
@@ -106,7 +108,9 @@ export function OrderImportForm() {
 
           {/* Payment Time */}
           <div className="space-y-2">
-            <Label>Payment Time</Label>
+            <Label>
+              Payment Time<span className="text-red-500">*</span>
+            </Label>
             <div className="relative flex items-center">
               <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
                 <DateTimePicker
@@ -121,23 +125,32 @@ export function OrderImportForm() {
                 </span>
               </div>
             </div>
+            {form.formState.errors.paidAt && (
+              <p className="text-sm text-red-500">{form.formState.errors.paidAt.message}</p>
+            )}
           </div>
 
           {/* Client Name */}
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">
+                First Name<span className="text-red-500">*</span>
+              </Label>
               <Input id="firstName" {...form.register('firstName')} />
               {form.formState.errors.firstName && (
                 <p className="text-sm text-red-500">{form.formState.errors.firstName.message}</p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="middleName">Middle Name</Label>
+              <Label htmlFor="middleName">
+                Middle Name<span className="text-sm text-gray-500 ml-2">(Optional)</span>
+              </Label>
               <Input id="middleName" {...form.register('middleName')} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">
+                Last Name<span className="text-red-500">*</span>
+              </Label>
               <Input id="lastName" {...form.register('lastName')} />
               {form.formState.errors.lastName && (
                 <p className="text-sm text-red-500">{form.formState.errors.lastName.message}</p>
@@ -147,7 +160,9 @@ export function OrderImportForm() {
 
           {/* Service Type */}
           <div className="space-y-2">
-            <Label>Service Type</Label>
+            <Label>
+              Service Type<span className="text-red-500">*</span>
+            </Label>
             <Select
               value={form.watch('purpose')}
               onValueChange={(value: OrderFormData['purpose']) => form.setValue('purpose', value)}
@@ -170,7 +185,9 @@ export function OrderImportForm() {
 
           {/* Due Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount">Due Amount</Label>
+            <Label htmlFor="amount">
+              Due Amount<span className="text-red-500">*</span>
+            </Label>
             <Input id="amount" type="number" min="0" step="0.01" {...form.register('dueAmount')} />
             {form.formState.errors.dueAmount && (
               <p className="text-sm text-red-500">{form.formState.errors.dueAmount.message}</p>
@@ -179,7 +196,9 @@ export function OrderImportForm() {
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">
+              Notes<span className="text-sm text-gray-500 ml-2">(Optional)</span>
+            </Label>
             <Textarea
               id="notes"
               placeholder="Add any additional notes here..."

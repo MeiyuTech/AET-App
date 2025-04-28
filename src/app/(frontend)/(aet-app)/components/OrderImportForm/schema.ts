@@ -12,7 +12,8 @@ export const orderFormSchema = z.object({
     required_error: 'Please select an office',
   }),
   paidAt: z.date({
-    required_error: 'Please select a payment date',
+    required_error: 'Payment time is required',
+    invalid_type_error: 'Please select a valid payment time',
   }),
   notes: z.string().optional(),
 })
