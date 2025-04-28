@@ -1,6 +1,12 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { heartbeats, contactSubmissions, fceApplications, fceEducations } from '../drizzle/schema'
+import {
+  heartbeats,
+  contactSubmissions,
+  fceApplications,
+  fceEducations,
+  fceExternalOrders,
+} from '../drizzle/schema'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { s3Storage } from '@payloadcms/storage-s3'
 
@@ -119,6 +125,7 @@ export default buildConfig({
             contactSubmissions,
             fceApplications,
             fceEducations,
+            fceExternalOrders,
           },
         }
       },
