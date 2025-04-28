@@ -7,12 +7,12 @@ export const orderFormSchema = z.object({
   purpose: z.enum(['evaluation-uscis', 'evaluation-employment', 'evaluation-education'] as const, {
     required_error: 'Please select a service type',
   }),
-  serviceAmount: z.string().min(1, 'Service amount is required'),
-  paymentId: z.string().optional(),
+  dueAmount: z.string().min(1, 'Due amount is required'),
   office: z.enum(['Los Angeles', 'Miami', 'San Francisco'] as const, {
     required_error: 'Please select an office',
   }),
-  paidTime: z.date({
+  paidAt: z.date({
     required_error: 'Please select a payment date',
   }),
+  notes: z.string().optional(),
 })

@@ -3,17 +3,16 @@ import type { DatabaseApplication } from '../FCEApplicationForm/types'
 
 export const formatFormDataForSubmission = (
   formData: OrderFormData
-): Partial<DatabaseApplication> => {
+): Partial<DatabaseApplication> & { notes?: string } => {
   return {
     first_name: formData.firstName,
     middle_name: formData.middleName || null,
     last_name: formData.lastName,
     purpose: formData.purpose,
-    due_amount: parseFloat(formData.serviceAmount),
-    payment_id: formData.paymentId || null,
+    due_amount: parseFloat(formData.dueAmount),
     office: formData.office,
-    paid_at: formData.paidTime?.toISOString() || null,
-    payment_status: 'paid',
+    paid_at: formData.paidAt?.toISOString() || null,
+    notes: formData.notes,
   }
 }
 
