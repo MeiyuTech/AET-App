@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Card,
   CardContent,
@@ -23,10 +24,10 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
+import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/client'
 
 import { OFFICE_OPTIONS, PURPOSE_OPTIONS } from '../FCEApplicationForm/constants'
 import { orderFormSchema } from './schema'
-import { formatFormDataForSubmission } from './utils'
 import { defaultFormValues } from './types'
 import type { OrderFormData } from './types'
 
@@ -39,13 +40,28 @@ export function OrderImportForm() {
 
   const handleSubmit = async (data: OrderFormData) => {
     try {
-      const formattedData = formatFormDataForSubmission(data)
-      // TODO: Implement API call
-      console.log(formattedData)
+      const client = createClient()
+
+      // Insert into fce_external_orders table
+      const { error: insertError } = await client.from('fce_external_orders').insert({
+        first_name: data.firstName,
+        middle_name: data.middleName || null,
+        last_name: data.lastName,
+        purpose: data.purpose,
+        due_amount: parseFloat(data.dueAmount),
+        office: data.office,
+        paid_at: data.paidAt?.toISOString(),
+        notes: data.notes || null,
+      })
+
+      if (insertError) {
+        throw insertError
+      }
 
       toast({
-        title: 'Success',
-        description: 'Order has been imported successfully.',
+        title: ' 🎉 Order Imported Successfully!  🎉',
+        description: `Your order has been successfully imported.`,
+        className: 'bg-green-50 border border-green-200 text-green-800',
       })
       form.reset(defaultFormValues)
     } catch (error) {
@@ -94,13 +110,13 @@ export function OrderImportForm() {
             <div className="relative flex items-center">
               <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
                 <DateTimePicker
-                  date={form.watch('paidTime')}
-                  setDate={(date) => form.setValue('paidTime', date)}
+                  date={form.watch('paidAt')}
+                  setDate={(date) => form.setValue('paidAt', date)}
                   className="h-4 w-4 p-0 -ml-1"
                 />
                 <span className="text-sm">
-                  {form.watch('paidTime')
-                    ? form.watch('paidTime')!.toLocaleString()
+                  {form.watch('paidAt')
+                    ? form.watch('paidAt')!.toLocaleString()
                     : 'No date selected'}
                 </span>
               </div>
@@ -152,29 +168,25 @@ export function OrderImportForm() {
             )}
           </div>
 
-          {/* Service Amount */}
+          {/* Due Amount */}
           <div className="space-y-2">
             <Label htmlFor="amount">Due Amount</Label>
-            <Input
-              id="amount"
-              type="number"
-              min="0"
-              step="0.01"
-              {...form.register('serviceAmount')}
-            />
-            {form.formState.errors.serviceAmount && (
-              <p className="text-sm text-red-500">{form.formState.errors.serviceAmount.message}</p>
+            <Input id="amount" type="number" min="0" step="0.01" {...form.register('dueAmount')} />
+            {form.formState.errors.dueAmount && (
+              <p className="text-sm text-red-500">{form.formState.errors.dueAmount.message}</p>
             )}
           </div>
 
-          {/* Payment ID */}
-          {/* <div className="space-y-2">
-            <Label htmlFor="paymentId">Payment ID</Label>
-            <Input id="paymentId" {...form.register('paymentId')} />
-            {form.formState.errors.paymentId && (
-              <p className="text-sm text-red-500">{form.formState.errors.paymentId.message}</p>
-            )}
-          </div> */}
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea
+              id="notes"
+              placeholder="Add any additional notes here..."
+              className="resize-none"
+              {...form.register('notes')}
+            />
+          </div>
         </CardContent>
 
         <CardFooter>

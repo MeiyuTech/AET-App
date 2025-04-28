@@ -142,6 +142,7 @@ interface FetchApplicationsListResult {
  * Fetch applications list with filter:
  * 1. Get applications data from database with filter
  * 2. Get related educations data
+ * 3. Get external orders data
  * @param filter - SQL filter string
  * @returns - FetchApplicationsListResult
  */
@@ -158,6 +159,7 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
       throw new Error('Invalid filter format')
     }
 
+    // Get fce_applications data
     const { data: applications, error: applicationsError } = await client
       .from('fce_applications')
       .select(
@@ -174,9 +176,83 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
       return { success: false, error: 'Failed to fetch applications' }
     }
 
+    // Get fce_external_orders data
+    const { data: externalOrders, error: externalOrdersError } = await client
+      .from('fce_external_orders')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (externalOrdersError) {
+      console.error('Error fetching external orders:', externalOrdersError)
+      return { success: false, error: 'Failed to fetch external orders' }
+    }
+
+    // Convert external orders to applications format
+    const convertedOrders = externalOrders.map((order) => ({
+      id: order.id,
+      status: 'completed', // Default status
+      current_step: 3, // Default completed status
+      first_name: order.first_name,
+      middle_name: order.middle_name,
+      last_name: order.last_name,
+      purpose: order.purpose,
+      office: order.office,
+      due_amount: order.due_amount,
+      payment_status: 'paid', // Imported orders default to paid
+      payment_id: null,
+      paid_at: order.paid_at,
+      created_at: order.created_at,
+      updated_at: order.updated_at,
+      submitted_at: order.created_at,
+      // Set default values for other fields
+      name: `${order.first_name} ${order.last_name}`,
+      country: 'United States',
+      street_address: 'Imported Order',
+      street_address2: null,
+      city: 'Imported',
+      region: 'CA',
+      zip_code: '00000',
+      phone: '0000000000',
+      fax: null,
+      email: 'noemail@aet-translation.com',
+      purpose_other: null,
+      pronouns: 'mr',
+      date_of_birth: null,
+      service_type: {
+        foreignCredentialEvaluation: {
+          firstDegree: { speed: undefined },
+          secondDegrees: 0,
+        },
+        coursebyCourse: {
+          firstDegree: { speed: undefined },
+          secondDegrees: 0,
+        },
+        professionalExperience: { speed: undefined },
+        positionEvaluation: { speed: undefined },
+        translation: { required: false },
+        customizedService: { required: false },
+      },
+      delivery_method: 'no_delivery_needed',
+      additional_services: [],
+      additional_services_quantity: {
+        extra_copy: 0,
+        pdf_with_hard_copy: 0,
+        pdf_only: 0,
+      },
+      // Add a flag to distinguish the source
+      source: 'external',
+      notes: order.notes,
+    }))
+
+    // Merge the data from the two tables
+    const allApplications = [
+      ...applications.map((app) => ({ ...app, source: 'internal' })),
+      ...convertedOrders,
+    ]
+
     return {
       success: true,
-      applications: applications || [],
+      applications: allApplications || [],
     }
   } catch (error) {
     console.error('Failed to fetch applications:', error)

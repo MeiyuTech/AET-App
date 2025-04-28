@@ -5,10 +5,10 @@ export interface OrderFormData {
   middleName: string
   lastName: string
   purpose: DatabaseApplication['purpose']
-  serviceAmount: string
-  paymentId?: string
+  dueAmount: string
   office: DatabaseApplication['office']
-  paidTime: Date | undefined
+  paidAt: Date | undefined
+  notes?: string
 }
 
 export const defaultFormValues: OrderFormData = {
@@ -16,8 +16,8 @@ export const defaultFormValues: OrderFormData = {
   middleName: '',
   lastName: '',
   purpose: 'evaluation-uscis',
-  serviceAmount: '',
-  paymentId: '',
+  dueAmount: '',
   office: 'Los Angeles',
-  paidTime: undefined,
+  paidAt: undefined,
+  notes: '',
 }

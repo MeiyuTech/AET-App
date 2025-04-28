@@ -939,3 +939,21 @@ export const footerRels = pgTable("footer_rels", {
 	path: varchar().notNull(),
 	pagesId: integer("pages_id"),
 });
+
+export const fceExternalOrders = pgTable("fce_external_orders", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	firstName: text("first_name").notNull(),
+	middleName: text("middle_name"),
+	lastName: text("last_name").notNull(),
+	purpose: text().notNull(),
+	dueAmount: numeric("due_amount", { precision: 6, scale:  2 }).default('NULL'),
+	office: text().notNull(),
+	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }).notNull(),
+	notes: text(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => {
+	return {
+		anyoneCanManageFceExternalOrders: pgPolicy("Anyone can manage fce external orders", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
+	}
+});

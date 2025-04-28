@@ -253,7 +253,6 @@ export default function FCEApplicationForm() {
           title: ' 🎉 Application Submitted Successfully!  🎉',
           description: `Your application has been successfully submitted. We are processing your information.`,
           className: 'bg-green-50 border border-green-200 text-green-800',
-          //
         })
 
         router.push(`/status?applicationId=${result.applicationId}`)

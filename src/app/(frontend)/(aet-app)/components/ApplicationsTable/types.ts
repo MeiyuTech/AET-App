@@ -10,10 +10,13 @@ export interface Application extends Omit<DatabaseApplication, 'service_type' | 
     price: number
   }
 
-  // Override educations to use DatabaseEducation type
+  // Use DatabaseEducation type directly
   educations?: DatabaseEducation[]
+
   payment_status: 'pending' | 'paid' | 'failed' | 'expired'
   payment_id: string | null
   paid_at: string | null
   due_amount: number | null
+  source: 'internal' | 'external'
+  notes?: string | null
 }
