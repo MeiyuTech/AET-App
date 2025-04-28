@@ -42,7 +42,7 @@ export function OrderImportForm() {
     try {
       const client = createClient()
 
-      // 插入订单数据
+      // Insert into fce_external_orders table
       const { error: insertError } = await client.from('fce_external_orders').insert({
         first_name: data.firstName,
         middle_name: data.middleName || null,
@@ -59,8 +59,9 @@ export function OrderImportForm() {
       }
 
       toast({
-        title: 'Success',
-        description: 'Order has been imported successfully.',
+        title: ' 🎉 Order Imported Successfully!  🎉',
+        description: `Your order has been successfully imported.`,
+        className: 'bg-green-50 border border-green-200 text-green-800',
       })
       form.reset(defaultFormValues)
     } catch (error) {
