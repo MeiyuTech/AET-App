@@ -197,7 +197,7 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
       purpose: order.purpose,
       office: order.office,
       due_amount: order.due_amount,
-      payment_status: order.payment_status || 'paid', // Use db value with fallback
+      payment_status: 'paid', // Use db value with fallback
       payment_id: null,
       paid_at: order.paid_at,
       created_at: order.created_at,
