@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { format } from 'date-fns'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,33 +21,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/utilities/cn'
-import { CalendarIcon } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
 
-// Import types and constants from FCEApplicationForm
 import { OFFICE_OPTIONS, PURPOSE_OPTIONS } from '../FCEApplicationForm/constants'
+import { orderFormSchema } from './schema'
+import { formatFormDataForSubmission } from './utils'
+import { defaultFormValues } from './types'
+import type { OrderFormData } from './types'
 
 export function OrderImportForm() {
-  const [date, setDate] = useState<Date>()
-  const [formData, setFormData] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    purpose: '',
-    serviceAmount: '',
-    paymentId: '',
-    office: '',
+  const { toast } = useToast()
+  const form = useForm<OrderFormData>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: defaultFormValues,
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // TODO: Implement form submission
-    console.log({
-      paidTime: date,
-      ...formData,
-    })
+  const handleSubmit = async (data: OrderFormData) => {
+    try {
+      const formattedData = formatFormDataForSubmission(data)
+      // TODO: Implement API call
+      console.log(formattedData)
+
+      toast({
+        title: 'Success',
+        description: 'Order has been imported successfully.',
+      })
+      form.reset(defaultFormValues)
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to import order. Please try again.',
+      })
+    }
   }
 
   return (
@@ -58,66 +66,14 @@ export function OrderImportForm() {
           Fill in the form below to import order data into the system
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <CardContent className="space-y-4">
-          {/* Payment Time */}
-          <div className="space-y-2">
-            <Label>Payment Time</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    'w-full justify-start text-left font-normal',
-                    !date && 'text-muted-foreground'
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, 'PPP') : <span>Select date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          {/* Client Name */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="middleName">Middle Name</Label>
-              <Input
-                id="middleName"
-                value={formData.middleName}
-                onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                required
-              />
-            </div>
-          </div>
-
           {/* Office */}
           <div className="space-y-2">
             <Label>Office</Label>
             <Select
-              value={formData.office}
-              onValueChange={(value) => setFormData({ ...formData, office: value })}
+              value={form.watch('office')}
+              onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select office" />
@@ -132,12 +88,53 @@ export function OrderImportForm() {
             </Select>
           </div>
 
+          {/* Payment Time */}
+          <div className="space-y-2">
+            <Label>Payment Time</Label>
+            <div className="relative flex items-center">
+              <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
+                <DateTimePicker
+                  date={form.watch('paidTime')}
+                  setDate={(date) => form.setValue('paidTime', date)}
+                  className="h-4 w-4 p-0 -ml-1"
+                />
+                <span className="text-sm">
+                  {form.watch('paidTime')
+                    ? form.watch('paidTime')!.toLocaleString()
+                    : 'No date selected'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Client Name */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input id="firstName" {...form.register('firstName')} />
+              {form.formState.errors.firstName && (
+                <p className="text-sm text-red-500">{form.formState.errors.firstName.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="middleName">Middle Name</Label>
+              <Input id="middleName" {...form.register('middleName')} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input id="lastName" {...form.register('lastName')} />
+              {form.formState.errors.lastName && (
+                <p className="text-sm text-red-500">{form.formState.errors.lastName.message}</p>
+              )}
+            </div>
+          </div>
+
           {/* Service Type */}
           <div className="space-y-2">
             <Label>Service Type</Label>
             <Select
-              value={formData.purpose}
-              onValueChange={(value) => setFormData({ ...formData, purpose: value })}
+              value={form.watch('purpose')}
+              onValueChange={(value: OrderFormData['purpose']) => form.setValue('purpose', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
@@ -150,6 +147,9 @@ export function OrderImportForm() {
                 ))}
               </SelectContent>
             </Select>
+            {form.formState.errors.purpose && (
+              <p className="text-sm text-red-500">{form.formState.errors.purpose.message}</p>
+            )}
           </div>
 
           {/* Service Amount */}
@@ -160,21 +160,20 @@ export function OrderImportForm() {
               type="number"
               min="0"
               step="0.01"
-              value={formData.serviceAmount}
-              onChange={(e) => setFormData({ ...formData, serviceAmount: e.target.value })}
-              required
+              {...form.register('serviceAmount')}
             />
+            {form.formState.errors.serviceAmount && (
+              <p className="text-sm text-red-500">{form.formState.errors.serviceAmount.message}</p>
+            )}
           </div>
 
           {/* Payment ID */}
           <div className="space-y-2">
             <Label htmlFor="paymentId">Payment ID</Label>
-            <Input
-              id="paymentId"
-              value={formData.paymentId}
-              onChange={(e) => setFormData({ ...formData, paymentId: e.target.value })}
-              required
-            />
+            <Input id="paymentId" {...form.register('paymentId')} />
+            {form.formState.errors.paymentId && (
+              <p className="text-sm text-red-500">{form.formState.errors.paymentId.message}</p>
+            )}
           </div>
         </CardContent>
 

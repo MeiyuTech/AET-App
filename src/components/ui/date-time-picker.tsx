@@ -118,7 +118,8 @@ export function DateTimePicker({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -right-8 top-0 h-8 w-8 p-0 opacity-70 hover:opacity-100"
+          // delete absolute
+          className=" -right-8 top-0 h-8 w-8 p-0 opacity-70 hover:opacity-100"
           onClick={() => {
             setDate(undefined)
             setIsOpen(false)
