@@ -190,15 +190,14 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
     // Convert external orders to applications format
     const convertedOrders = externalOrders.map((order) => ({
       id: order.id,
-      status: 'completed', // Default status
-      current_step: 3, // Default completed status
+      status: order.status,
       first_name: order.first_name,
       middle_name: order.middle_name,
       last_name: order.last_name,
       purpose: order.purpose,
       office: order.office,
       due_amount: order.due_amount,
-      payment_status: 'paid', // Imported orders default to paid
+      payment_status: order.payment_status || 'paid', // Use db value with fallback
       payment_id: null,
       paid_at: order.paid_at,
       created_at: order.created_at,
@@ -216,7 +215,7 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
       fax: null,
       email: 'noemail@aet-translation.com',
       purpose_other: null,
-      pronouns: 'mr',
+      pronouns: 'mx',
       date_of_birth: null,
       service_type: {
         foreignCredentialEvaluation: {
