@@ -8,7 +8,7 @@ export const orderFormSchema = z.object({
     required_error: 'Please select a service type',
   }),
   serviceAmount: z.string().min(1, 'Service amount is required'),
-  paymentId: z.string().min(1, 'Payment ID is required'),
+  paymentId: z.string().optional(),
   office: z.enum(['Los Angeles', 'Miami', 'San Francisco'] as const, {
     required_error: 'Please select an office',
   }),

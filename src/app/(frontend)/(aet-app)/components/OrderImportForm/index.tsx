@@ -154,7 +154,7 @@ export function OrderImportForm() {
 
           {/* Service Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount">Service Amount</Label>
+            <Label htmlFor="amount">Due Amount</Label>
             <Input
               id="amount"
               type="number"
@@ -168,13 +168,13 @@ export function OrderImportForm() {
           </div>
 
           {/* Payment ID */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="paymentId">Payment ID</Label>
             <Input id="paymentId" {...form.register('paymentId')} />
             {form.formState.errors.paymentId && (
               <p className="text-sm text-red-500">{form.formState.errors.paymentId.message}</p>
             )}
-          </div>
+          </div> */}
         </CardContent>
 
         <CardFooter>

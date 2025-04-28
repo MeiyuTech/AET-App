@@ -6,7 +6,7 @@ export interface OrderFormData {
   lastName: string
   purpose: DatabaseApplication['purpose']
   serviceAmount: string
-  paymentId: string
+  paymentId?: string
   office: DatabaseApplication['office']
   paidTime: Date | undefined
 }

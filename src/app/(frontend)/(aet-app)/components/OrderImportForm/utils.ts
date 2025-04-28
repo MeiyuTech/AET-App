@@ -10,7 +10,7 @@ export const formatFormDataForSubmission = (
     last_name: formData.lastName,
     purpose: formData.purpose,
     due_amount: parseFloat(formData.serviceAmount),
-    payment_id: formData.paymentId,
+    payment_id: formData.paymentId || null,
     office: formData.office,
     paid_at: formData.paidTime?.toISOString() || null,
     payment_status: 'paid',
