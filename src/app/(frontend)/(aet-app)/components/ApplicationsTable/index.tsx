@@ -26,6 +26,7 @@ import { FilesDialog } from './FilesDialog'
 import { PaymentLinkDialog } from './PaymentLinkDialog'
 import { PaidAtConfirmDialog } from './PaidAtConfirmDialog'
 import { TableScrollButtons } from './TableScrollButtons'
+import { DueAmountSummary } from './DueAmountSummary'
 import {
   useOfficeChange,
   useTableScroll,
@@ -143,6 +144,9 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
 
   return (
     <div className="space-y-4">
+      {/* Due Amount Summary */}
+      <DueAmountSummary applications={applications} />
+
       {/* Search bar */}
       <div className="flex items-center py-4">
         <Input
