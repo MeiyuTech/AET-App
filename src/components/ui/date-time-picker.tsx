@@ -4,7 +4,7 @@ import * as React from 'react'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon, Clock, X, Check } from 'lucide-react'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -118,7 +118,8 @@ export function DateTimePicker({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -right-8 top-0 h-8 w-8 p-0 opacity-70 hover:opacity-100"
+          // delete absolute
+          className=" -right-8 top-0 h-8 w-8 p-0 opacity-70 hover:opacity-100"
           onClick={() => {
             setDate(undefined)
             setIsOpen(false)

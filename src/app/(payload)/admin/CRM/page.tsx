@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
 
 export const metadata: Metadata = {
-  title: 'AET Service Application ｜ AET CRM',
+  title: 'AET Service Application ｜ AET CRM ｜ AET Admin',
   description: 'AET Service Application CRM',
 }
 
