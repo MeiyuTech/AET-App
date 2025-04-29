@@ -3,7 +3,7 @@ import { fillClientInfo } from './utils/form-helpers'
 
 test.describe('FCE client info form test', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/apply-credential-evaluation-for-uscis')
+    await page.goto('/credential-evaluation-application')
     // verify the client info step is visible
     await expect(page.getByText('Client Information')).toBeVisible()
   })

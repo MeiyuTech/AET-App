@@ -3,7 +3,7 @@
 
 // test.describe('FCE Form Submission Tests', () => {
 //   test.beforeEach(async ({ page }) => {
-//     await page.goto('/apply-credential-evaluation-for-uscis')
+//     await page.goto('/credential-evaluation-application')
 //   })
 
 //   test('should allow saving form as draft', async ({ page }) => {

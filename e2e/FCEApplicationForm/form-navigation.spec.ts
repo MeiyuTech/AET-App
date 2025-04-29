@@ -4,7 +4,7 @@
 // test.describe('FCE form navigation test', () => {
 //   test.beforeEach(async ({ page }) => {
 //     // navigate to the form page
-//     await page.goto('/apply-credential-evaluation-for-uscis')
+//     await page.goto('/credential-evaluation-application')
 //   })
 
 //   test('should show the client info step', async ({ page }) => {
