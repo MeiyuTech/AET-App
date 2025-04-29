@@ -22,7 +22,7 @@ test('should navigate to the form page', async ({ page }) => {
     const link = page.getByRole('link', { name: /Submit Credential Evaluation Application/i })
     if (await link.isVisible()) {
       await link.click()
-      await page.waitForURL(/.*apply-credential-evaluation-for-uscis.*/)
+      await page.waitForURL(/.*credential-evaluation-application.*/)
     } else {
       // if the direct link is not visible, try to navigate through the menu
       console.log('direct link not visible, trying to navigate through the menu')
@@ -32,7 +32,7 @@ test('should navigate to the form page', async ({ page }) => {
     console.error(error)
     console.log('navigation failed, trying to navigate to the form page directly')
     // navigate to the form page directly
-    await page.goto('/apply-credential-evaluation-for-uscis')
+    await page.goto('/credential-evaluation-application')
   }
 
   // verify the page content contains form related text

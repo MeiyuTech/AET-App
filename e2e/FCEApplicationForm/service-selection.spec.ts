@@ -4,7 +4,7 @@
 // test.describe('FCE Service Selection Form Tests', () => {
 //   test.beforeEach(async ({ page }) => {
 //     // Navigate to the FCE application form
-//     await page.goto('/apply-credential-evaluation-for-uscis')
+//     await page.goto('/credential-evaluation-application')
 
 //     // Fill client info form and proceed to next step
 //     await fillClientInfo(page)

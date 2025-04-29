@@ -4,7 +4,7 @@ import { fillClientInfo, fillEvalueeInfo } from './utils/form-helpers'
 test.describe('FCE evaluee info form test', () => {
   test.beforeEach(async ({ page }) => {
     // navigate to the form page and complete the client info step
-    await page.goto('/apply-credential-evaluation-for-uscis')
+    await page.goto('/credential-evaluation-application')
     await fillClientInfo(page)
     await page.getByTestId('form-next-button').click()
 

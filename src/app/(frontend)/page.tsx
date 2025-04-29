@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Credential Evaluation Application Form Card */}
           <Link
-            href="/apply-credential-evaluation-for-uscis"
+            href="/credential-evaluation-application"
             className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
           >
             <h2 className="text-xl font-semibold mb-3">Submit Credential Evaluation Application</h2>

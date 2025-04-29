@@ -4,7 +4,7 @@
 // test.describe('FCE Review Form Tests', () => {
 //   test.beforeEach(async ({ page }) => {
 //     // Navigate to the FCE application form
-//     await page.goto('/apply-credential-evaluation-for-uscis')
+//     await page.goto('/credential-evaluation-application')
 
 //     // Fill all steps to reach review page
 //     await fillCompleteForm(page)

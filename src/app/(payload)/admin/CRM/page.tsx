@@ -60,7 +60,7 @@ export default async function CRMPage() {
       <br />
       {/* Import Orders Button */}
       <Button asChild>
-        <Link href="/admin/order" target="_blank">
+        <Link href="/admin/CRM/order" target="_blank">
           Import Orders
         </Link>
       </Button>
