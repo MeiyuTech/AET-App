@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { DateTimePicker } from '@/components/ui/date-time-picker'
+import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Application } from './types'
 import { CalendarIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/utilities/cn'
+import { format } from 'date-fns'
 
 interface DueAmountSummaryProps {
   applications: Application[]
@@ -30,7 +33,13 @@ export function DueAmountSummary({ applications }: DueAmountSummaryProps) {
           // Check if the date is valid
           if (isNaN(paymentAt.getTime())) return false
 
-          return paymentAt >= startDate && paymentAt <= endDate
+          // Set time to start of day for startDate and end of day for endDate
+          const start = new Date(startDate)
+          start.setHours(0, 0, 0, 0)
+          const end = new Date(endDate)
+          end.setHours(23, 59, 59, 999)
+
+          return paymentAt >= start && paymentAt <= end
         } catch (error) {
           console.error('Invalid date:', app.paid_at)
           console.error('Error:', error)
@@ -54,26 +63,19 @@ export function DueAmountSummary({ applications }: DueAmountSummaryProps) {
         // Check if the date is valid
         if (isNaN(paymentAt.getTime())) return false
 
-        return paymentAt >= startDate && paymentAt <= endDate
+        // Set time to start of day for startDate and end of day for endDate
+        const start = new Date(startDate)
+        start.setHours(0, 0, 0, 0)
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+
+        return paymentAt >= start && paymentAt <= end
       } catch (error) {
         console.error('Invalid date:', app.paid_at)
         console.error('Error:', error)
         return false
       }
     }).length
-  }
-
-  // Format the date for display
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return 'Not selected'
-    return date.toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
   }
 
   const totalDueAmount = calculateTotalDueAmount()
@@ -92,9 +94,28 @@ export function DueAmountSummary({ applications }: DueAmountSummaryProps) {
             <div className="flex flex-col space-y-2">
               <label className="text-base font-semibold">Start Date</label>
               <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  <DateTimePicker date={startDate} setDate={setStartDate} />
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        'w-full justify-start text-left font-normal',
+                        !startDate && 'text-muted-foreground'
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {startDate ? format(startDate, 'yyyy-MM-dd') : 'Select date'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <Button
                   variant="outline"
                   className="h-10 w-10 p-0"
@@ -103,16 +124,29 @@ export function DueAmountSummary({ applications }: DueAmountSummaryProps) {
                   ×
                 </Button>
               </div>
-              <p className="text-base text-gray-600">{formatDate(startDate)}</p>
             </div>
           </div>
           <div className="flex-1">
             <div className="flex flex-col space-y-2">
               <label className="text-base font-semibold">End Date</label>
               <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  <DateTimePicker date={endDate} setDate={setEndDate} />
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        'w-full justify-start text-left font-normal',
+                        !endDate && 'text-muted-foreground'
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {endDate ? format(endDate, 'yyyy-MM-dd') : 'Select date'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus />
+                  </PopoverContent>
+                </Popover>
                 <Button
                   variant="outline"
                   className="h-10 w-10 p-0"
@@ -121,7 +155,6 @@ export function DueAmountSummary({ applications }: DueAmountSummaryProps) {
                   ×
                 </Button>
               </div>
-              <p className="text-base text-gray-600">{formatDate(endDate)}</p>
             </div>
           </div>
         </div>
