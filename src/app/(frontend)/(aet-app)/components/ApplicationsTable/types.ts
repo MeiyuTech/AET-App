@@ -13,7 +13,7 @@ export interface Application extends Omit<DatabaseApplication, 'service_type' | 
   // Use DatabaseEducation type directly
   educations?: DatabaseEducation[]
 
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired' | 'refunded'
   payment_id: string | null
   paid_at: string | null
   due_amount: number | null

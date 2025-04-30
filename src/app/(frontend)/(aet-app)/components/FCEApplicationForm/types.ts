@@ -109,7 +109,7 @@ export interface ApplicationData extends Partial<FormData> {
   status: string
   submitted_at: string
   due_amount: number
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired' | 'refunded'
   payment_id: string | null
   paid_at: string | null
   additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
@@ -178,7 +178,7 @@ export interface DatabaseApplication {
 
   // Payment related fields
   due_amount: number | null
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired'
+  payment_status: 'pending' | 'paid' | 'failed' | 'expired' | 'refunded'
   payment_id: string | null
   paid_at: string | null
 }
