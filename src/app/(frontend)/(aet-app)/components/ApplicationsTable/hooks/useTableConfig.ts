@@ -36,7 +36,12 @@ interface TableConfigProps {
  */
 export const useTableConfig = ({ applications, getColumns, columnArgs }: TableConfigProps) => {
   // Table state
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: 'created_at',
+      desc: true,
+    },
+  ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
@@ -67,6 +72,12 @@ export const useTableConfig = ({ applications, getColumns, columnArgs }: TableCo
       pagination: {
         pageSize: 100,
       },
+      sorting: [
+        {
+          id: 'created_at',
+          desc: true,
+        },
+      ],
     },
   })
 
