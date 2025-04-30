@@ -15,6 +15,7 @@ export function getPaymentStatusColor(status: string): string {
     paid: 'text-green-600',
     failed: 'text-red-600',
     expired: 'text-gray-600',
+    refunded: 'text-red-600',
   }
   return colors[status as keyof typeof colors] || 'text-gray-600'
 }

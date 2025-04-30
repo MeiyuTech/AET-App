@@ -106,10 +106,15 @@ export const usePaymentStatusChange = ({
       const payment_id =
         paymentMethod === 'zelle' ? 'Marked as Paid via Zelle' : 'Marked as Paid via Paypal'
 
-      // Update both payment_status and paid_at
+      // Update payment_status, paid_at, and due_amount (set to null when refunded)
       const { error } = await supabase
         .from('fce_applications')
-        .update({ payment_status: status, paid_at, payment_id })
+        .update({
+          payment_status: status,
+          paid_at,
+          payment_id,
+          ...(status === 'refunded' ? { due_amount: null } : {}),
+        })
         .eq('id', id)
 
       if (error) throw error
@@ -120,9 +125,10 @@ export const usePaymentStatusChange = ({
           app.id === id
             ? {
                 ...app,
-                payment_status: status as 'pending' | 'paid' | 'failed' | 'expired',
+                payment_status: status as 'pending' | 'paid' | 'failed' | 'expired' | 'refunded',
                 paid_at,
                 payment_id,
+                ...(status === 'refunded' ? { due_amount: null } : {}),
               }
             : app
         )
@@ -130,7 +136,10 @@ export const usePaymentStatusChange = ({
 
       toast({
         title: 'Payment status updated',
-        description: `Payment status has been changed to ${status} via ${paymentMethod}.`,
+        description:
+          status === 'refunded'
+            ? 'Payment has been marked as refunded and due amount has been cleared.'
+            : `Payment status has been changed to ${status}${paymentMethod ? ` via ${paymentMethod}` : ''}.`,
       })
 
       // Clear the pending payment status change
