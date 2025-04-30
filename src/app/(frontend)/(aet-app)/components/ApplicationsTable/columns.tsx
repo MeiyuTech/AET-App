@@ -772,8 +772,11 @@ export const getColumns = ({
     cell: ({ row }) => {
       const paymentStatus = row.getValue('payment_status') as string
       const dueAmount = row.getValue('due_amount') as number | null
+      const status = row.getValue('status') as string
       // Allow changing payment status if it's pending or expired
       const canChangeToPaid = paymentStatus === 'pending' || paymentStatus === 'expired'
+      // Allow refund if payment is paid and status is not completed or cancelled
+      const canRefund = paymentStatus === 'paid' && !['completed', 'cancelled'].includes(status)
 
       return (
         <div className="flex items-center">
@@ -802,6 +805,16 @@ export const getColumns = ({
                     onClick={() => handlePaymentStatusChange(row.original.id, 'paid', 'paypal')}
                   >
                     Mark as Paid via Paypal
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              {canRefund && (
+                <>
+                  <DropdownMenuItem
+                    onClick={() => handlePaymentStatusChange(row.original.id, 'refunded', '')}
+                  >
+                    Mark as Refunded
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                 </>
