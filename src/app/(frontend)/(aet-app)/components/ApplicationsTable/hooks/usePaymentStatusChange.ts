@@ -94,7 +94,15 @@ export const usePaymentStatusChange = ({
       if (!pendingPaymentStatusChange) return
 
       const { id, status, paymentMethod } = pendingPaymentStatusChange
-      const paid_at = status === 'paid' ? new Date().toISOString() : null
+
+      // Find the application to get its current paid_at value
+      const application = applications.find((app) => app.id === id)
+      if (!application) {
+        throw new Error('Application not found')
+      }
+
+      // Use existing paid_at if available, otherwise use current time
+      const paid_at = application.paid_at || (status === 'paid' ? new Date().toISOString() : null)
       const payment_id =
         paymentMethod === 'zelle' ? 'Marked as Paid via Zelle' : 'Marked as Paid via Paypal'
 
