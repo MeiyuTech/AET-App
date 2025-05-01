@@ -148,83 +148,60 @@ const GPACalculator = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Enter Course Information</h2>
-        <div className="text-sm text-gray-600 mb-4 space-y-2">
-          <p>Format: Course Name [Tab or Spaces] Credits [Tab or Spaces] Grade</p>
-          <div className="mt-4">
-            <p className="font-semibold mb-2">Grade Points:</p>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-1">
-              <div>A+ = 4.35 (Highest possible)</div>
-              <div>C = 2.00</div>
-              <div>A = 4.00</div>
-              <div>C- = 1.65</div>
-              <div>A- = 3.65</div>
-              <div>D+ = 1.35</div>
-              <div>B+ = 3.35</div>
-              <div>D = 1.00</div>
-              <div>B = 3.00</div>
-              <div>D- = 0.65</div>
-              <div>B- = 2.65</div>
-              <div>F/Fail = 0.00 (counts in GPA)</div>
-              <div>C+ = 2.35</div>
-              <div>P/Pass/CR = credits only (not in GPA)</div>
+    <div className="max-w-7xl mx-auto p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Input Section */}
+        <Card className="p-8">
+          <h2 className="text-2xl font-bold mb-6">Enter Course Information</h2>
+          <div className="text-base text-gray-600 mb-6 space-y-4">
+            <p className="text-lg">
+              Format: Course Name [Tab or Spaces] Credits [Tab or Spaces] Grade
+            </p>
+            <div className="mt-6">
+              <p className="text-xl font-semibold mb-3">Grade Points:</p>
+              <div className="grid grid-cols-2 gap-x-12 gap-y-2 text-lg">
+                <div>A+ = 4.35 (Highest possible)</div>
+                <div>C = 2.00</div>
+                <div>A = 4.00</div>
+                <div>C- = 1.65</div>
+                <div>A- = 3.65</div>
+                <div>D+ = 1.35</div>
+                <div>B+ = 3.35</div>
+                <div>D = 1.00</div>
+                <div>B = 3.00</div>
+                <div>D- = 0.65</div>
+                <div>B- = 2.65</div>
+                <div>F/Fail = 0.00 (counts in GPA)</div>
+                <div>C+ = 2.35</div>
+                <div>P/Pass/CR = credits only (not in GPA)</div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <p className="text-xl font-semibold mb-3">Examples:</p>
+              <pre className="bg-gray-50 p-4 rounded text-lg">
+                College English 2.50 C Advanced Mathematics 3.00 B+
+              </pre>
             </div>
           </div>
-          <div className="mt-4">
-            <p className="font-semibold mb-2">Examples:</p>
-            <pre className="bg-gray-50 p-2 rounded">
-              College English 2.50 C Advanced Mathematics 3.00 B+
-            </pre>
-          </div>
-        </div>
-        <Textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="font-mono h-64"
-          placeholder="Example:
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="font-mono text-lg h-72"
+            placeholder="Example:
 College English 2.50 C
 Advanced Mathematics	3.00	B+"
-        />
-        <Button onClick={calculateGPA} className="mt-4">
-          Calculate GPA
-        </Button>
-      </Card>
+          />
+          <Button onClick={calculateGPA} className="mt-6 text-lg px-6 py-3">
+            Calculate GPA
+          </Button>
+        </Card>
 
-      {result && (
-        <Card className="p-6">
-          <pre className="whitespace-pre font-mono text-sm">
-            {`======   GPA SUMMARY  ====== 
-Final GPA: ${result.finalGPA.toFixed(6)} 
-Final Total Credits/Units: ${result.totalCredits.toFixed(3)} 
----------------------------------------------- 
-      Occurrences    Subtotal Course Credits 
----------------------------------------------- ${Object.entries(result.gradeDistribution)
-              .map(([grade, info]) => {
-                // Combine F and WF into one line
-                if (grade === 'WF') return ''
-                if (grade === 'F')
-                  return `\nF/WF\t${info.count + (result.gradeDistribution['WF']?.count || 0)}\t\t${(info.credits + (result.gradeDistribution['WF']?.credits || 0)).toFixed(2)}\t  \n----------------------------------------------`
-                // Combine P and CR into one line
-                if (grade === 'CR') return ''
-                if (grade === 'P')
-                  return `\nP/CR\t${info.count + (result.gradeDistribution['CR']?.count || 0)}\t\t${(info.credits + (result.gradeDistribution['CR']?.credits || 0)).toFixed(2)}\t  \n----------------------------------------------`
-                // Skip if it's not a standard grade
-                if (
-                  !['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-'].includes(
-                    grade
-                  )
-                )
-                  return ''
-                return `\n${grade}\t${info.count}\t\t${info.credits.toFixed(2)}\t  \n----------------------------------------------`
-              })
-              .join('')}`}
-          </pre>
-          <Button
-            onClick={() => {
-              const textArea = document.createElement('textarea')
-              textArea.value = `======   GPA SUMMARY  ====== 
+        {/* Output Section - Always show the card but conditionally show content */}
+        <Card className="p-8 h-fit sticky top-8">
+          <h2 className="text-2xl font-bold mb-6">GPA Summary</h2>
+          {result ? (
+            <pre className="whitespace-pre font-mono text-lg leading-relaxed">
+              {`======   GPA SUMMARY  ====== 
 Final GPA: ${result.finalGPA.toFixed(6)} 
 Final Total Credits/Units: ${result.totalCredits.toFixed(3)} 
 ---------------------------------------------- 
@@ -245,18 +222,15 @@ Final Total Credits/Units: ${result.totalCredits.toFixed(3)}
                     return ''
                   return `\n${grade}\t${info.count}\t\t${info.credits.toFixed(2)}\t  \n----------------------------------------------`
                 })
-                .join('')}`
-              document.body.appendChild(textArea)
-              textArea.select()
-              document.execCommand('copy')
-              document.body.removeChild(textArea)
-            }}
-            className="mt-4"
-          >
-            Copy to Clipboard
-          </Button>
+                .join('')}`}
+            </pre>
+          ) : (
+            <div className="text-lg text-gray-500 text-center py-8">
+              Enter course information and click Calculate GPA to see results
+            </div>
+          )}
         </Card>
-      )}
+      </div>
     </div>
   )
 }
