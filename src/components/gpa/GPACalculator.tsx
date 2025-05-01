@@ -56,18 +56,54 @@ const GPACalculator = () => {
       }
     })
 
-    lines.forEach((line) => {
-      const parts = line.trim().split('\t')
-      if (parts.length >= 3) {
-        const credits = parseFloat(parts[1])
-        const grade = parts[2].trim()
-        const gradePoint = GRADE_POINTS[grade]
+    const parseGradeInfo = (line: string) => {
+      // Try to split by tab
+      let parts = line.trim().split('\t')
 
-        if (!isNaN(credits) && gradePoint !== undefined) {
-          totalPoints += credits * gradePoint
-          totalCredits += credits
-          gradeDistribution[grade].count++
-          gradeDistribution[grade].credits += credits
+      // If split is not 3 parts, try multiple spaces
+      if (parts.length !== 3) {
+        // Replace multiple consecutive spaces with a single space, then split
+        parts = line.trim().replace(/\s+/g, ' ').split(' ')
+      }
+
+      // Search from back to front for grade and credits
+      if (parts.length >= 3) {
+        // Find the last part as grade
+        const grade = parts[parts.length - 1].trim()
+        // Find the second-to-last number as credits
+        let creditsStr = ''
+        let creditsFound = false
+
+        for (let i = parts.length - 2; i >= 0; i--) {
+          const part = parts[i].trim()
+          if (!creditsFound && !isNaN(parseFloat(part))) {
+            creditsStr = part
+            creditsFound = true
+            break
+          }
+        }
+
+        if (creditsFound && GRADE_POINTS[grade] !== undefined) {
+          const credits = parseFloat(creditsStr)
+          return { credits, grade }
+        }
+      }
+      return null
+    }
+
+    lines.forEach((line) => {
+      if (line.trim()) {
+        const result = parseGradeInfo(line)
+        if (result) {
+          const { credits, grade } = result
+          const gradePoint = GRADE_POINTS[grade]
+
+          if (!isNaN(credits) && gradePoint !== undefined) {
+            totalPoints += credits * gradePoint
+            totalCredits += credits
+            gradeDistribution[grade].count++
+            gradeDistribution[grade].credits += credits
+          }
         }
       }
     })
@@ -83,13 +119,20 @@ const GPACalculator = () => {
     <div className="space-y-6">
       <Card className="p-6">
         <h2 className="text-lg font-semibold mb-4">Enter Course Information</h2>
-        <p className="text-sm text-gray-600 mb-2">Format: Course Name [Tab] Credits [Tab] Grade</p>
+        <p className="text-sm text-gray-600 mb-2">
+          Format: Course Name [Tab or Spaces] Credits [Tab or Spaces] Grade
+          <br />
+          Example: College English 2.50 C
+          <br />
+          Example: Advanced Mathematics 3.00 B+
+        </p>
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="font-mono h-64"
           placeholder="Example:
-Neurobiology of Degeneration and Repair	3.75	B+"
+College English 2.50 C
+Advanced Mathematics	3.00	B+"
         />
         <Button onClick={calculateGPA} className="mt-4">
           Calculate GPA
