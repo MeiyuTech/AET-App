@@ -65,6 +65,13 @@ export default async function CRMPage() {
         </Link>
       </Button>
 
+      {/* GPA Calculator Button */}
+      <Button asChild className="ml-2">
+        <Link href="/admin/CRM/gpa-calculator" target="_blank">
+          GPA Calculator
+        </Link>
+      </Button>
+
       {/* Applications Table */}
       <ApplicationsTable dataFilter={dataFilter} />
     </div>
