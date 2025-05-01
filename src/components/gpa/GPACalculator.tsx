@@ -19,6 +19,7 @@ interface GPAResult {
 
 // GPA Calculation
 const GRADE_POINTS: Record<string, number> = {
+  // 4.35 is the highest GPA possible
   'A+': 4.35,
   A: 4.0,
   'A-': 3.65,
@@ -32,27 +33,47 @@ const GRADE_POINTS: Record<string, number> = {
   D: 1.0,
   'D-': 0.65,
   F: 0.0,
+  FAIL: 0.0,
   WF: 0.0,
   P: 0.0,
+  PASS: 0.0,
   CR: 0.0,
+}
+
+// Grades that don't count towards GPA but count for credits
+const NON_GPA_GRADES = ['P', 'PASS', 'CR']
+
+// Grade aliases for normalization
+const GRADE_ALIASES: Record<string, string> = {
+  FAIL: 'F',
+  PASS: 'P',
 }
 
 const GPACalculator = () => {
   const [input, setInput] = useState('')
   const [result, setResult] = useState<GPAResult | null>(null)
 
+  const normalizeGrade = (grade: string): string => {
+    const upperGrade = grade.toUpperCase().trim()
+    return GRADE_ALIASES[upperGrade] || upperGrade
+  }
+
   const calculateGPA = () => {
     const lines = input.trim().split('\n')
     let totalPoints = 0
     let totalCredits = 0
+    let gpaCredits = 0 // Credits that count towards GPA
     const gradeDistribution: Record<string, GradeInfo> = {}
 
     // Initialize grade distribution
     Object.keys(GRADE_POINTS).forEach((grade) => {
-      gradeDistribution[grade] = {
-        grade,
-        count: 0,
-        credits: 0,
+      if (!GRADE_ALIASES[grade]) {
+        // Don't initialize aliases
+        gradeDistribution[grade] = {
+          grade,
+          count: 0,
+          credits: 0,
+        }
       }
     })
 
@@ -69,7 +90,9 @@ const GPACalculator = () => {
       // Search from back to front for grade and credits
       if (parts.length >= 3) {
         // Find the last part as grade
-        const grade = parts[parts.length - 1].trim()
+        const rawGrade = parts[parts.length - 1].trim()
+        const grade = normalizeGrade(rawGrade)
+
         // Find the second-to-last number as credits
         let creditsStr = ''
         let creditsFound = false
@@ -99,17 +122,26 @@ const GPACalculator = () => {
           const gradePoint = GRADE_POINTS[grade]
 
           if (!isNaN(credits) && gradePoint !== undefined) {
-            totalPoints += credits * gradePoint
+            // Add to total credits for all valid grades
             totalCredits += credits
-            gradeDistribution[grade].count++
-            gradeDistribution[grade].credits += credits
+
+            // Only add to GPA calculation if it's not a non-GPA grade
+            if (!NON_GPA_GRADES.includes(grade)) {
+              totalPoints += credits * gradePoint
+              gpaCredits += credits
+            }
+
+            // Update grade distribution using normalized grade
+            const normalizedGrade = GRADE_ALIASES[grade] || grade
+            gradeDistribution[normalizedGrade].count++
+            gradeDistribution[normalizedGrade].credits += credits
           }
         }
       }
     })
 
     setResult({
-      finalGPA: totalCredits > 0 ? totalPoints / totalCredits : 0,
+      finalGPA: gpaCredits > 0 ? totalPoints / gpaCredits : 0,
       totalCredits,
       gradeDistribution,
     })
@@ -119,13 +151,34 @@ const GPACalculator = () => {
     <div className="space-y-6">
       <Card className="p-6">
         <h2 className="text-lg font-semibold mb-4">Enter Course Information</h2>
-        <p className="text-sm text-gray-600 mb-2">
-          Format: Course Name [Tab or Spaces] Credits [Tab or Spaces] Grade
-          <br />
-          Example: College English 2.50 C
-          <br />
-          Example: Advanced Mathematics 3.00 B+
-        </p>
+        <div className="text-sm text-gray-600 mb-4 space-y-2">
+          <p>Format: Course Name [Tab or Spaces] Credits [Tab or Spaces] Grade</p>
+          <div className="mt-4">
+            <p className="font-semibold mb-2">Grade Points:</p>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1">
+              <div>A+ = 4.35 (Highest possible)</div>
+              <div>C = 2.00</div>
+              <div>A = 4.00</div>
+              <div>C- = 1.65</div>
+              <div>A- = 3.65</div>
+              <div>D+ = 1.35</div>
+              <div>B+ = 3.35</div>
+              <div>D = 1.00</div>
+              <div>B = 3.00</div>
+              <div>D- = 0.65</div>
+              <div>B- = 2.65</div>
+              <div>F/Fail = 0.00 (counts in GPA)</div>
+              <div>C+ = 2.35</div>
+              <div>P/Pass/CR = credits only (not in GPA)</div>
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className="font-semibold mb-2">Examples:</p>
+            <pre className="bg-gray-50 p-2 rounded">
+              College English 2.50 C Advanced Mathematics 3.00 B+
+            </pre>
+          </div>
+        </div>
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
