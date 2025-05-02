@@ -37,6 +37,7 @@ import {
   useTableConfig,
   useApplicationState,
 } from './hooks'
+import { exportTableToXlsx, exportTableToCsv } from './exportToXlsx'
 
 export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
   const {
@@ -148,13 +149,65 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
       <DueAmountSummary applications={applications} />
 
       {/* Search bar */}
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
         <Input
           placeholder="Search all columns..."
           value={globalFilter ?? ''}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm text-base"
         />
+        <Button
+          variant="outline"
+          size="lg"
+          className="text-base px-6"
+          onClick={() => {
+            // get all visible columns (excluding index, action column, etc.)
+            const visibleColumns = table
+              .getAllLeafColumns()
+              .filter(
+                (col) =>
+                  col.getIsVisible() &&
+                  col.id !== 'index' &&
+                  'accessorKey' in col.columnDef &&
+                  col.columnDef.accessorKey
+              )
+              .map((col) => ({
+                accessorKey: (col.columnDef as any).accessorKey as string,
+                header: typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id,
+              }))
+            // get all rows' original data
+            const rows = table.getRowModel().rows.map((row) => row.original)
+            exportTableToXlsx({ data: rows, columns: visibleColumns })
+          }}
+        >
+          Export to Excel
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          className="text-base px-6"
+          onClick={() => {
+            // get all visible columns (excluding index, action column, etc.)
+            const visibleColumns = table
+              .getAllLeafColumns()
+              .filter(
+                (col) =>
+                  col.getIsVisible() &&
+                  col.id !== 'index' &&
+                  'accessorKey' in col.columnDef &&
+                  col.columnDef.accessorKey
+              )
+              .map((col) => ({
+                accessorKey: (col.columnDef as any).accessorKey as string,
+                header: typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id,
+              }))
+            // get all rows' original data
+            const rows = table.getRowModel().rows.map((row) => row.original)
+            exportTableToCsv({ data: rows, columns: visibleColumns })
+          }}
+        >
+          Export to CSV
+        </Button>
       </div>
 
       {/* Table container */}
