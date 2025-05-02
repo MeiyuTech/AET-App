@@ -200,7 +200,7 @@ Advanced Mathematics	3.00	B+"
         <Card className="p-8 h-fit sticky top-8">
           <h2 className="text-2xl font-bold mb-6">GPA Summary</h2>
           {result ? (
-            <pre className="whitespace-pre font-mono text-lg leading-relaxed">
+            <pre className="whitespace-pre font-mono text-lg leading-tight">
               {`======   GPA SUMMARY  ====== 
 Final GPA: ${result.finalGPA.toFixed(6)} 
 Final Total Credits/Units: ${result.totalCredits.toFixed(3)} 
