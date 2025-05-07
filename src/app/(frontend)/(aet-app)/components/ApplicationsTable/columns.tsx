@@ -48,6 +48,12 @@ const getOfficeDropboxLink = (office: string | null): string => {
   return officeLinks[office] || `https://www.dropbox.com/work/Team%20Files/WebsitesDev`
 }
 
+// 添加获取行样式的函数
+const getRowClassName = (row: any) => {
+  const source = row.original.source
+  return cn(source === 'external' && 'bg-purple-50/50')
+}
+
 export const getColumns = ({
   handleOfficeChange,
   handleStatusChange,
@@ -224,18 +230,23 @@ export const getColumns = ({
     cell: ({ row }) => {
       const office = row.getValue('office') as string | null
       const status = row.getValue('status') as string
+      const source = row.original.source
       const isEditable = status === 'submitted' || status === 'processing'
 
       return (
         <div className="flex items-center">
           {office ? (
-            <Link
-              href={getOfficeDropboxLink(office)}
-              className="text-blue-500 hover:underline mr-2"
-              target="_blank"
-            >
-              {office}
-            </Link>
+            source === 'external' ? (
+              <span className="mr-2">{office}</span>
+            ) : (
+              <Link
+                href={getOfficeDropboxLink(office)}
+                className="text-blue-500 hover:underline mr-2"
+                target="_blank"
+              >
+                {office}
+              </Link>
+            )
           ) : (
             <span className="mr-2">N/A</span>
           )}
@@ -962,17 +973,17 @@ export const getColumns = ({
       )
     },
   },
-  {
-    accessorKey: 'notes',
-    header: () => <div className="text-center">Notes</div>,
-    cell: ({ row }) => {
-      const notes = row.getValue('notes') as string | null
-      if (!notes) return 'N/A'
-      return (
-        <div className="max-w-[200px] truncate" title={notes}>
-          {notes}
-        </div>
-      )
-    },
-  },
+  // {
+  //   accessorKey: 'notes',
+  //   header: () => <div className="text-center">Notes</div>,
+  //   cell: ({ row }) => {
+  //     const notes = row.getValue('notes') as string | null
+  //     if (!notes) return 'N/A'
+  //     return (
+  //       <div className="max-w-[200px] truncate" title={notes}>
+  //         {notes}
+  //       </div>
+  //     )
+  //   },
+  // },
 ]

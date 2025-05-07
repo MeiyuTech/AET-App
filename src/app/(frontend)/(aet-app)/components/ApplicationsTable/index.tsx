@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { flexRender } from '@tanstack/react-table'
+import { cn } from '@/utilities/cn'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -243,7 +244,13 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} className="hover:bg-gray-50">
+                    <TableRow
+                      key={row.id}
+                      className={cn(
+                        'hover:bg-gray-50',
+                        row.original.source === 'external' && 'bg-purple-50/50'
+                      )}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-base py-4 px-2">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
