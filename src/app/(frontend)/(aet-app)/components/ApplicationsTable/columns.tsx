@@ -610,6 +610,12 @@ export const getColumns = ({
       const application = row.original
       const paidAt = application.paid_at
       const status = application.status
+      const source = application.source
+
+      // 如果是外部来源，显示特殊标识
+      if (source === 'external') {
+        return <div className="text-gray-500 italic">External Order</div>
+      }
 
       // if status is cancelled or completed, don't show the progress bar
       if (status === 'cancelled' || status === 'completed') {
