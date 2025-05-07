@@ -455,6 +455,8 @@ export const getColumns = ({
     accessorKey: 'educations',
     header: () => <div className="text-center">Educations</div>,
     cell: ({ row }) => {
+      const source = row.original.source
+      const isExternal = source === 'external'
       return (
         <Button
           variant="ghost"
@@ -464,8 +466,9 @@ export const getColumns = ({
             setSelectedEducations(row.original.educations)
             setDialogOpen(true)
           }}
+          disabled={isExternal}
         >
-          <Eye className="h-5 w-5" />
+          <Eye className={`h-5 w-5 ${isExternal ? 'opacity-50' : ''}`} />
         </Button>
       )
     },
@@ -474,6 +477,8 @@ export const getColumns = ({
     id: 'services',
     header: () => <div className="text-center">Services</div>,
     cell: ({ row }) => {
+      const source = row.original.source
+      const isExternal = source === 'external'
       return (
         <Button
           variant="ghost"
@@ -483,8 +488,9 @@ export const getColumns = ({
             setSelectedApplication(row.original)
             setServicesDialogOpen(true)
           }}
+          disabled={isExternal}
         >
-          <Eye className="h-5 w-5" />
+          <Eye className={`h-5 w-5 ${isExternal ? 'opacity-50' : ''}`} />
         </Button>
       )
     },
@@ -493,6 +499,8 @@ export const getColumns = ({
     id: 'files',
     header: () => <div className="text-center">Files</div>,
     cell: ({ row }) => {
+      const source = row.original.source
+      const isExternal = source === 'external'
       return (
         <Button
           variant="ghost"
@@ -502,8 +510,9 @@ export const getColumns = ({
             setSelectedApplication(row.original)
             setFilesDialogOpen(true)
           }}
+          disabled={isExternal}
         >
-          <FileText className="h-5 w-5" />
+          <FileText className={`h-5 w-5 ${isExternal ? 'opacity-50' : ''}`} />
         </Button>
       )
     },
