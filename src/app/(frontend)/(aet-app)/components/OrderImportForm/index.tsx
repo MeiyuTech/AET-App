@@ -85,50 +85,99 @@ export function OrderImportForm() {
         </CardHeader> */}
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <CardContent className="space-y-6">
-            {/* Office */}
-            <div className="space-y-3">
-              <Label className="text-lg">
-                Office<span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={form.watch('office')}
-                onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
-              >
-                <SelectTrigger className="h-12 text-lg">
-                  <SelectValue placeholder="Select office" />
-                </SelectTrigger>
-                <SelectContent>
-                  {OFFICE_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value} className="text-lg">
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Office and Service Type */}
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-1 space-y-3">
+                <Label className="text-lg">
+                  Office<span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={form.watch('office')}
+                  onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Select office" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OFFICE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-lg">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="col-span-2 space-y-3">
+                <Label className="text-lg">
+                  Service Type<span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={form.watch('purpose')}
+                  onValueChange={(value: OrderFormData['purpose']) =>
+                    form.setValue('purpose', value)
+                  }
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Select service type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PURPOSE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-lg">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {form.formState.errors.purpose && (
+                  <p className="text-base text-red-500">{form.formState.errors.purpose.message}</p>
+                )}
+              </div>
             </div>
 
-            {/* Payment Time */}
-            <div className="space-y-3">
-              <Label className="text-lg">
-                Payment Time<span className="text-red-500">*</span>
-              </Label>
-              <div className="relative flex items-center">
-                <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-3 text-lg">
-                  <DateTimePicker
-                    date={form.watch('paidAt')}
-                    setDate={(date) => form.setValue('paidAt', date)}
-                    className="h-4 w-4 p-0 -ml-1"
-                  />
-                  <span>
-                    {form.watch('paidAt')
-                      ? form.watch('paidAt')!.toLocaleString()
-                      : 'No date selected'}
-                  </span>
-                </div>
+            {/* Due Amount and Payment Time */}
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-1 space-y-3">
+                <Label htmlFor="amount" className="text-lg">
+                  Due Amount<span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  className="h-12 text-lg"
+                  {...form.register('dueAmount')}
+                />
+                {form.formState.errors.dueAmount && (
+                  <p className="text-base text-red-500">
+                    {form.formState.errors.dueAmount.message}
+                  </p>
+                )}
               </div>
-              {form.formState.errors.paidAt && (
-                <p className="text-base text-red-500">{form.formState.errors.paidAt.message}</p>
-              )}
+
+              <div className="col-span-2 space-y-3">
+                <Label className="text-lg">
+                  Payment Time<span className="text-red-500">*</span>
+                </Label>
+                <div className="relative flex items-center">
+                  <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-3 text-lg">
+                    <span>
+                      {form.watch('paidAt')
+                        ? form.watch('paidAt')!.toLocaleString()
+                        : 'No date selected -> Click to select date and time'}
+                    </span>
+                    <DateTimePicker
+                      date={form.watch('paidAt')}
+                      setDate={(date) => form.setValue('paidAt', date)}
+                      className="h-4 w-4 p-0 -ml-1"
+                    />
+                  </div>
+                </div>
+                {form.formState.errors.paidAt && (
+                  <p className="text-base text-red-500">{form.formState.errors.paidAt.message}</p>
+                )}
+              </div>
             </div>
 
             {/* Client Name */}
@@ -159,49 +208,6 @@ export function OrderImportForm() {
                   <p className="text-base text-red-500">{form.formState.errors.lastName.message}</p>
                 )}
               </div>
-            </div>
-
-            {/* Service Type */}
-            <div className="space-y-3">
-              <Label className="text-lg">
-                Service Type<span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={form.watch('purpose')}
-                onValueChange={(value: OrderFormData['purpose']) => form.setValue('purpose', value)}
-              >
-                <SelectTrigger className="h-12 text-lg">
-                  <SelectValue placeholder="Select service type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {PURPOSE_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value} className="text-lg">
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {form.formState.errors.purpose && (
-                <p className="text-base text-red-500">{form.formState.errors.purpose.message}</p>
-              )}
-            </div>
-
-            {/* Due Amount */}
-            <div className="space-y-3">
-              <Label htmlFor="amount" className="text-lg">
-                Due Amount<span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="amount"
-                type="number"
-                min="0"
-                step="0.01"
-                className="h-12 text-lg"
-                {...form.register('dueAmount')}
-              />
-              {form.formState.errors.dueAmount && (
-                <p className="text-base text-red-500">{form.formState.errors.dueAmount.message}</p>
-              )}
             </div>
 
             {/* Notes */}

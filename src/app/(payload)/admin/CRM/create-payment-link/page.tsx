@@ -22,14 +22,8 @@ export default async function PaymentLinkPage() {
   }
   return (
     <div className="container mx-auto p-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-8">Payment Link Generator</h1>
-        <p className="text-lg text-muted-foreground">
-          Create a payment link to share with your customers. They can use this link to make a
-          payment.
-        </p>
-      </div>
-
+      <h1 className="text-4xl font-bold">Payment Link Generator</h1>
+      <p className="text-lg text-muted-foreground"></p>
       <PaymentLinkCreator />
     </div>
   )
