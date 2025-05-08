@@ -23,10 +23,8 @@ export default async function GPACalculatorPage() {
 
   return (
     <div className="container mx-auto p-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-8">GPA Calculator</h1>
-        <p className="text-lg text-muted-foreground">Calculate your GPA quickly</p>
-      </div>
+      <h1 className="text-4xl font-bold">GPA Calculator</h1>
+      <p className="text-lg text-muted-foreground"></p>
       <GPACalculator />
     </div>
   )
