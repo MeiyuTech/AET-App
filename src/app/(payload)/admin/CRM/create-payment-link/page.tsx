@@ -21,12 +21,14 @@ export default async function PaymentLinkPage() {
     redirect(`/admin/login?redirect=${encodeURIComponent('/admin/CRM/create-payment-link')}`)
   }
   return (
-    <div className="container py-10">
-      <h1 className="text-3xl font-bold mb-6">Payment Link Generator</h1>
-      <p className="text-muted-foreground mb-8">
-        Create a payment link to share with your customers. They can use this link to make a
-        payment.
-      </p>
+    <div className="container mx-auto p-8">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold mb-8">Payment Link Generator</h1>
+        <p className="text-lg text-muted-foreground">
+          Create a payment link to share with your customers. They can use this link to make a
+          payment.
+        </p>
+      </div>
 
       <PaymentLinkCreator />
     </div>
