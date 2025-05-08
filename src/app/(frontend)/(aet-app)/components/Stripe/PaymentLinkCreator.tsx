@@ -91,7 +91,7 @@ export function PaymentLinkCreator({
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount">Due Amount</Label>
             <Input
               id="amount"
               type="number"

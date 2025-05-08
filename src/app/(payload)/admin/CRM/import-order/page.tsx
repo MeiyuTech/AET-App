@@ -17,7 +17,7 @@ export default async function OrderImportPage() {
   const { user } = await payload.auth({ headers: requestHeaders })
 
   if (!user) {
-    redirect(`/admin/login?redirect=${encodeURIComponent('/admin/CRM/order')}`)
+    redirect(`/admin/login?redirect=${encodeURIComponent('/admin/CRM/import-order')}`)
   }
   return (
     <div className="container mx-auto py-10">
