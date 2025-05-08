@@ -22,10 +22,8 @@ export default async function OrderImportPage() {
   }
   return (
     <div className="container mx-auto p-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-8">Order Import</h1>
-        <p className="text-lg text-muted-foreground">Import order data into the system quickly</p>
-      </div>
+      <h1 className="text-4xl font-bold">Order Import</h1>
+      <p className="text-lg text-muted-foreground"></p>
       <OrderImportForm />
     </div>
   )
