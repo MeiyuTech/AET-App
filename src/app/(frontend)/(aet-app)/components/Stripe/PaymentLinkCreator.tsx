@@ -31,14 +31,12 @@ interface PaymentLinkCreatorProps {
 export function PaymentLinkCreator({
   applicationId: defaultApplicationId,
   defaultAmount = 0,
-  defaultCurrency = 'usd',
   defaultDescription = 'Customized Service Payment',
   onSuccess,
   onError,
   hideApplicationId = false,
 }: PaymentLinkCreatorProps) {
   const [amount, setAmount] = useState<number>(defaultAmount)
-  const [currency, setCurrency] = useState<string>(defaultCurrency)
   const [description, setDescription] = useState<string>(defaultDescription)
   const [applicationId, setApplicationId] = useState<string>(defaultApplicationId || '')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -56,7 +54,7 @@ export function PaymentLinkCreator({
     setResult(null)
 
     try {
-      const response = await createPaymentLink(amount, applicationId, description, currency)
+      const response = await createPaymentLink(amount, applicationId, description, 'usd')
 
       const data = await response.json()
 
@@ -80,109 +78,110 @@ export function PaymentLinkCreator({
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Create Payment Link</CardTitle>
-        <CardDescription className="flex items-center gap-2">
-          <Info className="h-4 w-4 text-muted-foreground" />
-          <span>Each payment link can only be used once for security</span>
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <Input
-              id="amount"
-              type="number"
-              min="0"
-              step="0.01"
-              value={amount}
-              onChange={(e) => setAmount(parseFloat(e.target.value))}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="currency">Currency</Label>
-            <Input
-              id="currency"
-              type="text"
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </div>
-          {!hideApplicationId && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="applicationId">Application ID</Label>
-                <span className="text-xs text-muted-foreground">(Optional)</span>
-              </div>
+    <div className="max-w-7xl mx-auto p-4">
+      <Card className="w-full max-w-4xl mx-auto p-8">
+        <CardHeader className="space-y-4">
+          <CardTitle className="text-2xl font-bold">Create Payment Link</CardTitle>
+          <CardDescription className="flex items-center gap-2 text-lg text-gray-600">
+            <Info className="h-5 w-5 text-muted-foreground" />
+            <span>Each payment link can only be used once for security</span>
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="amount" className="text-lg">
+                Due Amount<span className="text-red-500">*</span>
+              </Label>
               <Input
-                id="applicationId"
-                type="text"
-                value={applicationId}
-                onChange={(e) => setApplicationId(e.target.value)}
-                placeholder="Enter application ID if applicable"
+                id="amount"
+                type="number"
+                min="0"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(parseFloat(e.target.value))}
+                required
+                className="h-12 text-lg"
               />
             </div>
-          )}
-
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {result && (
-            <Alert variant="default" className="bg-green-50 border-green-200">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertTitle className="text-green-800">Payment Link Created</AlertTitle>
-              <AlertDescription className="text-green-700">
-                <div className="mt-2">
-                  <p className="font-medium">Payment Link URL:</p>
-                  <a
-                    href={result.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline break-all"
-                  >
-                    {result.url}
-                  </a>
-                  <p className="mt-2 text-sm text-green-600">
-                    Note: This link can only be used once and will become invalid after a successful
-                    payment.
-                  </p>
+            <div className="space-y-3">
+              <Label htmlFor="description" className="text-lg">
+                Description<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="description"
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                className="h-12 text-lg"
+              />
+            </div>
+            {!hideApplicationId && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="applicationId" className="text-lg">
+                    Application ID&nbsp;
+                    <span className="text-base text-muted-foreground">(Optional)</span>
+                  </Label>
                 </div>
-              </AlertDescription>
-            </Alert>
-          )}
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              'Create Payment Link'
+                <Input
+                  id="applicationId"
+                  type="text"
+                  value={applicationId}
+                  onChange={(e) => setApplicationId(e.target.value)}
+                  placeholder="Enter application ID if applicable"
+                  className="h-12 text-lg"
+                />
+              </div>
             )}
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+
+            {error && (
+              <Alert variant="destructive" className="text-lg">
+                <AlertCircle className="h-5 w-5" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {result && (
+              <Alert variant="default" className="bg-green-50 border-green-200 text-lg">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <AlertTitle className="text-green-800">Payment Link Created</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  <div className="mt-2">
+                    <p className="font-medium">Payment Link URL:</p>
+                    <a
+                      href={result.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline break-all"
+                    >
+                      {result.url}
+                    </a>
+                    <p className="mt-2 text-base text-green-600">
+                      Note: This link can only be used once and will become invalid after a
+                      successful payment.
+                    </p>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" disabled={isLoading} className="w-full h-12 text-lg">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                'Create Payment Link'
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   )
 }

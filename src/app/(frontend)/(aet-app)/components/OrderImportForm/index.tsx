@@ -75,145 +75,162 @@ export function OrderImportForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Quick Order Import</CardTitle>
-        <CardDescription>
-          Fill in the form below to import order data into the system
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <CardContent className="space-y-4">
-          {/* Office */}
-          <div className="space-y-2">
-            <Label>
-              Office<span className="text-red-500">*</span>
-            </Label>
-            <Select
-              value={form.watch('office')}
-              onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select office" />
-              </SelectTrigger>
-              <SelectContent>
-                {OFFICE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="max-w-7xl mx-auto p-4">
+      <Card className="p-8">
+        {/* <CardHeader className="space-y-4">
+          <CardTitle className="text-2xl font-bold">Quick Order Import</CardTitle>
+          <CardDescription className="text-lg text-gray-600">
+            Fill in the form below to import order data into the system
+          </CardDescription>
+        </CardHeader> */}
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <CardContent className="space-y-6">
+            {/* Office and Service Type */}
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-1 space-y-3">
+                <Label className="text-lg">
+                  Office<span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={form.watch('office')}
+                  onValueChange={(value: OrderFormData['office']) => form.setValue('office', value)}
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Select office" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OFFICE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-lg">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-          {/* Payment Time */}
-          <div className="space-y-2">
-            <Label>
-              Payment Time<span className="text-red-500">*</span>
-            </Label>
-            <div className="relative flex items-center">
-              <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
-                <DateTimePicker
-                  date={form.watch('paidAt')}
-                  setDate={(date) => form.setValue('paidAt', date)}
-                  className="h-4 w-4 p-0 -ml-1"
-                />
-                <span className="text-sm">
-                  {form.watch('paidAt')
-                    ? form.watch('paidAt')!.toLocaleString()
-                    : 'No date selected'}
-                </span>
+              <div className="col-span-2 space-y-3">
+                <Label className="text-lg">
+                  Service Type<span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={form.watch('purpose')}
+                  onValueChange={(value: OrderFormData['purpose']) =>
+                    form.setValue('purpose', value)
+                  }
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Select service type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PURPOSE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-lg">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {form.formState.errors.purpose && (
+                  <p className="text-base text-red-500">{form.formState.errors.purpose.message}</p>
+                )}
               </div>
             </div>
-            {form.formState.errors.paidAt && (
-              <p className="text-sm text-red-500">{form.formState.errors.paidAt.message}</p>
-            )}
-          </div>
 
-          {/* Client Name */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">
-                First Name<span className="text-red-500">*</span>
-              </Label>
-              <Input id="firstName" {...form.register('firstName')} />
-              {form.formState.errors.firstName && (
-                <p className="text-sm text-red-500">{form.formState.errors.firstName.message}</p>
-              )}
+            {/* Due Amount and Payment Time */}
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-1 space-y-3">
+                <Label htmlFor="amount" className="text-lg">
+                  Due Amount<span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  className="h-12 text-lg"
+                  {...form.register('dueAmount')}
+                />
+                {form.formState.errors.dueAmount && (
+                  <p className="text-base text-red-500">
+                    {form.formState.errors.dueAmount.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="col-span-2 space-y-3">
+                <Label className="text-lg">
+                  Payment Time<span className="text-red-500">*</span>
+                </Label>
+                <div className="relative flex items-center">
+                  <div className="grow flex items-center gap-2 rounded-md border border-input bg-background px-3 py-3 text-lg">
+                    <span>
+                      {form.watch('paidAt')
+                        ? form.watch('paidAt')!.toLocaleString()
+                        : 'No date selected -> Click to select date and time'}
+                    </span>
+                    <DateTimePicker
+                      date={form.watch('paidAt')}
+                      setDate={(date) => form.setValue('paidAt', date)}
+                      className="h-4 w-4 p-0 -ml-1"
+                    />
+                  </div>
+                </div>
+                {form.formState.errors.paidAt && (
+                  <p className="text-base text-red-500">{form.formState.errors.paidAt.message}</p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="middleName">
-                Middle Name<span className="text-sm text-gray-500 ml-2">(Optional)</span>
-              </Label>
-              <Input id="middleName" {...form.register('middleName')} />
+
+            {/* Client Name */}
+            <div className="grid grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="firstName" className="text-lg">
+                  First Name<span className="text-red-500">*</span>
+                </Label>
+                <Input id="firstName" className="h-12 text-lg" {...form.register('firstName')} />
+                {form.formState.errors.firstName && (
+                  <p className="text-base text-red-500">
+                    {form.formState.errors.firstName.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="middleName" className="text-lg">
+                  Middle Name<span className="text-base text-gray-500 ml-2">(Optional)</span>
+                </Label>
+                <Input id="middleName" className="h-12 text-lg" {...form.register('middleName')} />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="lastName" className="text-lg">
+                  Last Name<span className="text-red-500">*</span>
+                </Label>
+                <Input id="lastName" className="h-12 text-lg" {...form.register('lastName')} />
+                {form.formState.errors.lastName && (
+                  <p className="text-base text-red-500">{form.formState.errors.lastName.message}</p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">
-                Last Name<span className="text-red-500">*</span>
+
+            {/* Notes */}
+            <div className="space-y-3">
+              <Label htmlFor="notes" className="text-lg">
+                Notes<span className="text-base text-gray-500 ml-2">(Optional)</span>
               </Label>
-              <Input id="lastName" {...form.register('lastName')} />
-              {form.formState.errors.lastName && (
-                <p className="text-sm text-red-500">{form.formState.errors.lastName.message}</p>
-              )}
+              <Textarea
+                id="notes"
+                placeholder="Add any additional notes here..."
+                className="resize-none text-lg min-h-[120px]"
+                {...form.register('notes')}
+              />
             </div>
-          </div>
+          </CardContent>
 
-          {/* Service Type */}
-          <div className="space-y-2">
-            <Label>
-              Service Type<span className="text-red-500">*</span>
-            </Label>
-            <Select
-              value={form.watch('purpose')}
-              onValueChange={(value: OrderFormData['purpose']) => form.setValue('purpose', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select service type" />
-              </SelectTrigger>
-              <SelectContent>
-                {PURPOSE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {form.formState.errors.purpose && (
-              <p className="text-sm text-red-500">{form.formState.errors.purpose.message}</p>
-            )}
-          </div>
-
-          {/* Due Amount */}
-          <div className="space-y-2">
-            <Label htmlFor="amount">
-              Due Amount<span className="text-red-500">*</span>
-            </Label>
-            <Input id="amount" type="number" min="0" step="0.01" {...form.register('dueAmount')} />
-            {form.formState.errors.dueAmount && (
-              <p className="text-sm text-red-500">{form.formState.errors.dueAmount.message}</p>
-            )}
-          </div>
-
-          {/* Notes */}
-          <div className="space-y-2">
-            <Label htmlFor="notes">
-              Notes<span className="text-sm text-gray-500 ml-2">(Optional)</span>
-            </Label>
-            <Textarea
-              id="notes"
-              placeholder="Add any additional notes here..."
-              className="resize-none"
-              {...form.register('notes')}
-            />
-          </div>
-        </CardContent>
-
-        <CardFooter>
-          <Button type="submit" className="w-full">
-            Submit Order
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+          <CardFooter>
+            <Button type="submit" className="w-full h-12 text-lg">
+              Submit Order
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   )
 }

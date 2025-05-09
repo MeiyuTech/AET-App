@@ -51,7 +51,7 @@ export default async function CRMPage() {
 
       {/* Payment Link Button */}
       <Button asChild>
-        <Link href="../../payment-link" target="_blank">
+        <Link href="/admin/CRM/create-payment-link" target="_blank">
           Manually Create Payment Link
         </Link>
       </Button>
@@ -60,7 +60,7 @@ export default async function CRMPage() {
       <br />
       {/* Import Orders Button */}
       <Button asChild>
-        <Link href="/admin/CRM/order" target="_blank">
+        <Link href="/admin/CRM/import-order" target="_blank">
           Import Orders
         </Link>
       </Button>
