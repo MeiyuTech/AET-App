@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Chatbot } from '@/components/Chatbot/Chatbot'
 
 export default function HomePage() {
   return (
@@ -67,6 +68,11 @@ export default function HomePage() {
             <p className="text-gray-600">Test Email</p>
           </Link> */}
         </div>
+
+        {/* AI Chatbot */}
+        {/* <div className="mt-8">
+          <Chatbot />
+        </div> */}
       </div>
     </div>
   )
