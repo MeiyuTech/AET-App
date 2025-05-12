@@ -89,6 +89,7 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
   // Calculate max business days
   let maxBusinessDays = 0
   let isSameDayService = false
+  let is24HourService = false
 
   // Check foreign credential evaluation service
   if (application.serviceType.foreignCredentialEvaluation?.firstDegree?.speed) {
@@ -103,10 +104,9 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
         businessDays = 3
         break
       case '24hour':
-        businessDays = 1
+        is24HourService = true
         break
       case 'sameday':
-        businessDays = 0
         isSameDayService = true
         break
     }
@@ -130,7 +130,7 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
         businessDays = 3
         break
       case '24hour':
-        businessDays = 1
+        is24HourService = true
         break
     }
 
@@ -181,29 +181,40 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
   }
 
   // If no service is selected, default to 10 days
-  if (maxBusinessDays === 0 && !isSameDayService) {
+  if (maxBusinessDays === 0 && !isSameDayService && !is24HourService) {
     return dayjs().add(10, 'day').format('YYYY-MM-DD')
   }
 
-  // Calculate estimated completion date
-  let completionDate = startDate
-
   // Handle same day service
   if (isSameDayService) {
-    // Skip weekend, move to next business day
+    return startDate.format('YYYY-MM-DD')
+  }
+
+  // Handle 24 hour service
+  if (is24HourService) {
+    let completionDate = startDate.add(24, 'hour')
+    // Skip weekends
     while (completionDate.day() === 0 || completionDate.day() === 6) {
       completionDate = completionDate.add(1, 'day')
     }
     return completionDate.format('YYYY-MM-DD')
   }
 
-  // Add business days for other services
-  let daysToAdd = maxBusinessDays
-  while (daysToAdd > 0) {
+  // Calculate estimated completion date for business days
+  let completionDate = startDate
+  let remainingDays = maxBusinessDays
+
+  // If today is a business day, count it as one day
+  if (completionDate.day() !== 0 && completionDate.day() !== 6) {
+    remainingDays--
+  }
+
+  // Add remaining business days
+  while (remainingDays > 0) {
     completionDate = completionDate.add(1, 'day')
-    // Skip weekends (Saturday and Sunday)
+    // Skip weekends
     if (completionDate.day() !== 0 && completionDate.day() !== 6) {
-      daysToAdd--
+      remainingDays--
     }
   }
 

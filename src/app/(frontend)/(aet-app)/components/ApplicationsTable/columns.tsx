@@ -632,7 +632,7 @@ export const getColumns = ({
       const status = application.status
       const source = application.source
 
-      // 如果是外部来源，显示特殊标识
+      // if the source is external, show a special identifier
       if (source === 'external') {
         return <div className="text-gray-500 italic">External Order</div>
       }
