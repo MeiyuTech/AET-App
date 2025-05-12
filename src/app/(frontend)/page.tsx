@@ -70,9 +70,9 @@ export default function HomePage() {
         </div>
 
         {/* AI Chatbot */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <Chatbot />
-        </div>
+        </div> */}
       </div>
     </div>
   )
