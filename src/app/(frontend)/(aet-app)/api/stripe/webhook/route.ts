@@ -235,12 +235,35 @@ export async function POST(req: Request) {
           return new NextResponse('No application found for this payment', { status: 404 })
         }
 
-        // TODO: sometimes we just partially refund the payment, so we need to update the due_amount
+        // Calculate the refunded amount in dollars (Stripe amounts are in cents)
+        const refundedAmount = charge.amount_refunded / 100
+        const originalAmount = application.due_amount || 0
+
+        // Calculate the new due_amount and determine if it's a full refund
+        let newDueAmount: number | null = null
+        let newPaymentId = application.payment_id
+        let newPaymentStatus = 'paid'
+
+        if (refundedAmount < originalAmount) {
+          // For partial refunds, calculate the new due_amount
+          // We need to account for Stripe's fee (2.9% + $0.30)
+          const stripeFee = Number((refundedAmount * 0.029 + 0.3).toFixed(2))
+          const actualRefundedAmount = Number((refundedAmount - stripeFee).toFixed(2))
+          newDueAmount = Number((originalAmount - actualRefundedAmount).toFixed(2))
+
+          // Add refund information to payment_id
+          newPaymentId = `${application.payment_id} (refunded $${refundedAmount.toFixed(2)})`
+        } else {
+          // Full refund
+          newPaymentStatus = 'refunded'
+        }
+
         const { error } = await client
           .from('fce_applications')
           .update({
-            payment_status: 'refunded',
-            due_amount: null,
+            payment_status: newPaymentStatus,
+            due_amount: newDueAmount,
+            payment_id: newPaymentId,
           })
           .eq('id', application.id)
 
@@ -251,7 +274,7 @@ export async function POST(req: Request) {
           })
         }
 
-        return new NextResponse('Webhook processed - Application marked as refunded', {
+        return new NextResponse('Webhook processed - Application updated with refund information', {
           status: 200,
         })
       }
