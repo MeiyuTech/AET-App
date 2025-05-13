@@ -114,8 +114,12 @@ export const useStatusChange = ({
       const { id, status } = pendingStatusChange
 
       const { error } = await supabase.from('fce_applications').update({ status }).eq('id', id)
+      const { error: externalError } = await supabase
+        .from('fce_external_orders')
+        .update({ status })
+        .eq('id', id)
 
-      if (error) throw error
+      if (error || externalError) throw error || externalError
 
       // Update local state
       setApplications((apps) =>
