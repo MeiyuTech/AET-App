@@ -214,6 +214,8 @@ export async function POST(req: Request) {
         console.log('charge.refunded data:', {
           payment_intent: charge.payment_intent,
           amount_refunded: charge.amount_refunded,
+          amount: charge.amount,
+          currency: charge.currency,
         })
 
         // Find application by payment_id
@@ -235,9 +237,22 @@ export async function POST(req: Request) {
           return new NextResponse('No application found for this payment', { status: 404 })
         }
 
+        console.log('Found application:', {
+          id: application.id,
+          current_payment_id: application.payment_id,
+          current_due_amount: application.due_amount,
+          current_payment_status: application.payment_status,
+        })
+
         // Calculate the refunded amount in dollars (Stripe amounts are in cents)
         const refundedAmount = charge.amount_refunded / 100
         const originalAmount = application.due_amount || 0
+
+        console.log('Refund calculation details:', {
+          refundedAmount,
+          originalAmount,
+          isFullRefund: refundedAmount >= originalAmount,
+        })
 
         // Calculate the new due_amount and determine if it's a full refund
         let newDueAmount: number | null = null
@@ -253,10 +268,28 @@ export async function POST(req: Request) {
 
           // Add refund information to payment_id
           newPaymentId = `${application.payment_id} (refunded $${refundedAmount.toFixed(2)})`
+
+          console.log('Partial refund details:', {
+            stripeFee,
+            actualRefundedAmount,
+            newDueAmount,
+            newPaymentId,
+          })
         } else {
           // Full refund
           newPaymentStatus = 'refunded'
+          console.log('Full refund detected:', {
+            refundedAmount,
+            originalAmount,
+            newPaymentStatus,
+          })
         }
+
+        console.log('Updating application with:', {
+          newPaymentStatus,
+          newDueAmount,
+          newPaymentId,
+        })
 
         const { error } = await client
           .from('fce_applications')
@@ -268,11 +301,25 @@ export async function POST(req: Request) {
           .eq('id', application.id)
 
         if (error) {
-          console.error('Error updating refunded application:', error)
+          console.error('Error updating refunded application:', {
+            error,
+            updateData: {
+              payment_status: newPaymentStatus,
+              due_amount: newDueAmount,
+              payment_id: newPaymentId,
+            },
+          })
           return new NextResponse(`Error updating refunded application: ${error.message}`, {
             status: 500,
           })
         }
+
+        console.log('Successfully updated application with refund information:', {
+          applicationId: application.id,
+          newPaymentStatus,
+          newDueAmount,
+          newPaymentId,
+        })
 
         return new NextResponse('Webhook processed - Application updated with refund information', {
           status: 200,
