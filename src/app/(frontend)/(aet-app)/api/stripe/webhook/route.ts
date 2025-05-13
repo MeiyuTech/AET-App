@@ -33,7 +33,6 @@ export async function POST(req: Request) {
 
     const client = await createClient()
     const session = event.data.object as Stripe.Checkout.Session
-    const applicationId = session.client_reference_id || session.metadata?.applicationId
 
     // If payment link is valid, handle different event types
     if (session.payment_link) {
@@ -70,166 +69,259 @@ export async function POST(req: Request) {
       }
     }
 
-    // If there is no payment link, then applicationId is required
-    if (!applicationId) {
-      console.error('No client_reference_id in session')
-      return new NextResponse('Missing client_reference_id', { status: 400 })
-    }
-
-    const { success, applicationData } = await fetchApplication(applicationId)
-
-    if (!success) {
-      console.error('Error fetching application:', applicationData)
-      return new NextResponse('Error fetching application', { status: 500 })
-    }
-
-    if (!applicationData) {
-      console.error('No application data found')
-      return new NextResponse('No application data found', { status: 400 })
-    }
-
+    // Handle different event types
     switch (event.type) {
-      case 'checkout.session.completed': {
-        if (!session.amount_total) {
-          console.error('No amount total in session')
-          return new NextResponse('Missing amount total', { status: 400 })
+      case 'checkout.session.completed':
+      case 'checkout.session.expired': {
+        const applicationId = session.client_reference_id || session.metadata?.applicationId
+        if (!applicationId) {
+          console.error('No client_reference_id in session')
+          return new NextResponse('Missing client_reference_id', { status: 400 })
         }
 
-        console.log('checkout.session.completed data:', {
-          client_reference_id: applicationId,
-          payment_intent: session.payment_intent,
-          current_application_data: applicationData,
-        })
+        const { success, applicationData } = await fetchApplication(applicationId)
 
-        // Update the application status and payment status
-        const paidAt = new Date().toISOString()
-        const amountTotal = session.amount_total / 100
-        const stripeFee = Number((amountTotal * 0.029 + 0.3).toFixed(2))
-        const price = Number((amountTotal - stripeFee).toFixed(2))
+        if (!success) {
+          console.error('Error fetching application:', applicationData)
+          return new NextResponse('Error fetching application', { status: 500 })
+        }
 
-        const currentAmount = applicationData.due_amount
-        console.log('currentAmount', currentAmount)
-        console.log('amountTotal', amountTotal)
-        console.log('stripeFee', stripeFee)
-        console.log('price', price)
+        if (!applicationData) {
+          console.error('No application data found')
+          return new NextResponse('No application data found', { status: 400 })
+        }
 
-        const { error } = await client
-          .from('fce_applications')
-          .update({
-            status: 'processing',
-            payment_status: 'paid',
-            payment_id: session.payment_intent as string,
-            paid_at: paidAt,
-            due_amount: price,
+        if (event.type === 'checkout.session.completed') {
+          if (!session.amount_total) {
+            console.error('No amount total in session')
+            return new NextResponse('Missing amount total', { status: 400 })
+          }
+
+          console.log('checkout.session.completed data:', {
+            client_reference_id: applicationId,
+            payment_intent: session.payment_intent,
+            current_application_data: applicationData,
           })
-          .eq('id', applicationId)
 
-        if (error) {
-          console.error('Error updating application:', {
-            error,
-            currentState: applicationData,
-            attemptedUpdate: {
+          // Update the application status and payment status
+          const paidAt = new Date().toISOString()
+          const amountTotal = session.amount_total / 100
+          const stripeFee = Number((amountTotal * 0.029 + 0.3).toFixed(2))
+          const price = Number((amountTotal - stripeFee).toFixed(2))
+
+          const currentAmount = applicationData.due_amount
+          console.log('currentAmount', currentAmount)
+          console.log('amountTotal', amountTotal)
+          console.log('stripeFee', stripeFee)
+          console.log('price', price)
+
+          const { error } = await client
+            .from('fce_applications')
+            .update({
               status: 'processing',
               payment_status: 'paid',
+              payment_id: session.payment_intent as string,
+              paid_at: paidAt,
+              due_amount: price,
+            })
+            .eq('id', applicationId)
+
+          if (error) {
+            console.error('Error updating application:', {
+              error,
+              currentState: applicationData,
+              attemptedUpdate: {
+                status: 'processing',
+                payment_status: 'paid',
+              },
+            })
+            return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
+          }
+
+          // Send payment confirmation email to the applicant
+          if (!session.amount_total) {
+            throw new Error('No amount total in session')
+          }
+
+          // This applicationData is not updated yet, so we need to use the old one and `paidAt`
+          console.log('Debug - Same Day Service Calculation:', {
+            paidAt,
+            applicationData: {
+              serviceType: applicationData.serviceType,
+              isSameDay:
+                applicationData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed ===
+                'sameday',
             },
           })
-          return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
-        }
-
-        // Send payment confirmation email to the applicant
-        if (!session.amount_total) {
-          throw new Error('No amount total in session')
-        }
-
-        // This applicationData is not updated yet, so we need to use the old one and `paidAt`
-        console.log('Debug - Same Day Service Calculation:', {
-          paidAt,
-          applicationData: {
-            serviceType: applicationData.serviceType,
-            isSameDay:
-              applicationData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed ===
-              'sameday',
-          },
-        })
-        const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
-        console.log('Debug - Calculated Completion Date:', {
-          estimatedCompletionDate,
-          paidAt,
-        })
-        const paymentAmount = (session.amount_total / 100).toFixed(2)
-        const { success: emailSuccess, message: sendEmailMessage } =
-          await sendPaymentConfirmationEmail(
-            applicationId,
-            applicationData,
+          const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
+          console.log('Debug - Calculated Completion Date:', {
+            estimatedCompletionDate,
             paidAt,
-            paymentAmount,
-            session.payment_intent as string,
-            estimatedCompletionDate
-          )
+          })
+          const paymentAmount = (session.amount_total / 100).toFixed(2)
+          const { success: emailSuccess, message: sendEmailMessage } =
+            await sendPaymentConfirmationEmail(
+              applicationId,
+              applicationData,
+              paidAt,
+              paymentAmount,
+              session.payment_intent as string,
+              estimatedCompletionDate
+            )
 
-        if (!emailSuccess) {
-          console.error('Failed to send payment confirmation email:', sendEmailMessage)
-          throw new Error('Failed to send payment confirmation email')
+          if (!emailSuccess) {
+            console.error('Failed to send payment confirmation email:', sendEmailMessage)
+            throw new Error('Failed to send payment confirmation email')
+          }
+
+          return new NextResponse('Webhook processed', { status: 200 })
+        } else {
+          // checkout.session.expired
+          console.log('checkout.session.expired data:', {
+            client_reference_id: applicationId,
+            current_application_data: applicationData,
+          })
+
+          if (applicationData.payment_status === 'paid') {
+            console.log('Application is paid, skipping update')
+            return new NextResponse('Webhook processed - Skipped paid application', { status: 200 })
+          }
+
+          const { error } = await client
+            .from('fce_applications')
+            .update({
+              payment_status: 'expired',
+            })
+            .eq('id', applicationId)
+            .select()
+            .single()
+
+          if (error) {
+            console.error('Error updating expired application:', error)
+            return new NextResponse(`Error updating expired application: ${error.message}`, {
+              status: 500,
+            })
+          }
+
+          return new NextResponse('Webhook processed - Application marked as expired', {
+            status: 200,
+          })
         }
-
-        return new NextResponse('Webhook processed', { status: 200 })
       }
 
-      case 'checkout.session.expired': {
-        console.log('checkout.session.expired data:', {
-          client_reference_id: applicationId,
-          current_application_data: applicationData,
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge
+        console.log('charge.refunded data:', {
+          payment_intent: charge.payment_intent,
+          amount_refunded: charge.amount_refunded,
+          amount: charge.amount,
+          currency: charge.currency,
         })
 
-        if (applicationData.payment_status === 'paid') {
-          console.log('Application is paid, skipping update')
-          return new NextResponse('Webhook processed - Skipped paid application', { status: 200 })
-        }
-
-        const { error } = await client
+        // Find application by payment_id
+        const { data: application, error: findError } = await client
           .from('fce_applications')
-          .update({
-            payment_status: 'expired',
-          })
-          .eq('id', applicationId)
-          .select()
+          .select('*')
+          .eq('payment_id', charge.payment_intent)
           .single()
 
-        if (error) {
-          console.error('Error updating expired application:', error)
-          return new NextResponse(`Error updating expired application: ${error.message}`, {
+        if (findError) {
+          console.error('Error finding application:', findError)
+          return new NextResponse(`Error finding application: ${findError.message}`, {
             status: 500,
           })
         }
 
-        return new NextResponse('Webhook processed - Application marked as expired', {
-          status: 200,
-        })
-      }
+        if (!application) {
+          console.error('No application found for payment_intent:', charge.payment_intent)
+          return new NextResponse('No application found for this payment', { status: 404 })
+        }
 
-      case 'charge.refunded': {
-        console.log('charge.refunded data:', {
-          client_reference_id: applicationId,
-          payment_intent: session.payment_intent,
-          current_application_data: applicationData,
-          amount_refunded: (event.data.object as Stripe.Charge).amount_refunded,
+        console.log('Found application:', {
+          id: application.id,
+          current_payment_id: application.payment_id,
+          current_due_amount: application.due_amount,
+          current_payment_status: application.payment_status,
+        })
+
+        // Calculate the refunded amount in dollars (Stripe amounts are in cents)
+        const refundedAmount = charge.amount_refunded / 100
+        const originalAmount = application.due_amount || 0
+
+        console.log('Refund calculation details:', {
+          refundedAmount,
+          originalAmount,
+          isFullRefund: refundedAmount >= originalAmount,
+        })
+
+        // Calculate the new due_amount and determine if it's a full refund
+        let newDueAmount: number | null = null
+        let newPaymentId = application.payment_id
+        let newPaymentStatus = 'paid'
+
+        if (refundedAmount < originalAmount) {
+          // For partial refunds, calculate the new due_amount
+          // We need to account for Stripe's fee (2.9% + $0.30)
+          const stripeFee = Number((refundedAmount * 0.029 + 0.3).toFixed(2))
+          const actualRefundedAmount = Number((refundedAmount - stripeFee).toFixed(2))
+          newDueAmount = Number((originalAmount - actualRefundedAmount).toFixed(2))
+
+          // Add refund information to payment_id
+          newPaymentId = `${application.payment_id} (refunded $${refundedAmount.toFixed(2)})`
+
+          console.log('Partial refund details:', {
+            stripeFee,
+            actualRefundedAmount,
+            newDueAmount,
+            newPaymentId,
+          })
+        } else {
+          // Full refund
+          newPaymentStatus = 'refunded'
+          console.log('Full refund detected:', {
+            refundedAmount,
+            originalAmount,
+            newPaymentStatus,
+          })
+        }
+
+        console.log('Updating application with:', {
+          newPaymentStatus,
+          newDueAmount,
+          newPaymentId,
         })
 
         const { error } = await client
           .from('fce_applications')
           .update({
-            payment_status: 'refunded',
+            payment_status: newPaymentStatus,
+            due_amount: newDueAmount,
+            payment_id: newPaymentId,
           })
-          .eq('id', applicationId)
+          .eq('id', application.id)
 
         if (error) {
-          console.error('Error updating refunded application:', error)
+          console.error('Error updating refunded application:', {
+            error,
+            updateData: {
+              payment_status: newPaymentStatus,
+              due_amount: newDueAmount,
+              payment_id: newPaymentId,
+            },
+          })
           return new NextResponse(`Error updating refunded application: ${error.message}`, {
             status: 500,
           })
         }
 
-        return new NextResponse('Webhook processed - Application marked as refunded', {
+        console.log('Successfully updated application with refund information:', {
+          applicationId: application.id,
+          newPaymentStatus,
+          newDueAmount,
+          newPaymentId,
+        })
+
+        return new NextResponse('Webhook processed - Application updated with refund information', {
           status: 200,
         })
       }
