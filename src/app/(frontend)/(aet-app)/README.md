@@ -75,6 +75,7 @@
 - [ ] 为每笔支付单独新建一个表（zelle Stripe paypal）
 - [x] evaluee name 加上 proun
 - [ ] 生成的 payment link，在完成支付后，在 crm 出现记录。
+- [ ] CRM 上增加一个提醒需要实体版邮寄的小图标！！！
 - [ ] 增加 AI feature
 - [ ] 一个 ai chatbot
 - [ ] 一个 ai 的 pre evaluation 功能
