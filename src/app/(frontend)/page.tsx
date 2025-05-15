@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Chatbot } from '@/components/Chatbot/Chatbot'
 
 export default function HomePage() {
   return (
@@ -18,20 +17,18 @@ export default function HomePage() {
               Fill out the application form to start your Credential Evaluation request
             </p>
           </Link>
+
+          {/* AI Assistant Card */}
+          {/* <Link
+            href="/chat"
+            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
+          >
+            <h2 className="text-xl font-semibold mb-3">AI Assistant</h2>
+            <p className="text-gray-600">Chat with our AI assistant for help with your questions</p>
+          </Link> */}
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Application Form Card */}
-          {/* <Link
-            href="/apply"
-            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow"
-          >
-            <h2 className="text-xl font-semibold mb-3">Submit General Application</h2>
-            <p className="text-gray-600">
-              Fill out the application form to start your AET service request
-            </p>
-          </Link> */}
-
           {/* Application Status Card */}
           <Link
             href="/status"
@@ -40,38 +37,6 @@ export default function HomePage() {
             <h2 className="text-xl font-semibold mb-3">Check Status</h2>
             <p className="text-gray-600">Track the progress of your submitted application</p>
           </Link>
-
-          {/* Dropbox Upload Test Card */}
-          {/* <Link
-            href="/dropbox-test"
-            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50"
-          >
-            <h2 className="text-xl font-semibold mb-3">Test Dropbox Upload</h2>
-            <p className="text-gray-600">Upload test files directly to company Dropbox</p>
-          </Link> */}
-
-          {/* Stripe Inline pricing Test Card */}
-          {/* <Link
-            href="/stripe-test"
-            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50"
-          >
-            <h2 className="text-xl font-semibold mb-3">Test Stripe Inline Pricing</h2>
-            <p className="text-gray-600">Test Stripe Inline Pricing</p>
-          </Link> */}
-
-          {/* Email Tester Card */}
-          {/* <Link
-            href="/email-test"
-            className="block p-6 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50"
-          >
-            <h2 className="text-xl font-semibold mb-3">Test Email</h2>
-            <p className="text-gray-600">Test Email</p>
-          </Link> */}
-        </div>
-
-        {/* AI Chatbot */}
-        <div className="mt-8">
-          <Chatbot />
         </div>
       </div>
     </div>
