@@ -959,3 +959,20 @@ export const fceExternalOrders = pgTable("fce_external_orders", {
 		anyoneCanManageFceExternalOrders: pgPolicy("Anyone can manage fce external orders", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
 	}
 });
+
+export const aetCoreApplications = pgTable("aet_core_applications", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	firstName: text("first_name").notNull(),
+	lastName: text("last_name").notNull(),
+	email: text().notNull(),
+	purpose: text(),
+	source: text(),
+	status: text().default('draft').notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => {
+	return {
+		aetCoreApplicationsEmailCheck: check("aet_core_applications_email_check", sql`email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'::text`),
+		aetCoreApplicationsStatusCheck: check("aet_core_applications_status_check", sql`status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])`),
+	}
+});
