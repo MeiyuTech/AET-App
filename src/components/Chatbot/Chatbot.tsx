@@ -1,69 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useChat } from '@ai-sdk/react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Send } from 'lucide-react'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-}
+import { Send, Loader2 } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export function Chatbot() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim()) return
-
-    const userMessage: Message = {
-      role: 'user',
-      content: input.trim(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setInput('')
-    setIsLoading(true)
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input.trim() }),
-      })
-
-      const data = await response.json()
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: data.message,
-        },
-      ])
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { messages, input, handleInputChange, handleSubmit, error, reload, status } = useChat()
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <div className="p-4">
         <h2 className="text-lg font-semibold mb-4">AI Assistant</h2>
+
         <ScrollArea className="h-[400px] mb-4">
           <div className="space-y-4">
-            {messages.map((message, index) => (
+            {messages.map((message) => (
               <div
-                key={index}
+                key={message.id}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
@@ -77,15 +34,31 @@ export function Chatbot() {
             ))}
           </div>
         </ScrollArea>
+
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription className="flex items-center justify-between">
+              <span>An error occurred. Please try again.</span>
+              <Button variant="outline" size="sm" onClick={() => reload()}>
+                Retry
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Type your message..."
-            disabled={isLoading}
+            disabled={status !== 'ready' || error != null}
           />
-          <Button type="submit" disabled={isLoading}>
-            <Send className="h-4 w-4" />
+          <Button type="submit" disabled={status !== 'ready' || error != null}>
+            {status === 'streaming' ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
           </Button>
         </form>
       </div>
