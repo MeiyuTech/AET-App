@@ -3,8 +3,74 @@
 import { createClient } from './supabase/server'
 import { FormData, ApplicationData } from '../components/FCEApplicationForm/types'
 import { formatUtils } from '../components/FCEApplicationForm/utils'
+import { FormData as DegreeEquivalencyFormData } from '../components/DegreeEquivalencyForm/types'
+import { formatUtils as DegreeEquivalencyFormatUtils } from '../components/DegreeEquivalencyForm/utils'
 import { sendApplicationConfirmationEmail } from './email/actions'
 import { Application } from '../components/ApplicationsTable/types'
+
+/**
+ * Submit AET Core Application:
+ * 1. Convert form data to database format
+ * 2. Insert application data into database
+ * 3. Insert education data into database
+ * 4. Send confirmation email
+ * @param formData - Form data
+ * @returns - { success: true, applicationId: string }
+ * @throws - Error if failed to submit application
+ */
+export async function submitAETCoreApplication(formData: DegreeEquivalencyFormData) {
+  try {
+    const client = await createClient()
+
+    console.log('Original form data:', formData)
+    const dbData = DegreeEquivalencyFormatUtils.toDatabase(formData, 3, 'submitted')
+    console.log('Converted Core Application database data:', dbData)
+
+    // Start database transaction
+    const { data: databaseApplication, error: databaseApplicationError } = await client
+      .from('aet_core_applications')
+      .insert({
+        ...dbData,
+      })
+      .select()
+      .single()
+
+    if (databaseApplicationError) {
+      console.error('Core Application insert error:', databaseApplicationError)
+      throw databaseApplicationError
+    }
+
+    // Insert education records
+    const educationPromises = formData.educations?.map((education) =>
+      client.from('aet_core_educations').insert({
+        application_id: databaseApplication.id,
+        ...DegreeEquivalencyFormatUtils.toEducationDatabase(education),
+      })
+    )
+
+    if (educationPromises) {
+      await Promise.all(educationPromises)
+    }
+
+    // TODO: Send confirmation email
+    // console.log('Sending application confirmation email...')
+    // const { success: emailSuccess, message: sendEmailMessage } =
+    //   await sendApplicationConfirmationEmail(databaseApplication.id)
+
+    // if (!emailSuccess) {
+    //   console.error('Failed to send confirmation email:', sendEmailMessage)
+    //   throw new Error('Failed to send confirmation email')
+    // }
+
+    return {
+      success: true,
+      applicationId: databaseApplication.id,
+    }
+  } catch (error) {
+    console.error('Failed to submit AET application:', error)
+    throw new Error('Failed to submit application')
+  }
+}
 
 /**
  * Submit AET application:

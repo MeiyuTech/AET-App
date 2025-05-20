@@ -58,14 +58,6 @@ export default function FCEApplicationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...(formData as FormData),
-      // Set default purpose to 'evaluation'
-      deliveryMethod: formData?.deliveryMethod || 'no_delivery_needed',
-      additionalServices: formData?.additionalServices || [],
-      additionalServicesQuantity: formData?.additionalServicesQuantity || {
-        extra_copy: 0,
-        pdf_with_hard_copy: 0,
-        pdf_only: 0,
-      },
       educations: formData?.educations || [
         {
           countryOfStudy: '',
@@ -77,10 +69,6 @@ export default function FCEApplicationForm() {
           },
         },
       ],
-      // Set default service type 'customizedService' as required
-      serviceType: {
-        customizedService: { required: true },
-      },
     },
   })
 
@@ -164,63 +152,12 @@ export default function FCEApplicationForm() {
   const getFieldsToValidate = (step: FormStep): (keyof FormData)[] => {
     switch (step) {
       case FormStep.CLIENT_INFO:
-        return [
-          // 'name',
-          'country',
-          'firstName',
-          'lastName',
-          'middleName',
-          // 'streetAddress',
-          // 'streetAddress2',
-          // 'city',
-          // 'region',
-          // 'zipCode',
-          // 'phone',
-          // 'fax',
-          'email',
-          // 'office',
-          // 'purpose',
-          // 'purposeOther',
-        ]
+        return ['country', 'firstName', 'lastName', 'middleName', 'email']
       case FormStep.EVALUEE_INFO:
-        return [
-          // 'pronouns',
-          // 'firstName',
-          // 'lastName',
-          // 'middleName',
-          // 'dateOfBirth',
-          'educations',
-        ]
-      case FormStep.SERVICE_SELECTION:
-        return ['serviceType', 'deliveryMethod', 'additionalServices', 'additionalServicesQuantity']
+        return ['educations']
       case FormStep.REVIEW:
         // Validate all required fields in Review step (excluding optional fields)
-        return [
-          // Client Info
-          // 'name',
-          // 'streetAddress',
-          // 'city',
-          // 'region',
-          // 'zipCode',
-          // 'phone',
-          // 'fax',
-          'email',
-          // 'office',
-          // 'purpose',
-          // 'purposeOther',
-          // Evaluee Info
-          // 'pronouns',
-          // 'firstName',
-          // 'lastName',
-          // 'middleName',
-          // 'dateOfBirth',
-          'educations',
-          // Service Selection
-          // 'serviceType',
-          // 'deliveryMethod',
-          // 'additionalServices',
-          // 'additionalServicesQuantity',
-        ]
+        return ['email', 'educations']
       default:
         return []
     }
@@ -242,7 +179,7 @@ export default function FCEApplicationForm() {
   }
 
   const onSubmit = async (data: FormData) => {
-    console.log('Starting form submission...', { currentStep, data })
+    console.log('Starting Degree Equivalency Form Submission...', { currentStep, data })
 
     if (currentStep !== FormStep.REVIEW) {
       console.log('Not in review step, cannot submit')
@@ -250,9 +187,9 @@ export default function FCEApplicationForm() {
     }
 
     try {
-      console.log('FCEApplicationForm index.tsx data:', data)
+      console.log('DegreeEquivalencyForm index.tsx data:', data)
       const result = await submitForm()
-      console.log('FCEApplicationForm index.tsx result:', result)
+      console.log('DegreeEquivalencyForm index.tsx result:', result)
       if (result?.success) {
         // Reset form after successful submission
         resetFormState()
@@ -260,17 +197,18 @@ export default function FCEApplicationForm() {
 
         // Show success toast notification with better styling
         toast({
-          title: ' 🎉 Application Submitted Successfully!  🎉',
-          description: `Your application has been successfully submitted. We are processing your information.`,
+          title: ' 🎉 Degree Equivalency Application Submitted Successfully!  🎉',
+          description: `Your application has been successfully submitted.`,
           className: 'bg-green-50 border border-green-200 text-green-800',
         })
 
-        router.push(`/status?applicationId=${result.applicationId}`)
+        // TODO: Add status page
+        // router.push(`/status?applicationId=${result.applicationId}`)
       }
     } catch (error) {
       console.error('Submission error:', error)
       toast({
-        title: 'Submission Failed',
+        title: 'Degree Equivalency Submission Failed',
         description: 'There was an error submitting your application. Please try again later.',
         variant: 'destructive',
       })

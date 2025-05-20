@@ -2,7 +2,7 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { submitAETApplication } from '../../utils/actions'
+import { submitAETCoreApplication } from '../../utils/actions'
 import { FormData, FormStep, defaultFormValues } from './types'
 
 interface FormState {
@@ -62,7 +62,8 @@ export const useFormStore = create<FormState>()(
         set({ isLoading: true })
 
         try {
-          const result = await submitAETApplication({
+          console.log('state.formData', state.formData)
+          const result = await submitAETCoreApplication({
             ...(state.formData as FormData),
             // Make sure email is included in the submission
             email: state.formData.email as string,

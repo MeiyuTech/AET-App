@@ -23,28 +23,13 @@ export type AdditionalService = 'extra_copy' | 'pdf_with_hard_copy' | 'pdf_only'
 
 // Default form values constant that can be reused across components
 export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
-  name: '',
   country: '',
-  streetAddress: '',
-  streetAddress2: '',
-  city: '',
-  region: '',
-  zipCode: '',
-  phone: '',
-  fax: '',
   email: '',
-  office: undefined,
-  purpose: undefined,
+  purpose: 'degree-equivalency',
   purposeOther: '',
-  pronouns: undefined,
   firstName: '',
   lastName: '',
   middleName: '',
-  dateOfBirth: {
-    month: '',
-    date: '',
-    year: '',
-  },
   educations: [
     {
       countryOfStudy: '',
@@ -56,28 +41,6 @@ export const defaultFormValues: Partial<z.infer<typeof formSchema>> = {
       },
     },
   ],
-  serviceType: {
-    // If wanna skip service selection, set customizedService to true
-    customizedService: { required: false },
-    foreignCredentialEvaluation: {
-      firstDegree: { speed: undefined },
-      secondDegrees: 0,
-    },
-    coursebyCourse: {
-      firstDegree: { speed: undefined },
-      secondDegrees: 0,
-    },
-    professionalExperience: { speed: undefined },
-    positionEvaluation: { speed: undefined },
-    translation: { required: false },
-  },
-  deliveryMethod: 'no_delivery_needed',
-  additionalServices: ['pdf_only'],
-  additionalServicesQuantity: {
-    extra_copy: 0,
-    pdf_with_hard_copy: 0,
-    pdf_only: 1,
-  },
 }
 
 /**
@@ -105,19 +68,10 @@ export type EducationFormData = z.infer<typeof educationSchema>
  * Application data type
  * For application data that use in frontend and backend
  */
-export interface ApplicationData extends Partial<FormData> {
+export interface CoreApplicationData extends Partial<FormData> {
   status: string
-  submitted_at: string
-  due_amount: number
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired' | 'refunded'
-  payment_id: string | null
-  paid_at: string | null
-  additionalServices: ('extra_copy' | 'pdf_with_hard_copy' | 'pdf_only')[]
-  additionalServicesQuantity: {
-    extra_copy: number
-    pdf_with_hard_copy: number
-    pdf_only: number
-  }
+  created_at: string
+  updated_at: string
   educationInfo?: EducationFormData[]
 }
 
@@ -125,24 +79,13 @@ export interface ApplicationData extends Partial<FormData> {
  * Database application type
  * For application data that stored in database
  */
-export interface DatabaseApplication {
+export interface DatabaseCoreApplication {
   id: string
   status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
-  current_step: FormStep
 
   // Client Information
-  name: string
-  country: string
-  street_address: string
-  street_address2: string | null
-  city: string
-  region: string
-  zip_code: string
-  phone: string
-  fax: string | null
+  // country: string
   email: string
-  office: 'Boston' | 'New York' | 'San Francisco' | 'Los Angeles' | 'Miami'
-  // purpose: 'immigration' | 'employment' | 'education' | 'other'
   purpose:
     | 'translation'
     | 'evaluation-uscis'
@@ -151,36 +94,17 @@ export interface DatabaseApplication {
     | 'evaluation-education'
     | 'interpretation'
     | 'visa'
+    | 'degree-equivalency'
     | 'other'
-  purpose_other: string | null
 
   // Evaluee Information
-  pronouns: 'mr' | 'ms' | 'mx'
   first_name: string
   last_name: string
   middle_name: string | null
-  date_of_birth: string // ISO format date
-
-  // Service Selection
-  service_type: FormData['serviceType'] // use same type
-  delivery_method: string
-  additional_services: string[]
-  additional_services_quantity: {
-    extra_copy: number
-    pdf_with_hard_copy: number
-    pdf_only: number
-  }
 
   // Metadata
   created_at: string
   updated_at: string
-  submitted_at: string | null
-
-  // Payment related fields
-  due_amount: number | null
-  payment_status: 'pending' | 'paid' | 'failed' | 'expired' | 'refunded'
-  payment_id: string | null
-  paid_at: string | null
 }
 
 /**
