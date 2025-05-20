@@ -321,12 +321,12 @@ export function EvalueeInfo() {
     name: 'educations',
   })
 
-  const birthMonth = form.watch('dateOfBirth.month')
-  const birthYear = form.watch('dateOfBirth.year')
+  // const birthMonth = form.watch('dateOfBirth.month')
+  // const birthYear = form.watch('dateOfBirth.year')
 
   // Calculate days in month
-  const daysInMonth =
-    birthMonth && birthYear ? dayjs(`${birthYear}-${birthMonth}`).daysInMonth() : 31
+  // const daysInMonth =
+  //   birthMonth && birthYear ? dayjs(`${birthYear}-${birthMonth}`).daysInMonth() : 31
 
   return (
     <div className="space-y-4">
