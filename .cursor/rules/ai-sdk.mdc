@@ -1,0 +1,124 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# AI SDK Best Practices
+
+## Chatbot Implementation
+
+### Frontend Components
+1. Use `useChat` hook to manage chat state and interactions
+2. Component Structure:
+   - Use `Card` component as container
+   - Use `ScrollArea` for message list
+   - Use `Input` and `Button` for user input
+   - Use `Alert` for error messages
+
+3. State Management:
+   ```typescript
+   const { 
+     messages,      // Message history
+     input,         // Input field content
+     handleInputChange,  // Input handler
+     handleSubmit,  // Submit handler
+     error,         // Error state
+     reload,        // Retry functionality
+     status         // Current status
+   } = useChat()
+   ```
+
+4. Error Handling:
+   - Use `Alert` component to display errors
+   - Provide retry button
+   - Disable input in error state
+
+### API Routes
+1. Use Edge Runtime:
+   ```typescript
+   export const runtime = 'edge'
+   ```
+
+2. Stream Response Handling:
+   ```typescript
+   const result = streamText({
+     model: openai('gpt-4o'),
+     messages,
+   })
+   return result.toDataStreamResponse()
+   ```
+
+3. Error Handling:
+   ```typescript
+   return result.toDataStreamResponse({
+     getErrorMessage: (error) => {
+       // Error message handling logic
+     }
+   })
+   ```
+
+## Best Practices
+
+1. **State Management**
+   - Use `status` to track request state
+   - Disable input in non-ready states
+   - Show loading states
+
+2. **Error Handling**
+   - Provide clear error messages
+   - Implement retry mechanism
+   - Graceful degradation
+
+3. **UI/UX**
+   - Use streaming responses for real-time feedback
+   - Show loading animations
+   - Maintain interface responsiveness
+
+4. **Performance Optimization**
+   - Use Edge Runtime
+   - Implement streaming responses
+   - Optimize message rendering
+
+5. **Code Organization**
+   - Separate UI components and business logic
+   - Use TypeScript types
+   - Follow component best practices
+
+## Common Patterns
+
+1. **Message Rendering**
+   ```typescript
+   {messages.map((message) => (
+     <div key={message.id}>
+       <div className={message.role === 'user' ? 'user' : 'assistant'}>
+         {message.content}
+       </div>
+     </div>
+   ))}
+   ```
+
+2. **Input Handling**
+   ```typescript
+   <form onSubmit={handleSubmit}>
+     <Input
+       value={input}
+       onChange={handleInputChange}
+       disabled={status !== 'ready'}
+     />
+     <Button type="submit" disabled={status !== 'ready'}>
+       {status === 'streaming' ? <Loader2 /> : <Send />}
+     </Button>
+   </form>
+   ```
+
+3. **Error Handling**
+   ```typescript
+   {error && (
+     <Alert variant="destructive">
+       <AlertDescription>
+         <span>An error occurred</span>
+         <Button onClick={() => reload()}>Retry</Button>
+       </AlertDescription>
+     </Alert>
+   )}
+   ```
