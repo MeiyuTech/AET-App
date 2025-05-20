@@ -973,7 +973,7 @@ export const aetCoreApplications = pgTable("aet_core_applications", {
 	middleName: text("middle_name"),
 }, (table) => {
 	return {
-		aetCoreApplicationsEmailCheck: check("aet_core_applications_email_check", sql`email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'::text`),
+		aetCoreApplicationsEmailCheck: check("aet_core_applications_email_check", sql`email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'::text`),
 		aetCoreApplicationsStatusCheck: check("aet_core_applications_status_check", sql`status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])`),
 	}
 });
