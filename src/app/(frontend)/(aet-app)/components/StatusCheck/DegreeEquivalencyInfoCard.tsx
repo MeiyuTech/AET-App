@@ -3,7 +3,7 @@
 import countryList from 'react-select-country-list'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { ApplicationData } from '../DegreeEquivalencyForm/types'
+import { CoreApplicationData } from '../DegreeEquivalencyForm/types'
 import { getCountryLabel } from '../DegreeEquivalencyForm/constants'
 
 function getCountryName(code: string) {
@@ -12,7 +12,7 @@ function getCountryName(code: string) {
 }
 
 interface DegreeEquivalencyInfoCardProps {
-  application: ApplicationData
+  application: CoreApplicationData
 }
 
 export default function DegreeEquivalencyInfoCard({ application }: DegreeEquivalencyInfoCardProps) {
