@@ -970,6 +970,7 @@ export const aetCoreApplications = pgTable("aet_core_applications", {
 	status: text().default('draft').notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	middleName: text("middle_name"),
 }, (table) => {
 	return {
 		aetCoreApplicationsEmailCheck: check("aet_core_applications_email_check", sql`email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'::text`),
