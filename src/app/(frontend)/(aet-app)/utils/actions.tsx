@@ -41,12 +41,27 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
     }
 
     // Insert education records
-    const educationPromises = formData.educations?.map((education) =>
-      client.from('aet_core_educations').insert({
-        application_id: databaseApplication.id,
-        ...DegreeEquivalencyFormatUtils.toEducationDatabase(education),
-      })
-    )
+    const educationPromises = formData.educations?.map((education, idx) => {
+      console.log(`[Education Insert][${idx}] Original:`, education)
+      const dbEducation = DegreeEquivalencyFormatUtils.toEducationDatabase(education)
+      console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
+      return client
+        .from('aet_core_educations')
+        .insert({
+          application_id: databaseApplication.id,
+          ...dbEducation,
+        })
+        .then(
+          (result) => {
+            console.log(`[Education Insert][${idx}] Insert result:`, result)
+            return result
+          },
+          (err) => {
+            console.error(`[Education Insert][${idx}] Insert error:`, err)
+            throw err
+          }
+        )
+    })
 
     if (educationPromises) {
       await Promise.all(educationPromises)
@@ -105,12 +120,27 @@ export async function submitAETApplication(formData: FormData) {
     }
 
     // Insert education records
-    const educationPromises = formData.educations?.map((education) =>
-      client.from('fce_educations').insert({
-        application_id: databaseApplication.id,
-        ...formatUtils.toEducationDatabase(education),
-      })
-    )
+    const educationPromises = formData.educations?.map((education, idx) => {
+      console.log(`[Education Insert][${idx}] Original:`, education)
+      const dbEducation = formatUtils.toEducationDatabase(education)
+      console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
+      return client
+        .from('fce_educations')
+        .insert({
+          application_id: databaseApplication.id,
+          ...dbEducation,
+        })
+        .then(
+          (result) => {
+            console.log(`[Education Insert][${idx}] Insert result:`, result)
+            return result
+          },
+          (err) => {
+            console.error(`[Education Insert][${idx}] Insert error:`, err)
+            throw err
+          }
+        )
+    })
 
     if (educationPromises) {
       await Promise.all(educationPromises)
