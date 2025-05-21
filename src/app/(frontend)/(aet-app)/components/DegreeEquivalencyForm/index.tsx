@@ -203,7 +203,9 @@ export default function FCEApplicationForm() {
         })
 
         // TODO: Add status page
-        // router.push(`/status?applicationId=${result.applicationId}`)
+        router.push(
+          `/degree-equivalency-tool/application/success?applicationId=${result.applicationId}`
+        )
       }
     } catch (error) {
       console.error('Submission error:', error)
