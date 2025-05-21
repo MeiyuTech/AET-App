@@ -80,6 +80,7 @@
 - [ ] 增加 AI feature
 - [ ] 一个 ai chatbot
 - [ ] 一个 ai 的 pre evaluation 功能
+- [ ] 移动端的一些显示细节问题。 logo，日期选择，etc..
 
 ## Features
 
