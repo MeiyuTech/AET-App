@@ -46,6 +46,14 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                 <td className="py-2 px-4 font-medium bg-gray-50">Name of Institution:</td>
                 <td className="py-2 px-4">{education.school_name}</td>
               </tr>
+              <tr className="border-b">
+                <td className="py-2 px-4 font-medium bg-gray-50">Study Duration:</td>
+                <td className="py-2 px-4">
+                  {education.study_start_date && education.study_end_date
+                    ? `${education.study_start_date.year}-${education.study_start_date.month} to ${education.study_end_date.year}-${education.study_end_date.month}`
+                    : education.duration || 'Not provided'}
+                </td>
+              </tr>
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">

@@ -34,7 +34,7 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
     initialMessages: [
       {
         role: 'user',
-        content: 'Please evaluate my degree equivalency',
+        content: 'Evaluate degree equivalency',
         id: '1',
       },
     ],
@@ -54,5 +54,5 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
   const lastMessage = messages[messages.length - 1]?.content
   console.log('DegreeEquivalencyAI: Last message:', lastMessage)
 
-  return lastMessage || '正在评估...'
+  return lastMessage || 'Evaluating...'
 }

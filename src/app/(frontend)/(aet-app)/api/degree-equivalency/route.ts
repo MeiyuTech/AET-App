@@ -24,21 +24,21 @@ export async function POST(req: Request) {
     const duration =
       education.study_start_date && education.study_end_date
         ? `${education.study_start_date.year}-${education.study_start_date.month} to ${education.study_end_date.year}-${education.study_end_date.month}`
-        : '未提供'
+        : 'Not provided'
 
-    const prompt = `作为一个教育评估专家，请根据以下信息评估该学位在美国的等效性：
+    const prompt = `As an education evaluation expert, please evaluate the equivalency of this degree in the United States based on the following information:
 
-学校名称：${education.school_name}
-学位名称：${education.degree_obtained}
-学习国家：${education.country_of_study}
-学习时长：${duration}
+School Name: ${education.school_name}
+Degree Name: ${education.degree_obtained}
+Study Country: ${education.country_of_study}
+Study Duration: ${duration}
 
-请提供：
-1. 最接近的美国学位等效性
-2. 简要解释评估依据
-3. 任何需要注意的特殊情况或限制
+Please provide:
+1. The most similar US degree equivalency
+2. A brief explanation of the evaluation basis
+3. Any special considerations or limitations
 
-请用专业但易懂的语言回答。`
+Please just output the Equivalency name of the degree, less than 10 words, no other text.`
 
     console.log('Degree Equivalency API: Generated prompt:', prompt)
 
@@ -47,7 +47,8 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: '你是一个专业的教育评估专家，专门负责评估国际学位与美国学位的等效性。',
+          content:
+            'You are a professional education evaluation expert, responsible for evaluating the equivalency of international degrees to US degrees.',
         },
         {
           role: 'user',
