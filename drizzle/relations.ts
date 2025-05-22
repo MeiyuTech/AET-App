@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { fceApplications, fceEducations } from "./schema";
+import { fceApplications, fceEducations, aetCoreApplications, aetCoreEducations } from "./schema";
 
 export const fceEducationsRelations = relations(fceEducations, ({one}) => ({
 	fceApplication: one(fceApplications, {
@@ -10,4 +10,15 @@ export const fceEducationsRelations = relations(fceEducations, ({one}) => ({
 
 export const fceApplicationsRelations = relations(fceApplications, ({many}) => ({
 	fceEducations: many(fceEducations),
+}));
+
+export const aetCoreEducationsRelations = relations(aetCoreEducations, ({one}) => ({
+	aetCoreApplication: one(aetCoreApplications, {
+		fields: [aetCoreEducations.applicationId],
+		references: [aetCoreApplications.id]
+	}),
+}));
+
+export const aetCoreApplicationsRelations = relations(aetCoreApplications, ({many}) => ({
+	aetCoreEducations: many(aetCoreEducations),
 }));
