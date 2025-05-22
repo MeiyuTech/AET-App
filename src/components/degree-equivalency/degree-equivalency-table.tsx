@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 import countryList from 'react-select-country-list'
+import { DegreeEquivalencyAI } from './degree-equivalency-ai'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -47,8 +48,8 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
               </tr>
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
-                <td className="py-2 px-4 font-semibold text-blue-900">
-                  {education.us_equivalency}
+                <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
+                  <DegreeEquivalencyAI education={education} />
                 </td>
               </tr>
             </tbody>
