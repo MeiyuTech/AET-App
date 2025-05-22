@@ -1,10 +1,19 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle2, Printer } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-export default function DegreeEquivalencySuccessPage() {
+import { DegreeEquivalencyTable } from '@/components/degree-equivalency/degree-equivalency-table'
+
+interface PageProps {
+  searchParams: Promise<{
+    applicationId?: string
+  }>
+}
+
+export default async function DegreeEquivalencySuccessPage({ searchParams }: PageProps) {
+  const { applicationId } = await searchParams
+
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-8 px-2">
       {/* Top Image and Title */}
@@ -68,41 +77,7 @@ export default function DegreeEquivalencySuccessPage() {
       </div>
 
       {/* Degree Equivalency Information Table */}
-      <div className="w-full max-w-3xl mb-6">
-        <Card>
-          <CardHeader className="bg-blue-900 text-white rounded-t-md">
-            <CardTitle className="text-lg font-bold">Credential 1</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <table className="w-full text-sm">
-              <tbody>
-                <tr className="border-b">
-                  <td className="py-2 px-4 font-medium bg-gray-50 w-1/3">Country of Education:</td>
-                  <td className="py-2 px-4">China</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-4 font-medium bg-gray-50">Name of Degree:</td>
-                  <td className="py-2 px-4">Bachelor of Science</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-4 font-medium bg-gray-50">Major:</td>
-                  <td className="py-2 px-4">Computer Science</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 px-4 font-medium bg-gray-50">Name of Institution:</td>
-                  <td className="py-2 px-4">Peking University</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
-                  <td className="py-2 px-4 font-semibold text-blue-900">
-                    Bachelor of Science in Computer Science
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-      </div>
+      <DegreeEquivalencyTable applicationId={applicationId} />
 
       {/* Note */}
       <div className="w-full max-w-3xl mb-6">
@@ -116,7 +91,7 @@ export default function DegreeEquivalencySuccessPage() {
 
       {/* Finish Button */}
       <div className="w-full max-w-3xl flex justify-end">
-        <Link href="/" passHref>
+        <Link href="/degree-equivalency-tool" passHref>
           <Button variant="outline" className="text-base px-8 py-2">
             Finish
           </Button>

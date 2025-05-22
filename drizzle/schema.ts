@@ -977,3 +977,23 @@ export const aetCoreApplications = pgTable("aet_core_applications", {
 		aetCoreApplicationsStatusCheck: check("aet_core_applications_status_check", sql`status = ANY (ARRAY['draft'::text, 'submitted'::text, 'processing'::text, 'completed'::text, 'cancelled'::text])`),
 	}
 });
+
+export const aetCoreEducations = pgTable("aet_core_educations", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	applicationId: uuid("application_id").notNull(),
+	countryOfStudy: text("country_of_study").notNull(),
+	degreeObtained: text("degree_obtained").notNull(),
+	schoolName: text("school_name").notNull(),
+	studyStartDate: jsonb("study_start_date").notNull(),
+	studyEndDate: jsonb("study_end_date").notNull(),
+}, (table) => {
+	return {
+		idxAetCoreEducationsApplication: index("idx_aet_core_educations_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),
+		aetCoreEducationsApplicationIdFkey: foreignKey({
+			columns: [table.applicationId],
+			foreignColumns: [aetCoreApplications.id],
+			name: "aet_core_educations_application_id_fkey"
+		}).onDelete("cascade"),
+		anyoneCanManageAetEducations: pgPolicy("Anyone can manage AET educations", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
+	}
+});

@@ -7,6 +7,7 @@ import {
   fceEducations,
   fceExternalOrders,
   aetCoreApplications,
+  aetCoreEducations,
 } from '../drizzle/schema'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { s3Storage } from '@payloadcms/storage-s3'
@@ -128,6 +129,7 @@ export default buildConfig({
             fceEducations,
             fceExternalOrders,
             aetCoreApplications,
+            aetCoreEducations,
           },
         }
       },
