@@ -1,4 +1,4 @@
-import { ChevronDown, Eye, Edit, FileText } from 'lucide-react'
+import { ChevronDown, Eye, Edit, FileText, Truck } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { cn } from '@/utilities/cn'
@@ -19,6 +19,7 @@ import { getStatusColor, getPaymentStatusColor } from '../../utils/statusColors'
 import { getEstimatedCompletionDate } from '../FCEApplicationForm/utils'
 import { CompletionProgressBar } from './CompletionProgressBar'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface GetColumnsProps {
   handleOfficeChange: (id: string, office: string | null) => Promise<void>
@@ -490,19 +491,36 @@ export const getColumns = ({
     cell: ({ row }) => {
       const source = row.original.source
       const isExternal = source === 'external'
+      const deliveryMethod = row.original.delivery_method
+      const needsDelivery = deliveryMethod && deliveryMethod !== 'no_delivery_needed'
+
       return (
-        <Button
-          variant="ghost"
-          size="default"
-          className="hover:bg-gray-100 px-1"
-          onClick={() => {
-            setSelectedApplication(row.original)
-            setServicesDialogOpen(true)
-          }}
-          disabled={isExternal}
-        >
-          <Eye className={`h-5 w-5 ${isExternal ? 'opacity-50' : ''}`} />
-        </Button>
+        <div className="flex items-center justify-center gap-1">
+          <Button
+            variant="ghost"
+            size="default"
+            className="hover:bg-gray-100 px-1"
+            onClick={() => {
+              setSelectedApplication(row.original)
+              setServicesDialogOpen(true)
+            }}
+            disabled={isExternal}
+          >
+            <Eye className={`h-5 w-5 ${isExternal ? 'opacity-50' : ''}`} />
+          </Button>
+          {needsDelivery && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Truck className="h-5 w-5 text-blue-500" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>需要邮寄纸质版</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
       )
     },
   },
