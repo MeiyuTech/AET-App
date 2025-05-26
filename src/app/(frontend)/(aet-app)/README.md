@@ -78,7 +78,7 @@
 - [x] CRM 上增加一个提醒需要实体版邮寄的小图标！！！
 - [ ] 对于 payment link 生成 payment confirmation email
 - [x] 增加 AI feature
-- [ ] 一个 ai chatbot
+- [x] 一个 ai chatbot
 - [ ] 一个 ai 的 pre evaluation 功能
 - [ ] 移动端的一些显示细节问题。 logo，日期选择，etc..
 - [x] 联邦假日。交付日期！！！
