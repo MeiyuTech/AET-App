@@ -8,6 +8,22 @@ import { formatUtils as DegreeEquivalencyFormatUtils } from '../components/Degre
 import { sendApplicationConfirmationEmail } from './email/actions'
 import { Application } from '../components/ApplicationsTable/types'
 
+export async function getApplicationEmail(applicationId: string) {
+  const client = await createClient()
+  const { data: application, error: applicationError } = await client
+    .from('aet_core_applications')
+    .select('email')
+    .eq('id', applicationId)
+    .single()
+
+  if (applicationError) {
+    console.error('Error fetching application email:', applicationError)
+    throw applicationError
+  }
+
+  return application.email
+}
+
 /**
  * Submit AET Core Application:
  * 1. Convert form data to database format
