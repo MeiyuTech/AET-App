@@ -8,10 +8,10 @@ import { formatUtils as DegreeEquivalencyFormatUtils } from '../components/Degre
 import { sendApplicationConfirmationEmail } from './email/actions'
 import { Application } from '../components/ApplicationsTable/types'
 
-export async function getApplicationEmail(applicationId: string) {
+export async function getFCEApplicationEmail(applicationId: string) {
   const client = await createClient()
   const { data: application, error: applicationError } = await client
-    .from('aet_core_applications')
+    .from('fce_applications')
     .select('email')
     .eq('id', applicationId)
     .single()
