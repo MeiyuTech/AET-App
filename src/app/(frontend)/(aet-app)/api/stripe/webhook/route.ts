@@ -103,6 +103,16 @@ export async function POST(req: Request) {
             current_application_data: applicationData,
           })
 
+          if (!session.payment_intent) {
+            console.error('No payment intent in session')
+            return new NextResponse('Missing payment intent', { status: 400 })
+          }
+
+          // Make sure the receipt email is set to the application email
+          stripe.paymentIntents.update(session.payment_intent as string, {
+            receipt_email: applicationData.email,
+          })
+
           // Update the application status and payment status
           const paidAt = new Date().toISOString()
           const amountTotal = session.amount_total / 100

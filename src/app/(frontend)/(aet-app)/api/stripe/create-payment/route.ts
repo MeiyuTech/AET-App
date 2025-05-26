@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { amount, currency, applicationId, applicationEmail } = body
+    const { amount, currency, applicationId } = body
 
     // Calculate Stripe Fee (2.9% + $0.30)
     const totalAmount = (amount + 0.3) / (1 - 0.029)
@@ -37,7 +37,6 @@ export async function POST(request: Request) {
       ],
       mode: 'payment',
       client_reference_id: applicationId || '',
-      customer_email: applicationEmail,
       success_url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
       // return_url: `${currentUrl}/stripe-test`,
       metadata: {
