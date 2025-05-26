@@ -1,5 +1,17 @@
 import { relations } from "drizzle-orm/relations";
-import { fceApplications, fceEducations, aetCoreApplications, aetCoreEducations } from "./schema";
+import { aetCoreApplications, aetCorePayments, fceApplications, fceEducations, aetCoreEducations } from "./schema";
+
+export const aetCorePaymentsRelations = relations(aetCorePayments, ({one}) => ({
+	aetCoreApplication: one(aetCoreApplications, {
+		fields: [aetCorePayments.applicationId],
+		references: [aetCoreApplications.id]
+	}),
+}));
+
+export const aetCoreApplicationsRelations = relations(aetCoreApplications, ({many}) => ({
+	aetCorePayments: many(aetCorePayments),
+	aetCoreEducations: many(aetCoreEducations),
+}));
 
 export const fceEducationsRelations = relations(fceEducations, ({one}) => ({
 	fceApplication: one(fceApplications, {
@@ -17,8 +29,4 @@ export const aetCoreEducationsRelations = relations(aetCoreEducations, ({one}) =
 		fields: [aetCoreEducations.applicationId],
 		references: [aetCoreApplications.id]
 	}),
-}));
-
-export const aetCoreApplicationsRelations = relations(aetCoreApplications, ({many}) => ({
-	aetCoreEducations: many(aetCoreEducations),
 }));
