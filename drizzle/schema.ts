@@ -1,4 +1,4 @@
-import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, check, smallint, date, jsonb, numeric, foreignKey, integer, boolean, serial, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, pgPolicy, bigint, timestamp, text, uuid, varchar, index, foreignKey, numeric, check, smallint, date, jsonb, integer, boolean, serial, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const locales = pgEnum("_locales", ['en', 'zh'])
@@ -61,6 +61,26 @@ export const contactSubmissions = pgTable("contact_submissions", {
 }, (table) => {
 	return {
 		enableInsertForAllUsers: pgPolicy("Enable insert for all users", { as: "permissive", for: "insert", to: ["public"], withCheck: sql`true`  }),
+	}
+});
+
+export const aetCorePayments = pgTable("aet_core_payments", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	applicationId: uuid("application_id"),
+	dueAmount: numeric("due_amount", { precision: 6, scale:  2 }).notNull(),
+	paymentStatus: text("payment_status").default('pending').notNull(),
+	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }),
+	paymentId: text("payment_id"),
+	source: text(),
+}, (table) => {
+	return {
+		idxAetCorePaymentsApplication: index("idx_aet_core_payments_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),
+		aetCorePaymentsApplicationIdFkey: foreignKey({
+			columns: [table.applicationId],
+			foreignColumns: [aetCoreApplications.id],
+			name: "aet_core_payments_application_id_fkey"
+		}).onDelete("cascade"),
+		anyoneCanManageAetPayments: pgPolicy("Anyone can manage AET payments", { as: "permissive", for: "all", to: ["public"], using: sql`true` }),
 	}
 });
 

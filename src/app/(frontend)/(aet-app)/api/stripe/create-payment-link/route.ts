@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getStripeConfig } from '../../../utils/stripe/config'
+import { createClient } from '../../../utils/supabase/server'
 
 export async function POST(request: Request) {
   const stripeConfig = await getStripeConfig()
@@ -68,6 +69,24 @@ export async function POST(request: Request) {
 
     // Create the payment link
     const paymentLink = await stripe.paymentLinks.create(paymentLinkParams)
+
+    // Create the payment link in the database
+    const client = await createClient()
+    const { data, error } = await client.from('aet_core_payments').insert({
+      payment_id: description,
+      application_id: applicationId || '',
+      due_amount: amount,
+      payment_status: 'pending',
+      source: 'Stripe Payment Link',
+    })
+
+    if (error) {
+      console.error('🔴 [create-payment-link] Error inserting payment link into database:', error)
+      return NextResponse.json(
+        { error: 'Error inserting payment link into database' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({
       url: paymentLink.url,
