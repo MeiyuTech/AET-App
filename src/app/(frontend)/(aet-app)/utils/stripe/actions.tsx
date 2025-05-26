@@ -1,5 +1,5 @@
 import { getClientSideURL } from '@/utilities/getURL'
-import { getFCEApplicationEmail } from '../actions'
+// import { getFCEApplicationEmail } from '../actions'
 
 export async function createPayment({
   amount,
@@ -16,7 +16,7 @@ export async function createPayment({
   const baseUrl = getClientSideURL()
   const apiUrl = `${baseUrl}/api/stripe/create-payment`
 
-  const applicationEmail = await getFCEApplicationEmail(applicationId)
+  // const applicationEmail = await getFCEApplicationEmail(applicationId)
 
   try {
     const response = await fetch(apiUrl, {
@@ -28,7 +28,6 @@ export async function createPayment({
         amount: numericAmount,
         currency: 'usd',
         applicationId: applicationId,
-        applicationEmail: applicationEmail,
       }),
     })
 
