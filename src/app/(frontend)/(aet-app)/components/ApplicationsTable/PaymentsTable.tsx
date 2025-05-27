@@ -8,29 +8,19 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import React from 'react'
 
-// Mock data
-const payments = [
-  {
-    id: 'pay_001',
-    applicationId: 'app_001',
-    dueAmount: 120.5,
-    paymentStatus: 'paid',
-    paidAt: '2024-05-20 10:00',
-    paymentId: 'stripe_123',
-    source: 'stripe',
-  },
-  {
-    id: 'pay_002',
-    applicationId: 'app_002',
-    dueAmount: 80.0,
-    paymentStatus: 'pending',
-    paidAt: null,
-    paymentId: null,
-    source: 'paypal',
-  },
-]
+import React, { useEffect, useState } from 'react'
+import { fetchPaymentsList } from '@/app/(frontend)/(aet-app)/utils/actions'
+
+interface Payment {
+  id: string
+  application_id: string | null
+  due_amount: number
+  payment_status: string
+  paid_at: string | null
+  payment_id: string | null
+  source: string | null
+}
 
 const statusColor = (status: string) => {
   switch (status) {
@@ -46,6 +36,33 @@ const statusColor = (status: string) => {
 }
 
 export default function PaymentsTable() {
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      setLoading(true)
+      setError(null)
+      const result = await fetchPaymentsList()
+      if (!result.success || !result.payments) {
+        setError(result.error || 'Failed to fetch payments')
+        setPayments([])
+      } else {
+        setPayments(result.payments)
+      }
+      setLoading(false)
+    }
+    fetchPayments()
+  }, [])
+
+  if (loading) {
+    return <div className="p-4">Loading payments...</div>
+  }
+  if (error) {
+    return <div className="p-4 text-red-500">Error: {error}</div>
+  }
+
   return (
     <div className="w-full overflow-x-auto">
       <Table>
@@ -61,23 +78,31 @@ export default function PaymentsTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {payments.map((p) => (
-            <TableRow key={p.id}>
-              <TableCell>{p.id}</TableCell>
-              <TableCell>{p.applicationId}</TableCell>
-              <TableCell>${p.dueAmount.toFixed(2)}</TableCell>
-              <TableCell>
-                <Badge variant={statusColor(p.paymentStatus)}>{p.paymentStatus}</Badge>
-              </TableCell>
-              <TableCell>{p.paidAt || '-'}</TableCell>
-              <TableCell>{p.source}</TableCell>
-              <TableCell>
-                <Button size="sm" variant="outline">
-                  Details
-                </Button>
+          {payments.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center">
+                No payments found.
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            payments.map((p) => (
+              <TableRow key={p.id}>
+                <TableCell>{p.payment_id || 'N/A'}</TableCell>
+                <TableCell>{p.application_id || 'N/A'}</TableCell>
+                <TableCell>${p.due_amount?.toFixed(2) ?? 'N/A'}</TableCell>
+                <TableCell>
+                  <Badge variant={statusColor(p.payment_status)}>{p.payment_status}</Badge>
+                </TableCell>
+                <TableCell>{p.paid_at ? new Date(p.paid_at).toLocaleString() : '-'}</TableCell>
+                <TableCell>{p.source || '-'}</TableCell>
+                <TableCell>
+                  <Button size="sm" variant="outline">
+                    Details
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
