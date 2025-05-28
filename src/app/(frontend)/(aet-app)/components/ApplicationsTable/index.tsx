@@ -39,7 +39,6 @@ import {
   useApplicationState,
 } from './hooks'
 import { exportTableToXlsx, exportTableToCsv } from './exportToXlsx'
-import PaymentsTable from './PaymentsTable'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 export default function ApplicationsTableMain(props) {
@@ -365,9 +364,6 @@ export default function ApplicationsTableMain(props) {
             defaultAmount={selectedApplicationForPayment?.amount || 0}
           />
         </div>
-      </TabsContent>
-      <TabsContent value="payments">
-        <PaymentsTable />
       </TabsContent>
     </Tabs>
   )
