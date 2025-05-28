@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,18 +19,60 @@ const statusColor = (status: string) => {
 
 export const columns: ColumnDef<Payment>[] = [
   {
+    id: 'index',
+    header: () => <div className="text-center">#</div>,
+    cell: ({ table, row }) => {
+      const rows = table.getRowModel().rows
+      const index = rows.findIndex((r) => r.id === row.id)
+      return index + 1
+    },
+  },
+  {
     accessorKey: 'payment_id',
-    header: 'Payment ID',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Payment ID
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
     cell: ({ row }) => row.getValue('payment_id') || 'N/A',
   },
   {
     accessorKey: 'application_id',
-    header: 'Application ID',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Application ID
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
     cell: ({ row }) => row.getValue('application_id') || 'N/A',
   },
   {
     accessorKey: 'due_amount',
-    header: 'Due Amount',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Due Amount
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const amount = row.getValue('due_amount') as number
       return amount ? `$${amount.toFixed(2)}` : 'N/A'
@@ -37,7 +80,18 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'payment_status',
-    header: 'Payment Status',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Payment Status
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const status = row.getValue('payment_status') as string
       return <Badge variant={statusColor(status)}>{status}</Badge>
@@ -45,23 +99,76 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'paid_at',
-    header: 'Paid At',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Paid At
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const date = row.getValue('paid_at') as string | null
-      return date ? new Date(date).toLocaleString() : '-'
+      if (!date) return '-'
+
+      const dateObj = new Date(date)
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">
+            {dateObj
+              .toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+              .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+          </div>
+          <div className="text-gray-600">
+            {dateObj.toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
+          </div>
+        </div>
+      )
     },
   },
   {
-    accessorKey: 'source',
-    header: 'Source',
-    cell: ({ row }) => row.getValue('source') || '-',
+    accessorKey: 'notes',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Notes
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => row.getValue('notes') || '-',
   },
   {
-    id: 'actions',
-    cell: () => (
-      <Button size="sm" variant="outline">
-        Details
-      </Button>
-    ),
+    accessorKey: 'source',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+        >
+          Source
+          <ChevronDown className="ml-2 h-5 w-5" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => row.getValue('source') || '-',
   },
 ]

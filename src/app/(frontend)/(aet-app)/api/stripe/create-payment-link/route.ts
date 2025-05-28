@@ -73,10 +73,10 @@ export async function POST(request: Request) {
     // Create the payment link in the database
     const client = await createClient()
     const { data, error } = await client.from('aet_core_payments').insert({
-      payment_id: description,
+      payment_status: 'pending',
       application_id: applicationId || null,
       due_amount: amount,
-      payment_status: 'pending',
+      notes: description,
       source: 'Stripe Payment Link',
     })
 

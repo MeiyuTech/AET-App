@@ -72,6 +72,7 @@ export const aetCorePayments = pgTable("aet_core_payments", {
 	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }),
 	paymentId: text("payment_id"),
 	source: text(),
+	notes: text(),
 }, (table) => {
 	return {
 		idxAetCorePaymentsApplication: index("idx_aet_core_payments_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),
