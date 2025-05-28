@@ -114,6 +114,7 @@ export const useApplicationState = (dataFilter: string): ApplicationStateResult 
     async function loadApplications() {
       try {
         setLoading(true)
+        // Get applications data from database (Supabase)
         const result = await fetchApplicationsList(dataFilter)
 
         if (!result.success || !result.applications) {

@@ -65,13 +65,14 @@ export const contactSubmissions = pgTable("contact_submissions", {
 });
 
 export const aetCorePayments = pgTable("aet_core_payments", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
+	id: text().primaryKey().notNull(),
 	applicationId: uuid("application_id"),
 	dueAmount: numeric("due_amount", { precision: 6, scale:  2 }).notNull(),
 	paymentStatus: text("payment_status").default('pending').notNull(),
 	paidAt: timestamp("paid_at", { withTimezone: true, mode: 'string' }),
 	paymentId: text("payment_id"),
 	source: text(),
+	notes: text(),
 }, (table) => {
 	return {
 		idxAetCorePaymentsApplication: index("idx_aet_core_payments_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),

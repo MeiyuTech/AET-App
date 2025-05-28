@@ -373,3 +373,87 @@ export async function fetchApplicationsList(filter: string): Promise<FetchApplic
     }
   }
 }
+
+/**
+ * Fetch and format AET application data:
+ * 1. Get application data from database
+ * 2. Get education data from database
+ * 3. Transform database field names to frontend field names
+ * @param id - Database ID
+ * @returns - { success: true, payment: formattedData }
+ * @throws - Error if failed to fetch payment
+ */
+export async function fetchPayment(id: string) {
+  try {
+    const client = await createClient()
+
+    // get the application data from the database
+    const { data: databasePayment, error: databasePaymentError } = await client
+      .from('aet_core_payments')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (databasePaymentError) {
+      console.error('Error verifying and fetching payment in database:', databasePaymentError)
+      return { success: false }
+    }
+
+    return {
+      success: true,
+      paymentData: databasePayment,
+    }
+  } catch (error) {
+    console.error('Failed to fetch payment:', error)
+    return { success: false }
+  }
+}
+
+interface Payment {
+  id: string
+  application_id: string
+  due_amount: number
+  payment_status: string
+  paid_at: string
+  payment_id: string
+  source: string
+}
+
+interface FetchPaymentsListResult {
+  success: boolean
+  payments?: Payment[]
+  error?: string
+}
+
+/**
+ * Fetch payments list:
+ * 1. Get payments data from database
+ * @returns - FetchPaymentsListResult
+ */
+export async function fetchPaymentsList(): Promise<FetchPaymentsListResult> {
+  try {
+    const client = await createClient()
+
+    // Get payments data from database
+    const { data: payments, error: paymentsError } = await client
+      .from('aet_core_payments')
+      .select('*')
+      .order('paid_at', { ascending: false })
+
+    if (paymentsError) {
+      console.error('Error fetching payments:', paymentsError)
+      return { success: false, error: 'Failed to fetch payments' }
+    }
+
+    return {
+      success: true,
+      payments: payments || [],
+    }
+  } catch (error) {
+    console.error('Failed to fetch payments:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch payments',
+    }
+  }
+}

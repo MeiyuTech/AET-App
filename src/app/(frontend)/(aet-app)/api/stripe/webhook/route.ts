@@ -46,6 +46,17 @@ export async function POST(req: Request) {
             payment_intent: session.payment_intent,
             amount_total: session.amount_total,
           })
+
+          const { data, error } = await client
+            .from('aet_core_payments')
+            .update({
+              payment_status: 'paid',
+            })
+            .eq('id', session.payment_link)
+
+          if (error) {
+            console.error('Error updating payment status:', error)
+          }
           return new NextResponse('Payment link checkout completed', { status: 200 })
         }
         case 'checkout.session.expired': {

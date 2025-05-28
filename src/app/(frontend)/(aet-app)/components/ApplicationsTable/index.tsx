@@ -40,7 +40,7 @@ import {
 } from './hooks'
 import { exportTableToXlsx, exportTableToCsv } from './exportToXlsx'
 
-export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
+export default function ApplicationsTableMain(props) {
   const {
     // Data states
     applications,
@@ -82,7 +82,7 @@ export function ApplicationsTable({ dataFilter }: { dataFilter: string }) {
     setPendingPaymentStatusChange,
     pendingPaidAtChange,
     setPendingPaidAtChange,
-  } = useApplicationState(dataFilter)
+  } = useApplicationState(props.dataFilter)
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 

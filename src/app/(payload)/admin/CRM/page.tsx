@@ -6,8 +6,10 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
-import { ApplicationsTable } from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
+import ApplicationsTable from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
+import PaymentsTable from '@/app/(frontend)/(aet-app)/components/PaymentsTable'
 
 export const metadata: Metadata = {
   title: 'AET Service Application ｜ AET CRM ｜ AET Admin',
@@ -49,31 +51,40 @@ export default async function CRMPage() {
         Welcome <span className="font-bold">{user.email}</span>
       </h2>
 
-      {/* Payment Link Button */}
-      <Button asChild>
-        <Link href="/admin/CRM/create-payment-link" target="_blank">
-          Manually Create Payment Link
-        </Link>
-      </Button>
+      {/* Action Buttons */}
+      <div className="flex gap-2 mb-8">
+        <Button asChild>
+          <Link href="/admin/CRM/create-payment-link" target="_blank">
+            Manually Create Payment Link
+          </Link>
+        </Button>
 
-      <br />
-      <br />
-      {/* Import Orders Button */}
-      <Button asChild>
-        <Link href="/admin/CRM/import-order" target="_blank">
-          Import Orders
-        </Link>
-      </Button>
+        <Button asChild>
+          <Link href="/admin/CRM/import-order" target="_blank">
+            Import Orders
+          </Link>
+        </Button>
 
-      {/* GPA Calculator Button */}
-      <Button asChild className="ml-2">
-        <Link href="/admin/CRM/gpa-calculator" target="_blank">
-          GPA Calculator
-        </Link>
-      </Button>
+        <Button asChild>
+          <Link href="/admin/CRM/gpa-calculator" target="_blank">
+            GPA Calculator
+          </Link>
+        </Button>
+      </div>
 
-      {/* Applications Table */}
-      <ApplicationsTable dataFilter={dataFilter} />
+      {/* Tabs for Applications and Payments */}
+      <Tabs defaultValue="applications" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="applications">Applications</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
+        </TabsList>
+        <TabsContent value="applications">
+          <ApplicationsTable dataFilter={dataFilter} />
+        </TabsContent>
+        <TabsContent value="payments">
+          <PaymentsTable />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
