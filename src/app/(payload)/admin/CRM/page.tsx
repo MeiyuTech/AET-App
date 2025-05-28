@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 import ApplicationsTable from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
 import PaymentsTable from '@/app/(frontend)/(aet-app)/components/PaymentsTable'
@@ -71,17 +72,19 @@ export default async function CRMPage() {
         </Button>
       </div>
 
-      {/* Applications Table */}
-      <div className="mb-8">
-        <h3 className="text-2xl font-semibold mb-4">Applications</h3>
-        <ApplicationsTable dataFilter={dataFilter} />
-      </div>
-
-      {/* Payments Table */}
-      <div>
-        <h3 className="text-2xl font-semibold mb-4">Payments</h3>
-        <PaymentsTable />
-      </div>
+      {/* Tabs for Applications and Payments */}
+      <Tabs defaultValue="applications" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="applications">Applications</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
+        </TabsList>
+        <TabsContent value="applications">
+          <ApplicationsTable dataFilter={dataFilter} />
+        </TabsContent>
+        <TabsContent value="payments">
+          <PaymentsTable />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
