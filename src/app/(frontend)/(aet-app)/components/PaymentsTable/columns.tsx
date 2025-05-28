@@ -3,28 +3,31 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Payment } from './types'
+import { cn } from '@/utilities/cn'
 
-const statusColor = (status: string) => {
+const getPaymentStatusColor = (status: string) => {
   switch (status) {
     case 'paid':
-      return 'default'
+      return 'text-green-600'
     case 'pending':
-      return 'secondary'
+      return 'text-yellow-600'
     case 'failed':
-      return 'destructive'
+      return 'text-red-600'
+    case 'refunded':
+      return 'text-gray-600'
     default:
-      return 'outline'
+      return 'text-gray-600'
   }
 }
 
 export const columns: ColumnDef<Payment>[] = [
   {
     id: 'index',
-    header: () => <div className="text-center">#</div>,
+    header: () => <div className="text-center text-base font-medium">#</div>,
     cell: ({ table, row }) => {
       const rows = table.getRowModel().rows
       const index = rows.findIndex((r) => r.id === row.id)
-      return index + 1
+      return <div className="text-base font-medium">{index + 1}</div>
     },
   },
   {
@@ -37,11 +40,12 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Payment ID
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
-    cell: ({ row }) => row.getValue('payment_id') || 'N/A',
+    cell: ({ row }) => (
+      <div className="text-base font-medium">{row.getValue('payment_id') || 'N/A'}</div>
+    ),
   },
   {
     accessorKey: 'application_id',
@@ -53,11 +57,12 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Application ID
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
-    cell: ({ row }) => row.getValue('application_id') || 'N/A',
+    cell: ({ row }) => (
+      <div className="text-base font-medium">{row.getValue('application_id') || 'N/A'}</div>
+    ),
   },
   {
     accessorKey: 'due_amount',
@@ -69,13 +74,12 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Due Amount
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
     cell: ({ row }) => {
       const amount = row.getValue('due_amount') as number
-      return amount ? `$${amount.toFixed(2)}` : 'N/A'
+      return <div className="text-base font-medium">{amount ? `$${amount.toFixed(2)}` : 'N/A'}</div>
     },
   },
   {
@@ -88,13 +92,24 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Payment Status
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const status = row.getValue('payment_status') as string
-      return <Badge variant={statusColor(status)}>{status}</Badge>
+      const paymentStatus = row.getValue('payment_status') as string
+      return (
+        <div className={`capitalize font-medium text-base ${getPaymentStatusColor(paymentStatus)}`}>
+          {paymentStatus}
+        </div>
+      )
+    },
+    filterFn: (row, columnId, filterValue) => {
+      const paymentStatus = row.getValue(columnId) as string
+      const displayStatus = paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)
+      return (
+        displayStatus.toLowerCase().includes(filterValue.toLowerCase()) ||
+        paymentStatus.toLowerCase().includes(filterValue.toLowerCase())
+      )
     },
   },
   {
@@ -107,18 +122,17 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Paid At
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
     cell: ({ row }) => {
       const date = row.getValue('paid_at') as string | null
-      if (!date) return '-'
+      if (!date) return <div className="text-base font-medium">-</div>
 
       const dateObj = new Date(date)
       return (
         <div className="space-y-1">
-          <div className="font-medium">
+          <div className="font-medium text-base">
             {dateObj
               .toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -127,7 +141,7 @@ export const columns: ColumnDef<Payment>[] = [
               })
               .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
           </div>
-          <div className="text-gray-600">
+          <div className="text-gray-600 text-base">
             {dateObj.toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit',
@@ -149,11 +163,10 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Notes
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
-    cell: ({ row }) => row.getValue('notes') || '-',
+    cell: ({ row }) => <div className="text-base font-medium">{row.getValue('notes') || '-'}</div>,
   },
   {
     accessorKey: 'source',
@@ -165,10 +178,9 @@ export const columns: ColumnDef<Payment>[] = [
           className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
         >
           Source
-          <ChevronDown className="ml-2 h-5 w-5" />
         </Button>
       )
     },
-    cell: ({ row }) => row.getValue('source') || '-',
+    cell: ({ row }) => <div className="text-base font-medium">{row.getValue('source') || '-'}</div>,
   },
 ]
