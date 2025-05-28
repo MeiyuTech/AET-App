@@ -42,6 +42,22 @@ export async function POST(request: Request) {
       currency: currency,
     })
 
+    const hasApplicationId = applicationId && applicationId !== 'null'
+
+    const afterCompletion = hasApplicationId
+      ? {
+          type: 'redirect',
+          redirect: {
+            url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
+          },
+        }
+      : {
+          type: 'hosted_confirmation',
+          hosted_confirmation: {
+            custom_message: 'Thank you for your payment! Your transaction is complete.',
+          },
+        }
+
     // Create payment link parameters
     const paymentLinkParams: Stripe.PaymentLinkCreateParams = {
       payment_method_types: ['card', 'alipay'],
@@ -51,12 +67,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      after_completion: {
-        type: 'redirect',
-        redirect: {
-          url: `${currentUrl}/checkout/success?applicationId=${applicationId}`,
-        },
-      },
+      after_completion: afterCompletion as Stripe.PaymentLinkCreateParams['after_completion'],
       metadata: {
         applicationId: applicationId || '',
       },

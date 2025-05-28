@@ -51,6 +51,7 @@ export async function POST(req: Request) {
             .from('aet_core_payments')
             .update({
               payment_status: 'paid',
+              payment_id: session.payment_intent,
             })
             .eq('id', session.payment_link)
 
