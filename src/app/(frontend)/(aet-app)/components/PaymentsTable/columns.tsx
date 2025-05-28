@@ -1,9 +1,7 @@
-import { ChevronDown } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Payment } from './types'
-import { cn } from '@/utilities/cn'
+import Link from 'next/link'
 
 const getPaymentStatusColor = (status: string) => {
   switch (status) {
@@ -43,9 +41,20 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => (
-      <div className="text-base font-medium">{row.getValue('payment_id') || 'N/A'}</div>
-    ),
+    cell: ({ row }) => {
+      const paymentId = row.getValue('payment_id') as string
+      if (!paymentId) return 'N/A'
+
+      return (
+        <Link
+          href={`https://dashboard.stripe.com/payments/${paymentId}`}
+          target="_blank"
+          className="text-blue-500 hover:underline"
+        >
+          {paymentId}
+        </Link>
+      )
+    },
   },
   {
     accessorKey: 'application_id',
