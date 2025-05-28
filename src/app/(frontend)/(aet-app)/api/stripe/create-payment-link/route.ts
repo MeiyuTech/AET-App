@@ -73,6 +73,7 @@ export async function POST(request: Request) {
     // Create the payment link in the database
     const client = await createClient()
     const { data, error } = await client.from('aet_core_payments').insert({
+      id: paymentLink.id,
       payment_status: 'pending',
       application_id: applicationId || null,
       due_amount: amount,

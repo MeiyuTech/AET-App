@@ -65,7 +65,7 @@ export const contactSubmissions = pgTable("contact_submissions", {
 });
 
 export const aetCorePayments = pgTable("aet_core_payments", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
+	id: text().primaryKey().notNull(),
 	applicationId: uuid("application_id"),
 	dueAmount: numeric("due_amount", { precision: 6, scale:  2 }).notNull(),
 	paymentStatus: text("payment_status").default('pending').notNull(),
