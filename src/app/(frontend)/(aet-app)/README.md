@@ -16,7 +16,7 @@
 - [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
 - [ ] Update fuzzy filter
 - [ ] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Database
-- [ ] better email template, table layout
+- [x] better email template, table layout
 - [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
 - [ ] 上传文件路径调整（支付前后，文件夹变化）
 - [x] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
@@ -60,7 +60,7 @@
 - [x] Stripe 完成付款后，发送邮件进行确认。（tong）
 - [x] CRM 处理进度 可视化。
 - [ ] 要有邮件发送的倒计时（zhao）
-- [ ] 某些情况下，手动设置价格后，发送邮件提示用户付款
+- [x] 某些情况下，手动设置价格后，发送邮件提示用户付款
 - [x] 增加付款的倒计时（暂时设置成半小时）
 - [x] 要增加 sample，在表格第一页！
 - [x] Marked as Paid for Zelle/ Paypal (stripe has payment id)
@@ -72,11 +72,11 @@
 - [x] 48小时自动标记 expired （script, Github Action）
 - [x] 设置 due amount 后发邮件通知
 - [x] 付款后，自动更新due amount
-- [ ] 为每笔支付单独新建一个表（zelle Stripe paypal）
+- [x] 为每笔支付单独新建一个表（zelle Stripe paypal）
 - [x] evaluee name 加上 proun
 - [x] 生成的 payment link，在完成支付后，在 crm 出现记录。
 - [x] CRM 上增加一个提醒需要实体版邮寄的小图标！！！
-- [ ] 对于 payment link 生成 payment confirmation email
+- [x] 对于 payment link 生成 payment confirmation email
 - [x] 增加 AI feature
 - [x] 一个 ai chatbot
 - [ ] 一个 ai 的 pre evaluation 功能
