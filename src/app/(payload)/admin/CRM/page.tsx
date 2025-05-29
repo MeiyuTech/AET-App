@@ -76,7 +76,7 @@ export default async function CRMPage() {
       <Tabs defaultValue="applications" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="applications">Applications</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="payments">Payment Links (Beta)</TabsTrigger>
         </TabsList>
         <TabsContent value="applications">
           <ApplicationsTable dataFilter={dataFilter} />
