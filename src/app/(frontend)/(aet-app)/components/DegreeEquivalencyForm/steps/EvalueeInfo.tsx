@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { DiplomaUploader } from '@/components/degree-equivalency/DiplomaUploader'
 
 import { PRONOUN_OPTIONS, MONTH_OPTIONS, YEAR_OPTIONS } from '../constants'
 import { FormData } from '../types'
@@ -310,6 +311,22 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           </div>
         </div>
       </div>
+
+      {/* Diploma Upload */}
+      <FormItem>
+        <FormLabel>Diploma</FormLabel>
+        <FormControl>
+          <DiplomaUploader
+            office={'Miami'}
+            email={form.watch('email')}
+            fullName={
+              [form.watch('firstName'), form.watch('middleName'), form.watch('lastName')]
+                .filter(Boolean)
+                .join(' ') || 'Not provided'
+            }
+          />
+        </FormControl>
+      </FormItem>
     </div>
   )
 }
