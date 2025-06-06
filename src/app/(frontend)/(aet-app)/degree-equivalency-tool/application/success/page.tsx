@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { DegreeEquivalencyTable } from '@/components/degree-equivalency/degree-equivalency-table'
+import { DegreeEquivalencyTable } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/degree-equivalency-table'
 
 interface PageProps {
   searchParams: Promise<{

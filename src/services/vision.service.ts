@@ -24,7 +24,7 @@ export class VisionService {
         return ''
       }
 
-      // 返回第一个检测结果（包含所有文本）
+      // Return the first detection result (contains all text)
       return detections[0].description || ''
     } catch (error) {
       console.error('Error detecting text from image:', error)
