@@ -45,6 +45,8 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
   let ocrText = ''
   if (diplomaImage) {
     ocrText = await VisionService.detectText(diplomaImage)
+    // console.log('Diploma Image Base64:', diplomaImage)
+    console.log('OCR Text:', ocrText)
   }
 
   return (
@@ -76,7 +78,8 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                     : education.duration || 'Not provided'}
                 </td>
               </tr>
-              <tr className="border-b">
+              {/* Show diploma image and OCR text */}
+              {/* <tr className="border-b">
                 <td className="py-2 px-4 font-medium bg-gray-50">Diploma Image:</td>
                 <td className="py-2 px-4">
                   {diplomaImage ? (
@@ -99,7 +102,7 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                     <span className="text-gray-500">No diploma image available</span>
                   )}
                 </td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
