@@ -37,12 +37,12 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
 
   // Check payment status
   const { data: paymentStatus } = await supabase
-    .from('aet_core_applications')
-    .select('equivalency_payment_status')
-    .eq('id', applicationId)
+    .from('aet_core_payments')
+    .select('payment_status')
+    .eq('application_id', applicationId)
     .single()
 
-  const isPaid = paymentStatus?.equivalency_payment_status === 'paid'
+  const isPaid = paymentStatus?.payment_status === 'paid'
 
   if (applicationError || educationError || !application || !education) {
     return null

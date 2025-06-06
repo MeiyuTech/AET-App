@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { createPayment } from '@/app/(frontend)/(aet-app)/utils/stripe/actions'
+import { LockClosedIcon } from '@heroicons/react/24/solid'
 
 interface PaymentOverlayProps {
   applicationId: string
@@ -41,16 +42,42 @@ export function PaymentOverlay({ applicationId }: PaymentOverlayProps) {
   }
 
   return (
-    <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
-      <div className="text-center">
-        <p className="text-gray-600 mb-4">Unlock full results</p>
-        <Button
-          onClick={handlePayment}
-          disabled={isLoading}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        >
-          {isLoading ? 'Processing...' : 'Pay $40 now'}
-        </Button>
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-br from-white/90 to-blue-100/80 backdrop-blur-sm">
+      <div className="relative p-8 bg-white rounded-2xl shadow-2xl ring-2 ring-blue-300/40 max-w-xs w-full animate-fade-in">
+        <div className="flex flex-col items-center">
+          <div className="mb-2 text-blue-700">
+            <LockClosedIcon className="w-8 h-8" />
+          </div>
+          <h2 className="text-lg font-bold mb-1">Unlock full results</h2>
+          <p className="text-gray-500 text-sm mb-4 text-center">
+            Pay to view your U.S. degree equivalency result.
+          </p>
+          <div className="text-2xl font-extrabold text-blue-700 mb-4">$40</div>
+          <Button
+            onClick={handlePayment}
+            disabled={isLoading}
+            className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-semibold shadow-lg transition-all duration-150 flex items-center justify-center"
+          >
+            {isLoading && (
+              <svg className="animate-spin w-5 h-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            )}
+            {isLoading ? 'Processing...' : 'Pay $40 now'}
+          </Button>
+        </div>
       </div>
     </div>
   )
