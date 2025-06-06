@@ -132,6 +132,9 @@ export function getEstimatedCompletionDate(application: ApplicationData, paidAt:
       case '24hour':
         is24HourService = true
         break
+      case 'sameday':
+        isSameDayService = true
+        break
     }
 
     maxBusinessDays = Math.max(maxBusinessDays, businessDays)

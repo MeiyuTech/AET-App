@@ -143,6 +143,10 @@ export const EVALUATION_SERVICES = {
         label: '24 Hours',
         price: 350,
       },
+      sameday: {
+        label: 'Same Day',
+        price: 400,
+      },
     },
     SECOND_DEGREE: {
       '8day': {
