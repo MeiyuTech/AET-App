@@ -19,7 +19,7 @@ export class DropboxService {
       const folderPath = `${basePath}/Miami/${fullName} - ${email}`
       const filePath = `${folderPath}/Diploma.png`
 
-      console.log('filePath:', filePath)
+      //   console.log('filePath:', filePath)
 
       const accessToken = await getAccessToken('AET_App')
       const dbx = createDropboxClient(accessToken, namespaceId)

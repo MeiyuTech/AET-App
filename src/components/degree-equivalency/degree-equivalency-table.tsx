@@ -3,6 +3,7 @@ import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 import countryList from 'react-select-country-list'
 import { DegreeEquivalencyAI } from './degree-equivalency-ai'
 import { DropboxService } from '@/services/dropbox.service'
+import Image from 'next/image'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -37,7 +38,6 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
     .filter(Boolean)
     .join(' ')
   const diplomaImage = await DropboxService.getDiplomaImage(application.email, fullName)
-  console.log('diplomaImage', diplomaImage)
 
   return (
     <div className="w-full max-w-3xl mb-6">
@@ -68,20 +68,23 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                     : education.duration || 'Not provided'}
                 </td>
               </tr>
-              <tr>
+              {/* Show diploma image */}
+              {/* <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Diploma Image:</td>
                 <td className="py-2 px-4">
                   {diplomaImage ? (
-                    <img
+                    <Image
                       src={`data:image/jpeg;base64,${diplomaImage}`}
                       alt="Diploma"
                       className="max-w-xs rounded-lg shadow-md"
+                      width={100}
+                      height={100}
                     />
                   ) : (
                     <span className="text-gray-500">No diploma image available</span>
                   )}
                 </td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
