@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { DiplomaUploader } from '@/components/degree-equivalency/DiplomaUploader'
+import { DiplomaUploader } from '@/app/(frontend)/(aet-app)/components/Dropbox/DiplomaUploader'
 
 import { PRONOUN_OPTIONS, MONTH_OPTIONS, YEAR_OPTIONS } from '../constants'
 import { FormData } from '../types'

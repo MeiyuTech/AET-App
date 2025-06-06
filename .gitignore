@@ -10,6 +10,9 @@ node_modules
 *.docx
 *.pptx
 
+# Keys
+keys/
+
 # test coverage
 coverage/
 

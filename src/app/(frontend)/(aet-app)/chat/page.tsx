@@ -1,6 +1,6 @@
 'use client'
 
-import { Chatbot } from '@/components/Chatbot/Chatbot'
+import { Chatbot } from '@/app/(frontend)/(aet-app)/components/Chatbot/Chatbot'
 
 export default function ChatPage() {
   return (

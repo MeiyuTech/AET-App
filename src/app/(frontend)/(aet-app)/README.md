@@ -79,11 +79,15 @@
 - [x] 对于 payment link 生成 payment confirmation email
 - [x] 增加 AI feature
 - [x] 一个 ai chatbot
-- [ ] 一个 ai 的 pre evaluation 功能
+- [x] 一个 ai 的 pre evaluation 功能
 - [ ] 移动端的一些显示细节问题。 logo，日期选择，etc..
 - [x] 联邦假日。交付日期！！！
 - [ ] 可以通过 dropbox 最新的发送链接的功能。直接把相关文件通过邮件发送给客户。
-- [ ] 通过上传图片 - ocr - llm，来判定等同学历。
+- [x] 通过上传图片 - ocr - llm，来判定等同学历。
+
+  - [ ] next?
+
+- [ ] 邮件中的 payment link 还是无效的啊。。。
 
 ## Features
 

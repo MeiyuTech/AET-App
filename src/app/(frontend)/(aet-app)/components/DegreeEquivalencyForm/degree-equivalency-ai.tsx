@@ -14,10 +14,11 @@ interface Education {
 
 interface DegreeEquivalencyAIProps {
   education: Education
+  ocrText?: string
 }
 
-export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
-  console.log('DegreeEquivalencyAI: Received education data:', education)
+export function DegreeEquivalencyAI({ education, ocrText }: DegreeEquivalencyAIProps) {
+  // console.log('DegreeEquivalencyAI: Received education data:', education)
 
   const { messages, reload, error, status } = useChat({
     api: '/api/degree-equivalency',
@@ -30,6 +31,7 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
         study_start_date: education.study_start_date,
         study_end_date: education.study_end_date,
       },
+      ocrText,
     },
     initialMessages: [
       {
@@ -40,19 +42,19 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
     ],
   })
 
-  console.log('DegreeEquivalencyAI: Chat status:', status)
-  console.log('DegreeEquivalencyAI: Messages:', messages)
+  // console.log('DegreeEquivalencyAI: Chat status:', status)
+  // console.log('DegreeEquivalencyAI: Messages:', messages)
   if (error) {
     console.error('DegreeEquivalencyAI: Error:', error)
   }
 
   useEffect(() => {
-    console.log('DegreeEquivalencyAI: Triggering reload')
+    // console.log('DegreeEquivalencyAI: Triggering reload')
     reload()
-  }, [reload])
+  }, [reload, ocrText])
 
   const lastMessage = messages[messages.length - 1]?.content
-  console.log('DegreeEquivalencyAI: Last message:', lastMessage)
+  // console.log('DegreeEquivalencyAI: Last message:', lastMessage)
 
   return lastMessage || 'Evaluating...'
 }
