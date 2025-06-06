@@ -3,7 +3,9 @@ import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 import countryList from 'react-select-country-list'
 import { DegreeEquivalencyAI } from './degree-equivalency-ai'
 import { DropboxService } from '@/services/dropbox.service'
+import { VisionService } from '@/services/vision.service'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -39,6 +41,12 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
     .join(' ')
   const diplomaImage = await DropboxService.getDiplomaImage(application.email, fullName)
 
+  // Get OCR text if diploma image exists
+  let ocrText = ''
+  if (diplomaImage) {
+    ocrText = await VisionService.detectText(diplomaImage)
+  }
+
   return (
     <div className="w-full max-w-3xl mb-6">
       <Card>
@@ -68,23 +76,30 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                     : education.duration || 'Not provided'}
                 </td>
               </tr>
-              {/* Show diploma image */}
-              {/* <tr>
+              <tr className="border-b">
                 <td className="py-2 px-4 font-medium bg-gray-50">Diploma Image:</td>
                 <td className="py-2 px-4">
                   {diplomaImage ? (
-                    <Image
-                      src={`data:image/jpeg;base64,${diplomaImage}`}
-                      alt="Diploma"
-                      className="max-w-xs rounded-lg shadow-md"
-                      width={100}
-                      height={100}
-                    />
+                    <div>
+                      <Image
+                        src={`data:image/jpeg;base64,${diplomaImage}`}
+                        alt="Diploma"
+                        className="max-w-xs rounded-lg shadow-md mb-2"
+                        width={100}
+                        height={100}
+                      />
+                      {ocrText && (
+                        <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                          <p className="font-medium mb-1">OCR Text:</p>
+                          <p className="whitespace-pre-wrap">{ocrText}</p>
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <span className="text-gray-500">No diploma image available</span>
                   )}
                 </td>
-              </tr> */}
+              </tr>
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
