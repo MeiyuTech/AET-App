@@ -6,7 +6,7 @@ export const runtime = 'edge'
 
 export async function POST(req: Request) {
   try {
-    console.log('Degree Equivalency API: Received request')
+    // console.log('Degree Equivalency API: Received request')
 
     if (!req.body) {
       console.error('Degree Equivalency API: No request body')
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     const { education } = await req.json()
-    console.log('Degree Equivalency API: Received education data:', education)
+    // console.log('Degree Equivalency API: Received education data:', education)
 
     if (!education) {
       console.error('Degree Equivalency API: No education data in request')

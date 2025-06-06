@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 import countryList from 'react-select-country-list'
 import { DegreeEquivalencyAI } from './degree-equivalency-ai'
+import { DropboxService } from '@/services/dropbox.service'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -15,15 +16,28 @@ interface DegreeEquivalencyTableProps {
 export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalencyTableProps) {
   const supabase = await createClient()
 
-  const { data: education, error } = await supabase
+  const { data: application, error: applicationError } = await supabase
+    .from('aet_core_applications')
+    .select('*')
+    .eq('id', applicationId)
+    .single()
+
+  const { data: education, error: educationError } = await supabase
     .from('aet_core_educations')
     .select('*')
     .eq('application_id', applicationId)
     .single()
 
-  if (error || !education) {
+  if (applicationError || educationError || !application || !education) {
     return null
   }
+
+  // Get diploma image
+  const fullName = [application.first_name, application.middle_name, application.last_name]
+    .filter(Boolean)
+    .join(' ')
+  const diplomaImage = await DropboxService.getDiplomaImage(application.email, fullName)
+  console.log('diplomaImage', diplomaImage)
 
   return (
     <div className="w-full max-w-3xl mb-6">
@@ -52,6 +66,20 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                   {education.study_start_date && education.study_end_date
                     ? `${education.study_start_date.year}-${education.study_start_date.month} to ${education.study_end_date.year}-${education.study_end_date.month}`
                     : education.duration || 'Not provided'}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2 px-4 font-medium bg-gray-50">Diploma Image:</td>
+                <td className="py-2 px-4">
+                  {diplomaImage ? (
+                    <img
+                      src={`data:image/jpeg;base64,${diplomaImage}`}
+                      alt="Diploma"
+                      className="max-w-xs rounded-lg shadow-md"
+                    />
+                  ) : (
+                    <span className="text-gray-500">No diploma image available</span>
+                  )}
                 </td>
               </tr>
               <tr>
