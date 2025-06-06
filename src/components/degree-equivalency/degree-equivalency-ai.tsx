@@ -14,9 +14,10 @@ interface Education {
 
 interface DegreeEquivalencyAIProps {
   education: Education
+  ocrText?: string
 }
 
-export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
+export function DegreeEquivalencyAI({ education, ocrText }: DegreeEquivalencyAIProps) {
   // console.log('DegreeEquivalencyAI: Received education data:', education)
 
   const { messages, reload, error, status } = useChat({
@@ -30,6 +31,7 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
         study_start_date: education.study_start_date,
         study_end_date: education.study_end_date,
       },
+      ocrText,
     },
     initialMessages: [
       {
@@ -49,7 +51,7 @@ export function DegreeEquivalencyAI({ education }: DegreeEquivalencyAIProps) {
   useEffect(() => {
     // console.log('DegreeEquivalencyAI: Triggering reload')
     reload()
-  }, [reload])
+  }, [reload, ocrText])
 
   const lastMessage = messages[messages.length - 1]?.content
   // console.log('DegreeEquivalencyAI: Last message:', lastMessage)

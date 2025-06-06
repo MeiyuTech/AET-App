@@ -103,7 +103,7 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
-                  <DegreeEquivalencyAI education={education} />
+                  <DegreeEquivalencyAI education={education} ocrText={ocrText} />
                 </td>
               </tr>
             </tbody>
