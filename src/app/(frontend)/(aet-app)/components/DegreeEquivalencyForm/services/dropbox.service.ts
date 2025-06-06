@@ -5,6 +5,26 @@ import {
 } from '@/app/(frontend)/(aet-app)/utils/dropbox/server'
 
 export class DropboxService {
+  private static readonly IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp']
+
+  private static async findFirstImageFile(dbx: any, folderPath: string): Promise<string | null> {
+    try {
+      const response = await dbx.filesListFolder({
+        path: folderPath,
+      })
+
+      const files = response.result.entries
+      const imageFile = files.find((file: any) =>
+        this.IMAGE_EXTENSIONS.some((ext) => file.name.toLowerCase().endsWith(ext))
+      )
+
+      return imageFile ? `${folderPath}/${imageFile.name}` : null
+    } catch (error) {
+      console.error('Error listing folder contents:', error)
+      return null
+    }
+  }
+
   static async getDiplomaImage(email: string, fullName: string): Promise<string | null> {
     const { namespaceId, basePath } = DROPBOX_TOKENS['AET_App']
 
@@ -15,14 +35,20 @@ export class DropboxService {
     }
 
     try {
-      // Build file path
+      // Build folder path
       const folderPath = `${basePath}/Miami/${fullName} - ${email}`
-      const filePath = `${folderPath}/Diploma.png`
-
-      //   console.log('filePath:', filePath)
 
       const accessToken = await getAccessToken('AET_App')
       const dbx = createDropboxClient(accessToken, namespaceId)
+
+      // Find the first image file in the folder
+      const filePath = await this.findFirstImageFile(dbx, folderPath)
+      console.log('filePath:', filePath)
+
+      if (!filePath) {
+        console.log('No image file found in folder:', folderPath)
+        return null
+      }
 
       // Download file
       const response = await dbx.filesDownload({
