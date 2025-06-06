@@ -49,28 +49,17 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
         </p>
         <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
           <li>Apply for a AET credential evaluation.</li>
-          <li>
-            Submit your documents according to the{' '}
-            <a
-              href="https://www.wes.org/document-requirements/"
-              className="text-green-700 underline font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              document requirements
-            </a>{' '}
-            for your country of education.
-          </li>
+          <li>Submit related documents (Diploma, Transcripts, etc.)</li>
           <li>
             AET prepares a credential evaluation, electronically stores your documents. Your report
             never expires.{' '}
             <a
-              href="https://applications.wes.org/createaccount/login/login"
+              href="https://app.americantranslationservice.com/credential-evaluation-application"
               className="text-green-700 underline font-medium"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Begin your application now.
+              Begin Your Application Now.
             </a>
           </li>
         </ol>
@@ -83,9 +72,9 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       <div className="w-full max-w-3xl mb-6">
         <div className="bg-gray-50 border border-gray-200 rounded-md p-4 text-gray-700 text-sm">
           <span className="font-bold">Note:</span> Any degree equivalency provided is based on the
-          information you have entered. It is not based on verified information or documents and may
-          not be used as proof that you attended an institution or earned a degree. AET may change
-          this provisional degree equivalency upon document verification and analysis.
+          information you have inputted. It is not based on verified information or documents and
+          may not be used as proof that you attended an institution or earned a degree. AET may
+          change this provisional degree equivalency upon document verification and analysis.
         </div>
       </div>
 
