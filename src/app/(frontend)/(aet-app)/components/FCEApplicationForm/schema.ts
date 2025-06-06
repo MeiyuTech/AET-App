@@ -114,6 +114,7 @@ const speedOptions = {
     '5day': '5 Business Days',
     '3day': '3 Business Days',
     '24hour': '24 Hours',
+    sameday: 'Same Day',
   },
   professionalExperience: {
     '21day': '21 Business Days',
@@ -142,7 +143,7 @@ const serviceTypeSchema = z
     }),
     coursebyCourse: z.object({
       firstDegree: z.object({
-        speed: z.enum(['8day', '5day', '3day', '24hour'] as const).optional(),
+        speed: z.enum(['8day', '5day', '3day', '24hour', 'sameday'] as const).optional(),
       }),
       secondDegrees: z.number().min(0).default(0),
     }),
