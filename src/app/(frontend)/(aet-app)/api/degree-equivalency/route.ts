@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     }
 
     prompt += `\n\nAdditional information from the application form:\nSchool Name: ${education.school_name}\nDegree Name: ${education.degree_obtained}\nStudy Country: ${education.country_of_study}\nStudy Duration: ${duration}`
-    prompt += `\n\nPlease provide:\n1. The most similar US degree equivalency (less than 10 words)\n2. A brief explanation of the evaluation basis (up to 200 words)\n\nPlease output in the following format:\nRESULT: <equivalency name>\nREASONING: <detailed explanation>`
+    prompt += `\n\nPlease provide:\n1. The most similar US degree equivalency (less than 10 words)\n2. A brief explanation of the evaluation basis (up to 200 words)\n\nPlease output in the following format:\nRESULT: <equivalency name>\n\nREASONING: <detailed explanation>`
 
     console.log('Degree Equivalency API: Generated prompt:', prompt)
 

@@ -58,7 +58,7 @@ export function DegreeEquivalencyAI({
     reload()
   }, [reload, ocrText])
 
-  // 解析 result/reasoning
+  // Parse result/reasoning
   let result = '',
     reasoning = ''
   const lastMessage = messages[messages.length - 1]?.content
@@ -68,8 +68,8 @@ export function DegreeEquivalencyAI({
       result = parsed.result || ''
       reasoning = parsed.reasoning || ''
     } catch {
-      // fallback: 兼容旧格式
-      const match = lastMessage.match(/RESULT:\s*(.*)\nREASONING:\s*([\s\S]*)/i)
+      // 更健壮的正则，兼容无换行、单换行、空格等
+      const match = lastMessage.match(/RESULT:\s*([^\n\r]*)[\n\r ]*REASONING:\s*([\s\S]*)/i)
       if (match) {
         result = match[1].trim()
         reasoning = match[2].trim()
@@ -81,10 +81,11 @@ export function DegreeEquivalencyAI({
 
   return (
     <div>
-      <div className="font-bold text-blue-900 text-lg">{result || 'Evaluating...'}</div>
+      <div className="font-bold text-blue-900 text-lg mb-2">{result || 'Evaluating...'}</div>
       {showReasoning && reasoning && (
-        <div className="mt-2 p-2 bg-gray-50 border rounded text-sm text-gray-700 whitespace-pre-line">
-          {reasoning}
+        <div className="p-4 bg-gray-50 border rounded">
+          <div className="font-bold text-purple-800 text-lg mb-1">Reasoning</div>
+          <div className="text-purple-800 text-lg whitespace-pre-line">{reasoning}</div>
         </div>
       )}
     </div>

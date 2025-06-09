@@ -213,6 +213,7 @@ export default function DegreeEquivalencyAITester() {
                   study_end_date: form.study_end_date,
                 }}
                 ocrText={ocrText}
+                showReasoning={true}
               />
             </CardContent>
           </Card>
@@ -222,7 +223,7 @@ export default function DegreeEquivalencyAITester() {
   )
 }
 
-// 工具函数：文件转 base64
+// Convert file to base64
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
