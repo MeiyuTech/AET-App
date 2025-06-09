@@ -1,7 +1,7 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Education {
   school_name: string
@@ -68,7 +68,7 @@ export function DegreeEquivalencyAI({
       result = parsed.result || ''
       reasoning = parsed.reasoning || ''
     } catch {
-      // 更健壮的正则，兼容无换行、单换行、空格等
+      // More robust regex pattern that handles various line breaks and whitespace
       const match = lastMessage.match(/RESULT:\s*([^\n\r]*)[\n\r ]*REASONING:\s*([\s\S]*)/i)
       if (match) {
         result = match[1].trim()
@@ -79,13 +79,65 @@ export function DegreeEquivalencyAI({
     }
   }
 
+  // Search for related US degree programs
+  const [searchResults, setSearchResults] = useState<{ title: string; url: string }[]>([])
+  const [searchLoading, setSearchLoading] = useState(false)
+  useEffect(() => {
+    // console.log('DegreeEquivalencyAI: Status:', status)
+    if (result && status === 'ready') {
+      console.log('DegreeEquivalencyAI: Searching for related degree programs')
+      console.log('DegreeEquivalencyAI: Result:', result)
+      setSearchLoading(true)
+      fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Search Operators
+        // site: *.edu - Search only edu websites
+        // Remeber to have the ' ' before '*.edu'
+        body: JSON.stringify({ query: `${result} site: *.edu`, num: 3 }),
+      })
+        .then((res) => res.json())
+        .then((data) => setSearchResults(data.results || []))
+        .finally(() => setSearchLoading(false))
+
+      console.log('DegreeEquivalencyAI: Search results:', searchResults)
+    } else {
+      setSearchResults([])
+    }
+  }, [result, status])
+
   return (
     <div>
       <div className="font-bold text-blue-900 text-lg mb-2">{result || 'Evaluating...'}</div>
       {showReasoning && reasoning && (
-        <div className="p-4 bg-gray-50 border rounded">
+        <div className="p-4 bg-gray-50 border rounded mb-4">
           <div className="font-bold text-purple-800 text-lg mb-1">Reasoning</div>
           <div className="text-purple-800 text-lg whitespace-pre-line">{reasoning}</div>
+        </div>
+      )}
+      {showReasoning && result && (
+        <div className="p-4 bg-gray-50 border rounded">
+          <div className="font-bold text-green-800 text-lg mb-1">Related US Degree Programs</div>
+          {searchLoading ? (
+            <div className="text-gray-500">Searching for related degree programs...</div>
+          ) : searchResults.length > 0 ? (
+            <ul className="list-disc pl-5">
+              {searchResults.map((item, idx) => (
+                <li key={idx} className="mb-1">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-700 underline"
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-gray-500">No related US degree programs found</div>
+          )}
         </div>
       )}
     </div>
