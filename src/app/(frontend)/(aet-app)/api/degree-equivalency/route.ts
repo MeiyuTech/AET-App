@@ -32,7 +32,8 @@ export async function POST(req: Request) {
       prompt += `\n\nBased on the OCR text from the diploma:\n${ocrText}\n\nPlease use this as the primary source of information.`
     }
 
-    prompt += `\n\nAdditional information from the application form:\nSchool Name: ${education.school_name}\nDegree Name: ${education.degree_obtained}\nStudy Country: ${education.country_of_study}\nStudy Duration: ${duration}\n\nPlease provide:\n1. The most similar US degree equivalency\n2. A brief explanation of the evaluation basis\n3. Any special considerations or limitations\n\nPlease just output the Equivalency name of the degree, less than 10 words, no other text.`
+    prompt += `\n\nAdditional information from the application form:\nSchool Name: ${education.school_name}\nDegree Name: ${education.degree_obtained}\nStudy Country: ${education.country_of_study}\nStudy Duration: ${duration}`
+    prompt += `\n\nPlease provide:\n1. The most similar US degree equivalency (less than 10 words)\n2. A brief explanation of the evaluation basis (up to 200 words)\n\nPlease output in the following format:\nRESULT: <equivalency name>\nREASONING: <detailed explanation>`
 
     console.log('Degree Equivalency API: Generated prompt:', prompt)
 
@@ -50,8 +51,6 @@ export async function POST(req: Request) {
         },
       ],
     })
-
-    console.log('Degree Equivalency API: Created stream result')
     return result.toDataStreamResponse()
   } catch (error) {
     console.error('Degree Equivalency API: Error:', error)

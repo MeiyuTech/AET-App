@@ -15,9 +15,14 @@ interface Education {
 interface DegreeEquivalencyAIProps {
   education: Education
   ocrText?: string
+  showReasoning?: boolean
 }
 
-export function DegreeEquivalencyAI({ education, ocrText }: DegreeEquivalencyAIProps) {
+export function DegreeEquivalencyAI({
+  education,
+  ocrText,
+  showReasoning = false,
+}: DegreeEquivalencyAIProps) {
   // console.log('DegreeEquivalencyAI: Received education data:', education)
 
   const { messages, reload, error, status } = useChat({
@@ -53,8 +58,35 @@ export function DegreeEquivalencyAI({ education, ocrText }: DegreeEquivalencyAIP
     reload()
   }, [reload, ocrText])
 
+  // 解析 result/reasoning
+  let result = '',
+    reasoning = ''
   const lastMessage = messages[messages.length - 1]?.content
-  // console.log('DegreeEquivalencyAI: Last message:', lastMessage)
+  if (lastMessage) {
+    try {
+      const parsed = JSON.parse(lastMessage)
+      result = parsed.result || ''
+      reasoning = parsed.reasoning || ''
+    } catch {
+      // fallback: 兼容旧格式
+      const match = lastMessage.match(/RESULT:\s*(.*)\nREASONING:\s*([\s\S]*)/i)
+      if (match) {
+        result = match[1].trim()
+        reasoning = match[2].trim()
+      } else {
+        result = lastMessage.trim()
+      }
+    }
+  }
 
-  return lastMessage || 'Evaluating...'
+  return (
+    <div>
+      <div className="font-bold text-blue-900 text-lg">{result || 'Evaluating...'}</div>
+      {showReasoning && reasoning && (
+        <div className="mt-2 p-2 bg-gray-50 border rounded text-sm text-gray-700 whitespace-pre-line">
+          {reasoning}
+        </div>
+      )}
+    </div>
+  )
 }
