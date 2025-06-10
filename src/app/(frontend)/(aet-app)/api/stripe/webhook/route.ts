@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
+import { randomUUID } from 'crypto'
 
 import { getEstimatedCompletionDate } from '../../../components/FCEApplicationForm/utils'
 
@@ -158,15 +159,53 @@ export async function POST(req: Request) {
               })
               .eq('id', applicationId)
 
-            const { error: paymentError } = await client.from('aet_core_payments').insert({
-              application_id: applicationId,
-              due_amount: price,
-              payment_status: 'paid',
-              paid_at: new Date().toISOString(),
-              payment_id: session.payment_intent as string,
-              source: 'Stripe Payment',
-              notes: 'Degree Equivalency Payment',
-            })
+            // First check if payment record exists
+            const { data: existingPayment, error: findCorePaymentError } = await client
+              .from('aet_core_payments')
+              .select('*')
+              .eq('application_id', applicationId)
+              .single()
+
+            if (findCorePaymentError && findCorePaymentError.code !== 'PGRST116') {
+              // PGRST116 is "no rows returned" error
+              console.error('Error finding payment record:', findCorePaymentError)
+              return new NextResponse(
+                `Error finding payment record: ${findCorePaymentError.message}`,
+                {
+                  status: 500,
+                }
+              )
+            }
+
+            let paymentError
+            if (existingPayment) {
+              // Update existing payment record
+              const { error } = await client
+                .from('aet_core_payments')
+                .update({
+                  due_amount: price,
+                  payment_status: 'paid',
+                  paid_at: new Date().toISOString(),
+                  payment_id: session.payment_intent as string,
+                  source: 'Stripe Payment',
+                  notes: 'Degree Equivalency Payment',
+                })
+                .eq('id', existingPayment.id)
+              paymentError = error
+            } else {
+              // Create new payment record
+              const { error } = await client.from('aet_core_payments').insert({
+                id: randomUUID(),
+                application_id: applicationId,
+                due_amount: price,
+                payment_status: 'paid',
+                paid_at: new Date().toISOString(),
+                payment_id: session.payment_intent as string,
+                source: 'Stripe Payment',
+                notes: 'Degree Equivalency Payment',
+              })
+              paymentError = error
+            }
 
             if (applicationError || paymentError) {
               console.error('Error updating degree equivalency application:', {
