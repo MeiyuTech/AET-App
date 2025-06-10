@@ -2,6 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 import countryList from 'react-select-country-list'
 import { DegreeEquivalencyAI } from './degree-equivalency-ai'
+import { DropboxService } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/services/dropbox.service'
+import { VisionService } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/services/vision.service'
+import Image from 'next/image'
+import { PaymentOverlay } from './payment-overlay'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -13,16 +17,48 @@ interface DegreeEquivalencyTableProps {
 }
 
 export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalencyTableProps) {
+  if (!applicationId) {
+    return null
+  }
+
   const supabase = await createClient()
 
-  const { data: education, error } = await supabase
+  const { data: application, error: applicationError } = await supabase
+    .from('aet_core_applications')
+    .select('*')
+    .eq('id', applicationId)
+    .single()
+
+  const { data: education, error: educationError } = await supabase
     .from('aet_core_educations')
     .select('*')
     .eq('application_id', applicationId)
     .single()
 
-  if (error || !education) {
+  // Check payment status
+  const { data: paymentStatus } = await supabase
+    .from('aet_core_payments')
+    .select('payment_status')
+    .eq('application_id', applicationId)
+    .single()
+
+  const isPaid = paymentStatus?.payment_status === 'paid'
+
+  if (applicationError || educationError || !application || !education) {
     return null
+  }
+
+  // Get diploma image
+  const fullName = [application.first_name, application.middle_name, application.last_name]
+    .filter(Boolean)
+    .join(' ')
+  const diplomaImage = await DropboxService.getDiplomaImage(application.email, fullName)
+
+  // Get OCR text if diploma image exists
+  let ocrText = ''
+  if (diplomaImage) {
+    ocrText = await VisionService.detectText(diplomaImage)
+    console.log('OCR Text:', ocrText)
   }
 
   return (
@@ -57,7 +93,10 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
               <tr>
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
-                  <DegreeEquivalencyAI education={education} />
+                  <div className="relative">
+                    {!isPaid && <PaymentOverlay applicationId={applicationId} />}
+                    <DegreeEquivalencyAI education={education} ocrText={ocrText} />
+                  </div>
                 </td>
               </tr>
             </tbody>
