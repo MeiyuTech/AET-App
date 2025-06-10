@@ -4,7 +4,7 @@ import { Stripe } from 'stripe'
 
 import { getEstimatedCompletionDate } from '../../../components/FCEApplicationForm/utils'
 
-import { fetchApplication } from '../../../utils/actions'
+import { fetchFCEApplication, fetchAETCoreApplication } from '../../../utils/actions'
 import { sendPaymentConfirmationEmail } from '../../../utils/email/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
@@ -92,7 +92,13 @@ export async function POST(req: Request) {
           return new NextResponse('Missing client_reference_id', { status: 400 })
         }
 
-        const { success, applicationData } = await fetchApplication(applicationId)
+        // Determine which type of application we're dealing with
+        const isDegreeEquivalency = session.metadata?.paymentType === 'degree-equivalency'
+
+        // Fetch application data based on type
+        const { success, applicationData } = isDegreeEquivalency
+          ? await fetchAETCoreApplication(applicationId)
+          : await fetchFCEApplication(applicationId)
 
         if (!success) {
           console.error('Error fetching application:', applicationData)
@@ -143,7 +149,7 @@ export async function POST(req: Request) {
           })
 
           // Handle different payment types
-          if (session.metadata?.paymentType === 'degree-equivalency') {
+          if (isDegreeEquivalency) {
             // Update degree equivalency application
             const { error: applicationError } = await client
               .from('aet_core_applications')
@@ -258,7 +264,7 @@ export async function POST(req: Request) {
         }
 
         // Handle different payment types for expired sessions
-        if (session.metadata?.paymentType === 'degree-equivalency') {
+        if (isDegreeEquivalency) {
           const { error } = await client
             .from('aet_core_applications')
             .update({

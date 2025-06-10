@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import { POST } from './route'
-import { fetchApplication } from '../../../utils/actions'
+import { fetchFCEApplication } from '../../../utils/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
 
@@ -126,7 +126,7 @@ describe('Stripe Webhook Handler', () => {
     }
     mockStripe.webhooks.constructEvent.mockReturnValue(mockEvent)
 
-    vi.mocked(fetchApplication).mockResolvedValue({
+    vi.mocked(fetchFCEApplication).mockResolvedValue({
       success: true,
       applicationData: {
         ...baseApplicationData,
@@ -166,7 +166,7 @@ describe('Stripe Webhook Handler', () => {
     }
     mockStripe.webhooks.constructEvent.mockReturnValue(mockEvent)
 
-    vi.mocked(fetchApplication).mockResolvedValue({
+    vi.mocked(fetchFCEApplication).mockResolvedValue({
       success: true,
       applicationData: {
         ...baseApplicationData,
@@ -200,7 +200,7 @@ describe('Stripe Webhook Handler', () => {
     }
     mockStripe.webhooks.constructEvent.mockReturnValue(mockEvent)
 
-    vi.mocked(fetchApplication).mockResolvedValue({
+    vi.mocked(fetchFCEApplication).mockResolvedValue({
       success: true,
       applicationData: {
         ...baseApplicationData,
@@ -237,7 +237,7 @@ describe('Stripe Webhook Handler', () => {
     }
     mockStripe.webhooks.constructEvent.mockReturnValue(mockEvent)
 
-    vi.mocked(fetchApplication).mockResolvedValue({
+    vi.mocked(fetchFCEApplication).mockResolvedValue({
       success: false,
       applicationData: undefined,
     })

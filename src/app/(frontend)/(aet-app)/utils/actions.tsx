@@ -182,7 +182,7 @@ export async function submitAETApplication(formData: FormData) {
 }
 
 /**
- * Fetch and format AET application data:
+ * Fetch and format AET FCE application data:
  * 1. Get application data from database
  * 2. Get education data from database
  * 3. Transform database field names to frontend field names
@@ -190,7 +190,7 @@ export async function submitAETApplication(formData: FormData) {
  * @returns - { success: true, application: formattedData }
  * @throws - Error if failed to fetch application
  */
-export async function fetchApplication(applicationId: string) {
+export async function fetchFCEApplication(applicationId: string) {
   try {
     const client = await createClient()
 
@@ -456,4 +456,40 @@ export async function fetchPaymentsList(): Promise<FetchPaymentsListResult> {
       error: error instanceof Error ? error.message : 'Failed to fetch payments',
     }
   }
+}
+
+export async function fetchAETCoreApplication(applicationId: string) {
+  const client = await createClient()
+
+  // Fetch application data
+  const { data: application, error: applicationError } = await client
+    .from('aet_core_applications')
+    .select('*')
+    .eq('id', applicationId)
+    .single()
+
+  if (applicationError) {
+    console.error('Error fetching degree equivalency application:', applicationError)
+    return { success: false, applicationData: null }
+  }
+
+  // Fetch education data
+  const { data: education, error: educationError } = await client
+    .from('aet_core_educations')
+    .select('*')
+    .eq('application_id', applicationId)
+    .single()
+
+  if (educationError) {
+    console.error('Error fetching education data:', educationError)
+    return { success: false, applicationData: null }
+  }
+
+  // Combine application and education data
+  const applicationData = {
+    ...application,
+    education,
+  }
+
+  return { success: true, applicationData }
 }

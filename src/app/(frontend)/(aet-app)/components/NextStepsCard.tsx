@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { fetchApplication } from '@/app/(frontend)/(aet-app)/utils/actions'
+import { fetchFCEApplication } from '@/app/(frontend)/(aet-app)/utils/actions'
 import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
 import { isValidUUID } from '@/app/(frontend)/(aet-app)/components/StatusCheck/utils'
 import PaymentCountdown from '@/app/(frontend)/(aet-app)/components/PaymentCountdown'
@@ -56,7 +56,7 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
 
     try {
       // Fetch application data from server
-      const result = await fetchApplication(ApplicationId)
+      const result = await fetchFCEApplication(ApplicationId)
 
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)

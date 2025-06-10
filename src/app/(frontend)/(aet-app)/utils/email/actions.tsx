@@ -14,7 +14,7 @@ import { calculateTotalPrice } from '../../components/FCEApplicationForm/utils'
 import { createPaymentLink } from '../stripe/actions'
 
 import { EmailOptions } from './config'
-import { fetchApplication } from '../actions'
+import { fetchFCEApplication } from '../actions'
 import { getCCAddress } from './utils'
 import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
 
@@ -84,7 +84,7 @@ export async function getApplicationConfirmationEmailHTML(
  */
 export async function sendApplicationConfirmationEmail(applicationId: string) {
   // Send confirmation email using the new email content generator
-  const { success, applicationData } = await fetchApplication(applicationId)
+  const { success, applicationData } = await fetchFCEApplication(applicationId)
   if (!success) {
     throw new Error('Application not found')
   }
@@ -245,7 +245,7 @@ export async function getDueAmountChangeEmailHTML(
  * @returns A promise that resolves to an object containing the success status and message.
  */
 export async function sendDueAmountChangeEmail(applicationId: string) {
-  const { success, applicationData } = await fetchApplication(applicationId)
+  const { success, applicationData } = await fetchFCEApplication(applicationId)
   if (!success || !applicationData) {
     throw new Error('Application not found')
   }
