@@ -70,6 +70,12 @@ export default async function CRMPage() {
             GPA Calculator
           </Link>
         </Button>
+
+        <Button asChild>
+          <Link href="/admin/CRM/degree-equivalency-tool" target="_blank">
+            Degree Equivalency AI Tester
+          </Link>
+        </Button>
       </div>
 
       {/* Tabs for Applications and Payments */}
