@@ -1,7 +1,6 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
-import { randomUUID } from 'crypto'
 
 import { getEstimatedCompletionDate } from '../../../components/FCEApplicationForm/utils'
 
@@ -290,8 +289,13 @@ export async function POST(req: Request) {
                 }
               )
             }
+
+            // For degree equivalency, we don't need to handle delivery time or send emails
+            return new NextResponse('Webhook processed - Degree Equivalency payment completed', {
+              status: 200,
+            })
           } else {
-            // Update FCE application
+            // Handle FCE application
             const { error } = await client
               .from('fce_applications')
               .update({
@@ -316,45 +320,45 @@ export async function POST(req: Request) {
                 status: 500,
               })
             }
-          }
 
-          // Send payment confirmation email to the applicant
-          if (!session.amount_total) {
-            throw new Error('No amount total in session')
-          }
+            // Send payment confirmation email to the applicant
+            if (!session.amount_total) {
+              throw new Error('No amount total in session')
+            }
 
-          // This applicationData is not updated yet, so we need to use the old one and `paidAt`
-          console.log('Debug - Same Day Service Calculation:', {
-            paidAt,
-            applicationData: {
-              serviceType: applicationData.serviceType,
-              isSameDay:
-                applicationData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed ===
-                'sameday',
-            },
-          })
-          const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
-          console.log('Debug - Calculated Completion Date:', {
-            estimatedCompletionDate,
-            paidAt,
-          })
-          const paymentAmount = (session.amount_total / 100).toFixed(2)
-          const { success: emailSuccess, message: sendEmailMessage } =
-            await sendPaymentConfirmationEmail(
-              applicationId,
-              applicationData,
+            // This applicationData is not updated yet, so we need to use the old one and `paidAt`
+            console.log('Debug - Same Day Service Calculation:', {
               paidAt,
-              paymentAmount,
-              session.payment_intent as string,
-              estimatedCompletionDate
-            )
+              applicationData: {
+                serviceType: applicationData.serviceType,
+                isSameDay:
+                  applicationData.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed ===
+                  'sameday',
+              },
+            })
+            const estimatedCompletionDate = getEstimatedCompletionDate(applicationData, paidAt)
+            console.log('Debug - Calculated Completion Date:', {
+              estimatedCompletionDate,
+              paidAt,
+            })
+            const paymentAmount = (session.amount_total / 100).toFixed(2)
+            const { success: emailSuccess, message: sendEmailMessage } =
+              await sendPaymentConfirmationEmail(
+                applicationId,
+                applicationData,
+                paidAt,
+                paymentAmount,
+                session.payment_intent as string,
+                estimatedCompletionDate
+              )
 
-          if (!emailSuccess) {
-            console.error('Failed to send payment confirmation email:', sendEmailMessage)
-            throw new Error('Failed to send payment confirmation email')
+            if (!emailSuccess) {
+              console.error('Failed to send payment confirmation email:', sendEmailMessage)
+              throw new Error('Failed to send payment confirmation email')
+            }
+
+            return new NextResponse('Webhook processed', { status: 200 })
           }
-
-          return new NextResponse('Webhook processed', { status: 200 })
         }
 
         // checkout.session.expired
