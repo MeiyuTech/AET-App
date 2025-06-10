@@ -79,13 +79,13 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       </div>
 
       {/* Finish Button */}
-      <div className="w-full max-w-3xl flex justify-end">
+      {/* <div className="w-full max-w-3xl flex justify-end">
         <Link href="/degree-equivalency-tool" passHref>
           <Button variant="outline" className="text-base px-8 py-2">
             Finish
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -6,11 +6,13 @@ import { useToast } from '@/hooks/use-toast'
 import { createPayment } from '@/app/(frontend)/(aet-app)/utils/stripe/actions'
 import { LockClosedIcon } from '@heroicons/react/24/solid'
 
-interface PaymentOverlayProps {
+interface DegreeEquivalencyPaymentOverlayProps {
   applicationId: string
 }
 
-export function PaymentOverlay({ applicationId }: PaymentOverlayProps) {
+export function DegreeEquivalencyPaymentOverlay({
+  applicationId,
+}: DegreeEquivalencyPaymentOverlayProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
