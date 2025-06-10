@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
-import { createPayment } from '@/app/(frontend)/(aet-app)/utils/stripe/actions'
+import { createDegreeEquivalencyPayment } from '@/app/(frontend)/(aet-app)/utils/stripe/actions'
 import { LockClosedIcon } from '@heroicons/react/24/solid'
 
 interface DegreeEquivalencyPaymentOverlayProps {
@@ -19,7 +19,7 @@ export function DegreeEquivalencyPaymentOverlay({
   const handlePayment = async () => {
     setIsLoading(true)
     try {
-      const response = await createPayment({
+      const response = await createDegreeEquivalencyPayment({
         // TODO: change to 40
         amount: '1.01',
         applicationId,
