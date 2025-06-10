@@ -160,6 +160,11 @@ export async function POST(req: Request) {
               .eq('id', applicationId)
 
             // First check if payment record exists
+            console.log('🔍 Checking existing payment record for application:', {
+              applicationId,
+              paymentType: 'degree-equivalency',
+            })
+
             const { data: existingPayment, error: findCorePaymentError } = await client
               .from('aet_core_payments')
               .select('*')
@@ -168,7 +173,11 @@ export async function POST(req: Request) {
 
             if (findCorePaymentError && findCorePaymentError.code !== 'PGRST116') {
               // PGRST116 is "no rows returned" error
-              console.error('Error finding payment record:', findCorePaymentError)
+              console.error('❌ Error finding payment record:', {
+                error: findCorePaymentError,
+                applicationId,
+                paymentType: 'degree-equivalency',
+              })
               return new NextResponse(
                 `Error finding payment record: ${findCorePaymentError.message}`,
                 {
@@ -177,9 +186,23 @@ export async function POST(req: Request) {
               )
             }
 
+            console.log('📝 Payment record check result:', {
+              exists: !!existingPayment,
+              applicationId,
+              paymentType: 'degree-equivalency',
+              existingPaymentId: existingPayment?.id,
+            })
+
             let paymentError
             if (existingPayment) {
               // Update existing payment record
+              console.log('🔄 Updating existing payment record:', {
+                paymentId: existingPayment.id,
+                applicationId,
+                newAmount: price,
+                paymentIntent: session.payment_intent,
+              })
+
               const { error } = await client
                 .from('aet_core_payments')
                 .update({
@@ -192,10 +215,35 @@ export async function POST(req: Request) {
                 })
                 .eq('id', existingPayment.id)
               paymentError = error
+
+              if (paymentError) {
+                console.error('❌ Error updating payment record:', {
+                  error: paymentError,
+                  paymentId: existingPayment.id,
+                  applicationId,
+                  updateData: {
+                    due_amount: price,
+                    payment_status: 'paid',
+                    payment_id: session.payment_intent,
+                  },
+                })
+              } else {
+                console.log('✅ Successfully updated payment record:', {
+                  paymentId: existingPayment.id,
+                  applicationId,
+                })
+              }
             } else {
               // Create new payment record
+              console.log('➕ Creating new payment record:', {
+                sessionId: session.id,
+                applicationId,
+                amount: price,
+                paymentIntent: session.payment_intent,
+              })
+
               const { error } = await client.from('aet_core_payments').insert({
-                id: randomUUID(),
+                id: session.id,
                 application_id: applicationId,
                 due_amount: price,
                 payment_status: 'paid',
@@ -205,11 +253,30 @@ export async function POST(req: Request) {
                 notes: 'Degree Equivalency Payment',
               })
               paymentError = error
+
+              if (paymentError) {
+                console.error('❌ Error creating payment record:', {
+                  error: paymentError,
+                  sessionId: session.id,
+                  applicationId,
+                  insertData: {
+                    due_amount: price,
+                    payment_status: 'paid',
+                    payment_id: session.payment_intent,
+                  },
+                })
+              } else {
+                console.log('✅ Successfully created payment record:', {
+                  sessionId: session.id,
+                  applicationId,
+                })
+              }
             }
 
             if (applicationError || paymentError) {
-              console.error('Error updating degree equivalency application:', {
-                error: applicationError || paymentError,
+              console.error('❌ Error in degree equivalency payment process:', {
+                applicationError,
+                paymentError,
                 currentState: applicationData,
                 attemptedUpdate: {
                   status: 'processing',
