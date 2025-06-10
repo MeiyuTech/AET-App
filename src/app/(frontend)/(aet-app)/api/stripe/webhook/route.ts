@@ -159,7 +159,7 @@ export async function POST(req: Request) {
               .eq('id', applicationId)
 
             const { error: paymentError } = await client.from('aet_core_payments').insert({
-              applicationId: applicationId,
+              application_id: applicationId,
               due_amount: price,
               payment_status: 'paid',
               paid_at: new Date().toISOString(),
