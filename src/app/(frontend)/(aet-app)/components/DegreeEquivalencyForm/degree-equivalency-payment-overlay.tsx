@@ -20,6 +20,7 @@ export function DegreeEquivalencyPaymentOverlay({
     setIsLoading(true)
     try {
       const response = await createPayment({
+        // TODO: change to 40
         amount: '1.01',
         applicationId,
       })
@@ -50,10 +51,10 @@ export function DegreeEquivalencyPaymentOverlay({
           <div className="mb-2 text-blue-700">
             <LockClosedIcon className="w-8 h-8" />
           </div>
-          <h2 className="text-lg font-bold mb-1">Unlock full results</h2>
-          <p className="text-gray-500 text-sm mb-4 text-center">
-            Pay to view your U.S. degree equivalency result.
-          </p>
+          <h2 className="text-lg font-bold mb-1 text-center">
+            Unlock Your U.S. Degree Equivalency Result
+          </h2>
+          {/* <p className="text-gray-500 text-sm mb-4 text-center">Pay to view</p> */}
           <div className="text-2xl font-extrabold text-blue-700 mb-4">$40</div>
           <Button
             onClick={handlePayment}
@@ -77,7 +78,7 @@ export function DegreeEquivalencyPaymentOverlay({
                 ></path>
               </svg>
             )}
-            {isLoading ? 'Processing...' : 'Pay $40 now'}
+            {isLoading ? 'Processing...' : 'Pay Now'}
           </Button>
         </div>
       </div>
