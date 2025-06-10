@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import countryList from 'react-select-country-list'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -11,12 +12,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
   MONTH_OPTIONS,
   YEAR_OPTIONS,
 } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/constants'
 import { DegreeEquivalencyAI } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/degree-equivalency-ai'
+import { Loader2 } from 'lucide-react'
 
 export default function DegreeEquivalencyAITester() {
   const countries = useMemo(() => countryList().getData(), [])
@@ -76,154 +78,184 @@ export default function DegreeEquivalencyAITester() {
   }
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold">Degree Equivalency AI Tester</h1>
-      <p className="text-lg text-muted-foreground"></p>
-      <div className="max-w-7xl mx-auto p-4">
-        <Card className="p-8 h-full flex flex-col">
-          <CardHeader className="space-y-4">
-            <CardTitle className="text-2xl font-bold">Input Education Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label className="block mb-1 font-medium">School Name</label>
+    <div className="max-w-7xl mx-auto p-4">
+      <Card className="w-full max-w-4xl mx-auto p-8">
+        <CardHeader className="space-y-4">
+          <CardTitle className="text-2xl font-bold">Degree Equivalency AI Tester</CardTitle>
+          <CardDescription className="text-lg text-gray-600">
+            Test the AI&apos;s ability to evaluate degree equivalency
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="school_name" className="text-lg">
+                School Name<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="school_name"
+                name="school_name"
+                value={form.school_name}
+                onChange={handleInput}
+                placeholder="Enter full school name"
+                required
+                className="h-12 text-lg"
+              />
+            </div>
 
-                <Input
-                  name="school_name"
-                  value={form.school_name}
-                  onChange={handleInput}
-                  placeholder="Enter full school name"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-medium">Study Country</label>
+            <div className="space-y-3">
+              <Label htmlFor="country_of_study" className="text-lg">
+                Study Country<span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={form.country_of_study}
+                onValueChange={(v) => handleSelect('country_of_study', v)}
+              >
+                <SelectTrigger className="h-12 text-lg">
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countries.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>
+                      {c.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="degree_obtained" className="text-lg">
+                Degree Obtained<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="degree_obtained"
+                name="degree_obtained"
+                value={form.degree_obtained}
+                onChange={handleInput}
+                placeholder="e.g.: Bachelor of Science"
+                required
+                className="h-12 text-lg"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-lg">
+                Study Period<span className="text-red-500">*</span>
+              </Label>
+              <div className="flex gap-2">
                 <Select
-                  value={form.country_of_study}
-                  onValueChange={(v) => handleSelect('country_of_study', v)}
+                  value={form.study_start_date.month}
+                  onValueChange={(v) => handleSelect('study_start_date.month', v)}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select country" />
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Start Month" />
                   </SelectTrigger>
                   <SelectContent>
-                    {countries.map((c) => (
-                      <SelectItem key={c.value} value={c.value}>
-                        {c.label}
+                    {MONTH_OPTIONS.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={form.study_start_date.year}
+                  onValueChange={(v) => handleSelect('study_start_date.year', v)}
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="Start Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {YEAR_OPTIONS.map((y) => (
+                      <SelectItem key={y.value} value={y.value}>
+                        {y.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span className="self-center text-lg">to</span>
+                <Select
+                  value={form.study_end_date.month}
+                  onValueChange={(v) => handleSelect('study_end_date.month', v)}
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="End Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MONTH_OPTIONS.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={form.study_end_date.year}
+                  onValueChange={(v) => handleSelect('study_end_date.year', v)}
+                >
+                  <SelectTrigger className="h-12 text-lg">
+                    <SelectValue placeholder="End Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {YEAR_OPTIONS.map((y) => (
+                      <SelectItem key={y.value} value={y.value}>
+                        {y.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <label className="block mb-1 font-medium">Degree Obtained</label>
-                <Input
-                  name="degree_obtained"
-                  value={form.degree_obtained}
-                  onChange={handleInput}
-                  placeholder="e.g.: Bachelor of Science"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-medium">Study Period</label>
-                <div className="flex gap-2">
-                  <Select
-                    value={form.study_start_date.month}
-                    onValueChange={(v) => handleSelect('study_start_date.month', v)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Start Month" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MONTH_OPTIONS.map((m) => (
-                        <SelectItem key={m.value} value={m.value}>
-                          {m.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={form.study_start_date.year}
-                    onValueChange={(v) => handleSelect('study_start_date.year', v)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Start Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {YEAR_OPTIONS.map((y) => (
-                        <SelectItem key={y.value} value={y.value}>
-                          {y.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="self-center">to</span>
-                  <Select
-                    value={form.study_end_date.month}
-                    onValueChange={(v) => handleSelect('study_end_date.month', v)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="End Month" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MONTH_OPTIONS.map((m) => (
-                        <SelectItem key={m.value} value={m.value}>
-                          {m.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={form.study_end_date.year}
-                    onValueChange={(v) => handleSelect('study_end_date.year', v)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="End Year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {YEAR_OPTIONS.map((y) => (
-                        <SelectItem key={y.value} value={y.value}>
-                          {y.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <label className="block mb-1 font-medium">Diploma (Image/PDF)</label>
-                <Input type="file" accept="image/*,application/pdf" onChange={handleFile} />
-              </div>
-              <Button type="submit" disabled={loading}>
-                {loading ? 'Processing...' : 'Test AI'}
-              </Button>
-            </form>
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="diploma" className="text-lg">
+                Diploma (Image: jpg, png, jpeg, webp)
+              </Label>
+              <Input
+                id="diploma"
+                type="file"
+                accept="image/*,application/pdf"
+                onChange={handleFile}
+                className="h-12 text-lg"
+              />
+            </div>
+          </CardContent>
+          <CardContent>
+            <Button type="submit" disabled={loading} className="w-full h-12 text-lg">
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Test AI'
+              )}
+            </Button>
+          </CardContent>
+        </form>
+      </Card>
+
+      {submitted && (
+        <Card className="w-full max-w-4xl mx-auto mt-8 p-8">
+          <CardHeader className="space-y-4">
+            <CardTitle className="text-2xl font-bold">AI Result</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DegreeEquivalencyAI
+              education={{
+                school_name: form.school_name,
+                country_of_study: form.country_of_study,
+                degree_obtained: form.degree_obtained,
+                study_start_date: form.study_start_date,
+                study_end_date: form.study_end_date,
+              }}
+              ocrText={ocrText}
+              showReasoning={true}
+            />
           </CardContent>
         </Card>
-        {submitted && (
-          <div className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Result</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DegreeEquivalencyAI
-                  education={{
-                    school_name: form.school_name,
-                    country_of_study: form.country_of_study,
-                    degree_obtained: form.degree_obtained,
-                    study_start_date: form.study_start_date,
-                    study_end_date: form.study_end_date,
-                  }}
-                  ocrText={ocrText}
-                  showReasoning={true}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }
