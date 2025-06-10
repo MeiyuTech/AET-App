@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
-import { fetchApplication } from '../../utils/actions'
+import { fetchFCEApplication } from '../../utils/actions'
 
 import PaymentOptions from '../AETPayment/PaymentOptions'
 import Uploader from '../Dropbox/Uploader'
@@ -67,7 +67,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
     try {
       // Fetch application data from server
-      const result = await fetchApplication(ApplicationId)
+      const result = await fetchFCEApplication(ApplicationId)
 
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)
