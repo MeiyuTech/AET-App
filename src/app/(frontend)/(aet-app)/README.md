@@ -88,6 +88,7 @@
   - [ ] next?
 
 - [ ] 邮件中的 payment link 还是无效的啊。。。
+- [ ] 考虑用 college Scoredcard api 来获取 fields of study？ (已经申请 api keys)
 
 ## Features
 
