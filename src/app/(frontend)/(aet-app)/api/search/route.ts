@@ -4,8 +4,8 @@ export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
   try {
-    // console.log('SEARCH ROUTE: Request received')
-    const { query, num = 3 } = await req.json()
+    console.log('SEARCH ROUTE: Request received')
+    const { query, num = 10 } = await req.json()
     if (!query) {
       return NextResponse.json({ error: 'Missing query' }, { status: 400 })
     }

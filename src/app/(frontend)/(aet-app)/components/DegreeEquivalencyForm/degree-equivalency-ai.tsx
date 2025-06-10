@@ -82,29 +82,23 @@ export function DegreeEquivalencyAI({
   // Search for related US degree programs
   const [searchResults, setSearchResults] = useState<{ title: string; url: string }[]>([])
   const [searchLoading, setSearchLoading] = useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
   useEffect(() => {
-    // console.log('DegreeEquivalencyAI: Status:', status)
-    if (result && status === 'ready') {
-      console.log('DegreeEquivalencyAI: Searching for related degree programs')
-      console.log('DegreeEquivalencyAI: Result:', result)
+    if (result && status === 'ready' && !hasSearched) {
+      setHasSearched(true)
       setSearchLoading(true)
       fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Search Operators
-        // site: *.edu - Search only edu websites
-        // Remeber to have the ' ' before '*.edu'
-        body: JSON.stringify({ query: `${result} site: *.edu`, num: 3 }),
+        body: JSON.stringify({ query: `${result} site: *.edu`, num: 10 }),
       })
         .then((res) => res.json())
         .then((data) => setSearchResults(data.results || []))
         .finally(() => setSearchLoading(false))
-
-      console.log('DegreeEquivalencyAI: Search results:', searchResults)
-    } else {
-      setSearchResults([])
     }
-  }, [result, status])
+    // 如果 result 变为空，重置 hasSearched
+    if (!result && hasSearched) setHasSearched(false)
+  }, [result, status, hasSearched])
 
   return (
     <div>
