@@ -96,7 +96,7 @@ export function DegreeEquivalencyAI({
         .then((data) => setSearchResults(data.results || []))
         .finally(() => setSearchLoading(false))
     }
-    // 如果 result 变为空，重置 hasSearched
+    // If result is empty, reset hasSearched
     if (!result && hasSearched) setHasSearched(false)
   }, [result, status, hasSearched])
 

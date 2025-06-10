@@ -38,9 +38,7 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
         <div className="flex items-center mb-4">
           <CheckCircle2 className="text-green-600 mr-2" size={28} />
-          <h2 className="text-xl font-bold text-green-700">
-            Here is Your Free AET Degree Equivalency
-          </h2>
+          <h2 className="text-xl font-bold text-green-700">Here is Your AET Degree Equivalency</h2>
         </div>
         <p className="text-gray-700 mb-2">
           Now that you know what your education is worth in the U.S., get a AET credential
@@ -79,13 +77,13 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       </div>
 
       {/* Finish Button */}
-      <div className="w-full max-w-3xl flex justify-end">
+      {/* <div className="w-full max-w-3xl flex justify-end">
         <Link href="/degree-equivalency-tool" passHref>
           <Button variant="outline" className="text-base px-8 py-2">
             Finish
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   )
 }

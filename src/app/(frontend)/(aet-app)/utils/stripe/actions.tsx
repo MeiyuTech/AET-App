@@ -38,6 +38,41 @@ export async function createPayment({
   }
 }
 
+export async function createDegreeEquivalencyPayment({
+  amount,
+  applicationId,
+}: {
+  amount: string
+  applicationId: string
+}) {
+  console.log('🟠 [createDegreeEquivalencyPayment] Creating payment link with params:', {
+    amount,
+    applicationId,
+  })
+  const numericAmount = parseFloat(amount || '0')
+  const baseUrl = getClientSideURL()
+  const apiUrl = `${baseUrl}/api/stripe/create-degree-equivalency-payment`
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: numericAmount,
+        currency: 'usd',
+        applicationId: applicationId,
+      }),
+    })
+
+    return response
+  } catch (error) {
+    console.error('🔴 [createDegreeEquivalencyPayment] Error:', error)
+    throw error
+  }
+}
+
 export async function createPaymentLink(
   amount: number,
   applicationId: string,

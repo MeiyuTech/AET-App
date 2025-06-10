@@ -8,9 +8,9 @@ import { fetchApplication } from '../../../utils/actions'
 import { sendPaymentConfirmationEmail } from '../../../utils/email/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
+
 /**
- * This route handles the Stripe webhook events for the FCE application.
- * (Only 2 events: checkout.session.completed and checkout.session.expired)
+ * This route handles the Stripe webhook events for both FCE and Degree Equivalency applications.
  * It updates the application status and payment status based on the Stripe event type.
  * @param req - The request object.
  * @returns A response object.
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
             amount_total: session.amount_total,
           })
 
-          const { data, error } = await client
+          const { error } = await client
             .from('aet_core_payments')
             .update({
               payment_status: 'paid',
@@ -114,6 +114,7 @@ export async function POST(req: Request) {
             client_reference_id: applicationId,
             payment_intent: session.payment_intent,
             current_application_data: applicationData,
+            payment_type: session.metadata?.paymentType,
           })
 
           if (!session.payment_intent) {
@@ -133,32 +134,76 @@ export async function POST(req: Request) {
           const price = Number((amountTotal - stripeFee).toFixed(2))
 
           const currentAmount = applicationData.due_amount
-          console.log('currentAmount', currentAmount)
-          console.log('amountTotal', amountTotal)
-          console.log('stripeFee', stripeFee)
-          console.log('price', price)
+          console.log('Payment details:', {
+            currentAmount,
+            amountTotal,
+            stripeFee,
+            price,
+            paymentType: session.metadata?.paymentType,
+          })
 
-          const { error } = await client
-            .from('fce_applications')
-            .update({
-              status: 'processing',
-              payment_status: 'paid',
-              payment_id: session.payment_intent as string,
-              paid_at: paidAt,
+          // Handle different payment types
+          if (session.metadata?.paymentType === 'degree-equivalency') {
+            // Update degree equivalency application
+            const { error: applicationError } = await client
+              .from('aet_core_applications')
+              .update({
+                status: 'processing',
+              })
+              .eq('id', applicationId)
+
+            const { error: paymentError } = await client.from('aet_core_payments').insert({
+              applicationId: applicationId,
               due_amount: price,
+              payment_status: 'paid',
+              paid_at: new Date().toISOString(),
+              payment_id: session.payment_intent as string,
+              source: 'Stripe Payment',
+              notes: 'Degree Equivalency Payment',
             })
-            .eq('id', applicationId)
 
-          if (error) {
-            console.error('Error updating application:', {
-              error,
-              currentState: applicationData,
-              attemptedUpdate: {
+            if (applicationError || paymentError) {
+              console.error('Error updating degree equivalency application:', {
+                error: applicationError || paymentError,
+                currentState: applicationData,
+                attemptedUpdate: {
+                  status: 'processing',
+                  payment_status: 'paid',
+                },
+              })
+              return new NextResponse(
+                `Error updating application: ${applicationError?.message || paymentError?.message}`,
+                {
+                  status: 500,
+                }
+              )
+            }
+          } else {
+            // Update FCE application
+            const { error } = await client
+              .from('fce_applications')
+              .update({
                 status: 'processing',
                 payment_status: 'paid',
-              },
-            })
-            return new NextResponse(`Error updating application: ${error.message}`, { status: 500 })
+                payment_id: session.payment_intent as string,
+                paid_at: paidAt,
+                due_amount: price,
+              })
+              .eq('id', applicationId)
+
+            if (error) {
+              console.error('Error updating FCE application:', {
+                error,
+                currentState: applicationData,
+                attemptedUpdate: {
+                  status: 'processing',
+                  payment_status: 'paid',
+                },
+              })
+              return new NextResponse(`Error updating application: ${error.message}`, {
+                status: 500,
+              })
+            }
           }
 
           // Send payment confirmation email to the applicant
@@ -198,18 +243,38 @@ export async function POST(req: Request) {
           }
 
           return new NextResponse('Webhook processed', { status: 200 })
-        } else {
-          // checkout.session.expired
-          console.log('checkout.session.expired data:', {
-            client_reference_id: applicationId,
-            current_application_data: applicationData,
-          })
+        }
 
-          if (applicationData.payment_status === 'paid') {
-            console.log('Application is paid, skipping update')
-            return new NextResponse('Webhook processed - Skipped paid application', { status: 200 })
+        // checkout.session.expired
+        console.log('checkout.session.expired data:', {
+          client_reference_id: applicationId,
+          current_application_data: applicationData,
+          payment_type: session.metadata?.paymentType,
+        })
+
+        if (applicationData.payment_status === 'paid') {
+          console.log('Application is paid, skipping update')
+          return new NextResponse('Webhook processed - Skipped paid application', { status: 200 })
+        }
+
+        // Handle different payment types for expired sessions
+        if (session.metadata?.paymentType === 'degree-equivalency') {
+          const { error } = await client
+            .from('aet_core_applications')
+            .update({
+              payment_status: 'expired',
+            })
+            .eq('id', applicationId)
+            .select()
+            .single()
+
+          if (error) {
+            console.error('Error updating expired degree equivalency application:', error)
+            return new NextResponse(`Error updating expired application: ${error.message}`, {
+              status: 500,
+            })
           }
-
+        } else {
           const { error } = await client
             .from('fce_applications')
             .update({
@@ -220,16 +285,16 @@ export async function POST(req: Request) {
             .single()
 
           if (error) {
-            console.error('Error updating expired application:', error)
+            console.error('Error updating expired FCE application:', error)
             return new NextResponse(`Error updating expired application: ${error.message}`, {
               status: 500,
             })
           }
-
-          return new NextResponse('Webhook processed - Application marked as expired', {
-            status: 200,
-          })
         }
+
+        return new NextResponse('Webhook processed - Application marked as expired', {
+          status: 200,
+        })
       }
 
       case 'charge.refunded': {
@@ -241,12 +306,22 @@ export async function POST(req: Request) {
           currency: charge.currency,
         })
 
-        // Find application by payment_id
-        const { data: application, error: findError } = await client
-          .from('fce_applications')
-          .select('*')
-          .eq('payment_id', charge.payment_intent)
-          .single()
+        // Find application by payment_id in both tables
+        const [fceResult, degreeResult] = await Promise.all([
+          client
+            .from('fce_applications')
+            .select('*')
+            .eq('payment_id', charge.payment_intent)
+            .single(),
+          client
+            .from('aet_core_applications')
+            .select('*')
+            .eq('payment_id', charge.payment_intent)
+            .single(),
+        ])
+
+        const application = fceResult.data || degreeResult.data
+        const findError = fceResult.error || degreeResult.error
 
         if (findError) {
           console.error('Error finding application:', findError)
@@ -314,8 +389,10 @@ export async function POST(req: Request) {
           newPaymentId,
         })
 
+        // Update the appropriate table based on the application type
+        const tableName = fceResult.data ? 'fce_applications' : 'aet_core_applications'
         const { error } = await client
-          .from('fce_applications')
+          .from(tableName)
           .update({
             payment_status: newPaymentStatus,
             due_amount: newDueAmount,

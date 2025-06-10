@@ -4,8 +4,8 @@ import countryList from 'react-select-country-list'
 import { DegreeEquivalencyAI } from './degree-equivalency-ai'
 import { DropboxService } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/services/dropbox.service'
 import { VisionService } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/services/vision.service'
-import Image from 'next/image'
-import { PaymentOverlay } from './payment-overlay'
+// import Image from 'next/image'
+import { DegreeEquivalencyPaymentOverlay } from './degree-equivalency-payment-overlay'
 
 function getCountryName(code: string) {
   const countries = countryList().getData()
@@ -36,13 +36,13 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
     .single()
 
   // Check payment status
-  const { data: paymentStatus } = await supabase
+  const { data: payment } = await supabase
     .from('aet_core_payments')
     .select('payment_status')
     .eq('application_id', applicationId)
     .single()
 
-  const isPaid = paymentStatus?.payment_status === 'paid'
+  const isPaid = payment?.payment_status === 'paid'
 
   if (applicationError || educationError || !application || !education) {
     return null
@@ -94,7 +94,7 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
                   <div className="relative">
-                    {!isPaid && <PaymentOverlay applicationId={applicationId} />}
+                    {!isPaid && <DegreeEquivalencyPaymentOverlay applicationId={applicationId} />}
                     <DegreeEquivalencyAI education={education} ocrText={ocrText} />
                   </div>
                 </td>
