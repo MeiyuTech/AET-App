@@ -89,6 +89,8 @@
 
 - [ ] 邮件中的 payment link 还是无效的啊。。。
 - [ ] 考虑用 college Scoredcard api 来获取 fields of study？ (已经申请 api keys)
+- [ ] 重新矫正AI 输出结果，之前 Haiti 的案例好像不对了？！！！
+- [ ]
 
 ## Features
 
