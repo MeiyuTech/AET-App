@@ -147,65 +147,100 @@ export const DegreeEquivalencyConfirmationEmail = ({
                 </ol>
               </Section>
 
+              {/* Degree Equivalency Table */}
               <Section
                 style={{
                   ...styles.section.card,
                   backgroundColor: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-                  padding: '24px',
+                  padding: '0',
                   marginBottom: '24px',
+                  overflow: 'hidden',
                 }}
               >
-                <Heading style={styles.heading.h2}>Your Degree Equivalency</Heading>
-
-                <Text style={styles.text.default}>
-                  <strong>Foreign Degree:</strong> {degreeEquivalency.foreignDegree}
-                </Text>
-                <Text style={styles.text.default}>
-                  <strong>U.S. Equivalency:</strong> {degreeEquivalency.usEquivalency}
-                </Text>
-                <Text style={styles.text.default}>
-                  <strong>Institution:</strong> {degreeEquivalency.institution}
-                </Text>
-                <Text style={styles.text.default}>
-                  <strong>Country:</strong> {degreeEquivalency.country}
-                </Text>
-              </Section>
-
-              <Section
-                style={{
-                  ...styles.section.card,
-                  backgroundColor: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-                  padding: '24px',
-                  marginBottom: '24px',
-                }}
-              >
-                <Heading style={styles.heading.h2}>Next Steps</Heading>
-                <ol
-                  style={{ ...styles.text.default, marginLeft: '24px', listStyleType: 'decimal' }}
+                <div
+                  style={{
+                    backgroundColor: '#1e3a8a',
+                    padding: '16px',
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
+                  }}
                 >
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>Apply for a AET credential evaluation.</strong>
-                  </li>
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>Submit related documents (Diploma, Transcripts, etc.)</strong>
-                  </li>
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>
-                      AET prepares a credential evaluation, electronically stores your documents.
-                      Your report never expires.
-                    </strong>
-                  </li>
-                </ol>
-
-                <Section style={{ textAlign: 'center', margin: '20px 0' }}>
-                  <Button href="https://app.americantranslationservice.com/credential-evaluation-application">
-                    Begin Your Application Now
-                  </Button>
-                </Section>
+                  <Heading
+                    style={{
+                      ...styles.heading.h2,
+                      color: 'white',
+                      fontSize: '18px',
+                      fontWeight: 'bold',
+                      margin: 0,
+                    }}
+                  >
+                    Credential 1
+                  </Heading>
+                </div>
+                <table style={{ width: '100%', fontSize: '14px' }}>
+                  <tbody>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          backgroundColor: '#f9fafb',
+                          width: '33.33%',
+                        }}
+                      >
+                        Country of Study:
+                      </td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.country}</td>
+                    </tr>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          backgroundColor: '#f9fafb',
+                        }}
+                      >
+                        Name of Degree:
+                      </td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.foreignDegree}</td>
+                    </tr>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          backgroundColor: '#f9fafb',
+                        }}
+                      >
+                        Name of Institution:
+                      </td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.institution}</td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          backgroundColor: '#f9fafb',
+                        }}
+                      >
+                        Equivalency in U.S.:
+                      </td>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '600',
+                          color: '#1e3a8a',
+                          backgroundColor: '#eff6ff',
+                        }}
+                      >
+                        {degreeEquivalency.usEquivalency}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </Section>
 
               <Section
