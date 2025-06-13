@@ -2,6 +2,7 @@
 
 import { useChat } from '@ai-sdk/react'
 import { useEffect, useState } from 'react'
+import { createBrowserClient } from '@supabase/ssr'
 
 interface Education {
   school_name: string
@@ -10,6 +11,7 @@ interface Education {
   duration?: string
   study_start_date?: { year: string; month: string }
   study_end_date?: { year: string; month: string }
+  id?: string
 }
 
 interface DegreeEquivalencyAIProps {
@@ -58,6 +60,28 @@ export function DegreeEquivalencyAI({
     reload()
   }, [reload, ocrText])
 
+  // Add function to update education record with AI result
+  const updateEducationWithResult = async (result: string) => {
+    if (!education.id) return // Skip if no education ID
+
+    try {
+      const client = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      const { error } = await client
+        .from('aet_core_educations')
+        .update({ ai_output: result })
+        .eq('id', education.id)
+
+      if (error) {
+        console.error('Error updating education with AI result:', error)
+      }
+    } catch (error) {
+      console.error('Failed to update education with AI result:', error)
+    }
+  }
+
   // Parse result/reasoning
   let result = '',
     reasoning = ''
@@ -76,6 +100,11 @@ export function DegreeEquivalencyAI({
       } else {
         result = lastMessage.trim()
       }
+    }
+
+    // Update education record with result when we get it
+    if (result) {
+      updateEducationWithResult(result)
     }
   }
 
