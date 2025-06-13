@@ -5,7 +5,14 @@ import { Plus, Trash2, X } from 'lucide-react'
 import { useMemo } from 'react'
 import countryList from 'react-select-country-list'
 import { useFormContext, useFieldArray } from 'react-hook-form'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -110,10 +117,14 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
         render={({ field }) => (
           <FormItem>
             <FormLabel>Degree Obtained</FormLabel>
+            <FormDescription>
+              Please specify your degree in detail, including your major if applicable. For example:
+              &quot;Bachelor of Science in Computer Science&quot;
+            </FormDescription>
             <FormControl>
               <Input
                 data-testid={`degree-obtained-input-${index}`}
-                placeholder="e.g.: Bachelor of Science"
+                placeholder="e.g.: Bachelor of Science in Computer Science"
                 {...field}
               />
             </FormControl>
@@ -522,7 +533,7 @@ export function EvalueeInfo() {
             Education History<span className="text-red-500">*</span>
           </h3>
 
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="sm"
@@ -541,7 +552,7 @@ export function EvalueeInfo() {
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Education
-          </Button>
+          </Button> */}
         </div>
 
         <div className="space-y-4">

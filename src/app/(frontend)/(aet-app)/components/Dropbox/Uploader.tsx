@@ -231,7 +231,7 @@ export default function DropboxUploader({
         className="w-full py-2 px-4 bg-blue-600 text-white rounded-md
           hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-        {uploading ? 'Uploading...' : 'Upload to Dropbox'}
+        {uploading ? 'Uploading...' : 'Upload Picture of Your Diploma'}
       </button>
 
       {message && (

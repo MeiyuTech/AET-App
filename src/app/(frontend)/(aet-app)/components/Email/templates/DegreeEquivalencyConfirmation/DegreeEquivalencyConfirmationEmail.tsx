@@ -16,6 +16,7 @@ import { Button } from '../../Button'
 import { Footer } from '../../Footer'
 import { Header } from '../../Header'
 import { styles, colors } from '../../styles/config'
+import countryList from 'react-select-country-list'
 
 interface DegreeEquivalencyConfirmationEmailProps {
   // applicationId: string
@@ -41,12 +42,18 @@ function formatStudyDuration(
   return `${startDate.year}-${startDate.month} - ${endDate.year}-${endDate.month}`
 }
 
+function getCountryName(code: string) {
+  const countries = countryList().getData()
+  return countries.find((c) => c.value === code)?.label || code
+}
+
 export const DegreeEquivalencyConfirmationEmail = ({
   // applicationId,
   // firstName,
   // lastName,
   education: degreeEquivalency,
 }: DegreeEquivalencyConfirmationEmailProps) => {
+  const countryName = getCountryName(degreeEquivalency.countryOfStudy)
   return (
     <Html lang="en" dir="ltr">
       <Head>
@@ -203,7 +210,7 @@ export const DegreeEquivalencyConfirmationEmail = ({
                       >
                         Country of Study:
                       </td>
-                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.countryOfStudy}</td>
+                      <td style={{ padding: '8px 16px' }}>{countryName}</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
                       <td

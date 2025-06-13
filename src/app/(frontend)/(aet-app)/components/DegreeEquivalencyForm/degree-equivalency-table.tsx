@@ -96,7 +96,11 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
                   <div className="relative">
                     {!isPaid && <DegreeEquivalencyPaymentOverlay applicationId={applicationId} />}
-                    <DegreeEquivalencyAI education={education} ocrText={ocrText} />
+                    <DegreeEquivalencyAI
+                      education={education}
+                      ocrText={ocrText}
+                      showResult={isPaid}
+                    />
                   </div>
                 </td>
               </tr>
