@@ -290,29 +290,6 @@ export async function POST(req: Request) {
               )
             }
 
-            // Send payment confirmation email
-            try {
-              const { data: applicationData } = await client
-                .from('aet_core_applications')
-                .select('*')
-                .eq('id', applicationId)
-                .single()
-
-              if (applicationData) {
-                await sendPaymentConfirmationEmail(
-                  applicationId,
-                  applicationData,
-                  new Date().toISOString(),
-                  price.toString(),
-                  session.payment_intent as string,
-                  new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days from now
-                )
-              }
-            } catch (emailError) {
-              console.error('❌ Error sending payment confirmation email:', emailError)
-              // Don't return error response as payment was successful
-            }
-
             // For degree equivalency, we don't need to handle delivery time or send emails
             return new NextResponse('Webhook processed - Degree Equivalency payment completed', {
               status: 200,
