@@ -533,7 +533,7 @@ export function EvalueeInfo() {
             Education History<span className="text-red-500">*</span>
           </h3>
 
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="sm"
@@ -552,7 +552,7 @@ export function EvalueeInfo() {
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Education
-          </Button>
+          </Button> */}
         </div>
 
         <div className="space-y-4">
