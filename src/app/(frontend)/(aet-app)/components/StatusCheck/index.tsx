@@ -69,6 +69,8 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
       // Fetch application data from server
       const result = await fetchFCEApplication(ApplicationId)
 
+      console.log('result:', result)
+
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)
       } else {
