@@ -118,8 +118,33 @@ export const DegreeEquivalencyConfirmationEmail = ({
                 <Text style={styles.text.default}>
                   Now that you know what your education is worth in the U.S., get a AET credential
                   evaluation to verify your credentials so they&apos;ll be recognized by U.S.
-                  universities, employers and licensing boards.
+                  universities, employers and licensing boards. Follow these simple steps:
                 </Text>
+                <ol
+                  style={{ ...styles.text.default, marginLeft: '24px', listStyleType: 'decimal' }}
+                >
+                  <li style={{ marginBottom: '12px' }}>
+                    <strong>Apply for a AET credential evaluation.</strong>
+                  </li>
+                  <li style={{ marginBottom: '12px' }}>
+                    <strong>Submit related documents (Diploma, Transcripts, etc.)</strong>
+                  </li>
+                  <li style={{ marginBottom: '12px' }}>
+                    <strong>
+                      AET prepares a credential evaluation, electronically stores your documents.
+                      Your report never expires.
+                      <br />
+                      <a
+                        href="https://app.americantranslationservice.com/credential-evaluation-application"
+                        className="text-green-700 underline font-medium"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Begin Your Application Now.
+                      </a>
+                    </strong>
+                  </li>
+                </ol>
               </Section>
 
               <Section
