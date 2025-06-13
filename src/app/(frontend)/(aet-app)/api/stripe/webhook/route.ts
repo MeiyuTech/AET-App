@@ -310,6 +310,15 @@ export async function POST(req: Request) {
 
             // Send confirmation email
             try {
+              console.log('Sending degree equivalency confirmation email:', {
+                email: applicationData.email,
+                countryOfStudy: educationData.country_of_study,
+                degreeObtained: educationData.degree_obtained,
+                schoolName: educationData.school_name,
+                studyStartDate: educationData.study_start_date,
+                studyEndDate: educationData.study_end_date,
+                aiOutput: educationData.ai_output,
+              })
               const { success, message } = await sendDegreeEquivalencyConfirmationEmail(
                 applicationData.email,
                 {
