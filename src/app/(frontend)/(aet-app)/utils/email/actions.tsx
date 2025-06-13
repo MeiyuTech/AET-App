@@ -17,6 +17,7 @@ import { EmailOptions } from './config'
 import { fetchFCEApplication } from '../actions'
 import { getCCAddress } from './utils'
 import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
+import { DegreeEquivalencyConfirmationEmail } from '../../components/Email/templates/DegreeEquivalencyConfirmation/DegreeEquivalencyConfirmationEmail'
 
 /**
  * Send an email using the Resend API.
@@ -282,6 +283,67 @@ export async function sendDueAmountChangeEmail(applicationId: string) {
     return { success: emailSuccess, message: sendEmailMessage }
   } catch (error) {
     console.error('Failed to send service fee change email:', error)
+    throw error
+  }
+}
+
+/**
+ * Get the HTML for a degree equivalency confirmation email.
+ * @param education - The degree equivalency data.
+ * @returns A promise that resolves to the HTML for the degree equivalency confirmation email.
+ */
+export async function getDegreeEquivalencyConfirmationEmailHTML(education: {
+  countryOfStudy: string
+  degreeObtained: string
+  schoolName: string
+  studyStartDate: { year: string; month: string }
+  studyEndDate: { year: string; month: string }
+  aiOutput: {
+    result: string
+    reasoning?: string
+  }
+}): Promise<string> {
+  const emailComponent = React.createElement(DegreeEquivalencyConfirmationEmail, {
+    education,
+  })
+
+  return render(emailComponent)
+}
+
+/**
+ * Send a degree equivalency confirmation email to the applicant.
+ * @param education - The degree equivalency data.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
+export async function sendDegreeEquivalencyConfirmationEmail(
+  email: string,
+  education: {
+    countryOfStudy: string
+    degreeObtained: string
+    schoolName: string
+    studyStartDate: { year: string; month: string }
+    studyEndDate: { year: string; month: string }
+    aiOutput: {
+      result: string
+      reasoning?: string
+    }
+  }
+) {
+  const degreeEquivalencyConfirmationEmailHTML =
+    await getDegreeEquivalencyConfirmationEmailHTML(education)
+
+  try {
+    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
+      to: email,
+      cc: process.env.RESEND_DEFAULT_CC_ADDRESS!,
+      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
+      subject: 'AET Degree Equivalency Confirmation',
+      html: degreeEquivalencyConfirmationEmailHTML,
+    })
+
+    return { success: emailSuccess, message: sendEmailMessage }
+  } catch (error) {
+    console.error('Failed to send degree equivalency confirmation email:', error)
     throw error
   }
 }

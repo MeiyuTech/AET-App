@@ -52,13 +52,14 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
   const fullName = [application.first_name, application.middle_name, application.last_name]
     .filter(Boolean)
     .join(' ')
+
   const diplomaImage = await DropboxService.getDiplomaImage(application.email, fullName)
 
   // Get OCR text if diploma image exists
   let ocrText = ''
   if (diplomaImage) {
     ocrText = await VisionService.detectText(diplomaImage)
-    console.log('OCR Text:', ocrText)
+    // console.log('OCR Text:', ocrText)
   }
 
   return (

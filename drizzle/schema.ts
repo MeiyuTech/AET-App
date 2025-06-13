@@ -1007,6 +1007,7 @@ export const aetCoreEducations = pgTable("aet_core_educations", {
 	schoolName: text("school_name").notNull(),
 	studyStartDate: jsonb("study_start_date").notNull(),
 	studyEndDate: jsonb("study_end_date").notNull(),
+	aiOutput: jsonb("ai_output"),
 }, (table) => {
 	return {
 		idxAetCoreEducationsApplication: index("idx_aet_core_educations_application").using("btree", table.applicationId.asc().nullsLast().op("uuid_ops")),

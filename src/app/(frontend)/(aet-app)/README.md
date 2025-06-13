@@ -89,8 +89,10 @@
 
 - [ ] 邮件中的 payment link 还是无效的啊。。。
 - [ ] 考虑用 college Scoredcard api 来获取 fields of study？ (已经申请 api keys)
-- [ ] 重新矫正AI 输出结果，之前 Haiti 的案例好像不对了？！！！
-- [ ]
+- [x] 重新矫正AI 输出结果，之前 Haiti 的案例好像不对了？！！！ fix: google vision api
+- [ ] 现在的设计是，在申请的过程中上传 diploma。但是有个问题在于可能会导致用户忘记上传？？
+- [ ] 不同进度的的 row 上色，变得更加明显。
+- [ ] 数据库应该加栏，记录返回的 ocrText，result， reasoning
 
 ## Features
 
