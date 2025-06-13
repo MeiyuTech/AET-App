@@ -18,42 +18,34 @@ import { Header } from '../../Header'
 import { styles, colors } from '../../styles/config'
 
 interface DegreeEquivalencyConfirmationEmailProps {
-  applicationId: string
-  firstName: string
-  lastName: string
-  degreeEquivalency: {
-    foreignDegree: string
-    usEquivalency: string
-    institution: string
-    country: string
-    studyDuration: {
-      start?: { year: string; month: string }
-      end?: { year: string; month: string }
+  // applicationId: string
+  // firstName: string
+  // lastName: string
+  education: {
+    countryOfStudy: string
+    degreeObtained: string
+    schoolName: string
+    studyStartDate: { year: string; month: string }
+    studyEndDate: { year: string; month: string }
+    aiOutput: {
+      result: string
+      reasoning?: string
     }
   }
 }
 
-function formatStudyDuration(duration: {
-  start?: { year: string; month: string }
-  end?: { year: string; month: string }
-}) {
-  if (duration?.start && duration?.end) {
-    return `${duration.start.year}-${duration.start.month} - ${duration.end.year}-${duration.end.month}`
-  }
-  if (duration?.start) {
-    return `${duration.start.year}-${duration.start.month} - ?`
-  }
-  if (duration?.end) {
-    return `? - ${duration.end.year}-${duration.end.month}`
-  }
-  return 'Not provided'
+function formatStudyDuration(
+  startDate: { year: string; month: string },
+  endDate: { year: string; month: string }
+) {
+  return `${startDate.year}-${startDate.month} - ${endDate.year}-${endDate.month}`
 }
 
 export const DegreeEquivalencyConfirmationEmail = ({
-  applicationId,
-  firstName,
-  lastName,
-  degreeEquivalency,
+  // applicationId,
+  // firstName,
+  // lastName,
+  education: degreeEquivalency,
 }: DegreeEquivalencyConfirmationEmailProps) => {
   return (
     <Html lang="en" dir="ltr">
@@ -207,12 +199,11 @@ export const DegreeEquivalencyConfirmationEmail = ({
                           padding: '8px 16px',
                           fontWeight: '500',
                           backgroundColor: '#f9fafb',
-                          width: '33.33%',
                         }}
                       >
                         Country of Study:
                       </td>
-                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.country}</td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.countryOfStudy}</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
                       <td
@@ -224,7 +215,7 @@ export const DegreeEquivalencyConfirmationEmail = ({
                       >
                         Name of Degree:
                       </td>
-                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.foreignDegree}</td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.degreeObtained}</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
                       <td
@@ -236,7 +227,7 @@ export const DegreeEquivalencyConfirmationEmail = ({
                       >
                         Name of Institution:
                       </td>
-                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.institution}</td>
+                      <td style={{ padding: '8px 16px' }}>{degreeEquivalency.schoolName}</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
                       <td
@@ -249,7 +240,10 @@ export const DegreeEquivalencyConfirmationEmail = ({
                         Study Duration:
                       </td>
                       <td style={{ padding: '8px 16px' }}>
-                        {formatStudyDuration(degreeEquivalency.studyDuration)}
+                        {formatStudyDuration(
+                          degreeEquivalency.studyStartDate,
+                          degreeEquivalency.studyEndDate
+                        )}
                       </td>
                     </tr>
                     <tr>
@@ -270,7 +264,7 @@ export const DegreeEquivalencyConfirmationEmail = ({
                           backgroundColor: '#eff6ff',
                         }}
                       >
-                        {degreeEquivalency.usEquivalency}
+                        {degreeEquivalency.aiOutput.result}
                       </td>
                     </tr>
                   </tbody>
@@ -322,17 +316,18 @@ export const DegreeEquivalencyConfirmationEmail = ({
 }
 
 DegreeEquivalencyConfirmationEmail.PreviewProps = {
-  applicationId: '1234567890',
-  firstName: 'John',
-  lastName: 'Doe',
-  degreeEquivalency: {
-    foreignDegree: 'Bachelor of Science in Computer Science',
-    usEquivalency: 'Bachelor of Science in Computer Science',
-    institution: 'Example University',
-    country: 'China',
-    studyDuration: {
-      start: { year: '2017', month: '08' },
-      end: { year: '2021', month: '05' },
+  // applicationId: '1234567890',
+  // firstName: 'John',
+  // lastName: 'Doe',
+  education: {
+    countryOfStudy: 'China',
+    degreeObtained: 'Bachelor of Science in Computer Science',
+    schoolName: 'Example University',
+    studyStartDate: { year: '2017', month: '08' },
+    studyEndDate: { year: '2021', month: '05' },
+    aiOutput: {
+      result: 'Bachelor of Science in Computer Science',
+      reasoning: 'Based on the degree requirements and curriculum',
     },
   },
 } as DegreeEquivalencyConfirmationEmailProps
