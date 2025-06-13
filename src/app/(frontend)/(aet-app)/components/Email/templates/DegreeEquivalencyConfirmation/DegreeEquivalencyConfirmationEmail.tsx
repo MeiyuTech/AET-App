@@ -26,7 +26,27 @@ interface DegreeEquivalencyConfirmationEmailProps {
     usEquivalency: string
     institution: string
     country: string
+    studyDuration: {
+      start?: { year: string; month: string }
+      end?: { year: string; month: string }
+    }
   }
+}
+
+function formatStudyDuration(duration: {
+  start?: { year: string; month: string }
+  end?: { year: string; month: string }
+}) {
+  if (duration?.start && duration?.end) {
+    return `${duration.start.year}-${duration.start.month} - ${duration.end.year}-${duration.end.month}`
+  }
+  if (duration?.start) {
+    return `${duration.start.year}-${duration.start.month} - ?`
+  }
+  if (duration?.end) {
+    return `? - ${duration.end.year}-${duration.end.month}`
+  }
+  return 'Not provided'
 }
 
 export const DegreeEquivalencyConfirmationEmail = ({
@@ -218,6 +238,20 @@ export const DegreeEquivalencyConfirmationEmail = ({
                       </td>
                       <td style={{ padding: '8px 16px' }}>{degreeEquivalency.institution}</td>
                     </tr>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                      <td
+                        style={{
+                          padding: '8px 16px',
+                          fontWeight: '500',
+                          backgroundColor: '#f9fafb',
+                        }}
+                      >
+                        Study Duration:
+                      </td>
+                      <td style={{ padding: '8px 16px' }}>
+                        {formatStudyDuration(degreeEquivalency.studyDuration)}
+                      </td>
+                    </tr>
                     <tr>
                       <td
                         style={{
@@ -264,7 +298,11 @@ export const DegreeEquivalencyConfirmationEmail = ({
 
               <Section style={styles.section.default}>
                 <Text style={styles.text.default}>
-                  If you have any questions, please reply to this email thread (Reply All Please).
+                  <span style={{ color: colors.primary }}>
+                    If anything, please reply to this email thread (Reply All Please) with all of
+                    your questions.
+                  </span>{' '}
+                  We are looking forward to cooperating with you!
                 </Text>
 
                 <Text style={styles.text.default}>
@@ -292,6 +330,10 @@ DegreeEquivalencyConfirmationEmail.PreviewProps = {
     usEquivalency: 'Bachelor of Science in Computer Science',
     institution: 'Example University',
     country: 'China',
+    studyDuration: {
+      start: { year: '2017', month: '08' },
+      end: { year: '2021', month: '05' },
+    },
   },
 } as DegreeEquivalencyConfirmationEmailProps
 
