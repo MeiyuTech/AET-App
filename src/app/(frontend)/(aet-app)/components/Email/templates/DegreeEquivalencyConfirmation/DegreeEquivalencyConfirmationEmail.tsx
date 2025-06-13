@@ -28,10 +28,7 @@ interface DegreeEquivalencyConfirmationEmailProps {
     schoolName: string
     studyStartDate: { year: string; month: string }
     studyEndDate: { year: string; month: string }
-    aiOutput: {
-      result: string
-      reasoning?: string
-    }
+    aiOutput: string
   }
 }
 
@@ -271,7 +268,7 @@ export const DegreeEquivalencyConfirmationEmail = ({
                           backgroundColor: '#eff6ff',
                         }}
                       >
-                        {degreeEquivalency.aiOutput.result}
+                        {degreeEquivalency.aiOutput}
                       </td>
                     </tr>
                   </tbody>
@@ -332,10 +329,7 @@ DegreeEquivalencyConfirmationEmail.PreviewProps = {
     schoolName: 'Example University',
     studyStartDate: { year: '2017', month: '08' },
     studyEndDate: { year: '2021', month: '05' },
-    aiOutput: {
-      result: 'Bachelor of Science in Computer Science',
-      reasoning: 'Based on the degree requirements and curriculum',
-    },
+    aiOutput: 'Bachelor of Science in Computer Science',
   },
 } as DegreeEquivalencyConfirmationEmailProps
 

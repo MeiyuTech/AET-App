@@ -298,10 +298,7 @@ export async function getDegreeEquivalencyConfirmationEmailHTML(education: {
   schoolName: string
   studyStartDate: { year: string; month: string }
   studyEndDate: { year: string; month: string }
-  aiOutput: {
-    result: string
-    reasoning?: string
-  }
+  aiOutput: string
 }): Promise<string> {
   const emailComponent = React.createElement(DegreeEquivalencyConfirmationEmail, {
     education,
@@ -323,10 +320,7 @@ export async function sendDegreeEquivalencyConfirmationEmail(
     schoolName: string
     studyStartDate: { year: string; month: string }
     studyEndDate: { year: string; month: string }
-    aiOutput: {
-      result: string
-      reasoning?: string
-    }
+    aiOutput: string
   }
 ) {
   const degreeEquivalencyConfirmationEmailHTML =
