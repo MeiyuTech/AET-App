@@ -2,6 +2,10 @@ import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Eye } from 'lucide-react'
+import {
+  getStatusColor,
+  getPaymentStatusColor,
+} from '@/app/(frontend)/(aet-app)/utils/statusColors'
 
 export const getDegreeEquivalencyColumns = (
   onEducationClick: (educations: any[]) => void
@@ -149,8 +153,14 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const status = row.getValue('status') as string | undefined
-      return <span className="capitalize">{status || 'N/A'}</span>
+      const status = row.getValue('status') as string
+      return (
+        <div className="flex items-center">
+          <div className={`capitalize font-medium mr-2 text-base ${getStatusColor(status)}`}>
+            {status}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -181,8 +191,14 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const status = row.getValue('payment_status') as string | undefined
-      return <span className="capitalize">{status || 'N/A'}</span>
+      const status = row.getValue('payment_status') as string
+      return (
+        <div className="flex items-center">
+          <div className={`capitalize font-medium mr-2 text-base ${getPaymentStatusColor(status)}`}>
+            {status}
+          </div>
+        </div>
+      )
     },
   },
   {
@@ -243,20 +259,20 @@ export const getDegreeEquivalencyColumns = (
       )
     },
   },
-  {
-    accessorKey: 'source',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
-      >
-        Source
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const source = row.getValue('source') as string | undefined
-      return <span className="capitalize">{source || 'N/A'}</span>
-    },
-  },
+  // {
+  //   accessorKey: 'source',
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //       className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+  //     >
+  //       Source
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const source = row.getValue('source') as string | undefined
+  //     return <span className="capitalize">{source || 'N/A'}</span>
+  //   },
+  // },
 ]
