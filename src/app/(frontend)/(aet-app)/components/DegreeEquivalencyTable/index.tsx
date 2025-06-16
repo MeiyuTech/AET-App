@@ -28,9 +28,7 @@ export default function DegreeEquivalencyTable() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
-      console.log('fetchData')
       const result = await fetchAETCoreApplicationsList()
-      console.log('result', result)
       if (!result.success || !result.applications) {
         setData([])
       } else {

@@ -16,7 +16,7 @@ export const getDegreeEquivalencyColumns = (
     },
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'created_at',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -27,7 +27,7 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const dateStr = row.getValue('createdAt') as string | undefined
+      const dateStr = row.getValue('created_at') as string | undefined
       if (!dateStr) return 'N/A'
       const date = new Date(dateStr)
       const formattedDate = date
@@ -47,34 +47,34 @@ export const getDegreeEquivalencyColumns = (
       )
     },
   },
-  {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
-      >
-        ID
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const id = row.getValue('id') as string | undefined
-      if (!id) return 'N/A'
-      // Split UUID into three parts for better readability
-      const parts = id.split('-')
-      const firstPart = parts.slice(0, 2).join('-') + '-'
-      const secondPart = parts.slice(2, 4).join('-') + '-'
-      const thirdPart = parts[4]
-      return (
-        <div className="text-sm block w-[140px]">
-          <div>{firstPart}</div>
-          <div>{secondPart}</div>
-          <div>{thirdPart}</div>
-        </div>
-      )
-    },
-  },
+  // {
+  //   accessorKey: 'id',
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //       className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+  //     >
+  //       ID
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const id = row.getValue('id') as string | undefined
+  //     if (!id) return 'N/A'
+  //     // Split UUID into three parts for better readability
+  //     const parts = id.split('-')
+  //     const firstPart = parts.slice(0, 2).join('-') + '-'
+  //     const secondPart = parts.slice(2, 4).join('-') + '-'
+  //     const thirdPart = parts[4]
+  //     return (
+  //       <div className="text-sm block w-[140px]">
+  //         <div>{firstPart}</div>
+  //         <div>{secondPart}</div>
+  //         <div>{thirdPart}</div>
+  //       </div>
+  //     )
+  //   },
+  // },
   {
     id: 'evalueeName',
     header: ({ column }) => (
@@ -87,9 +87,9 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const firstName = row.original.firstName || ''
-      const middleName = row.original.middleName || ''
-      const lastName = row.original.lastName || ''
+      const firstName = row.original.first_name || ''
+      const middleName = row.original.middle_name || ''
+      const lastName = row.original.last_name || ''
       return [firstName, middleName, lastName].filter(Boolean).join(' ')
     },
   },
@@ -154,7 +154,7 @@ export const getDegreeEquivalencyColumns = (
     },
   },
   {
-    accessorKey: 'dueAmount',
+    accessorKey: 'due_amount',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -165,12 +165,12 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const amount = row.getValue('dueAmount')
+      const amount = row.getValue('due_amount')
       return amount !== null && amount !== undefined ? `$${Number(amount).toFixed(2)}` : 'N/A'
     },
   },
   {
-    accessorKey: 'paymentStatus',
+    accessorKey: 'payment_status',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -181,12 +181,12 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const status = row.getValue('paymentStatus') as string | undefined
+      const status = row.getValue('payment_status') as string | undefined
       return <span className="capitalize">{status || 'N/A'}</span>
     },
   },
   {
-    accessorKey: 'paidAt',
+    accessorKey: 'paid_at',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -197,7 +197,7 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const dateStr = row.getValue('paidAt') as string | undefined
+      const dateStr = row.getValue('paid_at') as string | undefined
       if (!dateStr) return 'N/A'
       const date = new Date(dateStr)
       const formattedDate = date
@@ -218,7 +218,7 @@ export const getDegreeEquivalencyColumns = (
     },
   },
   {
-    accessorKey: 'paymentId',
+    accessorKey: 'payment_id',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -229,7 +229,7 @@ export const getDegreeEquivalencyColumns = (
       </Button>
     ),
     cell: ({ row }) => {
-      const paymentId = row.getValue('paymentId') as string | undefined
+      const paymentId = row.getValue('payment_id') as string | undefined
       return paymentId ? (
         <Link
           href={`https://dashboard.stripe.com/payments/${paymentId}`}
