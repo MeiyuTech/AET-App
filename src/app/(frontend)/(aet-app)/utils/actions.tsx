@@ -493,3 +493,44 @@ export async function fetchAETCoreApplication(applicationId: string) {
 
   return { success: true, applicationData }
 }
+
+export async function fetchAETCoreApplicationsList() {
+  const client = await createClient()
+  // 1. Fetch applications
+  const { data: applications, error: appError } = await client
+    .from('aet_core_applications')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100)
+  if (appError || !applications) return { success: false, error: appError?.message || 'No data' }
+
+  const appIds = applications.map((a: any) => a.id)
+
+  // 2. Fetch educations
+  const { data: educations } = await client
+    .from('aet_core_educations')
+    .select('*')
+    .in('applicationId', appIds)
+
+  // 3. Fetch payments
+  const { data: payments } = await client
+    .from('aet_core_payments')
+    .select('*')
+    .in('applicationId', appIds)
+
+  // 4. Merge Data
+  const merged = applications.map((app: any) => {
+    const appEducations = educations?.filter((e: any) => e.applicationId === app.id) || []
+    const appPayments = payments?.filter((p: any) => p.applicationId === app.id) || []
+    const payment = appPayments[0] || {}
+    return {
+      ...app,
+      educations: appEducations,
+      dueAmount: payment.dueAmount ?? null,
+      paymentStatus: payment.paymentStatus ?? null,
+      paidAt: payment.paidAt ?? null,
+      paymentId: payment.paymentId ?? null,
+    }
+  })
+  return { success: true, applications: merged }
+}

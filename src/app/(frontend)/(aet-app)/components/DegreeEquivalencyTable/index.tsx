@@ -12,9 +12,7 @@ import {
 } from '@/components/ui/table'
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
 import { EducationDetailsDialog } from '../ApplicationsTable/EducationDetailsDialog'
-import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/client'
-
-const supabase = createClient()
+import { fetchAETCoreApplicationsList } from '@/app/(frontend)/(aet-app)/utils/actions'
 
 export default function DegreeEquivalencyTable() {
   const [data, setData] = useState<any[]>([])
@@ -30,46 +28,14 @@ export default function DegreeEquivalencyTable() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
-      // 1. 拉取 applications
-      const { data: applications, error: appError } = await supabase
-        .from('aet_core_applications')
-        .select('*')
-        .order('createdAt', { ascending: false })
-        .limit(100)
-      if (appError || !applications) {
-        setLoading(false)
+      console.log('fetchData')
+      const result = await fetchAETCoreApplicationsList()
+      console.log('result', result)
+      if (!result.success || !result.applications) {
         setData([])
-        return
+      } else {
+        setData(result.applications)
       }
-      const appIds = applications.map((a: any) => a.id)
-
-      // 2. 拉取 educations
-      const { data: educations } = await supabase
-        .from('aet_core_educations')
-        .select('*')
-        .in('applicationId', appIds)
-
-      // 3. 拉取 payments
-      const { data: payments } = await supabase
-        .from('aet_core_payments')
-        .select('*')
-        .in('applicationId', appIds)
-
-      // 4. 合并数据
-      const merged = applications.map((app: any) => {
-        const appEducations = educations?.filter((e: any) => e.applicationId === app.id) || []
-        const appPayments = payments?.filter((p: any) => p.applicationId === app.id) || []
-        const payment = appPayments[0] || {}
-        return {
-          ...app,
-          educations: appEducations,
-          dueAmount: payment.dueAmount ?? null,
-          paymentStatus: payment.paymentStatus ?? null,
-          paidAt: payment.paidAt ?? null,
-          paymentId: payment.paymentId ?? null,
-        }
-      })
-      setData(merged)
       setLoading(false)
     }
     fetchData()
