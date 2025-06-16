@@ -1,14 +1,24 @@
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Eye } from 'lucide-react'
+import { Eye, Edit } from 'lucide-react'
 import {
   getStatusColor,
   getPaymentStatusColor,
 } from '@/app/(frontend)/(aet-app)/utils/statusColors'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Textarea } from '@/components/ui/textarea'
 
 export const getDegreeEquivalencyColumns = (
-  onEducationClick: (educations: any[]) => void
+  onEducationClick: (educations: any[]) => void,
+  handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
     id: 'index',
@@ -136,13 +146,58 @@ export const getDegreeEquivalencyColumns = (
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
       >
-        Degree Equivalency
+        AI Output
       </Button>
     ),
     cell: ({ row }) => {
       // TODO: Handle multiple educations
-      const aiOutput = row.original.educations[0].ai_output
-      return <div className="max-w-[300px] truncate">{aiOutput}</div>
+      const education = row.original.educations[0]
+      if (!education) return 'N/A'
+
+      return (
+        <div className="flex items-center">
+          <div className="max-w-[300px] truncate mr-2" title={education.ai_output}>
+            {education.ai_output || 'N/A'}
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="default" className="hover:bg-gray-100 px-1">
+                <Edit className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[400px]">
+              <DropdownMenuLabel>Change AI Output</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="px-2 py-1.5">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    const form = e.target as HTMLFormElement
+                    const textarea = form.elements.namedItem('aiOutput') as HTMLTextAreaElement
+                    const newAiOutput = textarea.value.trim()
+
+                    if (newAiOutput) {
+                      handleAiOutputChange(row.original.id, education.id, newAiOutput)
+                    }
+                  }}
+                >
+                  <div className="flex flex-col gap-2">
+                    <Textarea
+                      name="aiOutput"
+                      defaultValue={education.ai_output || ''}
+                      placeholder="Enter new AI output"
+                      className="min-h-[100px] resize-none"
+                    />
+                    <Button type="submit" size="sm" className="self-end">
+                      Save
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
     },
   },
   {
