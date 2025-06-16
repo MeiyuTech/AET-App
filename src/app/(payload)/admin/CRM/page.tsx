@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 import ApplicationsTable from '@/app/(frontend)/(aet-app)/components/ApplicationsTable'
 import PaymentsTable from '@/app/(frontend)/(aet-app)/components/PaymentsTable'
+import DegreeEquivalencyTable from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyTable'
 
 export const metadata: Metadata = {
   title: 'AET Service Application ｜ AET CRM ｜ AET Admin',
@@ -83,12 +84,16 @@ export default async function CRMPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="applications">Applications</TabsTrigger>
           <TabsTrigger value="payments">Payment Links (Beta)</TabsTrigger>
+          <TabsTrigger value="degree-equivalency">Degree Equivalency (Beta)</TabsTrigger>
         </TabsList>
         <TabsContent value="applications">
           <ApplicationsTable dataFilter={dataFilter} />
         </TabsContent>
         <TabsContent value="payments">
           <PaymentsTable />
+        </TabsContent>
+        <TabsContent value="degree-equivalency">
+          <DegreeEquivalencyTable />
         </TabsContent>
       </Tabs>
     </div>
