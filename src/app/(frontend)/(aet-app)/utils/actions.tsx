@@ -518,6 +518,7 @@ export async function fetchAETCoreApplicationsList() {
     .from('aet_core_payments')
     .select('*')
     .in('application_id', appIds)
+  // console.log('fetchAETCoreApplicationsList payments', payments)
 
   // 4. Merge Data
   const merged = applications.map((app: any) => {
@@ -527,10 +528,10 @@ export async function fetchAETCoreApplicationsList() {
     return {
       ...app,
       educations: appEducations,
-      dueAmount: payment.dueAmount ?? null,
-      paymentStatus: payment.paymentStatus ?? null,
-      paidAt: payment.paidAt ?? null,
-      paymentId: payment.paymentId ?? null,
+      due_amount: payment.due_amount ?? null,
+      payment_status: payment.payment_status ?? null,
+      paid_at: payment.paid_at ?? null,
+      payment_id: payment.payment_id ?? null,
     }
   })
   return { success: true, applications: merged }
