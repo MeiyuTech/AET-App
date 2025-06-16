@@ -38,9 +38,9 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
   try {
     const client = await createClient()
 
-    console.log('Original form data:', formData)
+    // console.log('Original form data:', formData)
     const dbData = DegreeEquivalencyFormatUtils.toDatabase(formData, 3, 'submitted')
-    console.log('Converted Core Application database data:', dbData)
+    // console.log('Converted Core Application database data:', dbData)
 
     // Start database transaction
     const { data: databaseApplication, error: databaseApplicationError } = await client
@@ -58,9 +58,9 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
 
     // Insert education records
     const educationPromises = formData.educations?.map((education, idx) => {
-      console.log(`[Education Insert][${idx}] Original:`, education)
+      // console.log(`[Education Insert][${idx}] Original:`, education)
       const dbEducation = DegreeEquivalencyFormatUtils.toEducationDatabase(education)
-      console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
+      // console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
       return client
         .from('aet_core_educations')
         .insert({
@@ -69,7 +69,7 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
         })
         .then(
           (result) => {
-            console.log(`[Education Insert][${idx}] Insert result:`, result)
+            // console.log(`[Education Insert][${idx}] Insert result:`, result)
             return result
           },
           (err) => {
@@ -117,9 +117,9 @@ export async function submitAETApplication(formData: FormData) {
   try {
     const client = await createClient()
 
-    console.log('Original form data:', formData)
+    // console.log('Original form data:', formData)
     const dbData = formatUtils.toDatabase(formData, 3, 'submitted', new Date().toISOString())
-    console.log('Converted database data:', dbData)
+    // console.log('Converted database data:', dbData)
 
     // Start database transaction
     const { data: databaseApplication, error: databaseApplicationError } = await client
@@ -137,9 +137,9 @@ export async function submitAETApplication(formData: FormData) {
 
     // Insert education records
     const educationPromises = formData.educations?.map((education, idx) => {
-      console.log(`[Education Insert][${idx}] Original:`, education)
+      // console.log(`[Education Insert][${idx}] Original:`, education)
       const dbEducation = formatUtils.toEducationDatabase(education)
-      console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
+      // console.log(`[Education Insert][${idx}] To DB:`, dbEducation)
       return client
         .from('fce_educations')
         .insert({
@@ -148,7 +148,7 @@ export async function submitAETApplication(formData: FormData) {
         })
         .then(
           (result) => {
-            console.log(`[Education Insert][${idx}] Insert result:`, result)
+            // console.log(`[Education Insert][${idx}] Insert result:`, result)
             return result
           },
           (err) => {
@@ -162,7 +162,7 @@ export async function submitAETApplication(formData: FormData) {
       await Promise.all(educationPromises)
     }
 
-    console.log('Sending application confirmation email...')
+    // console.log('Sending application confirmation email...')
     const { success: emailSuccess, message: sendEmailMessage } =
       await sendApplicationConfirmationEmail(databaseApplication.id)
 
@@ -510,18 +510,19 @@ export async function fetchAETCoreApplicationsList() {
   const { data: educations } = await client
     .from('aet_core_educations')
     .select('*')
-    .in('applicationId', appIds)
+    .in('application_id', appIds)
+  // console.log('fetchAETCoreApplicationsList educations', educations)
 
   // 3. Fetch payments
   const { data: payments } = await client
     .from('aet_core_payments')
     .select('*')
-    .in('applicationId', appIds)
+    .in('application_id', appIds)
 
   // 4. Merge Data
   const merged = applications.map((app: any) => {
-    const appEducations = educations?.filter((e: any) => e.applicationId === app.id) || []
-    const appPayments = payments?.filter((p: any) => p.applicationId === app.id) || []
+    const appEducations = educations?.filter((e: any) => e.application_id === app.id) || []
+    const appPayments = payments?.filter((p: any) => p.application_id === app.id) || []
     const payment = appPayments[0] || {}
     return {
       ...app,
