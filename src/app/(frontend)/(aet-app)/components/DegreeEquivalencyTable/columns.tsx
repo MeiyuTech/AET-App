@@ -129,6 +129,23 @@ export const getDegreeEquivalencyColumns = (
     ),
   },
   {
+    id: 'ai_output',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Degree Equivalency
+      </Button>
+    ),
+    cell: ({ row }) => {
+      // TODO: Handle multiple educations
+      const aiOutput = row.original.educations[0].ai_output
+      return <div className="max-w-[300px] truncate">{aiOutput}</div>
+    },
+  },
+  {
     accessorKey: 'purpose',
     header: ({ column }) => (
       <Button
