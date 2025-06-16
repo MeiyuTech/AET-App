@@ -1,50 +1,91 @@
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Eye } from 'lucide-react'
 
-export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
+export const getDegreeEquivalencyColumns = (
+  onEducationClick: (educations: any[]) => void
+): ColumnDef<any>[] => [
+  {
+    id: 'index',
+    header: () => <div className="text-center">#</div>,
+    cell: ({ table, row }) => {
+      const rows = table.getRowModel().rows
+      const index = rows.findIndex((r) => r.id === row.id)
+      return index + 1
+    },
+  },
   {
     accessorKey: 'createdAt',
-    header: 'Created At',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Created At
+      </Button>
+    ),
     cell: ({ row }) => {
-      const raw = row.getValue('createdAt')
-      const date = raw ? new Date(raw as string) : null
-      return date ? (
-        <div>
-          {date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-          <br />
-          <span className="text-gray-500 text-xs">
-            {date.toLocaleTimeString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false,
-            })}
-          </span>
+      const dateStr = row.getValue('createdAt') as string | undefined
+      if (!dateStr) return 'N/A'
+      const date = new Date(dateStr)
+      const formattedDate = date
+        .toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">{formattedDate}</div>
+          <div className="text-gray-600">{formattedTime}</div>
         </div>
-      ) : (
-        'N/A'
       )
     },
   },
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        ID
+      </Button>
+    ),
     cell: ({ row }) => {
       const id = row.getValue('id') as string | undefined
       if (!id) return 'N/A'
+      // Split UUID into three parts for better readability
       const parts = id.split('-')
+      const firstPart = parts.slice(0, 2).join('-') + '-'
+      const secondPart = parts.slice(2, 4).join('-') + '-'
+      const thirdPart = parts[4]
       return (
-        <div className="text-xs">
-          <div>{parts.slice(0, 2).join('-')}</div>
-          <div>{parts.slice(2, 4).join('-')}</div>
-          <div>{parts[4]}</div>
+        <div className="text-sm block w-[140px]">
+          <div>{firstPart}</div>
+          <div>{secondPart}</div>
+          <div>{thirdPart}</div>
         </div>
       )
     },
   },
   {
     id: 'evalueeName',
-    header: 'Evaluee Name',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Evaluee Name
+      </Button>
+    ),
     cell: ({ row }) => {
       const firstName = row.original.firstName || ''
       const middleName = row.original.middleName || ''
@@ -52,19 +93,57 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
       return [firstName, middleName, lastName].filter(Boolean).join(' ')
     },
   },
+  // {
+  //   accessorKey: 'email',
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //       className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+  //     >
+  //       Email
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => (row.getValue('email') as string) || 'N/A',
+  // },
   {
-    accessorKey: 'email',
-    header: 'Email',
-    cell: ({ row }) => (row.getValue('email') as string) || 'N/A',
+    id: 'educations',
+    header: () => <div className="text-center">Educations</div>,
+    cell: ({ row }: any) => (
+      <Button
+        variant="ghost"
+        size="default"
+        onClick={() => onEducationClick(row.original.educations)}
+        disabled={!row.original.educations || row.original.educations.length === 0}
+      >
+        <Eye className="h-5 w-5" />
+      </Button>
+    ),
   },
   {
     accessorKey: 'purpose',
-    header: 'Purpose',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Purpose
+      </Button>
+    ),
     cell: ({ row }) => (row.getValue('purpose') as string) || 'N/A',
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Status
+      </Button>
+    ),
     cell: ({ row }) => {
       const status = row.getValue('status') as string | undefined
       return <span className="capitalize">{status || 'N/A'}</span>
@@ -72,7 +151,15 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
   },
   {
     accessorKey: 'dueAmount',
-    header: 'Due Amount',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Due Amount
+      </Button>
+    ),
     cell: ({ row }) => {
       const amount = row.getValue('dueAmount')
       return amount !== null && amount !== undefined ? `$${Number(amount).toFixed(2)}` : 'N/A'
@@ -80,7 +167,15 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
   },
   {
     accessorKey: 'paymentStatus',
-    header: 'Payment Status',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Payment Status
+      </Button>
+    ),
     cell: ({ row }) => {
       const status = row.getValue('paymentStatus') as string | undefined
       return <span className="capitalize">{status || 'N/A'}</span>
@@ -88,17 +183,47 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
   },
   {
     accessorKey: 'paidAt',
-    header: 'Paid At',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Paid At
+      </Button>
+    ),
     cell: ({ row }) => {
-      const raw = row.getValue('paidAt')
-      if (!raw) return 'N/A'
-      const date = new Date(raw as string)
-      return !isNaN(date.getTime()) ? date.toLocaleString() : 'N/A'
+      const dateStr = row.getValue('paidAt') as string | undefined
+      if (!dateStr) return 'N/A'
+      const date = new Date(dateStr)
+      const formattedDate = date
+        .toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+        .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
+      const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      return (
+        <div className="space-y-1">
+          <div className="font-medium">{formattedDate}</div>
+          <div className="text-gray-600">{formattedTime}</div>
+        </div>
+      )
     },
   },
   {
     accessorKey: 'paymentId',
-    header: 'Payment ID',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Payment ID
+      </Button>
+    ),
     cell: ({ row }) => {
       const paymentId = row.getValue('paymentId') as string | undefined
       return paymentId ? (
@@ -116,7 +241,15 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
   },
   {
     accessorKey: 'source',
-    header: 'Source',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Source
+      </Button>
+    ),
     cell: ({ row }) => {
       const source = row.getValue('source') as string | undefined
       return <span className="capitalize">{source || 'N/A'}</span>

@@ -88,26 +88,7 @@ export default function DegreeEquivalencyTable() {
     setEducationDialogOpen(true)
   }
 
-  const columns = useMemo(() => {
-    const base = getDegreeEquivalencyColumns()
-    return [
-      ...base,
-      {
-        id: 'educations',
-        header: 'Educations',
-        cell: ({ row }: any) => (
-          <Button
-            variant="ghost"
-            size="default"
-            onClick={() => handleOpenEducationDialog(row.original.educations)}
-            disabled={!row.original.educations || row.original.educations.length === 0}
-          >
-            <Eye className="h-5 w-5" />
-          </Button>
-        ),
-      },
-    ]
-  }, [])
+  const columns = useMemo(() => getDegreeEquivalencyColumns(handleOpenEducationDialog), [])
 
   const table = useReactTable({
     data: mockData,
