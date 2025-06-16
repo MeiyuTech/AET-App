@@ -108,7 +108,11 @@ export const getDegreeEquivalencyColumns = (
   // },
   {
     id: 'educations',
-    header: () => <div className="text-center">Educations</div>,
+    header: () => (
+      <div className="text-lg font-semibold hover:bg-gray-100 w-full justify-center">
+        Educations
+      </div>
+    ),
     cell: ({ row }: any) => (
       <Button
         variant="ghost"

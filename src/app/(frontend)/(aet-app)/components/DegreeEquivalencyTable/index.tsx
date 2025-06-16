@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import { getDegreeEquivalencyColumns } from './columns'
 import {
   Table,
@@ -10,91 +10,82 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Eye } from 'lucide-react'
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
 import { EducationDetailsDialog } from '../ApplicationsTable/EducationDetailsDialog'
+import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/client'
 
-// mock data
-const mockData = [
-  {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    createdAt: '2024-06-16T10:00:00Z',
-    firstName: 'Alice',
-    middleName: 'B.',
-    lastName: 'Smith',
-    email: 'alice@example.com',
-    countryOfStudy: 'US',
-    schoolName: 'MIT',
-    degreeObtained: 'Bachelor',
-    studyStartDate: '2018-09-01',
-    studyEndDate: '2022-06-01',
-    purpose: 'education',
-    status: 'completed',
-    dueAmount: 200,
-    paymentStatus: 'paid',
-    paidAt: '2024-06-17T12:00:00Z',
-    paymentId: 'pi_3Nw1e2eW8',
-    source: 'internal',
-    educations: [
-      {
-        id: 'edu1',
-        school_name: 'MIT',
-        country_of_study: 'US',
-        degree_obtained: 'Bachelor',
-        study_start_date: { month: 9, year: 2018 },
-        study_end_date: { month: 6, year: 2022 },
-      },
-    ],
-  },
-  {
-    id: '223e4567-e89b-12d3-a456-426614174001',
-    createdAt: '2024-06-15T09:00:00Z',
-    firstName: 'Bob',
-    middleName: '',
-    lastName: 'Lee',
-    email: 'bob@example.com',
-    countryOfStudy: 'CN',
-    schoolName: 'Tsinghua University',
-    degreeObtained: 'Master',
-    studyStartDate: '2016-09-01',
-    studyEndDate: '2019-06-01',
-    purpose: 'employment',
-    status: 'processing',
-    dueAmount: 300,
-    paymentStatus: 'pending',
-    paidAt: null,
-    paymentId: null,
-    source: 'external',
-    educations: [
-      {
-        id: 'edu2',
-        school_name: 'Tsinghua University',
-        country_of_study: 'CN',
-        degree_obtained: 'Master',
-        study_start_date: { month: 9, year: 2016 },
-        study_end_date: { month: 6, year: 2019 },
-      },
-    ],
-  },
-]
+const supabase = createClient()
 
 export default function DegreeEquivalencyTable() {
+  const [data, setData] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [educationDialogOpen, setEducationDialogOpen] = useState(false)
   const [selectedEducations, setSelectedEducations] = useState<any[]>([])
 
-  const handleOpenEducationDialog = (educations: any[]) => {
+  const handleOpenEducationDialog = useCallback((educations: any[]) => {
     setSelectedEducations(educations)
     setEducationDialogOpen(true)
-  }
+  }, [])
 
-  const columns = useMemo(() => getDegreeEquivalencyColumns(handleOpenEducationDialog), [])
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true)
+      // 1. 拉取 applications
+      const { data: applications, error: appError } = await supabase
+        .from('aet_core_applications')
+        .select('*')
+        .order('createdAt', { ascending: false })
+        .limit(100)
+      if (appError || !applications) {
+        setLoading(false)
+        setData([])
+        return
+      }
+      const appIds = applications.map((a: any) => a.id)
 
+      // 2. 拉取 educations
+      const { data: educations } = await supabase
+        .from('aet_core_educations')
+        .select('*')
+        .in('applicationId', appIds)
+
+      // 3. 拉取 payments
+      const { data: payments } = await supabase
+        .from('aet_core_payments')
+        .select('*')
+        .in('applicationId', appIds)
+
+      // 4. 合并数据
+      const merged = applications.map((app: any) => {
+        const appEducations = educations?.filter((e: any) => e.applicationId === app.id) || []
+        const appPayments = payments?.filter((p: any) => p.applicationId === app.id) || []
+        const payment = appPayments[0] || {}
+        return {
+          ...app,
+          educations: appEducations,
+          dueAmount: payment.dueAmount ?? null,
+          paymentStatus: payment.paymentStatus ?? null,
+          paidAt: payment.paidAt ?? null,
+          paymentId: payment.paymentId ?? null,
+        }
+      })
+      setData(merged)
+      setLoading(false)
+    }
+    fetchData()
+  }, [])
+
+  const columns = useMemo(
+    () => getDegreeEquivalencyColumns(handleOpenEducationDialog),
+    [handleOpenEducationDialog]
+  )
   const table = useReactTable({
-    data: mockData,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  if (loading) return <div className="p-4">Loading...</div>
 
   return (
     <div className="p-4">
