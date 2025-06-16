@@ -58,41 +58,6 @@ export const getDegreeEquivalencyColumns = (): ColumnDef<any>[] => [
     cell: ({ row }) => (row.getValue('email') as string) || 'N/A',
   },
   {
-    accessorKey: 'countryOfStudy',
-    header: 'Country of Study',
-    cell: ({ row }) => (row.getValue('countryOfStudy') as string) || 'N/A',
-  },
-  {
-    accessorKey: 'schoolName',
-    header: 'School Name',
-    cell: ({ row }) => (row.getValue('schoolName') as string) || 'N/A',
-  },
-  {
-    accessorKey: 'degreeObtained',
-    header: 'Degree Obtained',
-    cell: ({ row }) => (row.getValue('degreeObtained') as string) || 'N/A',
-  },
-  {
-    accessorKey: 'studyStartDate',
-    header: 'Start Date',
-    cell: ({ row }) => {
-      const raw = row.getValue('studyStartDate')
-      if (!raw) return 'N/A'
-      const date = new Date(raw as string)
-      return !isNaN(date.getTime()) ? date.toISOString().split('T')[0] : 'N/A'
-    },
-  },
-  {
-    accessorKey: 'studyEndDate',
-    header: 'End Date',
-    cell: ({ row }) => {
-      const raw = row.getValue('studyEndDate')
-      if (!raw) return 'N/A'
-      const date = new Date(raw as string)
-      return !isNaN(date.getTime()) ? date.toISOString().split('T')[0] : 'N/A'
-    },
-  },
-  {
     accessorKey: 'purpose',
     header: 'Purpose',
     cell: ({ row }) => (row.getValue('purpose') as string) || 'N/A',

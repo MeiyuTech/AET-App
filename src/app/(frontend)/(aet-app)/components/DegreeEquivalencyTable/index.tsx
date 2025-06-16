@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { getDegreeEquivalencyColumns } from './columns'
 import {
   Table,
@@ -10,7 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Eye } from 'lucide-react'
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
+import { EducationDetailsDialog } from '../ApplicationsTable/EducationDetailsDialog'
 
 // mock data
 const mockData = [
@@ -21,7 +24,7 @@ const mockData = [
     middleName: 'B.',
     lastName: 'Smith',
     email: 'alice@example.com',
-    countryOfStudy: 'USA',
+    countryOfStudy: 'US',
     schoolName: 'MIT',
     degreeObtained: 'Bachelor',
     studyStartDate: '2018-09-01',
@@ -33,6 +36,16 @@ const mockData = [
     paidAt: '2024-06-17T12:00:00Z',
     paymentId: 'pi_3Nw1e2eW8',
     source: 'internal',
+    educations: [
+      {
+        id: 'edu1',
+        school_name: 'MIT',
+        country_of_study: 'US',
+        degree_obtained: 'Bachelor',
+        study_start_date: { month: 9, year: 2018 },
+        study_end_date: { month: 6, year: 2022 },
+      },
+    ],
   },
   {
     id: '223e4567-e89b-12d3-a456-426614174001',
@@ -41,7 +54,7 @@ const mockData = [
     middleName: '',
     lastName: 'Lee',
     email: 'bob@example.com',
-    countryOfStudy: 'China',
+    countryOfStudy: 'CN',
     schoolName: 'Tsinghua University',
     degreeObtained: 'Master',
     studyStartDate: '2016-09-01',
@@ -53,11 +66,49 @@ const mockData = [
     paidAt: null,
     paymentId: null,
     source: 'external',
+    educations: [
+      {
+        id: 'edu2',
+        school_name: 'Tsinghua University',
+        country_of_study: 'CN',
+        degree_obtained: 'Master',
+        study_start_date: { month: 9, year: 2016 },
+        study_end_date: { month: 6, year: 2019 },
+      },
+    ],
   },
 ]
 
 export default function DegreeEquivalencyTable() {
-  const columns = useMemo(() => getDegreeEquivalencyColumns(), [])
+  const [educationDialogOpen, setEducationDialogOpen] = useState(false)
+  const [selectedEducations, setSelectedEducations] = useState<any[]>([])
+
+  const handleOpenEducationDialog = (educations: any[]) => {
+    setSelectedEducations(educations)
+    setEducationDialogOpen(true)
+  }
+
+  const columns = useMemo(() => {
+    const base = getDegreeEquivalencyColumns()
+    return [
+      ...base,
+      {
+        id: 'educations',
+        header: 'Educations',
+        cell: ({ row }: any) => (
+          <Button
+            variant="ghost"
+            size="default"
+            onClick={() => handleOpenEducationDialog(row.original.educations)}
+            disabled={!row.original.educations || row.original.educations.length === 0}
+          >
+            <Eye className="h-5 w-5" />
+          </Button>
+        ),
+      },
+    ]
+  }, [])
+
   const table = useReactTable({
     data: mockData,
     columns,
@@ -100,6 +151,11 @@ export default function DegreeEquivalencyTable() {
           )}
         </TableBody>
       </Table>
+      <EducationDetailsDialog
+        open={educationDialogOpen}
+        onOpenChange={setEducationDialogOpen}
+        educations={selectedEducations}
+      />
     </div>
   )
 }
