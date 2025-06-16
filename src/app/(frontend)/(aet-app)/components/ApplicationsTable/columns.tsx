@@ -874,7 +874,7 @@ export const getColumns = ({
     filterFn: (row, columnId, filterValue) => {
       const paymentStatus = row.getValue(columnId) as string
 
-      // 用户看到的显示方式 (首字母大写)
+      // Capitalize the first letter of the payment status
       const displayStatus = paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)
 
       return (
