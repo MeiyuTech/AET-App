@@ -18,7 +18,8 @@ import { Textarea } from '@/components/ui/textarea'
 
 export const getDegreeEquivalencyColumns = (
   onEducationClick: (educations: any[]) => void,
-  handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>
+  handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>,
+  handleStatusChange: (id: string, status: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
     id: 'index',
@@ -226,11 +227,59 @@ export const getDegreeEquivalencyColumns = (
     ),
     cell: ({ row }) => {
       const status = row.getValue('status') as string
+      const paymentStatus = row.getValue('payment_status') as string
+
+      // Determine which status changes are allowed
+      const canComplete = status === 'processing' && paymentStatus === 'paid'
+      const canCancel =
+        (status === 'processing' && paymentStatus !== 'paid') || status === 'submitted'
+      const canProcess = status === 'submitted' && paymentStatus === 'paid'
+      const isEditable = canComplete || canCancel || canProcess
+
       return (
         <div className="flex items-center">
           <div className={`capitalize font-medium mr-2 text-base ${getStatusColor(status)}`}>
             {status}
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100 px-1"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
+              </Button>
+            </DropdownMenuTrigger>
+            {isEditable && (
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {canComplete && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'completed')}
+                  >
+                    Mark as Completed
+                  </DropdownMenuItem>
+                )}
+                {canProcess && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'processing')}
+                  >
+                    Mark as Processing
+                  </DropdownMenuItem>
+                )}
+                {canCancel && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'cancelled')}
+                  >
+                    Cancel Application
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            )}
+          </DropdownMenu>
         </div>
       )
     },
