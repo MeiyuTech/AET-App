@@ -4,6 +4,7 @@ import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { DegreeEquivalencyTable } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/degree-equivalency-table'
+import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
 
 interface PageProps {
   searchParams: Promise<{
@@ -13,6 +14,37 @@ interface PageProps {
 
 export default async function DegreeEquivalencySuccessPage({ searchParams }: PageProps) {
   const { applicationId } = await searchParams
+
+  if (!applicationId) {
+    return null
+  }
+
+  const supabase = await createClient()
+
+  const { data: application, error: applicationError } = await supabase
+    .from('aet_core_applications')
+    .select('*')
+    .eq('id', applicationId)
+    .single()
+
+  const { data: education, error: educationError } = await supabase
+    .from('aet_core_educations')
+    .select('*')
+    .eq('application_id', applicationId)
+    .single()
+
+  // Check payment status
+  const { data: payment } = await supabase
+    .from('aet_core_payments')
+    .select('payment_status')
+    .eq('application_id', applicationId)
+    .single()
+
+  const isPaid = payment?.payment_status === 'paid'
+
+  if (applicationError || educationError || !application || !education) {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-8 px-2">
@@ -64,7 +96,7 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       </div>
 
       {/* Degree Equivalency Information Table */}
-      <DegreeEquivalencyTable applicationId={applicationId} />
+      <DegreeEquivalencyTable application={application} education={education} isPaid={isPaid} />
 
       {/* Note */}
       <div className="w-full max-w-3xl mb-6">
