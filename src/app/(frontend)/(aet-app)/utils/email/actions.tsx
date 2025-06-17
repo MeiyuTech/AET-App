@@ -327,9 +327,10 @@ export async function sendDegreeEquivalencyConfirmationEmail(
     await getDegreeEquivalencyConfirmationEmailHTML(education)
 
   try {
+    const ccAddresses = ['ca@aet21.com', 'ca2@aet21.com', 'info@americantranslationservice.com']
     const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
       to: email,
-      cc: process.env.RESEND_DEFAULT_CC_ADDRESS!,
+      cc: ccAddresses,
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
       subject: 'AET Degree Equivalency Confirmation',
       html: degreeEquivalencyConfirmationEmailHTML,

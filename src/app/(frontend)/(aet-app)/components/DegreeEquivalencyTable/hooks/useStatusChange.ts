@@ -1,6 +1,7 @@
 import { toast } from '@/hooks/use-toast'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/client'
 import { DatabaseCoreApplication } from '../../DegreeEquivalencyForm/types'
+import { sendDegreeEquivalencyConfirmationEmail } from '@/app/(frontend)/(aet-app)/utils/email/actions'
 
 interface StatusChangeHookProps {
   applications: DatabaseCoreApplication[]
@@ -48,8 +49,9 @@ export const useStatusChange = ({
         !(currentStatus === 'processing' && paymentStatus === 'paid')
       ) {
         toast({
-          title: '操作不允许',
-          description: '只有状态为"处理中"且支付状态为"已支付"的申请才能被标记为完成。',
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Processing" and payment status "Paid" can be marked as completed.',
           variant: 'destructive',
         })
         return
@@ -63,8 +65,9 @@ export const useStatusChange = ({
         )
       ) {
         toast({
-          title: '操作不允许',
-          description: '只有状态为"已提交"或"处理中"（未支付）的申请才能被取消。',
+          title: 'Operation not allowed',
+          description:
+            'Only applications with status "Submitted" or "Processing" (not paid) can be cancelled.',
           variant: 'destructive',
         })
         return
@@ -111,6 +114,16 @@ export const useStatusChange = ({
 
       const { id, status } = pendingStatusChange
 
+      // Get the application data before updating
+      const { data: applicationData, error: fetchError } = await supabase
+        .from('aet_core_applications')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+
+      // Update application status
       const { error } = await supabase.from('aet_core_applications').update({ status }).eq('id', id)
 
       if (error) throw error
@@ -126,6 +139,80 @@ export const useStatusChange = ({
             : app
         )
       )
+
+      // console.log('useStatusChange.tsx Send confirmation email')
+      // console.log('Status changed to:', status)
+      // console.log('Application data:', applicationData)
+
+      // If status is changed to completed, send confirmation email
+      if (status === 'completed' && applicationData) {
+        try {
+          // Get education data for email
+          const { data: educationData, error: educationError } = await supabase
+            .from('aet_core_educations')
+            .select('*')
+            .eq('application_id', id)
+            .single()
+
+          if (educationError) {
+            console.error('Error fetching education data:', {
+              error: educationError,
+              applicationId: id,
+            })
+            throw educationError
+          }
+
+          // Send confirmation email
+          // console.log('Sending degree equivalency confirmation email:', {
+          //   email: applicationData.email,
+          //   countryOfStudy: educationData.country_of_study,
+          //   degreeObtained: educationData.degree_obtained,
+          //   schoolName: educationData.school_name,
+          //   studyStartDate: educationData.study_start_date,
+          //   studyEndDate: educationData.study_end_date,
+          //   aiOutput: educationData.ai_output,
+          // })
+
+          const { success, message } = await sendDegreeEquivalencyConfirmationEmail(
+            applicationData.email,
+            {
+              countryOfStudy: educationData.country_of_study,
+              degreeObtained: educationData.degree_obtained,
+              schoolName: educationData.school_name,
+              studyStartDate: educationData.study_start_date,
+              studyEndDate: educationData.study_end_date,
+              aiOutput: educationData.ai_output,
+            }
+          )
+
+          if (!success) {
+            console.error('Error sending degree equivalency confirmation email:', {
+              message,
+              applicationId: id,
+              email: applicationData.email,
+            })
+            throw new Error(message)
+          }
+
+          // console.log('Successfully sent degree equivalency confirmation email:', {
+          //   applicationId: id,
+          //   email: applicationData.email,
+          // })
+        } catch (emailError) {
+          console.error('Error in email sending process:', {
+            error: emailError,
+            applicationId: id,
+            email: applicationData.email,
+          })
+          // Don't throw the error here, as the status change was successful
+          // Just show a warning toast
+          toast({
+            title: 'Warning',
+            description: 'Status was updated but failed to send confirmation email.',
+            variant: 'destructive',
+          })
+        }
+      }
 
       toast({
         title: 'Status updated',

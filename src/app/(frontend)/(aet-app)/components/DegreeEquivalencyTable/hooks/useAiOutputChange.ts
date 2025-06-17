@@ -26,6 +26,24 @@ export const useAiOutputChange = ({
    */
   const handleAiOutputChange = async (id: string, educationId: string, newAiOutput: string) => {
     try {
+      // Check if the application is completed
+      const { data: application, error: fetchError } = await supabase
+        .from('aet_core_applications')
+        .select('status')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+
+      if (application?.status === 'completed') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Cannot modify AI output for completed applications.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       // Open confirmation dialog
       setPendingAiOutputChange({
         id,
@@ -51,7 +69,25 @@ export const useAiOutputChange = ({
     try {
       if (!pendingAiOutputChange) return
 
-      const { educationId, aiOutput } = pendingAiOutputChange
+      const { id, educationId, aiOutput } = pendingAiOutputChange
+
+      // Double check if the application is completed
+      const { data: application, error: fetchError } = await supabase
+        .from('aet_core_applications')
+        .select('status')
+        .eq('id', id)
+        .single()
+
+      if (fetchError) throw fetchError
+
+      if (application?.status === 'completed') {
+        toast({
+          title: 'Operation not allowed',
+          description: 'Cannot modify AI output for completed applications.',
+          variant: 'destructive',
+        })
+        return
+      }
 
       const { error } = await supabase
         .from('aet_core_educations')

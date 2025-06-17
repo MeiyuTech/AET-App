@@ -155,6 +155,9 @@ export const getDegreeEquivalencyColumns = (
       const education = row.original.educations[0]
       if (!education) return 'N/A'
 
+      const status = row.getValue('status') as string
+      const isEditable = status !== 'completed'
+
       return (
         <div className="flex items-center">
           <div className="max-w-[300px] truncate mr-2" title={education.ai_output}>
@@ -162,40 +165,47 @@ export const getDegreeEquivalencyColumns = (
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="default" className="hover:bg-gray-100 px-1">
-                <Edit className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100 px-1"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[400px]">
-              <DropdownMenuLabel>Change AI Output</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="px-2 py-1.5">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    const form = e.target as HTMLFormElement
-                    const textarea = form.elements.namedItem('aiOutput') as HTMLTextAreaElement
-                    const newAiOutput = textarea.value.trim()
+            {isEditable && (
+              <DropdownMenuContent className="w-[400px]">
+                <DropdownMenuLabel>Change AI Output</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      const form = e.target as HTMLFormElement
+                      const textarea = form.elements.namedItem('aiOutput') as HTMLTextAreaElement
+                      const newAiOutput = textarea.value.trim()
 
-                    if (newAiOutput) {
-                      handleAiOutputChange(row.original.id, education.id, newAiOutput)
-                    }
-                  }}
-                >
-                  <div className="flex flex-col gap-2">
-                    <Textarea
-                      name="aiOutput"
-                      defaultValue={education.ai_output || ''}
-                      placeholder="Enter new AI output"
-                      className="min-h-[100px] resize-none"
-                    />
-                    <Button type="submit" size="sm" className="self-end">
-                      Save
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </DropdownMenuContent>
+                      if (newAiOutput) {
+                        handleAiOutputChange(row.original.id, education.id, newAiOutput)
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <Textarea
+                        name="aiOutput"
+                        defaultValue={education.ai_output || ''}
+                        placeholder="Enter new AI output"
+                        className="min-h-[100px] resize-none"
+                      />
+                      <Button type="submit" size="sm" className="self-end">
+                        Save
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </DropdownMenuContent>
+            )}
           </DropdownMenu>
         </div>
       )
