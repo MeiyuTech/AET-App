@@ -18,7 +18,8 @@ import { Textarea } from '@/components/ui/textarea'
 
 export const getDegreeEquivalencyColumns = (
   onEducationClick: (educations: any[]) => void,
-  handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>
+  handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>,
+  handleStatusChange: (id: string, status: string) => Promise<void>
 ): ColumnDef<any>[] => [
   {
     id: 'index',
@@ -154,6 +155,9 @@ export const getDegreeEquivalencyColumns = (
       const education = row.original.educations[0]
       if (!education) return 'N/A'
 
+      const status = row.getValue('status') as string
+      const isEditable = status !== 'completed'
+
       return (
         <div className="flex items-center">
           <div className="max-w-[300px] truncate mr-2" title={education.ai_output}>
@@ -161,40 +165,47 @@ export const getDegreeEquivalencyColumns = (
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="default" className="hover:bg-gray-100 px-1">
-                <Edit className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100 px-1"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[400px]">
-              <DropdownMenuLabel>Change AI Output</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="px-2 py-1.5">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    const form = e.target as HTMLFormElement
-                    const textarea = form.elements.namedItem('aiOutput') as HTMLTextAreaElement
-                    const newAiOutput = textarea.value.trim()
+            {isEditable && (
+              <DropdownMenuContent className="w-[400px]">
+                <DropdownMenuLabel>Change AI Output</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      const form = e.target as HTMLFormElement
+                      const textarea = form.elements.namedItem('aiOutput') as HTMLTextAreaElement
+                      const newAiOutput = textarea.value.trim()
 
-                    if (newAiOutput) {
-                      handleAiOutputChange(row.original.id, education.id, newAiOutput)
-                    }
-                  }}
-                >
-                  <div className="flex flex-col gap-2">
-                    <Textarea
-                      name="aiOutput"
-                      defaultValue={education.ai_output || ''}
-                      placeholder="Enter new AI output"
-                      className="min-h-[100px] resize-none"
-                    />
-                    <Button type="submit" size="sm" className="self-end">
-                      Save
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </DropdownMenuContent>
+                      if (newAiOutput) {
+                        handleAiOutputChange(row.original.id, education.id, newAiOutput)
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <Textarea
+                        name="aiOutput"
+                        defaultValue={education.ai_output || ''}
+                        placeholder="Enter new AI output"
+                        className="min-h-[100px] resize-none"
+                      />
+                      <Button type="submit" size="sm" className="self-end">
+                        Save
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </DropdownMenuContent>
+            )}
           </DropdownMenu>
         </div>
       )
@@ -226,11 +237,59 @@ export const getDegreeEquivalencyColumns = (
     ),
     cell: ({ row }) => {
       const status = row.getValue('status') as string
+      const paymentStatus = row.getValue('payment_status') as string
+
+      // Determine which status changes are allowed
+      const canComplete = status === 'processing' && paymentStatus === 'paid'
+      const canCancel =
+        (status === 'processing' && paymentStatus !== 'paid') || status === 'submitted'
+      const canProcess = status === 'submitted' && paymentStatus === 'paid'
+      const isEditable = canComplete || canCancel || canProcess
+
       return (
         <div className="flex items-center">
           <div className={`capitalize font-medium mr-2 text-base ${getStatusColor(status)}`}>
             {status}
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="default"
+                className="hover:bg-gray-100 px-1"
+                disabled={!isEditable}
+              >
+                <Edit className={`h-5 w-5 ${!isEditable ? 'opacity-50' : ''}`} />
+              </Button>
+            </DropdownMenuTrigger>
+            {isEditable && (
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {canComplete && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'completed')}
+                  >
+                    Mark as Completed
+                  </DropdownMenuItem>
+                )}
+                {canProcess && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'processing')}
+                  >
+                    Mark as Processing
+                  </DropdownMenuItem>
+                )}
+                {canCancel && (
+                  <DropdownMenuItem
+                    onClick={() => handleStatusChange(row.original.id, 'cancelled')}
+                  >
+                    Cancel Application
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            )}
+          </DropdownMenu>
         </div>
       )
     },

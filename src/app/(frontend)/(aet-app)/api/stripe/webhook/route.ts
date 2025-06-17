@@ -291,66 +291,6 @@ export async function POST(req: Request) {
               )
             }
 
-            // Get education data for email
-            const { data: educationData, error: educationError } = await client
-              .from('aet_core_educations')
-              .select('*')
-              .eq('application_id', applicationId)
-              .single()
-
-            if (educationError) {
-              console.error('❌ Error fetching education data:', {
-                error: educationError,
-                applicationId,
-              })
-              return new NextResponse(`Error fetching education data: ${educationError.message}`, {
-                status: 500,
-              })
-            }
-
-            // Send confirmation email
-            try {
-              console.log('Sending degree equivalency confirmation email:', {
-                email: applicationData.email,
-                countryOfStudy: educationData.country_of_study,
-                degreeObtained: educationData.degree_obtained,
-                schoolName: educationData.school_name,
-                studyStartDate: educationData.study_start_date,
-                studyEndDate: educationData.study_end_date,
-                aiOutput: educationData.ai_output,
-              })
-              const { success, message } = await sendDegreeEquivalencyConfirmationEmail(
-                applicationData.email,
-                {
-                  countryOfStudy: educationData.country_of_study,
-                  degreeObtained: educationData.degree_obtained,
-                  schoolName: educationData.school_name,
-                  studyStartDate: educationData.study_start_date,
-                  studyEndDate: educationData.study_end_date,
-                  aiOutput: educationData.ai_output,
-                }
-              )
-
-              if (!success) {
-                console.error('❌ Error sending degree equivalency confirmation email:', {
-                  message,
-                  applicationId,
-                  email: applicationData.email,
-                })
-              } else {
-                console.log('✅ Successfully sent degree equivalency confirmation email:', {
-                  applicationId,
-                  email: applicationData.email,
-                })
-              }
-            } catch (emailError) {
-              console.error('❌ Error in email sending process:', {
-                error: emailError,
-                applicationId,
-                email: applicationData.email,
-              })
-            }
-
             return new NextResponse('Webhook processed - Degree Equivalency payment completed', {
               status: 200,
             })
