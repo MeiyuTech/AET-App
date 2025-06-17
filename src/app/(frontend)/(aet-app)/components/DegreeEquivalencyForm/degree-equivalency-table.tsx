@@ -99,7 +99,9 @@ export async function DegreeEquivalencyTable({ applicationId }: DegreeEquivalenc
                     <DegreeEquivalencyAI
                       education={education}
                       ocrText={ocrText}
-                      showResult={isPaid}
+                      // After payment, we will send email manually.
+                      // Results will be sent to the email address provided by the user.
+                      showResult={false}
                     />
                   </div>
                 </td>

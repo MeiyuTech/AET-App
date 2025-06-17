@@ -41,7 +41,20 @@ export const useStatusChange = ({
       }
 
       const currentStatus = application.status
-      const paymentStatus = application.payment_status
+
+      // Get payment status from aet_core_payments table
+      const { data: paymentData, error: paymentError } = await supabase
+        .from('aet_core_payments')
+        .select('payment_status')
+        .eq('application_id', id)
+        .single()
+
+      if (paymentError) {
+        console.error('Error fetching payment status:', paymentError)
+        throw new Error('Failed to fetch payment status')
+      }
+
+      const paymentStatus = paymentData?.payment_status || 'unpaid'
 
       // Validate status change based on the rules
       if (

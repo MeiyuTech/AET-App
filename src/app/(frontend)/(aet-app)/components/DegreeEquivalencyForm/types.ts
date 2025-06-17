@@ -82,7 +82,6 @@ export interface CoreApplicationData extends Partial<FormData> {
 export interface DatabaseCoreApplication {
   id: string
   status: 'draft' | 'submitted' | 'processing' | 'completed' | 'cancelled'
-  payment_status: 'pending' | 'paid' | 'expired' | 'refunded'
 
   // Client Information
   // country: string

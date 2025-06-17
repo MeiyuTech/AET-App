@@ -63,7 +63,6 @@ export const dateUtils = {
  * @param paidAt - The date and time the application was paid (new Date().toISOString())
  * @returns The estimated completion date (YYYY-MM-DD, EST/EDT)
  */
-
 export const formatUtils = {
   /* Convert frontend form data to database format
    * When fullfilling the form, the status is always 'draft' or 'submitted'
@@ -76,7 +75,6 @@ export const formatUtils = {
   ): Omit<DatabaseCoreApplication, 'id' | 'created_at' | 'updated_at'> {
     return {
       status,
-      payment_status: 'pending',
       // Client Information
       email: formData.email!,
       purpose: formData.purpose!,

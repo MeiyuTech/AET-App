@@ -171,7 +171,10 @@ export function DegreeEquivalencyAI({
           )}
         </>
       ) : (
-        <div className="text-gray-500">Please complete payment to view evaluation results</div>
+        <div className="text-gray-500">
+          Upon Receipt of Payment, We Will Email Your Degree Equivalency Results Within One Business
+          Day.
+        </div>
       )}
     </div>
   )
