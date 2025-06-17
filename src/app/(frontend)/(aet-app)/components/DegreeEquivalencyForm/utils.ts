@@ -76,6 +76,7 @@ export const formatUtils = {
   ): Omit<DatabaseCoreApplication, 'id' | 'created_at' | 'updated_at'> {
     return {
       status,
+      payment_status: 'pending',
       // Client Information
       email: formData.email!,
       purpose: formData.purpose!,
