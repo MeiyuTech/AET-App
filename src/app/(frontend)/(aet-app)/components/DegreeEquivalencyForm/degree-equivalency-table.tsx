@@ -55,7 +55,7 @@ export function DegreeEquivalencyTable({
                 <td className="py-2 px-4 font-medium bg-gray-50">Equivalency in U.S.:</td>
                 <td className="py-2 px-4 font-semibold text-blue-900 bg-blue-50">
                   <div className="relative">
-                    <DegreeEquivalencyAI education={education} ocrText="" showResult={isPaid} />
+                    <DegreeEquivalencyAI education={education} ocrText="" showResult={false} />
                   </div>
                 </td>
               </tr>
