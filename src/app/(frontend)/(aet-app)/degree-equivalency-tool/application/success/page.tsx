@@ -78,19 +78,20 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
           employers and licensing boards. Follow these simple steps:
         </p>
         <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
-          <li>Apply for a AET credential evaluation.</li>
-          <li>Submit related documents (Diploma, Transcripts, etc.)</li>
           <li>
-            AET prepares a credential evaluation, electronically stores your documents. Your report
-            never expires.{' '}
             <a
               href="https://app.americantranslationservice.com/credential-evaluation-application"
               className="text-green-700 underline font-medium"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Begin Your Application Now.
+              Begin Your Credential Evaluation Application Now.
             </a>
+          </li>
+          <li>Submit related documents (Diploma, Transcripts, etc.)</li>
+          <li>
+            AET prepares a credential evaluation, electronically stores your documents. Your report
+            never expires.{' '}
           </li>
         </ol>
       </div>
