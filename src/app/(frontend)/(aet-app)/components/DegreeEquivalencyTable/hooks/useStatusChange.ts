@@ -188,6 +188,9 @@ export const useStatusChange = ({
 
           const { success, message } = await sendDegreeEquivalencyConfirmationEmail(
             applicationData.email,
+            applicationData.first_name,
+            applicationData.last_name,
+            applicationData.id,
             {
               countryOfStudy: educationData.country_of_study,
               degreeObtained: educationData.degree_obtained,

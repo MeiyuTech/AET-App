@@ -12,16 +12,15 @@ import {
   Img,
 } from '@react-email/components'
 import { CheckCircle2 } from 'lucide-react'
-import { Button } from '../../Button'
 import { Footer } from '../../Footer'
 import { Header } from '../../Header'
 import { styles, colors } from '../../styles/config'
 import countryList from 'react-select-country-list'
 
-interface DegreeEquivalencyConfirmationEmailProps {
-  // applicationId: string
-  // firstName: string
-  // lastName: string
+interface DEResultsConfirmationEmailProps {
+  applicationId: string
+  firstName: string
+  lastName: string
   education: {
     countryOfStudy: string
     degreeObtained: string
@@ -44,12 +43,12 @@ function getCountryName(code: string) {
   return countries.find((c) => c.value === code)?.label || code
 }
 
-export const DegreeEquivalencyConfirmationEmail = ({
+export const DEResultsConfirmationEmail = ({
   // applicationId,
-  // firstName,
-  // lastName,
+  firstName,
+  lastName,
   education: degreeEquivalency,
-}: DegreeEquivalencyConfirmationEmailProps) => {
+}: DEResultsConfirmationEmailProps) => {
   const countryName = getCountryName(degreeEquivalency.countryOfStudy)
   return (
     <Html lang="en" dir="ltr">
@@ -108,6 +107,10 @@ export const DegreeEquivalencyConfirmationEmail = ({
             </Section>
 
             <Section style={styles.content}>
+              <Heading style={styles.heading.h1}>
+                Dear {firstName} {lastName},
+              </Heading>
+
               <Section
                 style={{
                   ...styles.section.card,
@@ -319,10 +322,10 @@ export const DegreeEquivalencyConfirmationEmail = ({
   )
 }
 
-DegreeEquivalencyConfirmationEmail.PreviewProps = {
-  // applicationId: '1234567890',
-  // firstName: 'John',
-  // lastName: 'Doe',
+DEResultsConfirmationEmail.PreviewProps = {
+  applicationId: '1234567890',
+  firstName: 'John',
+  lastName: 'Doe',
   education: {
     countryOfStudy: 'China',
     degreeObtained: 'Bachelor of Science in Computer Science',
@@ -331,6 +334,6 @@ DegreeEquivalencyConfirmationEmail.PreviewProps = {
     studyEndDate: { year: '2021', month: '05' },
     aiOutput: 'Bachelor of Science in Computer Science',
   },
-} as DegreeEquivalencyConfirmationEmailProps
+} as DEResultsConfirmationEmailProps
 
-export default DegreeEquivalencyConfirmationEmail
+export default DEResultsConfirmationEmail

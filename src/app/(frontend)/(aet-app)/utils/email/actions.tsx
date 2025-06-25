@@ -17,7 +17,7 @@ import { EmailOptions } from './config'
 import { fetchFCEApplication } from '../actions'
 import { getCCAddress } from './utils'
 import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
-import { DegreeEquivalencyConfirmationEmail } from '../../components/Email/templates/DEResultsConfirmation/DegreeEquivalencyConfirmationEmail'
+import { DEResultsConfirmationEmail } from '../../components/Email/templates/DEResultsConfirmation/DEResultsConfirmationEmail'
 
 /**
  * Send an email using the Resend API.
@@ -289,18 +289,29 @@ export async function sendDueAmountChangeEmail(applicationId: string) {
 
 /**
  * Get the HTML for a degree equivalency confirmation email.
+ * @param applicationId - The ID of the application.
+ * @param firstName - The first name of the applicant.
+ * @param lastName - The last name of the applicant.
  * @param education - The degree equivalency data.
  * @returns A promise that resolves to the HTML for the degree equivalency confirmation email.
  */
-export async function getDegreeEquivalencyConfirmationEmailHTML(education: {
-  countryOfStudy: string
-  degreeObtained: string
-  schoolName: string
-  studyStartDate: { year: string; month: string }
-  studyEndDate: { year: string; month: string }
-  aiOutput: string
-}): Promise<string> {
-  const emailComponent = React.createElement(DegreeEquivalencyConfirmationEmail, {
+export async function getDegreeEquivalencyConfirmationEmailHTML(
+  applicationId: string,
+  firstName: string,
+  lastName: string,
+  education: {
+    countryOfStudy: string
+    degreeObtained: string
+    schoolName: string
+    studyStartDate: { year: string; month: string }
+    studyEndDate: { year: string; month: string }
+    aiOutput: string
+  }
+): Promise<string> {
+  const emailComponent = React.createElement(DEResultsConfirmationEmail, {
+    applicationId,
+    firstName,
+    lastName,
     education,
   })
 
@@ -314,6 +325,9 @@ export async function getDegreeEquivalencyConfirmationEmailHTML(education: {
  */
 export async function sendDegreeEquivalencyConfirmationEmail(
   email: string,
+  firstName: string,
+  lastName: string,
+  applicationId: string,
   education: {
     countryOfStudy: string
     degreeObtained: string
@@ -323,8 +337,12 @@ export async function sendDegreeEquivalencyConfirmationEmail(
     aiOutput: string
   }
 ) {
-  const degreeEquivalencyConfirmationEmailHTML =
-    await getDegreeEquivalencyConfirmationEmailHTML(education)
+  const degreeEquivalencyConfirmationEmailHTML = await getDegreeEquivalencyConfirmationEmailHTML(
+    applicationId,
+    firstName,
+    lastName,
+    education
+  )
 
   try {
     const ccAddresses = ['ca@aet21.com', 'ca2@aet21.com', 'info@americantranslationservice.com']
