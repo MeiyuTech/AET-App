@@ -1,7 +1,7 @@
 import { toast } from '@/hooks/use-toast'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/client'
 import { DatabaseCoreApplication } from '../../DegreeEquivalencyForm/types'
-import { sendDegreeEquivalencyConfirmationEmail } from '@/app/(frontend)/(aet-app)/utils/email/actions'
+import { sendDEResultsConfirmationEmail } from '@/app/(frontend)/(aet-app)/utils/email/actions'
 
 interface StatusChangeHookProps {
   applications: DatabaseCoreApplication[]
@@ -186,7 +186,7 @@ export const useStatusChange = ({
           //   aiOutput: educationData.ai_output,
           // })
 
-          const { success, message } = await sendDegreeEquivalencyConfirmationEmail(
+          const { success, message } = await sendDEResultsConfirmationEmail(
             applicationData.email,
             applicationData.first_name,
             applicationData.last_name,

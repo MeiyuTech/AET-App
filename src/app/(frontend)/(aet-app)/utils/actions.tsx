@@ -7,6 +7,8 @@ import { FormData as DegreeEquivalencyFormData } from '../components/DegreeEquiv
 import { formatUtils as DegreeEquivalencyFormatUtils } from '../components/DegreeEquivalencyForm/utils'
 import { sendApplicationConfirmationEmail } from './email/actions'
 import { Application } from '../components/ApplicationsTable/types'
+import { sendDEResultsConfirmationEmail } from './email/actions'
+import { sendDEApplicationConfirmationEmail } from './email/actions'
 
 export async function getFCEApplicationEmail(applicationId: string) {
   const client = await createClient()
@@ -83,15 +85,16 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
       await Promise.all(educationPromises)
     }
 
-    // TODO: Send confirmation email
-    // console.log('Sending application confirmation email...')
-    // const { success: emailSuccess, message: sendEmailMessage } =
-    //   await sendApplicationConfirmationEmail(databaseApplication.id)
-
-    // if (!emailSuccess) {
-    //   console.error('Failed to send confirmation email:', sendEmailMessage)
-    //   throw new Error('Failed to send confirmation email')
-    // }
+    // Send confirmation email
+    if (databaseApplication.purpose === 'degree_equivalency') {
+      await sendDEApplicationConfirmationEmail(
+        databaseApplication.id,
+        databaseApplication.first_name,
+        databaseApplication.last_name,
+        databaseApplication.id,
+        databaseApplication.educations[0]
+      )
+    }
 
     return {
       success: true,

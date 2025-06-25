@@ -22,8 +22,6 @@ interface DEApplicationConfirmationEmailProps {
   firstName: string
   lastName: string
   education: {
-    firstName: string
-    lastName: string
     countryOfStudy: string
     degreeObtained: string
     schoolName: string

@@ -18,6 +18,7 @@ import { fetchFCEApplication } from '../actions'
 import { getCCAddress } from './utils'
 import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
 import { DEResultsConfirmationEmail } from '../../components/Email/templates/DEResultsConfirmation/DEResultsConfirmationEmail'
+import { DEApplicationConfirmationEmail } from '../../components/Email/templates/DEApplicationConfirmation/DEApplicationConfirmationEmail'
 
 /**
  * Send an email using the Resend API.
@@ -295,7 +296,85 @@ export async function sendDueAmountChangeEmail(applicationId: string) {
  * @param education - The degree equivalency data.
  * @returns A promise that resolves to the HTML for the degree equivalency confirmation email.
  */
-export async function getDegreeEquivalencyConfirmationEmailHTML(
+export async function getDEApplicationConfirmationEmailHTML(
+  applicationId: string,
+  firstName: string,
+  lastName: string,
+  education: {
+    countryOfStudy: string
+    degreeObtained: string
+    schoolName: string
+    studyStartDate: { year: string; month: string }
+    studyEndDate: { year: string; month: string }
+    aiOutput: string
+  }
+): Promise<string> {
+  const emailComponent = React.createElement(DEApplicationConfirmationEmail, {
+    applicationId,
+    firstName,
+    lastName,
+    education,
+  })
+
+  return render(emailComponent)
+}
+
+/**
+ * Send a degree equivalency confirmation email to the applicant.
+ * @param email - The email address of the applicant.
+ * @param firstName - The first name of the applicant.
+ * @param lastName - The last name of the applicant.
+ * @param applicationId - The ID of the application.
+ * @param education - The degree equivalency data.
+ * @returns A promise that resolves to an object containing the success status and message.
+ */
+export async function sendDEApplicationConfirmationEmail(
+  email: string,
+  firstName: string,
+  lastName: string,
+  applicationId: string,
+  education: {
+    countryOfStudy: string
+    degreeObtained: string
+    schoolName: string
+    studyStartDate: { year: string; month: string }
+    studyEndDate: { year: string; month: string }
+    aiOutput: string
+  }
+) {
+  const degreeEquivalencyConfirmationEmailHTML = await getDEApplicationConfirmationEmailHTML(
+    applicationId,
+    firstName,
+    lastName,
+    education
+  )
+
+  try {
+    const ccAddresses = ['ca@aet21.com', 'ca2@aet21.com', 'info@americantranslationservice.com']
+    const { success: emailSuccess, message: sendEmailMessage } = await resendEmail({
+      to: email,
+      cc: ccAddresses,
+      bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
+      subject: 'AET Degree Equivalency Confirmation',
+      html: degreeEquivalencyConfirmationEmailHTML,
+    })
+
+    return { success: emailSuccess, message: sendEmailMessage }
+  } catch (error) {
+    console.error('Failed to send degree equivalency confirmation email:', error)
+    throw error
+  }
+}
+
+/**
+ * Get the HTML for a degree equivalency confirmation email.
+ * @param applicationId - The ID of the application.
+ * @param firstName - The first name of the applicant.
+ * @param lastName - The last name of the applicant.
+ * @param education - The degree equivalency data.
+ * @returns A promise that resolves to the HTML for the degree equivalency confirmation email.
+ */
+export async function getDEResultsConfirmationEmailHTML(
   applicationId: string,
   firstName: string,
   lastName: string,
@@ -320,10 +399,14 @@ export async function getDegreeEquivalencyConfirmationEmailHTML(
 
 /**
  * Send a degree equivalency confirmation email to the applicant.
+ * @param email - The email address of the applicant.
+ * @param firstName - The first name of the applicant.
+ * @param lastName - The last name of the applicant.
+ * @param applicationId - The ID of the application.
  * @param education - The degree equivalency data.
  * @returns A promise that resolves to an object containing the success status and message.
  */
-export async function sendDegreeEquivalencyConfirmationEmail(
+export async function sendDEResultsConfirmationEmail(
   email: string,
   firstName: string,
   lastName: string,
@@ -337,7 +420,7 @@ export async function sendDegreeEquivalencyConfirmationEmail(
     aiOutput: string
   }
 ) {
-  const degreeEquivalencyConfirmationEmailHTML = await getDegreeEquivalencyConfirmationEmailHTML(
+  const degreeEquivalencyConfirmationEmailHTML = await getDEResultsConfirmationEmailHTML(
     applicationId,
     firstName,
     lastName,
