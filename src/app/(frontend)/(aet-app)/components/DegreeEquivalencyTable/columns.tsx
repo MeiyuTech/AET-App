@@ -16,6 +16,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
 
+// get the dropbox link for the office
+const getDropboxLink = (fullName: string, email: string): string => {
+  const root = 'https://www.dropbox.com/work/Team%20Files/WebsitesDev/Miami'
+
+  return `${root}/${fullName} - ${email}`
+}
+
 export const getDegreeEquivalencyColumns = (
   onEducationClick: (educations: any[]) => void,
   handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>,
@@ -105,7 +112,14 @@ export const getDegreeEquivalencyColumns = (
       const firstName = row.original.first_name || ''
       const middleName = row.original.middle_name || ''
       const lastName = row.original.last_name || ''
-      return [firstName, middleName, lastName].filter(Boolean).join(' ')
+      const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ')
+      const email = row.original.email || ''
+      const dropboxLink = getDropboxLink(fullName, email)
+      return (
+        <Link href={dropboxLink} target="_blank" className="text-blue-500 underline">
+          {fullName}
+        </Link>
+      )
     },
   },
   // {
