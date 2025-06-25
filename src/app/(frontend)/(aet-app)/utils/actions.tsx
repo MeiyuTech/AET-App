@@ -7,7 +7,6 @@ import { FormData as DegreeEquivalencyFormData } from '../components/DegreeEquiv
 import { formatUtils as DegreeEquivalencyFormatUtils } from '../components/DegreeEquivalencyForm/utils'
 import { sendApplicationConfirmationEmail } from './email/actions'
 import { Application } from '../components/ApplicationsTable/types'
-import { sendDEResultsConfirmationEmail } from './email/actions'
 import { sendDEApplicationConfirmationEmail } from './email/actions'
 
 export async function getFCEApplicationEmail(applicationId: string) {
