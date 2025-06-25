@@ -94,6 +94,7 @@
 - [ ] 不同进度的的 row 上色，变得更加明显。
 - [ ] 数据库应该加栏，记录返回的 ocrText，result， reasoning
 - [ ] 24 小时交付的时间应该改一下
+- [ ] dropbox 的 fce 文件能隐藏一下，让用户只看到自己上传的文件。
 
 ## Features
 
