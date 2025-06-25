@@ -17,7 +17,7 @@ import { EmailOptions } from './config'
 import { fetchFCEApplication } from '../actions'
 import { getCCAddress } from './utils'
 import { DueAmountChangeEmail } from '../../components/Email/templates/DueAmountChange/DueAmountChangeEmail'
-import { DegreeEquivalencyConfirmationEmail } from '../../components/Email/templates/DegreeEquivalencyConfirmation/DegreeEquivalencyConfirmationEmail'
+import { DegreeEquivalencyConfirmationEmail } from '../../components/Email/templates/DEResultsConfirmation/DegreeEquivalencyConfirmationEmail'
 
 /**
  * Send an email using the Resend API.
