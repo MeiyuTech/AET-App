@@ -45,7 +45,9 @@ export async function GET(request: NextRequest) {
     }
 
     const path = `${folderPath}`
-
+    console.log('++++++++++++++++++++++++++')
+    console.log('path', path)
+    console.log('++++++++++++++++++++++++++')
     const accessToken = await getAccessToken(tokenType)
     const dbx = createDropboxClient(accessToken, namespaceId)
 

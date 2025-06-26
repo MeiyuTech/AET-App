@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { DegreeEquivalencyTable } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/degree-equivalency-table'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
+import { DiplomaUploader } from '@/app/(frontend)/(aet-app)/components/Dropbox/DiplomaUploader'
+import Viewer from '@/app/(frontend)/(aet-app)/components/Dropbox/Viewer'
 
 interface PageProps {
   searchParams: Promise<{
@@ -105,6 +107,20 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
           </h2>
         </div>
       )}
+
+      {/* File view and upload area, visual unified card wrapper */}
+      <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6 flex flex-col gap-6">
+        <Viewer
+          office={'Miami'}
+          applicationId={application.email}
+          fullName={`${application.first_name} ${application.last_name}`}
+        />
+        <DiplomaUploader
+          office={'Miami'}
+          email={application.email}
+          fullName={`${application.first_name} ${application.last_name}`}
+        />
+      </div>
 
       {/* Degree Equivalency Information Table */}
       <DegreeEquivalencyTable application={application} education={education} isPaid={isPaid} />
