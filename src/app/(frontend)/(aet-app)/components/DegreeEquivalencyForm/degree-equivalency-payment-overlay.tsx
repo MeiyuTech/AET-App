@@ -21,7 +21,8 @@ export function DegreeEquivalencyPaymentOverlay({
     try {
       const response = await createDegreeEquivalencyPayment({
         // amount: '1.01',
-        amount: '40.00',
+        // amount: '40.00',
+        amount: '39.00',
         applicationId,
       })
 
@@ -55,7 +56,7 @@ export function DegreeEquivalencyPaymentOverlay({
             Unlock Your U.S. Degree Equivalency Result
           </h2>
           {/* <p className="text-gray-500 text-sm mb-4 text-center">Pay to view</p> */}
-          <div className="text-2xl font-extrabold text-blue-700 mb-4">$40</div>
+          <div className="text-2xl font-extrabold text-blue-700 mb-4">$39</div>
           <Button
             onClick={handlePayment}
             disabled={isLoading}
