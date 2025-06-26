@@ -15,6 +15,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
+import { getServerSideURL } from '@/utilities/getURL'
+
+const getStatusPageLink = (applicationId: string): string => {
+  const currentUrl = getServerSideURL()
+  return `${currentUrl}/degree-equivalency-tool/application/success?applicationId=${applicationId}`
+}
 
 // get the dropbox link for the office
 const getDropboxLink = (fullName: string, email: string): string => {
@@ -113,10 +119,11 @@ export const getDegreeEquivalencyColumns = (
       const middleName = row.original.middle_name || ''
       const lastName = row.original.last_name || ''
       const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ')
-      const email = row.original.email || ''
-      const dropboxLink = getDropboxLink(fullName, email)
+      // const email = row.original.email || ''
+      // const dropboxLink = getDropboxLink(fullName, email)
+      const statusPageLink = getStatusPageLink(row.original.id)
       return (
-        <Link href={dropboxLink} target="_blank" className="text-blue-500 underline">
+        <Link href={statusPageLink} target="_blank" className="text-blue-500 underline">
           {fullName}
         </Link>
       )

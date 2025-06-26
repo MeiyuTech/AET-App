@@ -110,11 +110,18 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
 
       {/* File view and upload area, visual unified card wrapper */}
       <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6 flex flex-col gap-6">
+        <h2 className="text-xl font-bold">Diploma Uploader</h2>
+        <div className="text-gray-700 text-base mb-2">
+          Submitting a screenshot or scan of your diploma or related documents will greatly improve
+          the accuracy of our pre-evaluation. Please upload clear and legible files for the best
+          results.
+        </div>
         <Viewer
           office={'Miami'}
           applicationId={application.email}
           fullName={`${application.first_name} ${application.last_name}`}
         />
+
         <DiplomaUploader
           office={'Miami'}
           email={application.email}
