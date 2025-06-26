@@ -20,7 +20,8 @@ export function DegreeEquivalencyPaymentOverlay({
     setIsLoading(true)
     try {
       const response = await createDegreeEquivalencyPayment({
-        amount: '1.01',
+        // amount: '1.01',
+        amount: '40.00',
         applicationId,
       })
 
