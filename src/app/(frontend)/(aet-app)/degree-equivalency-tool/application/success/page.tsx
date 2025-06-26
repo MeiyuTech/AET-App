@@ -114,12 +114,12 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
         <div className="text-gray-700 text-base mb-2">
           Submitting a screenshot or scan of your diploma or related documents will greatly improve
           the accuracy of our pre-evaluation. Please upload clear and legible files for the best
-          results.
+          results.s
         </div>
         <Viewer
           office={'Miami'}
           applicationId={application.email}
-          fullName={`${application.first_name} ${application.last_name}`}
+          fullName={`${application.first_name} ${application.middle_name} ${application.last_name}`}
         />
 
         <DiplomaUploader
