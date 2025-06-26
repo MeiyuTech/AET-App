@@ -67,34 +67,44 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       </div>
 
       {/* Success Message and Step Instructions */}
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
-        <div className="flex items-center mb-4">
-          <CheckCircle2 className="text-green-600 mr-2" size={28} />
-          <h2 className="text-xl font-bold text-green-700">Here is Your AET Degree Equivalency</h2>
+      {isPaid ? (
+        <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
+          <div className="flex items-center mb-4">
+            <CheckCircle2 className="text-green-600 mr-2" size={28} />
+            <h2 className="text-xl font-bold text-green-700">
+              Here is Your AET Degree Equivalency
+            </h2>
+          </div>
+          <p className="text-gray-700 mb-2">
+            Now that you know what your education is worth in the U.S., get a AET credential
+            evaluation to verify your credentials so they&apos;ll be recognized by U.S.
+            universities, employers and licensing boards. Follow these simple steps:
+          </p>
+          <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
+            <li>
+              <a
+                href="https://app.americantranslationservice.com/credential-evaluation-application"
+                className="text-green-700 underline font-medium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Begin Your Credential Evaluation Application Now.
+              </a>
+            </li>
+            <li>Submit related documents (Diploma, Transcripts, etc.)</li>
+            <li>
+              AET prepares a credential evaluation, electronically stores your documents. Your
+              report never expires.{' '}
+            </li>
+          </ol>
         </div>
-        <p className="text-gray-700 mb-2">
-          Now that you know what your education is worth in the U.S., get a AET credential
-          evaluation to verify your credentials so they&apos;ll be recognized by U.S. universities,
-          employers and licensing boards. Follow these simple steps:
-        </p>
-        <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
-          <li>
-            <a
-              href="https://app.americantranslationservice.com/credential-evaluation-application"
-              className="text-green-700 underline font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Begin Your Credential Evaluation Application Now.
-            </a>
-          </li>
-          <li>Submit related documents (Diploma, Transcripts, etc.)</li>
-          <li>
-            AET prepares a credential evaluation, electronically stores your documents. Your report
-            never expires.{' '}
-          </li>
-        </ol>
-      </div>
+      ) : (
+        <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-bold text-green-700">
+            Your AET Degree Equivalency is being processed.
+          </h2>
+        </div>
+      )}
 
       {/* Degree Equivalency Information Table */}
       <DegreeEquivalencyTable application={application} education={education} isPaid={isPaid} />
