@@ -11,17 +11,16 @@ import {
   Text,
   Img,
 } from '@react-email/components'
-import { CheckCircle2 } from 'lucide-react'
 import { Button } from '../../Button'
 import { Footer } from '../../Footer'
 import { Header } from '../../Header'
 import { styles, colors } from '../../styles/config'
 import countryList from 'react-select-country-list'
 
-interface DegreeEquivalencyConfirmationEmailProps {
-  // applicationId: string
-  // firstName: string
-  // lastName: string
+interface DEApplicationConfirmationEmailProps {
+  applicationId: string
+  firstName: string
+  lastName: string
   education: {
     countryOfStudy: string
     degreeObtained: string
@@ -44,19 +43,20 @@ function getCountryName(code: string) {
   return countries.find((c) => c.value === code)?.label || code
 }
 
-export const DegreeEquivalencyConfirmationEmail = ({
-  // applicationId,
-  // firstName,
-  // lastName,
+export const DEApplicationConfirmationEmail = ({
+  applicationId,
+  firstName,
+  lastName,
   education: degreeEquivalency,
-}: DegreeEquivalencyConfirmationEmailProps) => {
+}: DEApplicationConfirmationEmailProps) => {
   const countryName = getCountryName(degreeEquivalency.countryOfStudy)
   return (
     <Html lang="en" dir="ltr">
       <Head>
-        <title>Degree Equivalency Confirmation</title>
+        <title>Degree Equivalency Application Confirmation</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
+
       <Tailwind>
         <Body style={styles.body}>
           <Container style={styles.container}>
@@ -108,60 +108,13 @@ export const DegreeEquivalencyConfirmationEmail = ({
             </Section>
 
             <Section style={styles.content}>
-              <Section
-                style={{
-                  ...styles.section.card,
-                  backgroundColor: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-                  padding: '24px',
-                  marginBottom: '24px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                  <CheckCircle2 className="text-green-600 mr-2" size={28} />
-                  <Heading
-                    style={{
-                      ...styles.heading.h2,
-                      color: '#15803d',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Here is Your AET Degree Equivalency
-                  </Heading>
-                </div>
-                <Text style={styles.text.default}>
-                  Now that you know what your education is worth in the U.S., get a AET credential
-                  evaluation to verify your credentials so they&apos;ll be recognized by U.S.
-                  universities, employers and licensing boards. Follow these simple steps:
-                </Text>
-                <ol
-                  style={{ ...styles.text.default, marginLeft: '24px', listStyleType: 'decimal' }}
-                >
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>Apply for a AET credential evaluation.</strong>
-                  </li>
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>Submit related documents (Diploma, Transcripts, etc.)</strong>
-                  </li>
-                  <li style={{ marginBottom: '12px' }}>
-                    <strong>
-                      AET prepares a credential evaluation, electronically stores your documents.
-                      Your report never expires.
-                      <br />
-                      <a
-                        href="https://app.americantranslationservice.com/credential-evaluation-application"
-                        className="text-green-700 underline font-medium"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Begin Your Application Now.
-                      </a>
-                    </strong>
-                  </li>
-                </ol>
-              </Section>
+              <Heading style={styles.heading.h1}>
+                Dear {firstName} {lastName},
+              </Heading>
+              <Text style={styles.text.default}>
+                Thank you for submitting your application. We have received it successfully! Your
+                application ID is <span style={styles.text.monospace}>{applicationId}</span>.
+              </Text>
 
               {/* Degree Equivalency Table */}
               <Section
@@ -268,32 +221,39 @@ export const DegreeEquivalencyConfirmationEmail = ({
                           backgroundColor: '#eff6ff',
                         }}
                       >
-                        {degreeEquivalency.aiOutput}
+                        Upon Receipt of Payment, We Will Email Your Degree Equivalency Results in
+                        One Business Day.
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </Section>
 
-              <Section
-                style={{
-                  ...styles.section.default,
-                  backgroundColor: '#f9fafb',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '6px',
-                  padding: '16px',
-                  marginBottom: '24px',
-                }}
-              >
-                <Text style={{ ...styles.text.default, fontSize: '14px', color: '#374151' }}>
-                  <span style={{ fontWeight: 'bold' }}>Note:</span> Any degree equivalency provided
-                  is based on the information you have inputted. It is not based on verified
-                  information or documents and may not be used as proof that you attended an
-                  institution or earned a degree. AET may change this provisional degree equivalency
-                  upon document verification and analysis.
+              {/* What's next? Section */}
+              <Section style={styles.section.card}>
+                <Heading style={styles.heading.h2}>What&apos;s next?</Heading>
+                <Text style={styles.heading.h3}>1. Confirm Your Application</Text>
+                <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
+                  Click the &quot;Check Status&quot; button to confirm your application.
+                </Text>
+
+                <Section style={{ textAlign: 'center', margin: '20px 0' }}>
+                  <Button
+                    href={`https://app.americantranslationservice.com/degree-equivalency-tool/application/success?applicationId=${applicationId}`}
+                  >
+                    Check Status
+                  </Button>
+                </Section>
+
+                <Text style={styles.heading.h3}>2. Make Payment</Text>
+
+                <Text style={styles.heading.h3}>3. Processing</Text>
+                <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
+                  We will begin processing your evaluation once payment is confirmed.
                 </Text>
               </Section>
 
+              {/* Best Regards Section */}
               <Section style={styles.section.default}>
                 <Text style={styles.text.default}>
                   <span style={{ color: colors.primary }}>
@@ -319,10 +279,10 @@ export const DegreeEquivalencyConfirmationEmail = ({
   )
 }
 
-DegreeEquivalencyConfirmationEmail.PreviewProps = {
-  // applicationId: '1234567890',
-  // firstName: 'John',
-  // lastName: 'Doe',
+DEApplicationConfirmationEmail.PreviewProps = {
+  applicationId: '1234567890',
+  firstName: 'John',
+  lastName: 'Doe',
   education: {
     countryOfStudy: 'China',
     degreeObtained: 'Bachelor of Science in Computer Science',
@@ -331,6 +291,6 @@ DegreeEquivalencyConfirmationEmail.PreviewProps = {
     studyEndDate: { year: '2021', month: '05' },
     aiOutput: 'Bachelor of Science in Computer Science',
   },
-} as DegreeEquivalencyConfirmationEmailProps
+} as DEApplicationConfirmationEmailProps
 
-export default DegreeEquivalencyConfirmationEmail
+export default DEApplicationConfirmationEmail

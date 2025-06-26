@@ -39,6 +39,7 @@ export const ApplicationConfirmationEmail = ({
         <title>Application Confirmation</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
+
       <Tailwind>
         <Body style={styles.body}>
           <Container style={styles.container}>
@@ -63,6 +64,7 @@ export const ApplicationConfirmationEmail = ({
                 <SelectedServicesEmailCard application={application} />
               </Section>
 
+              {/* What's next? Section */}
               <Section style={styles.section.card}>
                 <Heading style={styles.heading.h2}>What&apos;s next?</Heading>
                 <Text style={styles.heading.h3}>1. Confirm Your Application</Text>

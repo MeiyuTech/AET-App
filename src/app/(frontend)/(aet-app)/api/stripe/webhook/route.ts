@@ -8,7 +8,6 @@ import { fetchFCEApplication, fetchAETCoreApplication } from '../../../utils/act
 import { sendPaymentConfirmationEmail } from '../../../utils/email/actions'
 import { createClient } from '../../../utils/supabase/server'
 import { getStripeConfig } from '../../../utils/stripe/config'
-import { sendDegreeEquivalencyConfirmationEmail } from '../../../utils/email/actions'
 
 /**
  * This route handles the Stripe webhook events for both FCE and Degree Equivalency applications.
