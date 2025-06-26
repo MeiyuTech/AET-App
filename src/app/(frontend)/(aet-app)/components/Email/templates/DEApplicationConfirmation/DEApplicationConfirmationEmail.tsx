@@ -280,15 +280,15 @@ export const DEApplicationConfirmationEmail = ({
 }
 
 DEApplicationConfirmationEmail.PreviewProps = {
-  applicationId: '1234567890',
-  firstName: 'John',
-  lastName: 'Doe',
+  applicationId: 'cbdb4ed3-c7e2-4af6-9f2a-706403d8b5d3',
+  firstName: 'Basharat',
+  lastName: 'Rakhmanberdieva',
   education: {
-    countryOfStudy: 'China',
-    degreeObtained: 'Bachelor of Science in Computer Science',
-    schoolName: 'Example University',
-    studyStartDate: { year: '2017', month: '08' },
-    studyEndDate: { year: '2021', month: '05' },
+    countryOfStudy: 'Kazakhstan',
+    degreeObtained: 'Bachelor of economics and business in finance',
+    schoolName: 'Khoja Akhmet Yassawi International Kazakh-Turkish University',
+    studyStartDate: { year: '2014', month: '06' },
+    studyEndDate: { year: '2018', month: '06' },
     aiOutput: 'Bachelor of Science in Computer Science',
   },
 } as DEApplicationConfirmationEmailProps

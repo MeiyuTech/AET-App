@@ -355,7 +355,7 @@ export async function sendDEApplicationConfirmationEmail(
       to: email,
       cc: ccAddresses,
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      subject: 'AET Degree Equivalency Confirmation',
+      subject: 'AET Degree Equivalency Application Confirmation',
       html: degreeEquivalencyConfirmationEmailHTML,
     })
 
@@ -433,7 +433,7 @@ export async function sendDEResultsConfirmationEmail(
       to: email,
       cc: ccAddresses,
       bcc: process.env.RESEND_DEFAULT_BCC_ADDRESS!,
-      subject: 'AET Degree Equivalency Confirmation',
+      subject: 'AET Degree Equivalency Results',
       html: degreeEquivalencyConfirmationEmailHTML,
     })
 
