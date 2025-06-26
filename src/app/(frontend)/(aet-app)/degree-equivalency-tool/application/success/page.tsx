@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { DegreeEquivalencyTable } from '@/app/(frontend)/(aet-app)/components/DegreeEquivalencyForm/degree-equivalency-table'
 import { createClient } from '@/app/(frontend)/(aet-app)/utils/supabase/server'
+import { DiplomaUploader } from '@/app/(frontend)/(aet-app)/components/Dropbox/DiplomaUploader'
+import Viewer from '@/app/(frontend)/(aet-app)/components/Dropbox/Viewer'
 
 interface PageProps {
   searchParams: Promise<{
@@ -67,33 +69,64 @@ export default async function DegreeEquivalencySuccessPage({ searchParams }: Pag
       </div>
 
       {/* Success Message and Step Instructions */}
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
-        <div className="flex items-center mb-4">
-          <CheckCircle2 className="text-green-600 mr-2" size={28} />
-          <h2 className="text-xl font-bold text-green-700">Here is Your AET Degree Equivalency</h2>
+      {isPaid ? (
+        <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
+          <div className="flex items-center mb-4">
+            <CheckCircle2 className="text-green-600 mr-2" size={28} />
+            <h2 className="text-xl font-bold text-green-700">
+              Here is Your AET Degree Equivalency
+            </h2>
+          </div>
+          <p className="text-gray-700 mb-2">
+            Now that you know what your education is worth in the U.S., get a AET credential
+            evaluation to verify your credentials so they&apos;ll be recognized by U.S.
+            universities, employers and licensing boards. Follow these simple steps:
+          </p>
+          <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
+            <li>
+              <a
+                href="https://app.americantranslationservice.com/credential-evaluation-application"
+                className="text-green-700 underline font-medium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Begin Your Credential Evaluation Application Now.
+              </a>
+            </li>
+            <li>Submit related documents (Diploma, Transcripts, etc.)</li>
+            <li>
+              AET prepares a credential evaluation, electronically stores your documents. Your
+              report never expires.{' '}
+            </li>
+          </ol>
         </div>
-        <p className="text-gray-700 mb-2">
-          Now that you know what your education is worth in the U.S., get a AET credential
-          evaluation to verify your credentials so they&apos;ll be recognized by U.S. universities,
-          employers and licensing boards. Follow these simple steps:
-        </p>
-        <ol className="list-decimal list-inside text-gray-700 mb-2 pl-4">
-          <li>
-            <a
-              href="https://app.americantranslationservice.com/credential-evaluation-application"
-              className="text-green-700 underline font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Begin Your Credential Evaluation Application Now.
-            </a>
-          </li>
-          <li>Submit related documents (Diploma, Transcripts, etc.)</li>
-          <li>
-            AET prepares a credential evaluation, electronically stores your documents. Your report
-            never expires.{' '}
-          </li>
-        </ol>
+      ) : (
+        <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-bold text-green-700">
+            Your AET Degree Equivalency is being processed.
+          </h2>
+        </div>
+      )}
+
+      {/* File view and upload area, visual unified card wrapper */}
+      <div className="w-full max-w-3xl bg-white rounded-lg shadow p-6 mb-6 flex flex-col gap-6">
+        <h2 className="text-xl font-bold">Diploma Uploader</h2>
+        <div className="text-gray-700 text-base mb-2">
+          Submitting a screenshot or scan of your diploma or related documents will greatly improve
+          the accuracy of our pre-evaluation. Please upload clear and legible files for the best
+          results.
+        </div>
+        <Viewer
+          office={'Miami'}
+          applicationId={application.email}
+          fullName={`${application.first_name} ${application.last_name}`}
+        />
+
+        <DiplomaUploader
+          office={'Miami'}
+          email={application.email}
+          fullName={`${application.first_name} ${application.last_name}`}
+        />
       </div>
 
       {/* Degree Equivalency Information Table */}
