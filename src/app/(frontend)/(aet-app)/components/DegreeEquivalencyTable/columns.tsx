@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Eye, Edit } from 'lucide-react'
+import { Eye, Edit, FileText } from 'lucide-react'
 import {
   getStatusColor,
   getPaymentStatusColor,
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
 import { getServerSideURL } from '@/utilities/getURL'
+import { DatabaseCoreApplication } from '../DegreeEquivalencyForm/types'
 
 const getStatusPageLink = (applicationId: string): string => {
   const currentUrl = getServerSideURL()
@@ -32,7 +33,9 @@ const getDropboxLink = (fullName: string, email: string): string => {
 export const getDegreeEquivalencyColumns = (
   onEducationClick: (educations: any[]) => void,
   handleAiOutputChange: (id: string, educationId: string, newAiOutput: string) => Promise<void>,
-  handleStatusChange: (id: string, status: string) => Promise<void>
+  handleStatusChange: (id: string, status: string) => Promise<void>,
+  setSelectedApplication: (application: DatabaseCoreApplication | undefined) => void,
+  setFilesDialogOpen: (open: boolean) => void
 ): ColumnDef<any>[] => [
   {
     id: 'index',
@@ -159,6 +162,25 @@ export const getDegreeEquivalencyColumns = (
         <Eye className="h-5 w-5" />
       </Button>
     ),
+  },
+  {
+    id: 'files',
+    header: () => <div className="text-center">Files</div>,
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="default"
+          className="hover:bg-gray-100 px-1"
+          onClick={() => {
+            setSelectedApplication(row.original)
+            setFilesDialogOpen(true)
+          }}
+        >
+          <FileText className="h-5 w-5" />
+        </Button>
+      )
+    },
   },
   {
     id: 'ai_output',
@@ -411,6 +433,7 @@ export const getDegreeEquivalencyColumns = (
       )
     },
   },
+
   // {
   //   accessorKey: 'source',
   //   header: ({ column }) => (

@@ -5,6 +5,7 @@ import { getDegreeEquivalencyColumns } from './columns'
 
 import { useReactTable, getCoreRowModel } from '@tanstack/react-table'
 import { EducationDetailsDialog } from '../ApplicationsTable/EducationDetailsDialog'
+import { DegreeEquivalencyFilesDialog } from './DegreeEquivalencyFilesDialog'
 import { fetchAETCoreApplicationsList } from '@/app/(frontend)/(aet-app)/utils/actions'
 import { DataTable } from '@/components/ui/data-table'
 import { useAiOutputChange } from './hooks/useAiOutputChange'
@@ -19,6 +20,10 @@ export default function DegreeEquivalencyTable() {
   const [error, setError] = useState<string | null>(null)
   const [educationDialogOpen, setEducationDialogOpen] = useState(false)
   const [selectedEducations, setSelectedEducations] = useState<any[]>([])
+  const [filesDialogOpen, setFilesDialogOpen] = useState(false)
+  const [selectedApplication, setSelectedApplication] = useState<
+    DatabaseCoreApplication | undefined
+  >(undefined)
   const [pendingAiOutputChange, setPendingAiOutputChange] = useState<{
     id: string
     educationId: string
@@ -92,7 +97,9 @@ export default function DegreeEquivalencyTable() {
       getDegreeEquivalencyColumns(
         handleOpenEducationDialog,
         handleAiOutputChange,
-        handleStatusChange
+        handleStatusChange,
+        setSelectedApplication,
+        setFilesDialogOpen
       ),
     [handleOpenEducationDialog, handleAiOutputChange, handleStatusChange]
   )
@@ -116,6 +123,11 @@ export default function DegreeEquivalencyTable() {
         open={educationDialogOpen}
         onOpenChange={setEducationDialogOpen}
         educations={selectedEducations}
+      />
+      <DegreeEquivalencyFilesDialog
+        open={filesDialogOpen}
+        onOpenChange={setFilesDialogOpen}
+        application={selectedApplication}
       />
       <AiOutputConfirmDialog
         open={confirmDialogOpen}

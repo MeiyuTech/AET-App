@@ -49,7 +49,7 @@ const getOfficeDropboxLink = (office: string | null): string => {
   return officeLinks[office] || `https://www.dropbox.com/work/Team%20Files/WebsitesDev`
 }
 
-// 添加获取行样式的函数
+// Add a function to get the row class name
 const getRowClassName = (row: any) => {
   const source = row.original.source
   return cn(source === 'external' && 'bg-purple-50/50')
@@ -515,7 +515,7 @@ export const getColumns = ({
                   <Truck className="h-5 w-5 text-blue-500" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>需要邮寄纸质版</p>
+                  <p>Need to Mail Hard Copy</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
