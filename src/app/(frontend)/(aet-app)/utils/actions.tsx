@@ -44,6 +44,7 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
     // console.log('Converted Core Application database data:', dbData)
 
     // Start database transaction
+    // console.log('Submitting AET Core Application...')
     const { data: databaseApplication, error: databaseApplicationError } = await client
       .from('aet_core_applications')
       .insert({
@@ -85,13 +86,28 @@ export async function submitAETCoreApplication(formData: DegreeEquivalencyFormDa
     }
 
     // Send confirmation email
-    if (databaseApplication.purpose === 'degree_equivalency') {
+    // console.log('Sending DE application confirmation email...')
+    if (!formData.educations) {
+      console.error('No education data found')
+      throw new Error('No education data found')
+    }
+    const education = formData.educations[0]
+    // console.log('Education:', education)
+    // 'degree-equivalency' not 'degree_equivalency'
+    if (databaseApplication.purpose === 'degree-equivalency') {
       await sendDEApplicationConfirmationEmail(
-        databaseApplication.id,
+        databaseApplication.email,
         databaseApplication.first_name,
         databaseApplication.last_name,
         databaseApplication.id,
-        databaseApplication.educations[0]
+        {
+          countryOfStudy: education.countryOfStudy,
+          degreeObtained: education.degreeObtained,
+          schoolName: education.schoolName,
+          studyStartDate: education.studyDuration.startDate,
+          studyEndDate: education.studyDuration.endDate,
+          aiOutput: '',
+        }
       )
     }
 
