@@ -3,16 +3,31 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
 import { getDegreeEquivalencyColumns } from './columns'
 
-import { useReactTable, getCoreRowModel } from '@tanstack/react-table'
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+} from '@tanstack/react-table'
 import { EducationDetailsDialog } from '../ApplicationsTable/EducationDetailsDialog'
 import { DegreeEquivalencyFilesDialog } from './DegreeEquivalencyFilesDialog'
 import { fetchAETCoreApplicationsList } from '@/app/(frontend)/(aet-app)/utils/actions'
-import { DataTable } from '@/components/ui/data-table'
 import { useAiOutputChange } from './hooks/useAiOutputChange'
 import { AiOutputConfirmDialog } from './AiOutputConfirmDialog'
 import { useStatusChange } from './hooks/useStatusChange'
 import { StatusConfirmDialog } from './StatusConfirmDialog'
 import { DatabaseCoreApplication } from '../DegreeEquivalencyForm/types'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { flexRender } from '@tanstack/react-table'
 
 export default function DegreeEquivalencyTable() {
   const [data, setData] = useState<DatabaseCoreApplication[]>([])
@@ -36,6 +51,12 @@ export default function DegreeEquivalencyTable() {
     currentStatus: string
   } | null>(null)
   const [statusConfirmDialogOpen, setStatusConfirmDialogOpen] = useState(false)
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: 'created_at',
+      desc: true,
+    },
+  ])
 
   const fetchData = useCallback(async () => {
     try {
@@ -103,10 +124,28 @@ export default function DegreeEquivalencyTable() {
       ),
     [handleOpenEducationDialog, handleAiOutputChange, handleStatusChange]
   )
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 100,
+      },
+      sorting: [
+        {
+          id: 'created_at',
+          desc: true,
+        },
+      ],
+    },
   })
 
   if (loading) {
@@ -118,7 +157,65 @@ export default function DegreeEquivalencyTable() {
 
   return (
     <>
-      <DataTable columns={columns} data={data} />
+      <div className="p-4">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="text-base font-semibold">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="text-base">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-end space-x-4 py-6">
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className="text-base px-6"
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className="text-base px-6"
+        >
+          Next
+        </Button>
+      </div>
+
       <EducationDetailsDialog
         open={educationDialogOpen}
         onOpenChange={setEducationDialogOpen}
