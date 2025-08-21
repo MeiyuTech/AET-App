@@ -95,6 +95,7 @@
 - [ ] 数据库应该加栏，记录返回的 ocrText，result， reasoning
 - [ ] 24 小时交付的时间应该改一下
 - [ ] dropbox 的 fce 文件能隐藏一下，让用户只看到自己上传的文件。
+- [ ] 按钮，发邮件提醒补充材料。 diploma，transcript，Translation
 
 ## Features
 
