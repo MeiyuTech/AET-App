@@ -2,94 +2,92 @@
 
 ## TODO
 
-- [x] CRM Loading issue:
-      Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
-- [x] feat: we can change the payment price for every order (bufore payment) in admin panel
-- [x] Dropbox refresh token
-- [x] Customized Service
-- [x] Email sending
-- [x] clean up payment code!!!
-- [x] Upload file for each user
-- [x] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
-- [x] Add 'payment_amount' in supabase
-- [x] Add 'office' in supabase
-- [x] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
+- [X] CRM Loading issue:
+  Eventually, I pinpointed the cause: when I enter the admin username and password, Chrome detects that the password is weak and often warns me about a potential security breach. This warning is what caused the page to freeze. Once I went into Chrome settings and dismissed the password warning for this site, the issue disappeared! 🚀
+- [X] feat: we can change the payment price for every order (bufore payment) in admin panel
+- [X] Dropbox refresh token
+- [X] Customized Service
+- [X] Email sending
+- [X] clean up payment code!!!
+- [X] Upload file for each user
+- [X] Update/e-terms-of-use.html ! User should agree before submit. And it to /apply and /e_pay.html
+- [X] Add 'payment_amount' in supabase
+- [X] Add 'office' in supabase
+- [X] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Backend
 - [ ] Update fuzzy filter
 - [ ] Add CHECK for database update or insert!!! (like, only if it is submitted, we can change the office or payment_amount ) Database
-- [x] better email template, table layout
+- [X] better email template, table layout
 - [ ] should we delete 'additionalServices' and just keep 'additionalServicesQuantity'??
 - [ ] 上传文件路径调整（支付前后，文件夹变化）
-- [x] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
-- [x] 增加一个字段（'purpose'？）记录对应服务。
+- [X] 服务价格公寓复杂、过时。可能要删掉所有参考价格。
+- [X] 增加一个字段（'purpose'？）记录对应服务。
 
-  - [x] miami： 翻译公证，学历评估，口译，签证
-
-- [x] status 界面增加 instruction
-- [x] status 增加hover card，说明所需上传文件
+  - [X] miami： 翻译公证，学历评估，口译，签证
+- [X] status 界面增加 instruction
+- [X] status 增加hover card，说明所需上传文件
 - [ ] 1.单独建立五个申请卡片，对应 general，translation，evaluation和 visa
-- [x] 2.其中 evaluation 要分： immigration，employment，education
-- [x] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
+- [X] 2.其中 evaluation 要分： immigration，employment，education
+- [X] 3.CE 的 application 要明确 交付时间和申请服务(参考截图，可以不写价格)邮寄费用、pdf 费用都要标注
 - [ ] 4.translation 在提交之前上传文件
-- [x] 5.在确认邮件里增加一个支付按钮。
-- [x] 加急付款只能用 zelle，提到 stripe 有手续费
-- [x] 默认要pdf。
-- [x] email 里提醒大家 reply all。
-- [x] status 页面，把支付按钮放到最上面。
-- [x] 6.单独显示 first name， last name， middle name
-- [x] sf 邮箱要确认一下！！！
-- [x] Old ApplicationForm is kinda **deprecated**
-- [x] Add a button to dropbox folder for each order.
-- [x] Add a Loading button for payment
-- [x] use components for Reviews
-- [x] Better layout for Status page
-- [x] any way for Status page to pre load???
-- [x] user add comments for their services
-- [x] show files uploaded.
-- [x] 付款倒计时！
-- [x] delete "valid_purpose_other":
-      ((((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))))
-      to avoid:
-      new row for relation "fce_applications" violates check constraint "valid_purpose_other"
-- [x] 有两个邮寄选项选不上啊 ！！！已修复
-- [x] 取消 3% 手续费的提示
-- [x] 把 payment 放到上传文件下面
-- [x] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
-- [x] 调整邮件格式，增加更明显的用户引导
-- [x] 在用户上传文件后，后台可以 check 他的文件是否正确，
+- [X] 5.在确认邮件里增加一个支付按钮。
+- [X] 加急付款只能用 zelle，提到 stripe 有手续费
+- [X] 默认要pdf。
+- [X] email 里提醒大家 reply all。
+- [X] status 页面，把支付按钮放到最上面。
+- [X] 6.单独显示 first name， last name， middle name
+- [X] sf 邮箱要确认一下！！！
+- [X] Old ApplicationForm is kinda **deprecated**
+- [X] Add a button to dropbox folder for each order.
+- [X] Add a Loading button for payment
+- [X] use components for Reviews
+- [X] Better layout for Status page
+- [X] any way for Status page to pre load???
+- [X] user add comments for their services
+- [X] show files uploaded.
+- [X] 付款倒计时！
+- [X] delete "valid_purpose_other":
+  ((((purpose = 'other'::text) AND (purpose_other IS NOT NULL)) OR ((purpose <> 'other'::text) AND (purpose_other IS NULL))))
+  to avoid:
+  new row for relation "fce_applications" violates check constraint "valid_purpose_other"
+- [X] 有两个邮寄选项选不上啊 ！！！已修复
+- [X] 取消 3% 手续费的提示
+- [X] 把 payment 放到上传文件下面
+- [X] 状态页增加 Timeline/步骤状态图（比如：✅ Application Submitted → ⏳ Documents Pending → 🚀 Payment Confirmed → 📄 Evaluation Processing）
+- [X] 调整邮件格式，增加更明显的用户引导
+- [X] 在用户上传文件后，后台可以 check 他的文件是否正确，
 - [ ] 上传文件后，发送邮件确认 （zhao）
-- [x] Stripe 完成付款后，发送邮件进行确认。（tong）
-- [x] CRM 处理进度 可视化。
+- [X] Stripe 完成付款后，发送邮件进行确认。（tong）
+- [X] CRM 处理进度 可视化。
 - [ ] 要有邮件发送的倒计时（zhao）
-- [x] 某些情况下，手动设置价格后，发送邮件提示用户付款
-- [x] 增加付款的倒计时（暂时设置成半小时）
-- [x] 要增加 sample，在表格第一页！
-- [x] Marked as Paid for Zelle/ Paypal (stripe has payment id)
+- [X] 某些情况下，手动设置价格后，发送邮件提示用户付款
+- [X] 增加付款的倒计时（暂时设置成半小时）
+- [X] 要增加 sample，在表格第一页！
+- [X] Marked as Paid for Zelle/ Paypal (stripe has payment id)
 - [ ] 需要能手动导入 （批量？） 数据 （tong）
 - [ ] 参考 SuccessMessage，需要建立 FailedMsg
-- [x] Stripe 的 bank transfer 太慢了。 1-3 天。我们取消了。
-- [x] 不能把 paid 重写为 expired
+- [X] Stripe 的 bank transfer 太慢了。 1-3 天。我们取消了。
+- [X] 不能把 paid 重写为 expired
 - [ ] fix `export interface Application extends Omit<DatabaseApplication,'service_type'|'educations'>`
-- [x] 48小时自动标记 expired （script, Github Action）
-- [x] 设置 due amount 后发邮件通知
-- [x] 付款后，自动更新due amount
-- [x] 为每笔支付单独新建一个表（zelle Stripe paypal）
-- [x] evaluee name 加上 proun
-- [x] 生成的 payment link，在完成支付后，在 crm 出现记录。
-- [x] CRM 上增加一个提醒需要实体版邮寄的小图标！！！
-- [x] 对于 payment link 生成 payment confirmation email
-- [x] 增加 AI feature
-- [x] 一个 ai chatbot
-- [x] 一个 ai 的 pre evaluation 功能
+- [X] 48小时自动标记 expired （script, Github Action）
+- [X] 设置 due amount 后发邮件通知
+- [X] 付款后，自动更新due amount
+- [X] 为每笔支付单独新建一个表（zelle Stripe paypal）
+- [X] evaluee name 加上 proun
+- [X] 生成的 payment link，在完成支付后，在 crm 出现记录。
+- [X] CRM 上增加一个提醒需要实体版邮寄的小图标！！！
+- [X] 对于 payment link 生成 payment confirmation email
+- [X] 增加 AI feature
+- [X] 一个 ai chatbot
+- [X] 一个 ai 的 pre evaluation 功能
 - [ ] 移动端的一些显示细节问题。 logo，日期选择，etc..
-- [x] 联邦假日。交付日期！！！
+- [X] 联邦假日。交付日期！！！
 - [ ] 可以通过 dropbox 最新的发送链接的功能。直接把相关文件通过邮件发送给客户。
-- [x] 通过上传图片 - ocr - llm，来判定等同学历。
+- [X] 通过上传图片 - ocr - llm，来判定等同学历。
 
   - [ ] next?
-
 - [ ] 邮件中的 payment link 还是无效的啊。。。
 - [ ] 考虑用 college Scoredcard api 来获取 fields of study？ (已经申请 api keys)
-- [x] 重新矫正AI 输出结果，之前 Haiti 的案例好像不对了？！！！ fix: google vision api
+- [X] 重新矫正AI 输出结果，之前 Haiti 的案例好像不对了？！！！ fix: google vision api
 - [ ] 现在的设计是，在申请的过程中上传 diploma。但是有个问题在于可能会导致用户忘记上传？？
 - [ ] 不同进度的的 row 上色，变得更加明显。
 - [ ] 数据库应该加栏，记录返回的 ocrText，result， reasoning
@@ -134,14 +132,12 @@ FCE-Form/
    - Contact information
    - Address details (with country-specific regions)
    - Purpose of evaluation
-
 2. **Evaluee Information** (`EvalueeInfo.tsx`)
 
    - Personal information
    - Multiple education records
    - Study period details
    - Dynamic education fields
-
 3. **Service Selection** (`ServiceSelection.tsx`)
 
    - Document Evaluation Services
@@ -152,7 +148,6 @@ FCE-Form/
    - Translation Service
    - Delivery options
    - Additional services with quantities
-
 4. **Review** (`Review.tsx`)
 
    - Summary of all information
