@@ -1,17 +1,18 @@
 # TODO:
 
 - [ ] Add i18n and localization, which could help with the SEO and ToC (Table of Contents) in posts.
-- [x] IMPROVE the sitemap!!!!
+- [X] IMPROVE the sitemap!!!!
 - [ ] Do we need ‘src/utilities/serialize.ts’? Try to find the build in function in Payload.
-- [x] Create 'projects' and 'cases' pages, like Posts Page (or just add metadata('Related PAges' and 'Categories') for Pages? )
-- [x] Which logo should we use? One is darker (witth text "美域佳华"), one's color looks better yet the bg is not perfectly deleted. 暂定为天蓝色。
-- [x] Create a form and show the email resender, submission record.
-- [x] AnimatedTitle disappears in mobile mode!!!
-- [x] Theme selector shows layout mess in mobile mode!!!
-- [x] 提供的图片没有背景，在黑色主题下文字看不清！！！ 和王艳沟通，让 潘总 zhangfeng 帮忙改 (changed the ImageMedia ‘style’, )
+- [X] Create 'projects' and 'cases' pages, like Posts Page (or just add metadata('Related PAges' and 'Categories') for Pages? )
+- [X] Which logo should we use? One is darker (witth text "美域佳华"), one's color looks better yet the bg is not perfectly deleted. 暂定为天蓝色。
+- [X] Create a form and show the email resender, submission record.
+- [X] AnimatedTitle disappears in mobile mode!!!
+- [X] Theme selector shows layout mess in mobile mode!!!
+- [X] 提供的图片没有背景，在黑色主题下文字看不清！！！ 和王艳沟通，让 潘总 zhangfeng 帮忙改 (changed the ImageMedia ‘style’, )
 - [ ] Form is tricky, let them contact ppl first
 - [ ] make all the links work
 - [ ] add cases page
+- [ ] 支持大文件的上传
 
 # i18n and localization
 
