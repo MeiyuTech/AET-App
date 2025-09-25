@@ -1,141 +1,292 @@
+import Image from 'next/image'
+
 /**
  * Footer Component
  *
  * A responsive website footer that provides:
- * - Bilingual support (English/Chinese) with language switcher
+ * - Service links and popular links
+ * - Office location information
  * - Social media icons
- * - Copyright
- * - Multiple office location information
+ * - Copyright and policy links
  *
  * Used as the main footer for all pages in the application.
  */
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2B3A4D] text-white py-12 px-8" id="footer">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Los Angeles Office */}
-        <div>
-          <h3 className="text-2xl font-semibold mb-6 text-amber-400">Los Angeles Office – HQ</h3>
-          <div className="space-y-3">
-            <p>
-              <a
-                href="https://maps.app.goo.gl/h7ux4NDvi2t4JksQ7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-teal-400"
-              >
-                19800 MacArthur Blvd Ste 420, Irvine CA 92612
-              </a>
-            </p>
-            <p>Business Hours: Mon. – Fri. 9:30am - 5:30pm PST</p>
-            <div className="flex items-center gap-2">
-              <span>Phone:</span>
-              <a href={`tel:+1 (949) 954-7996`} className="hover:text-teal-400">
-                +1 (949) 954-7996
-              </a>
+    <footer
+      className="bg-white text-center py-8 px-4 shadow-2xl border-t border-gray-200"
+      style={{ fontFamily: 'Verdana, sans-serif' }}
+      id="footer"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Main Content Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          {/* TOP SERVICE Column */}
+          <div className="text-center">
+            <h3 className="text-base font-bold text-[#1a4d8c] mb-3 uppercase tracking-wide">
+              TOP SERVICE
+            </h3>
+            <div className="space-y-1 mb-6">
+              <p className="mb-2">
+                <a
+                  href="https://www.americantranslationservice.com/e-evaluation.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Foreign Credential Evaluation
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <span>Email:</span>
-              <a href={`mailto:ca2@aet21.com`} className="hover:text-teal-400">
-                ca2@aet21.com
-              </a>
+
+            <h3 className="text-base font-bold text-[#1a4d8c] mb-3 uppercase tracking-wide">
+              MORE SERVICES
+            </h3>
+            <div className="space-y-1">
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-notarized.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Certified Translation
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-interpretation.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Interpretation
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-visaservice.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Visa
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-authentication.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Consular Authentication
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <span>WeChat:</span>
-              <span className="hover:text-teal-400">LA9499547996</span>
+          </div>
+
+          {/* POPULAR LINKS Column */}
+          <div className="text-center">
+            <h3 className="text-base font-bold text-[#1a4d8c] mb-3 uppercase tracking-wide">
+              POPULAR LINKS
+            </h3>
+            <div className="space-y-1">
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-fee.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Service Fee
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-contact.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Contact Us
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-aboutus.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  About AET
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-careers.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Career
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <span>Toll Free from China:</span>
-              <span className="hover:text-teal-400">950-4041-5989/167-6208-4336</span>
+          </div>
+
+          {/* OFFICE Column */}
+          <div className="text-center">
+            <h3 className="text-base font-bold text-[#1a4d8c] mb-3 uppercase tracking-wide">
+              OFFICE
+            </h3>
+            <div className="space-y-1">
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-miami.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Miami
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-boston.php"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Boston
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-san-francisco.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  San Francisco
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-los-angeles.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Los Angeles
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-nyc.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  New York
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
+              <p className="mb-1">
+                <a
+                  href="https://www.americantranslationservice.com/e-office-beijing.php"
+                  className="text-[#3366cc] hover:text-[#1a4d8c] transition-colors text-sm relative group font-medium"
+                >
+                  Beijing
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Miami Office */}
-        <div>
-          <h3 className="text-2xl font-semibold mb-6 text-amber-400">Miami Office - HQ</h3>
-          <div className="space-y-3">
-            <p>
-              <a
-                href="https://maps.app.goo.gl/qs15wUVZYHRtfZJP9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-teal-400"
-              >
-                15321 S Dixie Hwy, #302, Palmetto Bay, FL 33157
-              </a>
-            </p>
-            <p>Business Hours: Mon. – Fri. 9:00am - 5:00pm EST</p>
-            <div className="flex items-center gap-2">
-              <span>Phone:</span>
-              <a href={`tel:+1 (786) 250-3999`} className="hover:text-teal-400">
-                +1 (786) 250-3999 /
-              </a>
-              <a href={`tel:+1 (786) 881-7058`} className="hover:text-teal-400">
-                +1 (786) 881-7058
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Email:</span>
-              <a href={`mailto:info@aet21.com`} className="hover:text-teal-400">
-                info@aet21.com
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>WeChat:</span>
-              <span className="hover:text-teal-400">AET-Miami</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>WhatsApp:</span>
-              <span className="hover:text-teal-400">786-881-7058</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Toll Free from China:</span>
-              <span className="hover:text-teal-400">950 4037 9459</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Fax:</span>
-              <span className="hover:text-teal-400">954 644 7787</span>
-            </div>
+        {/* Social Media Section */}
+        <div className="border-t border-gray-300 pt-6 mb-6">
+          <div className="flex justify-center items-center space-x-6">
+            <a
+              href="https://www.linkedin.com/company/american-education-&-translation-services-aet-"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Follow us on LinkedIn"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src="/LinkedIn Logo.svg"
+                alt="LinkedIn"
+                width={40}
+                height={28}
+                className="w-10 h-7"
+              />
+            </a>
+            <a
+              href="https://www.yelp.com/biz/american-education-and-translation-services-malden"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Read our Yelp reviews"
+              className="text-[#d32323] text-2xl hover:opacity-80 transition-opacity"
+            >
+              {/* Yelp SVG Logo */}
+              <Image
+                src="/yelp-color-svgrepo-com.svg"
+                alt="Yelp"
+                width={40}
+                height={28}
+                className="w-10 h-7"
+              />
+            </a>
+            <a
+              href="https://www.facebook.com/MiamiAET/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Follow us on Facebook"
+              className="text-blue-600 text-2xl hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src="/facebook-color-svgrepo-com.svg"
+                alt="Facebook"
+                width={40}
+                height={28}
+                className="w-10 h-7"
+              />
+            </a>
+            <a
+              href="https://www.google.com/search?q=american+education+translation+services&oq=american+education+translation+services&aqs=chrome..69i57j69i60l2j35i39i362l3j46i39i362j35i39i362.213j0j7&sourceid=chrome&ie=UTF-8"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Read our Google reviews"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <Image
+                src="/google-reviews.png"
+                alt="Google Reviews"
+                width={70}
+                height={40}
+                className="w-16 h-9"
+              />
+            </a>
           </div>
         </div>
 
-        {/* San Francisco Office */}
-        <div>
-          <h3 className="text-2xl font-semibold mb-6 text-amber-400">San Francisco Office</h3>
-          <div className="space-y-3">
-            <p>
-              <a
-                href="https://maps.app.goo.gl/aHKSWpskz1KTdzfY9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-teal-400"
-              >
-                851 Burlway Rd Ste 421, Burlingame CA 94010
-              </a>
-            </p>
-            <p>Business Hours: Mon. – Fri. 9:00am - 5:00pm PST</p>
-            <div className="flex items-center gap-2">
-              <span>Phone:</span>
-              <a href={`tel:+1 (415) 868-4892`} className="hover:text-teal-400">
-                +1 (415) 868-4892
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Email:</span>
-              <a href={`mailto:ca@aet21.com`} className="hover:text-teal-400">
-                ca@aet21.com
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>WeChat:</span>
-              <span className="hover:text-teal-400">18611291421</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Toll Free from China:</span>
-              <span className="hover:text-teal-400">950-4044-1214/167-1526-5057</span>
-            </div>
+        {/* Copyright Section */}
+        <div className="text-center">
+          <p className="text-[#3366cc] text-xs relative group font-medium">
+            Copyright 2009 - Present American Education and Translation Services
+          </p>
+          <div className="space-x-4">
+            <a
+              href="https://www.americantranslationservice.com/blog"
+              className="text-[#3366cc] text-xs relative group font-medium"
+            >
+              Blog
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a
+              href="https://www.americantranslationservice.com/e-terms-of-use.php"
+              className="text-[#3366cc] text-xs relative group font-medium"
+            >
+              Terms of Use
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a
+              href="https://www.americantranslationservice.com/e-privacy-policy.php"
+              className="text-[#3366cc] text-xs relative group font-medium"
+            >
+              Privacy Policy
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1a4d8c] transition-all duration-300 group-hover:w-full"></span>
+            </a>
           </div>
         </div>
       </div>
