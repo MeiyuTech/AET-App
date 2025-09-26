@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, DragEvent } from 'react'
-import { MAX_FILE_SIZE, ALLOWED_TYPES } from '../../utils/dropbox/config.client'
+import { MAX_FILE_SIZE, ALLOWED_TYPES, CHUNK_SIZE } from '../../utils/dropbox/config.client'
 import { getUploadStatusColor } from '../../utils/statusColors'
 
 type UploadStatus = 'pending' | 'uploading' | 'success' | 'failed' | 'cancelled'
@@ -23,10 +23,15 @@ export default function DropboxUploader({
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
   const [progress, setProgress] = useState<{
-    [key: string]: { status: UploadStatus; percent: number }
+    [key: string]: {
+      status: UploadStatus
+      percent: number
+      chunks?: { uploaded: number; total: number }
+    }
   }>({})
   const [isDragging, setIsDragging] = useState(false)
   const abortControllersRef = useRef<{ [key: string]: AbortController }>({})
+  const uploadSessionsRef = useRef<{ [key: string]: string }>({})
 
   const validateFile = (file: File) => {
     if (file.size > MAX_FILE_SIZE) {
@@ -77,6 +82,144 @@ export default function DropboxUploader({
     }))
   }
 
+  // Helper function to convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        const result = reader.result as string
+        // Remove data:image/jpeg;base64, prefix
+        const base64 = result.split(',')[1]
+        resolve(base64)
+      }
+      reader.onerror = (error) => reject(error)
+    })
+  }
+
+  // Chunked upload function
+  const uploadFileInChunks = async (file: File, uploadKey: string) => {
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
+
+    setProgress((prev) => ({
+      ...prev,
+      [file.name]: {
+        status: 'uploading',
+        percent: 0,
+        chunks: { uploaded: 0, total: totalChunks },
+      },
+    }))
+
+    try {
+      // Start upload session
+      const startResponse = await fetch('/api/dropbox/chunked-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'start',
+          office,
+          applicationId,
+          fullName,
+          submittedAt,
+          fileName: file.name,
+          fileSize: file.size,
+        }),
+      })
+
+      if (!startResponse.ok) {
+        throw new Error('Failed to start upload session')
+      }
+
+      const { sessionId } = await startResponse.json()
+      uploadSessionsRef.current[file.name] = sessionId
+
+      // Upload chunks
+      for (let i = 0; i < totalChunks; i++) {
+        if (abortControllersRef.current[file.name]?.signal.aborted) {
+          throw new Error('Upload cancelled')
+        }
+
+        const start = i * CHUNK_SIZE
+        const end = Math.min(start + CHUNK_SIZE, file.size)
+        const chunk = file.slice(start, end) as File
+        const chunkData = await fileToBase64(chunk)
+
+        const appendResponse = await fetch('/api/dropbox/chunked-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'append',
+            uploadKey,
+            chunkIndex: i,
+            chunkData,
+          }),
+        })
+
+        if (!appendResponse.ok) {
+          throw new Error(`Failed to upload chunk ${i + 1}`)
+        }
+
+        const percent = Math.round(((i + 1) / totalChunks) * 100)
+        setProgress((prev) => ({
+          ...prev,
+          [file.name]: {
+            status: 'uploading',
+            percent,
+            chunks: { uploaded: i + 1, total: totalChunks },
+          },
+        }))
+      }
+
+      // Finish upload
+      const finishResponse = await fetch('/api/dropbox/chunked-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'finish',
+          uploadKey,
+          commit: true,
+        }),
+      })
+
+      if (!finishResponse.ok) {
+        throw new Error('Failed to finish upload')
+      }
+
+      setProgress((prev) => ({
+        ...prev,
+        [file.name]: {
+          status: 'success',
+          percent: 100,
+          chunks: { uploaded: totalChunks, total: totalChunks },
+        },
+      }))
+
+      return { fileName: file.name, success: true }
+    } catch (error) {
+      if (error.message === 'Upload cancelled') {
+        setProgress((prev) => ({
+          ...prev,
+          [file.name]: {
+            status: 'cancelled',
+            percent: prev[file.name]?.percent || 0,
+            chunks: prev[file.name]?.chunks,
+          },
+        }))
+        return { fileName: file.name, success: false, aborted: true }
+      }
+
+      setProgress((prev) => ({
+        ...prev,
+        [file.name]: {
+          status: 'failed',
+          percent: prev[file.name]?.percent || 0,
+          chunks: prev[file.name]?.chunks,
+        },
+      }))
+      throw error
+    }
+  }
+
   const handleUpload = async () => {
     if (!files || files.length === 0) {
       setMessage('Please select files first')
@@ -86,53 +229,60 @@ export default function DropboxUploader({
     setUploading(true)
     setMessage('Uploading...')
     abortControllersRef.current = {}
+    uploadSessionsRef.current = {}
 
     try {
       const results = await Promise.all(
         Array.from(files).map(async (file) => {
-          const formData = new FormData()
-          formData.append('file', file)
-
-          // Add office information
-          formData.append('officeName', office)
-          if (submittedAt) {
-            formData.append('submittedAt', submittedAt)
-          }
-          if (fullName) {
-            formData.append('fullName', fullName)
-          }
-          if (applicationId) {
-            formData.append('applicationId', applicationId)
-          }
           // Create new AbortController for this upload
           const controller = new AbortController()
           abortControllersRef.current[file.name] = controller
 
-          setProgress((prev) => ({
-            ...prev,
-            [file.name]: { status: 'uploading', percent: 0 },
-          }))
+          // Generate unique upload key
+          const uploadKey = `${office}-${applicationId}-${file.name}`
 
           try {
-            const response = await fetch('/api/dropbox/upload', {
-              method: 'POST',
-              body: formData,
-              signal: controller.signal,
-            })
+            // Use chunked upload for files larger than 4MB, regular upload for smaller files
+            if (file.size > CHUNK_SIZE) {
+              return await uploadFileInChunks(file, uploadKey)
+            } else {
+              // Use regular upload for small files
+              const formData = new FormData()
+              formData.append('file', file)
+              formData.append('officeName', office)
+              if (submittedAt) {
+                formData.append('submittedAt', submittedAt)
+              }
+              if (fullName) {
+                formData.append('fullName', fullName)
+              }
+              if (applicationId) {
+                formData.append('applicationId', applicationId)
+              }
 
-            // const result = await response.json()
+              setProgress((prev) => ({
+                ...prev,
+                [file.name]: { status: 'uploading', percent: 0 },
+              }))
 
-            setProgress((prev) => ({
-              ...prev,
-              [file.name]: {
-                status: response.ok ? 'success' : 'failed',
-                percent: 100,
-              },
-            }))
+              const response = await fetch('/api/dropbox/upload', {
+                method: 'POST',
+                body: formData,
+                signal: controller.signal,
+              })
 
-            return { fileName: file.name, success: response.ok }
+              setProgress((prev) => ({
+                ...prev,
+                [file.name]: {
+                  status: response.ok ? 'success' : 'failed',
+                  percent: 100,
+                },
+              }))
+
+              return { fileName: file.name, success: response.ok }
+            }
           } catch (error) {
-            if (error.name === 'AbortError') {
+            if (error.name === 'AbortError' || error.message === 'Upload cancelled') {
               return { fileName: file.name, success: false, aborted: true }
             }
             throw error
@@ -151,6 +301,7 @@ export default function DropboxUploader({
     } finally {
       setUploading(false)
       abortControllersRef.current = {}
+      uploadSessionsRef.current = {}
     }
   }
 
@@ -179,7 +330,8 @@ export default function DropboxUploader({
         />
         <p className="mt-2 text-sm text-gray-500">or drag and drop files here</p>
         <p className="mt-1 text-xs text-gray-400">
-          Supported formats: JPG, PNG, PDF, DOC(X) • Max size: 50MB
+          Supported formats: JPG, PNG, PDF, DOC(X) • Max size: 50MB • Large files will be uploaded
+          in chunks
         </p>
       </div>
 
@@ -201,7 +353,9 @@ export default function DropboxUploader({
                   )}
                   <span className={getUploadStatusColor(progress[file.name]?.status || 'pending')}>
                     {progress[file.name]?.status === 'uploading'
-                      ? 'Uploading...'
+                      ? progress[file.name]?.chunks
+                        ? `Uploading... (${progress[file.name].chunks?.uploaded}/${progress[file.name].chunks?.total} chunks)`
+                        : 'Uploading...'
                       : progress[file.name]?.status === 'success'
                         ? 'Completed'
                         : progress[file.name]?.status === 'failed'
