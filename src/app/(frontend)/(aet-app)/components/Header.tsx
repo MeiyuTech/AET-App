@@ -3,7 +3,17 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, Globe, ChevronDown } from 'lucide-react'
+import {
+  Menu,
+  Globe,
+  ChevronDown,
+  Home,
+  GraduationCap,
+  Settings,
+  Mail,
+  Info,
+  Rss,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -23,8 +33,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 
 // Navigation data based on the HTML structure
 const navigationItems = [
-  { title: 'Home', href: 'https://www.americantranslationservice.com/' },
-  { title: 'Evaluation', href: '  https://www.americantranslationservice.com/e-evaluation.php' },
+  { title: 'Home', href: 'https://www.americantranslationservice.com/', icon: Home },
+  {
+    title: 'Evaluation',
+    href: 'https://www.americantranslationservice.com/e-evaluation.php',
+    icon: GraduationCap,
+  },
   {
     title: 'Services',
     items: [
@@ -66,9 +80,13 @@ const navigationItems = [
       },
     ],
   },
-  { title: 'Contact', href: 'https://www.americantranslationservice.com/e-contact.php' },
-  { title: 'About', href: 'https://www.americantranslationservice.com/e-aboutus.php' },
-  { title: 'Blog', href: 'https://www.americantranslationservice.com/blog' },
+  {
+    title: 'Contact',
+    href: 'https://www.americantranslationservice.com/e-contact.php',
+    icon: Mail,
+  },
+  { title: 'About', href: 'https://www.americantranslationservice.com/e-aboutus.php', icon: Info },
+  { title: 'Blog', href: 'https://www.americantranslationservice.com/blog', icon: Rss },
 ]
 
 const languages = [
@@ -199,44 +217,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-2 lg:hidden">
-            {/* Mobile Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="flex items-center space-x-1 px-2 py-1"
-                  style={{
-                    fontFamily: 'Verdana, sans-serif',
-                    color: '#00438F',
-                    fontSize: '14px',
-                  }}
-                >
-                  <Globe className="h-4 w-4" />
-                  <span className="font-normal">
-                    {languages.find((lang) => lang.code === currentLanguage)?.display}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[100px]">
-                {languages.map((language) => (
-                  <DropdownMenuItem
-                    key={language.code}
-                    onClick={() => handleLanguageChange(language.code)}
-                    className={`px-3 py-2 ${currentLanguage === language.code ? 'bg-accent' : ''}`}
-                    style={{
-                      fontFamily: 'Verdana, sans-serif',
-                      color: '#00438F',
-                      fontSize: '14px',
-                    }}
-                  >
-                    {language.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+          <div className="flex items-center lg:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm">
@@ -249,47 +230,82 @@ export default function Header() {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <div className="mt-6 space-y-4">
-                  {navigationItems.map((item) => (
-                    <div key={item.title}>
-                      {item.items ? (
-                        <div className="space-y-2">
-                          <div className="text-sm font-medium text-muted-foreground">
-                            {item.title}
-                          </div>
-                          <div className="ml-4 space-y-2">
-                            {item.items.map((subItem) => (
-                              <Link
-                                key={subItem.title}
-                                href={subItem.href}
-                                className="block hover:text-primary my-[2px] mx-[8px]"
-                                style={{
-                                  fontFamily: 'Verdana, sans-serif',
-                                  color: '#00438F',
-                                  fontSize: '14px',
-                                  padding: '12px 20px',
-                                }}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                              >
-                                {subItem.title}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className="block text-base font-normal hover:text-primary px-[15px] py-[12px]"
+                  {/* Navigation Items */}
+                  {navigationItems.map((item) => {
+                    const IconComponent = item.icon
+                    return (
+                      <div key={item.title}>
+                        {item.items ? (
+                          // For mobile, show "Other Services" instead of individual service items
+                          <Link
+                            href="https://www.americantranslationservice.com/home.php#other-services-section"
+                            className="flex items-center space-x-3 px-[15px] py-[12px] hover:bg-gray-50 rounded-md transition-colors"
+                            style={{
+                              fontFamily: 'Verdana, sans-serif',
+                              color: '#00438F',
+                              fontSize: '14px',
+                            }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span>Other Services</span>
+                          </Link>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className="flex items-center space-x-3 px-[15px] py-[12px] hover:bg-gray-50 rounded-md transition-colors"
+                            style={{
+                              fontFamily: 'Verdana, sans-serif',
+                              color: '#00438F',
+                              fontSize: '14px',
+                            }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {IconComponent && <IconComponent className="h-4 w-4" />}
+                            <span>{item.title}</span>
+                          </Link>
+                        )}
+                      </div>
+                    )
+                  })}
+
+                  {/* Language Selector in Mobile Menu */}
+                  <div className="border-t pt-4 mt-4">
+                    <div className="flex items-center space-x-3 px-[15px] py-[12px] text-sm font-medium text-muted-foreground">
+                      <Globe className="h-4 w-4" />
+                      <span>Language</span>
+                    </div>
+                    <div className="space-y-1">
+                      {languages.map((language) => (
+                        <button
+                          key={language.code}
+                          onClick={() => {
+                            handleLanguageChange(language.code)
+                            setIsMobileMenuOpen(false)
+                          }}
+                          className={`w-full text-left px-[15px] py-[8px] rounded-md transition-colors flex items-center space-x-2 ${
+                            currentLanguage === language.code
+                              ? 'bg-blue-50 text-blue-700'
+                              : 'hover:bg-gray-50'
+                          }`}
                           style={{
                             fontFamily: 'Verdana, sans-serif',
-                            color: '#00438F',
+                            color: currentLanguage === language.code ? '#00438F' : '#00438F',
+                            fontSize: '14px',
                           }}
-                          onClick={() => setIsMobileMenuOpen(false)}
                         >
-                          {item.title}
-                        </Link>
-                      )}
+                          <span
+                            className={`w-2 h-2 rounded-full ${
+                              currentLanguage === language.code
+                                ? 'bg-blue-600'
+                                : 'border border-gray-400'
+                            }`}
+                          ></span>
+                          <span>{language.name}</span>
+                        </button>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
