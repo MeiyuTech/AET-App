@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { DROPBOX_TOKENS } from '../../../utils/dropbox/config.server'
-import { getOfficeTokenType } from '../../../utils/dropbox/config.client'
+import { getOfficeTokenType, CHUNK_SIZE } from '../../../utils/dropbox/config.client'
 import { getAccessToken, createDropboxClient } from '../../../utils/dropbox/server'
 
 // Store upload sessions in memory (in production, use Redis or database)
@@ -64,7 +64,7 @@ async function startUploadSession(data: {
 
   const folderPath = `${basePath}/${office}/${fullName} - ${applicationId}`
   const filePath = `${folderPath}/${fileName}`
-  const totalChunks = Math.ceil(fileSize / (4 * 1024 * 1024)) // 4MB chunks
+  const totalChunks = Math.ceil(fileSize / CHUNK_SIZE) // Use configured chunk size
 
   const accessToken = await getAccessToken(tokenType)
   const dbx = createDropboxClient(accessToken, namespaceId)

@@ -242,7 +242,7 @@ export default function DropboxUploader({
           const uploadKey = `${office}-${applicationId}-${file.name}`
 
           try {
-            // Use chunked upload for files larger than 4MB, regular upload for smaller files
+            // Use chunked upload for files larger than CHUNK_SIZE, regular upload for smaller files
             if (file.size > CHUNK_SIZE) {
               return await uploadFileInChunks(file, uploadKey)
             } else {

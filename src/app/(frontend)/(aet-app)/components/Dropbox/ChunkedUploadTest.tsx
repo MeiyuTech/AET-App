@@ -72,9 +72,9 @@ export default function ChunkedUploadTest() {
         )}
 
         <div className="text-xs text-gray-500">
-          <p>• 文件大于 4MB 将使用分片上传</p>
-          <p>• 文件小于等于 4MB 将使用普通上传</p>
-          <p>• 分片大小: 4MB (符合 Vercel 4.5MB 限制)</p>
+          <p>• 文件大于 {(CHUNK_SIZE / 1024 / 1024).toFixed(0)}MB 将使用分片上传</p>
+          <p>• 文件小于等于 {(CHUNK_SIZE / 1024 / 1024).toFixed(0)}MB 将使用普通上传</p>
+          <p>• 分片大小: {(CHUNK_SIZE / 1024 / 1024).toFixed(0)}MB (符合 Vercel 4.5MB 限制)</p>
         </div>
       </div>
     </div>
