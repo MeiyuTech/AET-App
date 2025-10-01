@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { GoogleTagManager } from '@next/third-parties/google'
 
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
@@ -11,15 +10,13 @@ import React from 'react'
 import Header from '@/app/(frontend)/(aet-app)/components/Header'
 import Footer from '@/app/(frontend)/(aet-app)/components/Footer'
 import { Toaster } from '@/components/ui/toaster'
-import { Providers } from '@/providers'
-import { InitTheme } from '@/providers/Theme/InitTheme'
+import { I18nProvider } from '@/providers/I18nProvider'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { cn } from '@/utilities/cn'
 // import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-import { FloatingQRCode } from '@/components/FloatingQRCode'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // const { isEnabled } = await draftMode()
@@ -54,12 +51,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           /> */}
 
-        {/* <Header /> */}
-        <Header />
-        <main className="pt-[32px]">{children}</main>
-        {/* <Footer /> */}
-        <Footer />
-        <Toaster />
+        <I18nProvider>
+          {/* <Header /> */}
+          <Header />
+          <main className="pt-[32px]">{children}</main>
+          {/* <Footer /> */}
+          <Footer />
+          <Toaster />
+        </I18nProvider>
         {/* </Providers> */}
       </body>
     </html>

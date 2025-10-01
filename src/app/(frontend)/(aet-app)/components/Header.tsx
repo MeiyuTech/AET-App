@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { localeDisplayNames, Locale } from '@/i18n'
 import {
   Menu,
   Globe,
@@ -31,77 +34,90 @@ import {
 } from '@/components/ui/navigation-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
-// Navigation data based on the HTML structure
-const navigationItems = [
-  { title: 'Home', href: 'https://www.americantranslationservice.com/', icon: Home },
-  {
-    title: 'Evaluation',
-    href: 'https://www.americantranslationservice.com/e-evaluation.php',
-    icon: GraduationCap,
-  },
-  {
-    title: 'Services',
-    items: [
-      {
-        title: 'Certified Translation',
-        href: 'https://www.americantranslationservice.com/e-notarized.php',
-      },
-      {
-        title: 'Technical Translation',
-        href: 'https://www.americantranslationservice.com/e-tech-translation.php',
-      },
-      {
-        title: 'Interpretation',
-        href: 'https://www.americantranslationservice.com/e-interpretation.php',
-      },
-      {
-        title: 'Visa Services',
-        href: 'https://www.americantranslationservice.com/e-visaservice.php',
-      },
-      {
-        title: 'Expert Opinion Letters',
-        href: 'https://www.americantranslationservice.com/e-expert-opinion-letter.php',
-      },
-      {
-        title: 'Editing/Proofreading',
-        href: 'https://www.americantranslationservice.com/e-writing.php',
-      },
-      {
-        title: 'General Translation',
-        href: 'https://www.americantranslationservice.com/e-translation.php',
-      },
-      {
-        title: 'Notarization',
-        href: 'https://www.americantranslationservice.com/e-nus.php',
-      },
-      {
-        title: 'China Consular Authentication',
-        href: 'https://www.americantranslationservice.com/e-authentication.php',
-      },
-    ],
-  },
-  {
-    title: 'Contact',
-    href: 'https://www.americantranslationservice.com/e-contact.php',
-    icon: Mail,
-  },
-  { title: 'About', href: 'https://www.americantranslationservice.com/e-aboutus.php', icon: Info },
-  { title: 'Blog', href: 'https://www.americantranslationservice.com/blog', icon: Rss },
-]
-
+// Languages configuration
 const languages = [
-  { code: 'en', name: 'English', display: 'EN' },
-  { code: 'zh', name: '中文', display: '中文' },
-  { code: 'es', name: 'Español', display: 'ES' },
+  { code: 'en' as Locale, name: 'English', display: 'EN' },
+  { code: 'zh' as Locale, name: '中文', display: '中文' },
+  { code: 'es' as Locale, name: 'Español', display: 'ES' },
 ]
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [currentLanguage, setCurrentLanguage] = useState('en')
+  const t = useTranslations()
+  const { locale, setLocale } = useLanguage()
 
-  const handleLanguageChange = (langCode: string) => {
-    setCurrentLanguage(langCode)
-    // Add language switching logic here
+  // Create navigation items with translations
+  const navigationItems = [
+    {
+      title: t('navigation.home'),
+      href: 'https://www.americantranslationservice.com/',
+      icon: Home,
+    },
+    {
+      title: t('navigation.evaluation'),
+      href: 'https://www.americantranslationservice.com/e-evaluation.php',
+      icon: GraduationCap,
+    },
+    {
+      title: t('navigation.services'),
+      items: [
+        {
+          title: t('services.certifiedTranslation'),
+          href: 'https://www.americantranslationservice.com/e-notarized.php',
+        },
+        {
+          title: t('services.technicalTranslation'),
+          href: 'https://www.americantranslationservice.com/e-tech-translation.php',
+        },
+        {
+          title: t('services.interpretation'),
+          href: 'https://www.americantranslationservice.com/e-interpretation.php',
+        },
+        {
+          title: t('services.visaServices'),
+          href: 'https://www.americantranslationservice.com/e-visaservice.php',
+        },
+        {
+          title: t('services.expertOpinionLetters'),
+          href: 'https://www.americantranslationservice.com/e-expert-opinion-letter.php',
+        },
+        {
+          title: t('services.editingProofreading'),
+          href: 'https://www.americantranslationservice.com/e-writing.php',
+        },
+        {
+          title: t('services.generalTranslation'),
+          href: 'https://www.americantranslationservice.com/e-translation.php',
+        },
+        {
+          title: t('services.notarization'),
+          href: 'https://www.americantranslationservice.com/e-nus.php',
+        },
+        {
+          title: t('services.chinaConsularAuthentication'),
+          href: 'https://www.americantranslationservice.com/e-authentication.php',
+        },
+      ],
+    },
+    {
+      title: t('navigation.contact'),
+      href: 'https://www.americantranslationservice.com/e-contact.php',
+      icon: Mail,
+    },
+    {
+      title: t('navigation.about'),
+      href: 'https://www.americantranslationservice.com/e-aboutus.php',
+      icon: Info,
+    },
+    {
+      title: t('navigation.blog'),
+      href: 'https://www.americantranslationservice.com/blog',
+      icon: Rss,
+    },
+  ]
+
+  const handleLanguageChange = (langCode: Locale) => {
+    setLocale(langCode)
   }
 
   return (
@@ -136,9 +152,7 @@ export default function Header() {
                   }}
                 >
                   <Globe className="h-4 w-4" />
-                  <span className="font-normal">
-                    {languages.find((lang) => lang.code === currentLanguage)?.display}
-                  </span>
+                  <span className="font-normal">{localeDisplayNames[locale]}</span>
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
@@ -147,7 +161,7 @@ export default function Header() {
                   <DropdownMenuItem
                     key={language.code}
                     onClick={() => handleLanguageChange(language.code)}
-                    className={`px-4 py-3 ${currentLanguage === language.code ? 'bg-accent' : ''}`}
+                    className={`px-4 py-3 ${locale === language.code ? 'bg-accent' : ''}`}
                     style={{
                       fontFamily: 'Verdana, sans-serif',
                       color: '#00438F',
@@ -222,12 +236,12 @@ export default function Header() {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm">
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
+                  <span className="sr-only">{t('header.toggleMenu')}</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
+                  <SheetTitle>{t('header.menu')}</SheetTitle>
                 </SheetHeader>
                 <div className="mt-6 space-y-4">
                   {/* Navigation Items */}
@@ -248,7 +262,7 @@ export default function Header() {
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <Settings className="h-4 w-4" />
-                            <span>Other Services</span>
+                            <span>{t('services.otherServices')}</span>
                           </Link>
                         ) : (
                           <Link
@@ -273,7 +287,7 @@ export default function Header() {
                   <div className="border-t pt-4 mt-4">
                     <div className="flex items-center space-x-3 px-[15px] py-[12px] text-sm font-medium text-muted-foreground">
                       <Globe className="h-4 w-4" />
-                      <span>Language</span>
+                      <span>{t('navigation.language')}</span>
                     </div>
                     <div className="space-y-1">
                       {languages.map((language) => (
@@ -284,21 +298,19 @@ export default function Header() {
                             setIsMobileMenuOpen(false)
                           }}
                           className={`w-full text-left px-[15px] py-[8px] rounded-md transition-colors flex items-center space-x-2 ${
-                            currentLanguage === language.code
+                            locale === language.code
                               ? 'bg-blue-50 text-blue-700'
                               : 'hover:bg-gray-50'
                           }`}
                           style={{
                             fontFamily: 'Verdana, sans-serif',
-                            color: currentLanguage === language.code ? '#00438F' : '#00438F',
+                            color: locale === language.code ? '#00438F' : '#00438F',
                             fontSize: '14px',
                           }}
                         >
                           <span
                             className={`w-2 h-2 rounded-full ${
-                              currentLanguage === language.code
-                                ? 'bg-blue-600'
-                                : 'border border-gray-400'
+                              locale === language.code ? 'bg-blue-600' : 'border border-gray-400'
                             }`}
                           ></span>
                           <span>{language.name}</span>

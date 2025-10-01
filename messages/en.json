@@ -1,0 +1,61 @@
+{
+  "navigation": {
+    "home": "Home",
+    "evaluation": "Evaluation",
+    "services": "Services",
+    "contact": "Contact",
+    "about": "About",
+    "blog": "Blog",
+    "language": "Language"
+  },
+  "services": {
+    "certifiedTranslation": "Certified Translation",
+    "technicalTranslation": "Technical Translation",
+    "interpretation": "Interpretation",
+    "visaServices": "Visa Services",
+    "expertOpinionLetters": "Expert Opinion Letters",
+    "editingProofreading": "Editing/Proofreading",
+    "generalTranslation": "General Translation",
+    "notarization": "Notarization",
+    "chinaConsularAuthentication": "China Consular Authentication",
+    "otherServices": "Other Services"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "startNow": "Start Now"
+  },
+  "header": {
+    "menu": "Menu",
+    "toggleMenu": "Toggle Navigation Menu",
+    "logoAlt": "American Education and Translation Services Logo"
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use"
+  },
+  "degreeEquivalency": {
+    "title": "Degree Equivalency",
+    "tool": "Tool",
+    "subtitle": "See What Your Degree is Equivalent to in the U.S.",
+    "description": "Use our tool to learn more about what your degree is comparable to in the U.S.",
+    "disclaimer": "Not all degrees and institutions may be available."
+  },
+  "meta": {
+    "title": "American Education and Translation Services (AET) | Since 2009",
+    "description": "Located in Miami, Boston, SF, LA, NYC, American Education and Translation Services has been dedicated to being your best agency for Certified Translations and Credential Evaluation since 2009. Click to learn more.",
+    "keywords": "certified translation, notarized translation, foreign credential evaluation, translation services"
+  }
+}
