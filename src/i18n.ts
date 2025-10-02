@@ -24,9 +24,10 @@ export const localeDisplayNames: Record<Locale, string> = {
 
 export default getRequestConfig(async ({ locale }) => {
   // 验证传入的 locale 是否有效
-  if (!locales.includes(locale as Locale)) notFound()
+  if (!locale || !locales.includes(locale as Locale)) notFound()
 
   return {
+    locale: locale as Locale,
     messages: (await import(`../messages/${locale}.json`)).default,
   }
 })
