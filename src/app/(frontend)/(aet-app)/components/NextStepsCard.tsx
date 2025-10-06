@@ -6,6 +6,7 @@ import { fetchFCEApplication } from '@/app/(frontend)/(aet-app)/utils/actions'
 import { ApplicationData } from '@/app/(frontend)/(aet-app)/components/FCEApplicationForm/types'
 import { isValidUUID } from '@/app/(frontend)/(aet-app)/components/StatusCheck/utils'
 import PaymentCountdown from '@/app/(frontend)/(aet-app)/components/PaymentCountdown'
+import { useTranslations } from 'next-intl'
 
 interface StepProps {
   number: number
@@ -35,6 +36,7 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
   const [error, setError] = useState('')
+  const t = useTranslations('status')
 
   // Core function to fetch and validate application status
   const checkApplicationStatus = async (ApplicationId: string) => {
@@ -45,7 +47,7 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
 
     // Validate the format of the application ID
     if (!isValidUUID(ApplicationId)) {
-      setError('Invalid application ID format')
+      setError(t('errors.invalidFormat'))
       return
     }
 
@@ -61,10 +63,10 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)
       } else {
-        setError('Application not found. Please check your application ID.')
+        setError(t('errors.notFound'))
       }
     } catch (err) {
-      setError('Failed to check application status. Please try again.')
+      setError(t('errors.fetchFailed'))
       console.error(err)
     } finally {
       setIsLoading(false)
@@ -81,18 +83,18 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
   const steps: StepProps[] = [
     {
       number: 1,
-      title: 'Confirm Your Application',
-      description: 'Click the "Check Status" button to confirm your application.',
+      title: t('nextSteps.steps.confirm.title'),
+      description: t('nextSteps.steps.confirm.description'),
     },
     {
       number: 2,
-      title: 'Submit All Required Documents',
-      description: 'Please submit all required documents as specified in your application.',
+      title: t('nextSteps.steps.documents.title'),
+      description: t('nextSteps.steps.documents.description'),
     },
     {
       number: 3,
-      title: 'Processing Begins After Payment Confirmation',
-      description: 'We will begin processing your evaluation once payment is confirmed.',
+      title: t('nextSteps.steps.processing.title'),
+      description: t('nextSteps.steps.processing.description'),
     },
   ]
 
@@ -100,7 +102,7 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
     <Card>
       <CardContent className="pt-6">
         <div className="space-y-6">
-          <h3 className="text-lg font-semibold">What&apos;s next?</h3>
+          <h3 className="text-lg font-semibold">{t('nextSteps.heading')}</h3>
 
           <div className="space-y-4">
             {steps.map((step) => (
@@ -117,9 +119,9 @@ export default function NextStepsCard({ initialApplicationId }: NextStepsCardPro
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
             <p>
-              If you have any questions, please reply to your{' '}
-              <strong>Application Confirmation Email thread</strong>. We look forward to cooperating
-              with you!
+              {t.rich('nextSteps.contact', {
+                strong: (chunks) => <strong>{chunks}</strong>,
+              })}
             </p>
           </div>
         </div>

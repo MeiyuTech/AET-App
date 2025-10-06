@@ -1,10 +1,15 @@
 import { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 import StatusCheck from '../components/StatusCheck'
 import NextStepsCard from '../components/NextStepsCard'
 
-export const metadata: Metadata = {
-  title: 'AET Service Application Status',
-  description: 'AET Service Application Status',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('status.metadata')
+
+  return {
+    title: t('title'),
+    description: t('description'),
+  }
 }
 
 interface PageProps {
@@ -15,6 +20,7 @@ interface PageProps {
 
 export default async function StatusPage({ searchParams }: PageProps) {
   const { applicationId } = await searchParams
+  const t = await getTranslations('status.page')
 
   return (
     <div className="container mx-auto py-2">
@@ -26,8 +32,8 @@ export default async function StatusPage({ searchParams }: PageProps) {
 
         {/* Right Status Check Section */}
         <div className="md:col-span-2 space-y-6">
-          <h1 className="text-2xl font-bold">AET Service Application Status</h1>
-          <p className="text-sm text-gray-500">Check the status with your Application ID.</p>
+          <h1 className="text-2xl font-bold">{t('heading')}</h1>
+          <p className="text-sm text-gray-500">{t('intro')}</p>
           <StatusCheck initialApplicationId={applicationId} />
         </div>
       </div>

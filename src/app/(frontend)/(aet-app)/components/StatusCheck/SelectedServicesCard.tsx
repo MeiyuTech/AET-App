@@ -9,21 +9,25 @@ import {
   PURPOSE_OPTIONS,
 } from '../FCEApplicationForm/constants'
 import { calculateTotalPrice } from '../FCEApplicationForm/utils'
+import { useTranslations } from 'next-intl'
 
 interface SelectedServicesCardProps {
   application: ApplicationData
 }
 
 export default function SelectedServicesCard({ application }: SelectedServicesCardProps) {
+  const t = useTranslations('status')
+  const tCommon = useTranslations('common')
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Selected Services</CardTitle>
+        <CardTitle>{t('selectedServices.title')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Purpose */}
         <div>
-          <div className="font-medium">Purpose:</div>
+          <div className="font-medium">{t('selectedServices.purpose')}</div>
           <div className="pl-4">
             {' '}
             {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
@@ -31,21 +35,21 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         </div>
         {/* Service Notes */}
         <div>
-          <div className="font-medium">Service Notes:</div>
-          <div className="pl-4">{application.purposeOther}</div>
+          <div className="font-medium">{t('selectedServices.serviceNotes')}</div>
+          <div className="pl-4">{application.purposeOther || tCommon('notProvided')}</div>
         </div>
         {/* Customized Service */}
         {application.serviceType?.customizedService?.required && (
           <div>
-            <div className="font-medium">Customized Service</div>
-            <div className="pl-4">Price Will Be Quoted Upon Request</div>
+            <div className="font-medium">{t('selectedServices.customizedService')}</div>
+            <div className="pl-4">{t('selectedServices.priceOnRequest')}</div>
           </div>
         )}
 
         {/* Foreign Credential Evaluation */}
         {application.serviceType?.foreignCredentialEvaluation?.firstDegree?.speed && (
           <div>
-            <h4 className="font-medium mb-2">Educational Foreign Credential Evaluation</h4>
+            <h4 className="font-medium mb-2">{t('selectedServices.foreignCredential')}</h4>
             <div className="pl-4 space-y-2">
               {(() => {
                 const speed = application.serviceType.foreignCredentialEvaluation.firstDegree.speed
@@ -54,11 +58,11 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                   service && (
                     <>
                       <div>
-                        First Degree: {service.label} - ${service.price}
+                        {t('selectedServices.firstDegree')}: {service.label} - ${service.price}
                       </div>
                       {application.serviceType.foreignCredentialEvaluation.secondDegrees > 0 && (
                         <div>
-                          Second Degree:{' '}
+                          {t('selectedServices.secondDegree')}:{' '}
                           {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
                           {speed === '7day'
                             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
@@ -82,7 +86,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Course by Course */}
         {application.serviceType?.coursebyCourse?.firstDegree?.speed && (
           <div>
-            <div className="font-medium">Course-by-course Evaluation</div>
+            <div className="font-medium">{t('selectedServices.courseByCourse')}</div>
             <div className="pl-4 space-y-2">
               {(() => {
                 const speed = application.serviceType.coursebyCourse.firstDegree.speed
@@ -91,11 +95,12 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                   service && (
                     <>
                       <div>
-                        First Degree: {service.label} - ${service.price}
+                        {t('selectedServices.firstDegree')}: {service.label} - ${service.price}
                       </div>
                       {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                         <div>
-                          Second Degree: {application.serviceType.coursebyCourse.secondDegrees} × $
+                          {t('selectedServices.secondDegree')}:{' '}
+                          {application.serviceType.coursebyCourse.secondDegrees} × $
                           {speed === '8day'
                             ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
                             : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price}{' '}
@@ -117,7 +122,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Expert Opinion Letter */}
         {application.serviceType?.professionalExperience?.speed && (
           <div>
-            <div className="font-medium">Expert Opinion Letter</div>
+            <div className="font-medium">{t('selectedServices.expertOpinion')}</div>
             <div className="pl-4">
               {(() => {
                 const speed = application.serviceType.professionalExperience.speed
@@ -131,7 +136,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Position Evaluation */}
         {application.serviceType?.positionEvaluation?.speed && (
           <div>
-            <div className="font-medium">Position Evaluation</div>
+            <div className="font-medium">{t('selectedServices.positionEvaluation')}</div>
             <div className="pl-4">
               {(() => {
                 const speed = application.serviceType.positionEvaluation.speed
@@ -145,22 +150,22 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Translation Service */}
         {application.serviceType?.translation?.required && (
           <div>
-            <div className="font-medium">Translation Service</div>
-            <div className="pl-4">Price Will Be Quoted Upon Request</div>
+            <div className="font-medium">{t('selectedServices.translationService')}</div>
+            <div className="pl-4">{t('selectedServices.priceOnRequest')}</div>
           </div>
         )}
 
         {/* Type of Delivery */}
         {application.deliveryMethod && (
           <div>
-            <div className="font-medium">Type of Delivery</div>
+            <div className="font-medium">{t('selectedServices.deliveryType')}</div>
             <div className="pl-4">
               {(() => {
                 const method = application.deliveryMethod
                 const service = method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
                 return service
                   ? `${service.label} - $${service.price.toFixed(2)}`
-                  : 'No Delivery Needed - Free'
+                  : t('selectedServices.noDelivery')
               })()}
             </div>
           </div>
@@ -169,7 +174,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         {/* Additional Services */}
         {application.additionalServices?.length > 0 && (
           <div>
-            <div className="font-medium">Additional Services</div>
+            <div className="font-medium">{t('selectedServices.additionalServices')}</div>
             <div className="pl-4 space-y-1">
               {application.additionalServices.map((serviceId) => {
                 const service = ADDITIONAL_SERVICES[serviceId]
@@ -199,23 +204,22 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         <div className="pt-4 border-t">
           <div className="font-medium">
             {application.due_amount ? (
-              <div className="font-medium">Due Amount: ${application.due_amount}</div>
+              <div className="font-medium">
+                {t('selectedServices.dueAmount', { amount: application.due_amount })}
+              </div>
             ) : (
               <div className="font-medium">
-                Estimated Total:{' '}
-                {application.serviceType?.translation?.required ||
-                application.serviceType?.customizedService?.required
-                  ? 'Due amount is not set yet'
-                  : `$${calculateTotalPrice(application)}`}
+                {t('selectedServices.estimatedTotal', {
+                  amount:
+                    application.serviceType?.translation?.required ||
+                    application.serviceType?.customizedService?.required
+                      ? t('selectedServices.dueNotSet')
+                      : `$${calculateTotalPrice(application)}`,
+                })}
               </div>
             )}
           </div>
-          <div className="text-xs text-muted-foreground">
-            * This fee applies to most applications but it may vary for some applicants. We will
-            reconfirm your service details during the evaluation process. If any adjustments are
-            needed, we will contact you—any overpayment will be refunded, and underpayment will be
-            collected. Thank you for your trust!
-          </div>
+          <div className="text-xs text-muted-foreground">{t('selectedServices.footnote')}</div>
         </div>
       </CardContent>
     </Card>

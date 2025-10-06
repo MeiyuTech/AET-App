@@ -34,12 +34,138 @@
     "next": "Next",
     "previous": "Previous",
     "close": "Close",
-    "startNow": "Start Now"
+    "startNow": "Start Now",
+    "notProvided": "Not provided"
   },
   "header": {
     "menu": "Menu",
     "toggleMenu": "Toggle Navigation Menu",
     "logoAlt": "American Education and Translation Services Logo"
+  },
+  "status": {
+    "metadata": {
+      "title": "AET Service Application Status",
+      "description": "Check the status of your application with your Application ID."
+    },
+    "page": {
+      "heading": "AET Service Application Status",
+      "intro": "Check the status with your Application ID."
+    },
+    "errors": {
+      "invalidFormat": "Invalid application ID format.",
+      "invalidInput": "Please enter a valid application ID.",
+      "notFound": "Application not found. Please check your application ID.",
+      "fetchFailed": "Failed to check application status. Please try again.",
+      "paymentUnavailable": "Payment is not available until the due amount is set by our staff."
+    },
+    "form": {
+      "applicationIdLabel": "Application ID",
+      "applicationIdPlaceholder": "xxxxxxxx-xxxx-4xxx-xxxx-xxxxxxxxxxxx",
+      "button": {
+        "idle": "Check Status",
+        "loading": "Checking..."
+      }
+    },
+    "nextSteps": {
+      "heading": "What's next?",
+      "steps": {
+        "confirm": {
+          "title": "Confirm Your Application",
+          "description": "Click the \"Check Status\" button to confirm your application."
+        },
+        "documents": {
+          "title": "Submit All Required Documents",
+          "description": "Please submit all required documents as specified in your application."
+        },
+        "processing": {
+          "title": "Processing Begins After Payment Confirmation",
+          "description": "We will begin processing your evaluation once payment is confirmed."
+        }
+      },
+      "contact": "If you have any questions, please reply to your <strong>Application Confirmation Email thread</strong>. We look forward to cooperating with you!"
+    },
+    "upload": {
+      "title": "Upload Documents to {office} Office",
+      "description": "You can upload additional documents related to your application:",
+      "infoTitle": "For Credential Evaluation:",
+      "infoDescription": "Foreign Credential Evaluation is a service that assesses educational backgrounds and qualifications obtained outside the United States. It is crucial for foreign nationals seeking work authorization (H1B), immigration status, employment, education, or military recruitment in the U.S.",
+      "list": {
+        "degrees": "Scanned copies of your <strong>degree(s)</strong> and <strong>transcript(s)</strong>",
+        "translations": "<strong>Official or certified English translations</strong>"
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "pendingNotice": "Payment is not available until the due amount is set by our staff."
+    },
+    "applicationStatus": {
+      "title": "Application Status",
+      "status": "Status",
+      "submittedAt": "Submitted At",
+      "paymentStatus": "Payment Status",
+      "paidAt": "Paid At",
+      "notAvailable": "N/A",
+      "notPaid": "Not Paid"
+    },
+    "clientInfo": {
+      "title": "Client Information",
+      "companyName": "Company/Individual Name",
+      "country": "Country",
+      "streetAddress": "Street Address",
+      "address": "Address",
+      "phone": "Phone",
+      "fax": "Fax",
+      "email": "Email",
+      "purpose": "Purpose",
+      "serviceNotes": "Service Notes"
+    },
+    "evalueeInfo": {
+      "title": "Evaluee Information",
+      "firstName": "First Name",
+      "middleName": "Middle Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of Birth",
+      "pronouns": "Pronouns",
+      "education": {
+        "title": "Education Information",
+        "degree": "Degree {index}",
+        "country": "Country",
+        "degreeLabel": "Degree",
+        "school": "School",
+        "studyPeriod": "Study Period",
+        "empty": "No education information provided"
+      }
+    },
+    "selectedServices": {
+      "title": "Selected Services",
+      "purpose": "Purpose:",
+      "serviceNotes": "Service Notes:",
+      "customizedService": "Customized Service",
+      "priceOnRequest": "Price Will Be Quoted Upon Request",
+      "foreignCredential": "Educational Foreign Credential Evaluation",
+      "firstDegree": "First Degree",
+      "secondDegree": "Second Degree",
+      "courseByCourse": "Course-by-course Evaluation",
+      "expertOpinion": "Expert Opinion Letter",
+      "positionEvaluation": "Position Evaluation",
+      "translationService": "Translation Service",
+      "deliveryType": "Type of Delivery",
+      "noDelivery": "No Delivery Needed - Free",
+      "additionalServices": "Additional Services",
+      "dueAmount": "Due Amount: ${amount}",
+      "estimatedTotal": "Estimated Total: ${amount}",
+      "dueNotSet": "Due amount is not set yet",
+      "footnote": "* This fee applies to most applications but it may vary for some applicants. We will reconfirm your service details during the evaluation process. If any adjustments are needed, we will contact you—any overpayment will be refunded, and underpayment will be collected. Thank you for your trust!"
+    },
+    "paymentCountdown": {
+      "expiredTitle": "Payment Deadline Expired",
+      "expiredDescription": "Your payment deadline has expired. You may <link>contact support</link> to reactivate your application.",
+      "requiredTitle": "Payment Required",
+      "requiredDescription": "Please complete your payment to proceed with application processing. Your application will expire if payment is not received in time.",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    }
   },
   "footer": {
     "topService": "TOP SERVICE",

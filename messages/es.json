@@ -34,12 +34,138 @@
     "next": "Siguiente",
     "previous": "Anterior",
     "close": "Cerrar",
-    "startNow": "Comenzar Ahora"
+    "startNow": "Comenzar Ahora",
+    "notProvided": "No proporcionado"
   },
   "header": {
     "menu": "Menú",
     "toggleMenu": "Alternar Menú de Navegación",
     "logoAlt": "Logo de Servicios de Educación y Traducción Americana"
+  },
+  "status": {
+    "metadata": {
+      "title": "Estado de la Solicitud de AET",
+      "description": "Consulta el estado de tu solicitud con tu ID de solicitud."
+    },
+    "page": {
+      "heading": "Estado de la Solicitud de AET",
+      "intro": "Consulta el estado con tu ID de solicitud."
+    },
+    "errors": {
+      "invalidFormat": "Formato de ID de solicitud no válido.",
+      "invalidInput": "Ingresa un ID de solicitud válido.",
+      "notFound": "No se encontró la solicitud. Verifica tu ID de solicitud.",
+      "fetchFailed": "No se pudo consultar el estado de la solicitud. Inténtalo nuevamente.",
+      "paymentUnavailable": "El pago no estará disponible hasta que nuestro equipo establezca el monto adeudado."
+    },
+    "form": {
+      "applicationIdLabel": "ID de solicitud",
+      "applicationIdPlaceholder": "xxxxxxxx-xxxx-4xxx-xxxx-xxxxxxxxxxxx",
+      "button": {
+        "idle": "Verificar estado",
+        "loading": "Verificando..."
+      }
+    },
+    "nextSteps": {
+      "heading": "¿Cuál es el siguiente paso?",
+      "steps": {
+        "confirm": {
+          "title": "Confirma tu solicitud",
+          "description": "Haz clic en \"Verificar estado\" para confirmar tu solicitud."
+        },
+        "documents": {
+          "title": "Envía todos los documentos requeridos",
+          "description": "Envía todos los documentos solicitados en tu solicitud."
+        },
+        "processing": {
+          "title": "El proceso inicia tras confirmar el pago",
+          "description": "Comenzaremos la evaluación una vez que se confirme el pago."
+        }
+      },
+      "contact": "Si tienes alguna pregunta, responde al <strong>hilo del correo de confirmación de tu solicitud</strong>. ¡Esperamos trabajar contigo!"
+    },
+    "upload": {
+      "title": "Sube documentos a la oficina de {office}",
+      "description": "Puedes subir documentos adicionales relacionados con tu solicitud:",
+      "infoTitle": "Para la evaluación de credenciales:",
+      "infoDescription": "La evaluación de credenciales extranjeras analiza estudios y títulos obtenidos fuera de los Estados Unidos. Es crucial para quienes buscan autorización laboral (H1B), estatus migratorio, empleo, educación o reclutamiento militar en EE. UU.",
+      "list": {
+        "degrees": "Copias escaneadas de tus <strong>títulos</strong> y <strong>historiales académicos</strong>",
+        "translations": "<strong>Traducciones oficiales o certificadas al inglés</strong>"
+      }
+    },
+    "payment": {
+      "title": "Pago",
+      "pendingNotice": "El pago no estará disponible hasta que nuestro equipo establezca el monto adeudado."
+    },
+    "applicationStatus": {
+      "title": "Estado de la solicitud",
+      "status": "Estado",
+      "submittedAt": "Enviado el",
+      "paymentStatus": "Estado del pago",
+      "paidAt": "Pagado el",
+      "notAvailable": "N/D",
+      "notPaid": "No pagado"
+    },
+    "clientInfo": {
+      "title": "Información del cliente",
+      "companyName": "Nombre de la empresa/persona",
+      "country": "País",
+      "streetAddress": "Dirección",
+      "address": "Ciudad/Estado/Código postal",
+      "phone": "Teléfono",
+      "fax": "Fax",
+      "email": "Correo electrónico",
+      "purpose": "Propósito",
+      "serviceNotes": "Notas del servicio"
+    },
+    "evalueeInfo": {
+      "title": "Información del evaluado",
+      "firstName": "Nombre",
+      "middleName": "Segundo nombre",
+      "lastName": "Apellido",
+      "dateOfBirth": "Fecha de nacimiento",
+      "pronouns": "Pronombres",
+      "education": {
+        "title": "Información educativa",
+        "degree": "Título {index}",
+        "country": "País",
+        "degreeLabel": "Título",
+        "school": "Institución",
+        "studyPeriod": "Periodo de estudios",
+        "empty": "No se proporcionó información educativa"
+      }
+    },
+    "selectedServices": {
+      "title": "Servicios seleccionados",
+      "purpose": "Propósito:",
+      "serviceNotes": "Notas del servicio:",
+      "customizedService": "Servicio personalizado",
+      "priceOnRequest": "El precio se cotizará bajo solicitud",
+      "foreignCredential": "Evaluación educativa de credenciales extranjeras",
+      "firstDegree": "Primer título",
+      "secondDegree": "Segundo título",
+      "courseByCourse": "Evaluación curso por curso",
+      "expertOpinion": "Carta de opinión experta",
+      "positionEvaluation": "Evaluación de posición",
+      "translationService": "Servicio de traducción",
+      "deliveryType": "Tipo de envío",
+      "noDelivery": "No se requiere envío - Gratis",
+      "additionalServices": "Servicios adicionales",
+      "dueAmount": "Monto adeudado: ${amount}",
+      "estimatedTotal": "Total estimado: ${amount}",
+      "dueNotSet": "El monto adeudado aún no está definido",
+      "footnote": "* Esta tarifa aplica para la mayoría de las solicitudes, pero puede variar según el solicitante. Confirmaremos los detalles del servicio durante la evaluación. Si es necesario ajustar el monto, nos pondremos en contacto contigo: cualquier pago en exceso será reembolsado y los faltantes serán cobrados. ¡Gracias por tu confianza!"
+    },
+    "paymentCountdown": {
+      "expiredTitle": "Fecha límite de pago vencida",
+      "expiredDescription": "La fecha límite de tu pago ha vencido. Puedes <link>contactar al soporte</link> para reactivar tu solicitud.",
+      "requiredTitle": "Pago requerido",
+      "requiredDescription": "Completa tu pago para continuar con el proceso de la solicitud. Esta expirará si no recibimos el pago a tiempo.",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "seconds": "Segundos"
+    }
   },
   "footer": {
     "topService": "SERVICIO PRINCIPAL",
