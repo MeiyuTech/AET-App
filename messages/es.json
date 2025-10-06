@@ -77,6 +77,25 @@
     "description": "Use nuestra herramienta para aprender más sobre a qué es comparable su título en los EE.UU.",
     "disclaimer": "No todos los títulos e instituciones pueden estar disponibles."
   },
+  "homepage": {
+    "title": "Servicio AET",
+    "credentialEvaluation": {
+      "title": "Enviar Solicitud de Evaluación de Credenciales",
+      "description": "Complete el formulario de solicitud para comenzar su solicitud de Evaluación de Credenciales"
+    },
+    "degreeEquivalency": {
+      "title": "Enviar Solicitud de Equivalencia de Títulos",
+      "description": "Complete el formulario de solicitud para comenzar su solicitud de Equivalencia de Títulos"
+    },
+    "aiAssistant": {
+      "title": "Asistente de IA",
+      "description": "Chatea con nuestro asistente de IA para obtener ayuda con tus preguntas"
+    },
+    "checkStatus": {
+      "title": "Verificar Estado",
+      "description": "Rastrea el progreso de tu solicitud enviada"
+    }
+  },
   "meta": {
     "title": "Servicios de Educación y Traducción Americana (AET) | Desde 2009",
     "description": "Ubicados en Miami, Boston, SF, LA, NYC, los Servicios de Educación y Traducción Americana se han dedicado a ser su mejor agencia de Traducciones Certificadas y Evaluación de Credenciales desde 2009. Haga clic para aprender más.",

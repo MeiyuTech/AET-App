@@ -77,6 +77,25 @@
     "description": "使用我们的工具了解更多关于您的学位在美国的等效性。",
     "disclaimer": "并非所有学位和机构都可用。"
   },
+  "homepage": {
+    "title": "AET 服务",
+    "credentialEvaluation": {
+      "title": "提交学历评估申请",
+      "description": "填写申请表开始您的学历评估请求"
+    },
+    "degreeEquivalency": {
+      "title": "提交学位等效性申请",
+      "description": "填写申请表开始您的学位等效性请求"
+    },
+    "aiAssistant": {
+      "title": "AI 助手",
+      "description": "与我们的AI助手聊天获取问题帮助"
+    },
+    "checkStatus": {
+      "title": "查看状态",
+      "description": "跟踪您已提交申请的进度"
+    }
+  },
   "meta": {
     "title": "美国教育与翻译服务 (AET) | 自2009年",
     "description": "位于迈阿密、波士顿、旧金山、洛杉矶、纽约的美国教育与翻译服务公司自2009年以来一直致力于成为您最好的认证翻译和学历评估机构。点击了解更多。",
