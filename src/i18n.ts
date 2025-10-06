@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation'
 import { getRequestConfig } from 'next-intl/server'
 
 // 支持的语言列表
@@ -22,12 +21,28 @@ export const localeDisplayNames: Record<Locale, string> = {
   es: 'ES',
 }
 
+const resolveLocale = (locale?: string): Locale => {
+  if (!locale) return defaultLocale
+
+  const normalized = locale.toLowerCase()
+
+  if (locales.includes(normalized as Locale)) {
+    return normalized as Locale
+  }
+
+  const base = normalized.split('-')[0]
+  if (locales.includes(base as Locale)) {
+    return base as Locale
+  }
+
+  return defaultLocale
+}
+
 export default getRequestConfig(async ({ locale }) => {
-  // 验证传入的 locale 是否有效
-  if (!locale || !locales.includes(locale as Locale)) notFound()
+  const resolvedLocale = resolveLocale(locale)
 
   return {
-    locale: locale as Locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    locale: resolvedLocale,
+    messages: (await import(`../messages/${resolvedLocale}.json`)).default,
   }
 })

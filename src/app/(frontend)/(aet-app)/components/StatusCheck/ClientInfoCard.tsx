@@ -3,28 +3,32 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ApplicationData } from '../FCEApplicationForm/types'
 import { PURPOSE_OPTIONS, getCountryLabel } from '../FCEApplicationForm/constants'
+import { useTranslations } from 'next-intl'
 
 interface ClientInfoCardProps {
   application: ApplicationData
 }
 
 export default function ClientInfoCard({ application }: ClientInfoCardProps) {
+  const t = useTranslations('status')
+  const tCommon = useTranslations('common')
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Client Information</CardTitle>
+        <CardTitle>{t('clientInfo.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <dl className="grid grid-cols-2 gap-4">
           {/* Company/Individual Name */}
           <div>
-            <dt className="font-medium">Company/Individual Name</dt>
+            <dt className="font-medium">{t('clientInfo.companyName')}</dt>
             <dd className="text-muted-foreground">{application.name}</dd>
           </div>
 
           {/* Country */}
           <div>
-            <dt className="font-medium">Country</dt>
+            <dt className="font-medium">{t('clientInfo.country')}</dt>
             <dd className="text-muted-foreground">
               {application.country ? getCountryLabel(application.country) : ''}
             </dd>
@@ -32,7 +36,7 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
 
           {/* Street Address */}
           <div>
-            <dt className="font-medium">Street Address</dt>
+            <dt className="font-medium">{t('clientInfo.streetAddress')}</dt>
             <dd className="text-muted-foreground">
               {application.streetAddress}
               {application.streetAddress2 && <br />}
@@ -42,7 +46,7 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
 
           {/* Address */}
           <div>
-            <dt className="font-medium">Address</dt>
+            <dt className="font-medium">{t('clientInfo.address')}</dt>
             <dd className="text-muted-foreground">
               {application.city ? `${application.city}, ` : ''}
               {application.region || ''} {application.zipCode || ''}
@@ -51,25 +55,25 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
 
           {/* Phone */}
           <div>
-            <dt className="font-medium">Phone</dt>
+            <dt className="font-medium">{t('clientInfo.phone')}</dt>
             <dd className="text-muted-foreground">{application.phone}</dd>
           </div>
 
           {/* Fax */}
           <div>
-            <dt className="font-medium">Fax</dt>
-            <dd className="text-muted-foreground">{application.fax || 'Not Provided'}</dd>
+            <dt className="font-medium">{t('clientInfo.fax')}</dt>
+            <dd className="text-muted-foreground">{application.fax || tCommon('notProvided')}</dd>
           </div>
 
           {/* Email */}
           <div>
-            <dt className="font-medium">Email</dt>
+            <dt className="font-medium">{t('clientInfo.email')}</dt>
             <dd className="text-muted-foreground">{application.email}</dd>
           </div>
 
           {/* Purpose */}
           <div>
-            <dt className="font-medium">Purpose</dt>
+            <dt className="font-medium">{t('clientInfo.purpose')}</dt>
             <dd className="text-muted-foreground">
               {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
               {application.purpose === 'other' && application.purposeOther && (
@@ -80,8 +84,10 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
         </dl>
         {/* Service Notes */}
         <div className="mt-4">
-          <dt className="font-medium">Service Notes</dt>
-          <dd className="text-muted-foreground">{application.purposeOther}</dd>
+          <dt className="font-medium">{t('clientInfo.serviceNotes')}</dt>
+          <dd className="text-muted-foreground">
+            {application.purposeOther || tCommon('notProvided')}
+          </dd>
         </div>
       </CardContent>
     </Card>

@@ -17,6 +17,7 @@ import EvalueeInfoCard from './EvalueeInfoCard'
 import InfoHoverCard from './InfoHoverCard'
 import SelectedServicesCard from './SelectedServicesCard'
 import { formatUUID, isValidUUID } from './utils'
+import { useTranslations } from 'next-intl'
 
 interface StatusCheckProps {
   initialApplicationId?: string
@@ -27,6 +28,8 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [application, setApplication] = useState<ApplicationData | null>(null)
+  const t = useTranslations('status')
+  const tCommon = useTranslations('common')
 
   // Helper function to update URL with the applicationId parameter
   // This keeps the URL in sync with the current application being viewed
@@ -56,7 +59,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
 
     // Validate the format of the application ID
     if (!isValidUUID(ApplicationId)) {
-      setError('Please enter a valid application ID')
+      setError(t('errors.invalidInput'))
       return
     }
 
@@ -74,10 +77,10 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
       if (result.success && result.applicationData) {
         setApplication(result.applicationData)
       } else {
-        setError('Application not found. Please check your application ID.')
+        setError(t('errors.notFound'))
       }
     } catch (err) {
-      setError('Failed to check application status. Please try again.')
+      setError(t('errors.fetchFailed'))
       console.error(err)
     } finally {
       setIsLoading(false)
@@ -109,7 +112,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 htmlFor="applicationId"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Application ID
+                {t('form.applicationIdLabel')}
               </label>
               <input
                 id="applicationId"
@@ -117,7 +120,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 value={applicationId}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
-                placeholder="xxxxxxxx-xxxx-4xxx-xxxx-xxxxxxxxxxxx"
+                placeholder={t('form.applicationIdPlaceholder')}
                 pattern="^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 maxLength={36}
                 disabled={isLoading}
@@ -131,7 +134,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-400"
               disabled={isLoading}
             >
-              {isLoading ? 'Checking...' : 'Check Status'}
+              {isLoading ? t('form.button.loading') : t('form.button.idle')}
             </button>
           </form>
         </CardContent>
@@ -146,36 +149,29 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
             application.office && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Upload Documents to {application.office} Office</CardTitle>
+                  <CardTitle>{t('upload.title', { office: application.office })}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-2">
-                    You can upload additional documents related to your application:
-                    <br />
-                    <br />
+                    {t('upload.description')}
                   </p>
                   <div className="mb-2">
                     <InfoHoverCard
-                      title="For Credential Evaluation:"
+                      title={t('upload.infoTitle')}
                       content={
-                        <p className="text-sm text-muted-foreground">
-                          Foreign Credential Evaluation is a service that assesses educational
-                          backgrounds and qualifications obtained outside the United States. It is
-                          crucial for foreign nationals seeking work authorization (H1B),
-                          immigration status, employment, education, or military recruitment in the
-                          U.S.
-                          <br />
-                          <br />
-                        </p>
+                        <p className="text-sm text-muted-foreground">{t('upload.infoDescription')}</p>
                       }
                     />
                     <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
                       <li>
-                        Scanned copies of your <strong>degree(s)</strong> and{' '}
-                        <strong>transcript(s)</strong>
+                        {t.rich('upload.list.degrees', {
+                          strong: (chunks) => <strong>{chunks}</strong>,
+                        })}
                       </li>
                       <li>
-                        <strong>Official or certified English translations</strong>
+                        {t.rich('upload.list.translations', {
+                          strong: (chunks) => <strong>{chunks}</strong>,
+                        })}
                       </li>
                     </ul>
                   </div>
@@ -188,7 +184,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                       fullName={
                         [application.firstName, application.middleName, application.lastName]
                           .filter(Boolean)
-                          .join(' ') || 'Not provided'
+                          .join(' ') || tCommon('notProvided')
                       }
                     />
                   </div>
@@ -201,7 +197,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                     fullName={
                       [application.firstName, application.middleName, application.lastName]
                         .filter(Boolean)
-                        .join(' ') || 'Not provided'
+                        .join(' ') || tCommon('notProvided')
                     }
                   />
                 </CardContent>
@@ -214,7 +210,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
           {application.payment_status !== 'paid' && (
             <Card>
               <CardHeader>
-                <CardTitle>Payment</CardTitle>
+                <CardTitle>{t('payment.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {!application.serviceType?.translation?.required &&
@@ -225,7 +221,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                 ) : (
                   <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                     <p className="text-sm text-yellow-700">
-                      Payment is not available until the due amount is set by our staff.
+                      {t('payment.pendingNotice')}
                     </p>
                   </div>
                 )}

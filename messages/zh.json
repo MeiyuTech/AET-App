@@ -34,12 +34,138 @@
     "next": "下一步",
     "previous": "上一步",
     "close": "关闭",
-    "startNow": "立即开始"
+    "startNow": "立即开始",
+    "notProvided": "未提供"
   },
   "header": {
     "menu": "菜单",
     "toggleMenu": "切换导航菜单",
     "logoAlt": "美国教育与翻译服务公司标志"
+  },
+  "status": {
+    "metadata": {
+      "title": "AET 服务申请状态",
+      "description": "使用您的申请编号查询申请处理进度。"
+    },
+    "page": {
+      "heading": "AET 服务申请状态",
+      "intro": "使用您的申请编号查询申请进度。"
+    },
+    "errors": {
+      "invalidFormat": "申请编号格式无效。",
+      "invalidInput": "请输入有效的申请编号。",
+      "notFound": "未找到申请，请确认您的申请编号。",
+      "fetchFailed": "查询申请状态失败，请稍后重试。",
+      "paymentUnavailable": "在我们设定应付款金额之前暂无法进行付款。"
+    },
+    "form": {
+      "applicationIdLabel": "申请编号",
+      "applicationIdPlaceholder": "xxxxxxxx-xxxx-4xxx-xxxx-xxxxxxxxxxxx",
+      "button": {
+        "idle": "查询状态",
+        "loading": "正在查询..."
+      }
+    },
+    "nextSteps": {
+      "heading": "接下来怎么做？",
+      "steps": {
+        "confirm": {
+          "title": "确认您的申请",
+          "description": "点击“查询状态”按钮确认您的申请。"
+        },
+        "documents": {
+          "title": "提交所有所需材料",
+          "description": "请按申请要求提交所有必要材料。"
+        },
+        "processing": {
+          "title": "付款确认后开始处理",
+          "description": "付款确认后我们将开始评估流程。"
+        }
+      },
+      "contact": "如有任何问题，请回复您的<strong>申请确认邮件</strong>。期待与您合作！"
+    },
+    "upload": {
+      "title": "向 {office} 办事处上传文件",
+      "description": "您可以在此上传与申请相关的补充材料：",
+      "infoTitle": "关于学历评估：",
+      "infoDescription": "外国学历评估用于评估在美国以外获得的教育背景和资质，对申请工作签证（H1B）、移民身份、就业、入学或参军的外国人士尤为重要。",
+      "list": {
+        "degrees": "请上传<strong>学位证书</strong>与<strong>成绩单</strong>的扫描件",
+        "translations": "<strong>提供官方或认证的英文翻译件</strong>"
+      }
+    },
+    "payment": {
+      "title": "付款",
+      "pendingNotice": "在我们设定应付款金额之前暂无法进行付款。"
+    },
+    "applicationStatus": {
+      "title": "申请状态",
+      "status": "当前状态",
+      "submittedAt": "提交时间",
+      "paymentStatus": "付款状态",
+      "paidAt": "付款时间",
+      "notAvailable": "无",
+      "notPaid": "未付款"
+    },
+    "clientInfo": {
+      "title": "申请人信息",
+      "companyName": "公司 / 个人名称",
+      "country": "国家",
+      "streetAddress": "街道地址",
+      "address": "地址",
+      "phone": "电话",
+      "fax": "传真",
+      "email": "电子邮箱",
+      "purpose": "用途",
+      "serviceNotes": "服务备注"
+    },
+    "evalueeInfo": {
+      "title": "受评人信息",
+      "firstName": "名",
+      "middleName": "中间名",
+      "lastName": "姓",
+      "dateOfBirth": "出生日期",
+      "pronouns": "称谓",
+      "education": {
+        "title": "教育信息",
+        "degree": "第 {index} 个学位",
+        "country": "国家",
+        "degreeLabel": "学位",
+        "school": "学校",
+        "studyPeriod": "学习时间",
+        "empty": "未提供教育信息"
+      }
+    },
+    "selectedServices": {
+      "title": "已选服务",
+      "purpose": "用途：",
+      "serviceNotes": "服务备注：",
+      "customizedService": "定制服务",
+      "priceOnRequest": "价格将根据需求另行报价",
+      "foreignCredential": "学历评估（教育类）",
+      "firstDegree": "首个学位",
+      "secondDegree": "第二个学位",
+      "courseByCourse": "逐课评估",
+      "expertOpinion": "专家意见函",
+      "positionEvaluation": "职位评估",
+      "translationService": "翻译服务",
+      "deliveryType": "递送方式",
+      "noDelivery": "无需邮寄 — 免费",
+      "additionalServices": "附加服务",
+      "dueAmount": "应付金额：${amount}",
+      "estimatedTotal": "预估总计：${amount}",
+      "dueNotSet": "应付金额尚未设定",
+      "footnote": "* 此费用适用于大多数申请，个别申请人可能有所调整。我们会在评估过程中再次确认服务细项。如需调整，我们将联系您——多付部分会退还，少付部分将补收。感谢您的信任！"
+    },
+    "paymentCountdown": {
+      "expiredTitle": "付款截止已过",
+      "expiredDescription": "您的付款截止已过。您可以<link>联系支持</link>重新激活申请。",
+      "requiredTitle": "需要付款",
+      "requiredDescription": "请尽快完成付款以继续申请流程。如未按时付款，申请将失效。",
+      "hours": "小时",
+      "minutes": "分钟",
+      "seconds": "秒"
+    }
   },
   "footer": {
     "topService": "主要服务",

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { AlertCircle } from 'lucide-react'
-import {} from '@/components/ui/button'
 import { getPaymentDeadline } from './StatusCheck/utils'
+import { useTranslations } from 'next-intl'
 interface PaymentCountdownProps {
   submittedAt: string
   paymentStatus: string
@@ -17,6 +17,7 @@ interface TimeLeft {
 }
 
 export default function PaymentCountdown({ submittedAt, paymentStatus }: PaymentCountdownProps) {
+  const t = useTranslations('status')
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     hours: 0,
     minutes: 0,
@@ -71,14 +72,16 @@ export default function PaymentCountdown({ submittedAt, paymentStatus }: Payment
       <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
         <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="h-5 w-5 text-red-500" />
-          <h3 className="font-medium text-red-800">Payment Deadline Expired</h3>
+          <h3 className="font-medium text-red-800">{t('paymentCountdown.expiredTitle')}</h3>
         </div>
         <p className="text-sm text-red-700 mb-3">
-          Your payment deadline has expired. You may{' '}
-          <a href="#footer" className="text-amber-500">
-            contact support
-          </a>{' '}
-          to reactivate your application.
+          {t.rich('paymentCountdown.expiredDescription', {
+            link: (chunks) => (
+              <a href="#footer" className="text-amber-500">
+                {chunks}
+              </a>
+            ),
+          })}
         </p>
       </div>
     )
@@ -88,12 +91,11 @@ export default function PaymentCountdown({ submittedAt, paymentStatus }: Payment
     <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
       <div className="flex items-center gap-2 mb-2">
         <AlertCircle className="h-5 w-5 text-amber-500" />
-        <h3 className="font-medium text-amber-800">Payment Required</h3>
+        <h3 className="font-medium text-amber-800">{t('paymentCountdown.requiredTitle')}</h3>
       </div>
 
       <p className="text-sm text-amber-700 mb-3">
-        Please complete your payment to proceed with application processing. Your application will
-        expire if payment is not received in time.
+        {t('paymentCountdown.requiredDescription')}
       </p>
 
       <div className="flex items-center justify-center gap-4 my-3">
@@ -101,21 +103,21 @@ export default function PaymentCountdown({ submittedAt, paymentStatus }: Payment
           <span className="text-2xl font-bold text-amber-700">
             {timeLeft.hours.toString().padStart(2, '0')}
           </span>
-          <span className="text-xs text-amber-600">Hours</span>
+          <span className="text-xs text-amber-600">{t('paymentCountdown.hours')}</span>
         </div>
         <span className="text-xl font-bold text-amber-700">:</span>
         <div className="flex flex-col items-center">
           <span className="text-2xl font-bold text-amber-700">
             {timeLeft.minutes.toString().padStart(2, '0')}
           </span>
-          <span className="text-xs text-amber-600">Minutes</span>
+          <span className="text-xs text-amber-600">{t('paymentCountdown.minutes')}</span>
         </div>
         <span className="text-xl font-bold text-amber-700">:</span>
         <div className="flex flex-col items-center">
           <span className="text-2xl font-bold text-amber-700">
             {timeLeft.seconds.toString().padStart(2, '0')}
           </span>
-          <span className="text-xs text-amber-600">Seconds</span>
+          <span className="text-xs text-amber-600">{t('paymentCountdown.seconds')}</span>
         </div>
       </div>
     </div>
