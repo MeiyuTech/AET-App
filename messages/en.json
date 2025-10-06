@@ -1,0 +1,104 @@
+{
+  "navigation": {
+    "home": "Home",
+    "evaluation": "Evaluation",
+    "services": "Services",
+    "contact": "Contact",
+    "about": "About",
+    "blog": "Blog",
+    "language": "Language"
+  },
+  "services": {
+    "certifiedTranslation": "Certified Translation",
+    "technicalTranslation": "Technical Translation",
+    "interpretation": "Interpretation",
+    "visaServices": "Visa Services",
+    "expertOpinionLetters": "Expert Opinion Letters",
+    "editingProofreading": "Editing/Proofreading",
+    "generalTranslation": "General Translation",
+    "notarization": "Notarization",
+    "chinaConsularAuthentication": "China Consular Authentication",
+    "otherServices": "Other Services"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "startNow": "Start Now"
+  },
+  "header": {
+    "menu": "Menu",
+    "toggleMenu": "Toggle Navigation Menu",
+    "logoAlt": "American Education and Translation Services Logo"
+  },
+  "footer": {
+    "topService": "TOP SERVICE",
+    "moreServices": "MORE SERVICES",
+    "popularLinks": "POPULAR LINKS",
+    "office": "OFFICE",
+    "foreignCredentialEvaluation": "Foreign Credential Evaluation",
+    "certifiedTranslation": "Certified Translation",
+    "interpretation": "Interpretation",
+    "visa": "Visa",
+    "consularAuthentication": "Consular Authentication",
+    "serviceFee": "Service Fee",
+    "contactUs": "Contact Us",
+    "aboutAET": "About AET",
+    "career": "Career",
+    "miami": "Miami",
+    "boston": "Boston",
+    "sanFrancisco": "San Francisco",
+    "losAngeles": "Los Angeles",
+    "newYork": "New York",
+    "beijing": "Beijing",
+    "followLinkedIn": "Follow us on LinkedIn",
+    "readYelpReviews": "Read our Yelp reviews",
+    "followFacebook": "Follow us on Facebook",
+    "readGoogleReviews": "Read our Google reviews",
+    "copyright": "Copyright 2009 - Present American Education and Translation Services",
+    "blog": "Blog",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "degreeEquivalency": {
+    "title": "Degree Equivalency",
+    "tool": "Tool",
+    "subtitle": "See What Your Degree is Equivalent to in the U.S.",
+    "description": "Use our tool to learn more about what your degree is comparable to in the U.S.",
+    "disclaimer": "Not all degrees and institutions may be available."
+  },
+  "homepage": {
+    "title": "AET Service",
+    "credentialEvaluation": {
+      "title": "Submit Credential Evaluation Application",
+      "description": "Fill out the application form to start your Credential Evaluation request"
+    },
+    "degreeEquivalency": {
+      "title": "Submit Degree Equivalency Application",
+      "description": "Fill out the application form to start your Degree Equivalency request"
+    },
+    "aiAssistant": {
+      "title": "AI Assistant",
+      "description": "Chat with our AI assistant for help with your questions"
+    },
+    "checkStatus": {
+      "title": "Check Status",
+      "description": "Track the progress of your submitted application"
+    }
+  },
+  "meta": {
+    "title": "American Education and Translation Services (AET) | Since 2009",
+    "description": "Located in Miami, Boston, SF, LA, NYC, American Education and Translation Services has been dedicated to being your best agency for Certified Translations and Credential Evaluation since 2009. Click to learn more.",
+    "keywords": "certified translation, notarized translation, foreign credential evaluation, translation services"
+  }
+}

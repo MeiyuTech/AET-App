@@ -1,0 +1,104 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "evaluation": "Evaluación",
+    "services": "Servicios",
+    "contact": "Contacto",
+    "about": "Acerca de",
+    "blog": "Blog",
+    "language": "Idioma"
+  },
+  "services": {
+    "certifiedTranslation": "Traducción Certificada",
+    "technicalTranslation": "Traducción Técnica",
+    "interpretation": "Interpretación",
+    "visaServices": "Servicios de Visa",
+    "expertOpinionLetters": "Cartas de Opinión de Expertos",
+    "editingProofreading": "Edición/Corrección",
+    "generalTranslation": "Traducción General",
+    "notarization": "Notarización",
+    "chinaConsularAuthentication": "Autenticación Consular de China",
+    "otherServices": "Otros Servicios"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "startNow": "Comenzar Ahora"
+  },
+  "header": {
+    "menu": "Menú",
+    "toggleMenu": "Alternar Menú de Navegación",
+    "logoAlt": "Logo de Servicios de Educación y Traducción Americana"
+  },
+  "footer": {
+    "topService": "SERVICIO PRINCIPAL",
+    "moreServices": "MÁS SERVICIOS",
+    "popularLinks": "ENLACES POPULARES",
+    "office": "OFICINAS",
+    "foreignCredentialEvaluation": "Evaluación de Credenciales Extranjeras",
+    "certifiedTranslation": "Traducción Certificada",
+    "interpretation": "Interpretación",
+    "visa": "Visa",
+    "consularAuthentication": "Autenticación Consular",
+    "serviceFee": "Tarifas de Servicio",
+    "contactUs": "Contáctanos",
+    "aboutAET": "Acerca de AET",
+    "career": "Carreras",
+    "miami": "Miami",
+    "boston": "Boston",
+    "sanFrancisco": "San Francisco",
+    "losAngeles": "Los Angeles",
+    "newYork": "Nueva York",
+    "beijing": "Beijing",
+    "followLinkedIn": "Síguenos en LinkedIn",
+    "readYelpReviews": "Lee nuestras reseñas de Yelp",
+    "followFacebook": "Síguenos en Facebook",
+    "readGoogleReviews": "Lee nuestras reseñas de Google",
+    "copyright": "Copyright 2009 - Presente Servicios de Educación y Traducción Americana",
+    "blog": "Blog",
+    "termsOfUse": "Términos de Uso",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "degreeEquivalency": {
+    "title": "Equivalencia de Títulos",
+    "tool": "Herramienta",
+    "subtitle": "Vea a qué es Equivalente su Título en los EE.UU.",
+    "description": "Use nuestra herramienta para aprender más sobre a qué es comparable su título en los EE.UU.",
+    "disclaimer": "No todos los títulos e instituciones pueden estar disponibles."
+  },
+  "homepage": {
+    "title": "Servicio AET",
+    "credentialEvaluation": {
+      "title": "Enviar Solicitud de Evaluación de Credenciales",
+      "description": "Complete el formulario de solicitud para comenzar su solicitud de Evaluación de Credenciales"
+    },
+    "degreeEquivalency": {
+      "title": "Enviar Solicitud de Equivalencia de Títulos",
+      "description": "Complete el formulario de solicitud para comenzar su solicitud de Equivalencia de Títulos"
+    },
+    "aiAssistant": {
+      "title": "Asistente de IA",
+      "description": "Chatea con nuestro asistente de IA para obtener ayuda con tus preguntas"
+    },
+    "checkStatus": {
+      "title": "Verificar Estado",
+      "description": "Rastrea el progreso de tu solicitud enviada"
+    }
+  },
+  "meta": {
+    "title": "Servicios de Educación y Traducción Americana (AET) | Desde 2009",
+    "description": "Ubicados en Miami, Boston, SF, LA, NYC, los Servicios de Educación y Traducción Americana se han dedicado a ser su mejor agencia de Traducciones Certificadas y Evaluación de Credenciales desde 2009. Haga clic para aprender más.",
+    "keywords": "traducción certificada, traducción notariada, evaluación de credenciales extranjeras, servicios de traducción"
+  }
+}

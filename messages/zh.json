@@ -1,0 +1,104 @@
+{
+  "navigation": {
+    "home": "首页",
+    "evaluation": "学历评估",
+    "services": "服务",
+    "contact": "联系我们",
+    "about": "关于我们",
+    "blog": "博客",
+    "language": "语言"
+  },
+  "services": {
+    "certifiedTranslation": "认证翻译",
+    "technicalTranslation": "技术翻译",
+    "interpretation": "口译服务",
+    "visaServices": "签证服务",
+    "expertOpinionLetters": "专家意见书",
+    "editingProofreading": "编辑/校对",
+    "generalTranslation": "一般翻译",
+    "notarization": "公证服务",
+    "chinaConsularAuthentication": "中国领事认证",
+    "otherServices": "其他服务"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "submit": "提交",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "关闭",
+    "startNow": "立即开始"
+  },
+  "header": {
+    "menu": "菜单",
+    "toggleMenu": "切换导航菜单",
+    "logoAlt": "美国教育与翻译服务公司标志"
+  },
+  "footer": {
+    "topService": "主要服务",
+    "moreServices": "更多服务",
+    "popularLinks": "热门链接",
+    "office": "办事处",
+    "foreignCredentialEvaluation": "外国学历评估",
+    "certifiedTranslation": "认证翻译",
+    "interpretation": "口译服务",
+    "visa": "签证服务",
+    "consularAuthentication": "中国领事认证",
+    "serviceFee": "服务费用",
+    "contactUs": "联系我们",
+    "aboutAET": "关于AET",
+    "career": "招聘信息",
+    "miami": "迈阿密",
+    "boston": "波士顿",
+    "sanFrancisco": "旧金山",
+    "losAngeles": "洛杉矶",
+    "newYork": "纽约",
+    "beijing": "北京",
+    "followLinkedIn": "在LinkedIn上关注我们",
+    "readYelpReviews": "阅读我们的Yelp评价",
+    "followFacebook": "在Facebook上关注我们",
+    "readGoogleReviews": "阅读我们的Google评价",
+    "copyright": "版权所有 2009 - 至今 美国教育与翻译服务公司",
+    "blog": "博客",
+    "termsOfUse": "使用条款",
+    "privacyPolicy": "隐私政策"
+  },
+  "degreeEquivalency": {
+    "title": "学历等效性",
+    "tool": "工具",
+    "subtitle": "了解您的学位在美国的等效性",
+    "description": "使用我们的工具了解更多关于您的学位在美国的等效性。",
+    "disclaimer": "并非所有学位和机构都可用。"
+  },
+  "homepage": {
+    "title": "AET 服务",
+    "credentialEvaluation": {
+      "title": "提交学历评估申请",
+      "description": "填写申请表开始您的学历评估请求"
+    },
+    "degreeEquivalency": {
+      "title": "提交学位等效性申请",
+      "description": "填写申请表开始您的学位等效性请求"
+    },
+    "aiAssistant": {
+      "title": "AI 助手",
+      "description": "与我们的AI助手聊天获取问题帮助"
+    },
+    "checkStatus": {
+      "title": "查看状态",
+      "description": "跟踪您已提交申请的进度"
+    }
+  },
+  "meta": {
+    "title": "美国教育与翻译服务 (AET) | 自2009年",
+    "description": "位于迈阿密、波士顿、旧金山、洛杉矶、纽约的美国教育与翻译服务公司自2009年以来一直致力于成为您最好的认证翻译和学历评估机构。点击了解更多。",
+    "keywords": "认证翻译, 公证翻译, 外国学历评估, 学历认证, 翻译服务"
+  }
+}
