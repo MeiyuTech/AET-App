@@ -197,11 +197,11 @@ export const EVALUATION_SERVICES = {
 export const DELIVERY_OPTIONS = {
   usps_first_class_domestic: {
     label: 'USPS First Class Mail (Domestic)',
-    price: 7,
+    price: 10,
   },
   usps_first_class_international: {
     label: 'USPS First Class Mail (International)',
-    price: 13,
+    price: 20,
   },
   usps_priority_domestic: {
     label: 'USPS Priority Mail (Domestic)',
@@ -209,7 +209,7 @@ export const DELIVERY_OPTIONS = {
   },
   usps_express_domestic: {
     label: 'USPS Express Mail (Domestic)',
-    price: 32,
+    price: 42,
   },
   ups_express_domestic: {
     label: 'UPS Express Mail (Domestic)',
