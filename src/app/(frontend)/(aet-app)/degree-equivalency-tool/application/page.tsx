@@ -19,6 +19,7 @@ export default async function DegreeEquivalencyFormPage() {
   return (
     <div className="container mx-auto py-10">
       <div className="max-w-3xl mx-auto space-y-6 px-4 md:px-6 pt-2">
+        {/* TODO: move image and title to client component*/}
         {/* Top Image and Title */}
         <div className="w-full max-w-3xl">
           <div className="relative h-32 w-full rounded-lg overflow-hidden mb-6">
@@ -31,8 +32,7 @@ export default async function DegreeEquivalencyFormPage() {
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
               <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-                {t('hero.title')}{' '}
-                <span className="text-green-300">{t('hero.highlight')}</span>
+                {t('hero.title')} <span className="text-green-300">{t('hero.highlight')}</span>
               </h1>
             </div>
           </div>
