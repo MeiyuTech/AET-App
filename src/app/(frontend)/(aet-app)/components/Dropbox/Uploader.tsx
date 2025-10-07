@@ -330,8 +330,21 @@ export default function DropboxUploader({
         />
         <p className="mt-2 text-sm text-gray-500">or drag and drop files here</p>
         <p className="mt-1 text-xs text-gray-400">
-          Supported formats: JPG, PNG, PDF, DOC(X) • Max size: 50MB • Large files will be uploaded
-          in chunks
+          Supported: JPG, PNG, PDF, DOC(X) &nbsp;•&nbsp; Max 5MB per file. Large files use chunked
+          upload.
+        </p>
+        <p className="mt-1 text-xs text-gray-400">
+          If upload fails, please retry several times. If it still fails,{' '}
+          <span className="font-semibold text-blue-700">contact us:</span>
+        </p>
+        <p className="mt-1 text-xs text-gray-400">
+          <span className="font-semibold text-blue-700">LA/SF:</span>{' '}
+          <span className="font-mono bg-blue-50 px-1 rounded text-blue-700">ca2@aet21.com</span>
+          &nbsp;|&nbsp;
+          <span className="font-semibold text-blue-700">Other offices:</span>{' '}
+          <span className="font-mono bg-blue-50 px-1 rounded text-blue-700">
+            info@americantranslationservice.com
+          </span>
         </p>
       </div>
 
@@ -385,7 +398,7 @@ export default function DropboxUploader({
         className="w-full py-2 px-4 bg-blue-600 text-white rounded-md
           hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-        {uploading ? 'Uploading...' : 'Upload Picture of Your Diploma'}
+        {uploading ? 'Uploading...' : 'Upload Files'}
       </button>
 
       {message && (
