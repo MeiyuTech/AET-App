@@ -455,5 +455,32 @@
         "empty": "No se proporcionó información educativa"
       }
     }
+  },
+  "dropboxUploader": {
+    "dragOrDrop": "o arrastra y suelta los archivos aquí",
+    "supportedFormats": "Formatos admitidos: {formats} • Tamaño máximo: {maxSize} • Los archivos mayores a {chunkSize} se subirán por partes",
+    "retryHelp": "Si la carga falla, inténtalo varias veces. Si aún falla, <contact>contáctanos</contact>:",
+    "contact": {
+      "laSf": "Los Ángeles/San Francisco:",
+      "other": "Otras oficinas:"
+    },
+    "selectedFilesLabel": "{count, plural, one {Se seleccionó # archivo:} other {Se seleccionaron # archivos:}}",
+    "status": {
+      "uploading": "Subiendo...",
+      "uploadingWithProgress": "Subiendo... ({uploaded}/{total} partes)",
+      "success": "Completado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado",
+      "pending": "Pendiente"
+    },
+    "cta": "Subir archivos",
+    "selectFilesFirst": "Selecciona archivos primero",
+    "validation": {
+      "tooLarge": "{name} es demasiado grande (máximo {maxSize}MB)",
+      "unsupportedFormat": "{name} tiene un formato no compatible"
+    },
+    "summary": "Se subieron {successful} de {total} archivos",
+    "summaryWithCancelled": "Se subieron {successful} de {total} archivos ({cancelled} cancelados)",
+    "errorUploading": "Error al subir archivos: {error}"
   }
 }

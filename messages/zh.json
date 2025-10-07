@@ -85,7 +85,7 @@
       "contact": "如有任何问题，请回复您的<strong>申请确认邮件</strong>。期待与您合作！"
     },
     "upload": {
-      "title": "向 {office} 办事处上传文件",
+      "title": "向 {office} 办公室上传文件",
       "description": "您可以在此上传与申请相关的补充材料：",
       "infoTitle": "关于学历评估：",
       "infoDescription": "外国学历评估用于评估在美国以外获得的教育背景和资质，对申请工作签证（H1B）、移民身份、就业、入学或参军的外国人士尤为重要。",
@@ -171,7 +171,7 @@
     "topService": "主要服务",
     "moreServices": "更多服务",
     "popularLinks": "热门链接",
-    "office": "办事处",
+    "office": "办公室",
     "foreignCredentialEvaluation": "外国学历评估",
     "certifiedTranslation": "认证翻译",
     "interpretation": "口译服务",
@@ -455,5 +455,32 @@
         "empty": "尚未提供教育信息"
       }
     }
+  },
+  "dropboxUploader": {
+    "dragOrDrop": "或将文件拖放到此处",
+    "supportedFormats": "支持的格式：{formats} • 最大大小：{maxSize} • 大于 {chunkSize} 的文件将按分片上传",
+    "retryHelp": "如上传失败，请再试几次。如仍无法成功，请<contact>联系我们</contact>：",
+    "contact": {
+      "laSf": "洛杉矶/旧金山：",
+      "other": "其他办公室："
+    },
+    "selectedFilesLabel": "{count, plural, one {已选择 # 个文件：} other {已选择 # 个文件：}}",
+    "status": {
+      "uploading": "上传中…",
+      "uploadingWithProgress": "上传中…（{uploaded}/{total} 个分片）",
+      "success": "已完成",
+      "failed": "失败",
+      "cancelled": "已取消",
+      "pending": "待处理"
+    },
+    "cta": "上传文件",
+    "selectFilesFirst": "请先选择文件",
+    "validation": {
+      "tooLarge": "{name} 文件过大（最大 {maxSize}MB）",
+      "unsupportedFormat": "{name} 的格式不受支持"
+    },
+    "summary": "已上传 {successful}/{total} 个文件",
+    "summaryWithCancelled": "已上传 {successful}/{total} 个文件（{cancelled} 个已取消）",
+    "errorUploading": "文件上传出错：{error}"
   }
 }
