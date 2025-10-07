@@ -1,6 +1,8 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { NextIntlClientProvider } from 'next-intl'
+import enMessages from 'messages/en.json'
 import { Application } from './types'
 import SelectedServicesCard from '../StatusCheck/SelectedServicesCard'
 import { ApplicationData } from '../FCEApplicationForm/types'
@@ -36,7 +38,9 @@ export function ServicesDetailsDialog({ open, onOpenChange, application }: Servi
         <DialogHeader>
           <DialogTitle>Service Details</DialogTitle>
         </DialogHeader>
-        <SelectedServicesCard application={applicationData} />
+        <NextIntlClientProvider locale="en" messages={enMessages}>
+          <SelectedServicesCard application={applicationData} />
+        </NextIntlClientProvider>
       </DialogContent>
     </Dialog>
   )
