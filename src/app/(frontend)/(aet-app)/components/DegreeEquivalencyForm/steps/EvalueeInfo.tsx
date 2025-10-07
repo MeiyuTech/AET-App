@@ -56,6 +56,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t('schoolName.label')}</FormLabel>
+              <FormDescription>{t('englishHint')}</FormDescription>
               <FormControl>
                 <Input
                   data-testid={`school-name-input-${index}`}
@@ -122,6 +123,7 @@ function EducationFields({ index, onRemove }: { index: number; onRemove?: () => 
           <FormItem>
             <FormLabel>{t('degreeObtained.label')}</FormLabel>
             <FormDescription>{t('degreeObtained.description')}</FormDescription>
+            <FormDescription>{t('englishHint')}</FormDescription>
             <FormControl>
               <Input
                 data-testid={`degree-obtained-input-${index}`}

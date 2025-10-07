@@ -144,6 +144,6 @@ export const ApplicationConfirmationEmailFooter = `
     <br>
     © All rights reserved.</p>
     <br>
-    <a href="https://www.americantranslationservice.com/english.html" target="_blank">americantranslationservice.com</a>
+    <a href="https://www.americantranslationservice.com" target="_blank">americantranslationservice.com</a>
   </div>
 `

@@ -218,6 +218,7 @@ export function ClientInfo() {
               <FormLabel>
                 {t('firstName.label')} <span className="text-red-500">*</span>
               </FormLabel>
+              <FormDescription>{t('englishHint')}</FormDescription>
               <FormControl>
                 <Input data-testid="first-name-input" {...field} />
               </FormControl>
@@ -234,6 +235,7 @@ export function ClientInfo() {
               <FormLabel>
                 {t('lastName.label')} <span className="text-red-500">*</span>
               </FormLabel>
+              <FormDescription>{t('englishHint')}</FormDescription>
               <FormControl>
                 <Input data-testid="last-name-input" {...field} />
               </FormControl>
@@ -251,6 +253,7 @@ export function ClientInfo() {
                 {t('middleName.label')}
                 <span className="text-sm text-gray-500 ml-2">{t('middleName.optional')}</span>
               </FormLabel>
+              <FormDescription>{t('englishHint')}</FormDescription>
               <FormControl>
                 <Input data-testid="middle-name-input" {...field} />
               </FormControl>

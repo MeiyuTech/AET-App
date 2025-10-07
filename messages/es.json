@@ -301,7 +301,8 @@
       "email": {
         "label": "Correo electrónico",
         "placeholder": "name@example.com"
-      }
+      },
+      "englishHint": "Por favor ingresa tu nombre usando caracteres en inglés."
     },
     "educationFields": {
       "schoolName": {
@@ -330,7 +331,8 @@
       },
       "diploma": {
         "label": "Diploma"
-      }
+      },
+      "englishHint": "Por favor ingresa esta información usando caracteres en inglés."
     },
     "evalueeInfo": {
       "title": "Información educativa",

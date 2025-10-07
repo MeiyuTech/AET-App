@@ -301,7 +301,8 @@
       "email": {
         "label": "电子邮箱",
         "placeholder": "name@example.com"
-      }
+      },
+      "englishHint": "请使用英文字符填写姓名。"
     },
     "educationFields": {
       "schoolName": {
@@ -315,8 +316,8 @@
       },
       "degreeObtained": {
         "label": "获得的学位",
-        "description": "请详细说明您的学位，包括专业。例如：“计算机科学理学学士”。",
-        "placeholder": "例如：计算机科学理学学士"
+        "description": "请详细说明您的学位，包括专业。例如：\"Bachelor of Science in Computer Science\"",
+        "placeholder": "例如：Bachelor of Science in Computer Science"
       },
       "studyPeriod": {
         "label": "学习时段",
@@ -330,7 +331,8 @@
       },
       "diploma": {
         "label": "毕业证书"
-      }
+      },
+      "englishHint": "请使用英文字符填写此信息。"
     },
     "evalueeInfo": {
       "title": "教育信息",

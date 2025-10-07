@@ -316,7 +316,7 @@ export default function FCEApplicationForm() {
               {t.rich('terms.label', {
                 link: (chunks) => (
                   <Link
-                    href="https://www.americantranslationservice.com/e-terms-of-use.html"
+                    href="https://www.americantranslationservice.com/e-terms-of-use.php"
                     className="text-blue-500 hover:underline"
                     target="_blank"
                   >
