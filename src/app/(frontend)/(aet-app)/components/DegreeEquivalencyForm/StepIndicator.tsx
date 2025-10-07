@@ -1,3 +1,7 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
+
 import { cn } from '@/utilities/cn'
 import { FormStep } from './types'
 import { CONFIG } from './constants'
@@ -13,11 +17,13 @@ export function StepIndicator({
   onStepClick,
   showServiceSelection = CONFIG.SHOW_SERVICE_SELECTION,
 }: StepIndicatorProps) {
+  const t = useTranslations('degreeEquivalencyForm.steps')
+
   const steps = [
-    { step: FormStep.CLIENT_INFO, label: 'Client Info' },
-    { step: FormStep.EVALUEE_INFO, label: 'Education Info' },
-    ...(showServiceSelection ? [{ step: FormStep.SERVICE_SELECTION, label: 'Services' }] : []),
-    { step: FormStep.REVIEW, label: 'Review' },
+    { step: FormStep.CLIENT_INFO, label: t('clientInfo') },
+    { step: FormStep.EVALUEE_INFO, label: t('educationInfo') },
+    ...(showServiceSelection ? [{ step: FormStep.SERVICE_SELECTION, label: t('services') }] : []),
+    { step: FormStep.REVIEW, label: t('review') },
   ]
 
   return (

@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useTranslations } from 'next-intl'
 import {
   Select,
   SelectContent,
@@ -15,6 +16,9 @@ import {
 import { DELIVERY_OPTIONS, ADDITIONAL_SERVICES, EVALUATION_SERVICES } from '../constants'
 import { useEffect } from 'react'
 
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+
 export function ServiceSelection() {
   const {
     register,
@@ -22,6 +26,7 @@ export function ServiceSelection() {
     formState: { errors },
     setValue,
   } = useFormContext()
+  const t = useTranslations('degreeEquivalencyForm.serviceSelection')
 
   useEffect(() => {
     const currentValue = watch('deliveryMethod')
@@ -45,17 +50,16 @@ export function ServiceSelection() {
       <Card>
         <CardContent className="pt-6">
           <h3 className="text-lg font-semibold mb-4">
-            Service Selection<span className="text-red-500">*</span>
+            {t('title')}
+            <span className="text-red-500">*</span>
           </h3>
           {errors.serviceType && (
-            <p className="text-sm text-destructive mb-4">Please select at least one service</p>
+            <p className="text-sm text-destructive mb-4">{t('errors.serviceRequired')}</p>
           )}
 
           {/* Foreign Credential Evaluation Report */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">
-              Foreign Credential Evaluation Report (Document-by-Document)
-            </h4>
+            <h4 className="font-medium mb-3">{t('sections.foreignCredential.title')}</h4>
             <Select
               onValueChange={(value) => {
                 setValue(
@@ -68,20 +72,27 @@ export function ServiceSelection() {
               }
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select service speed" />
+                <SelectValue placeholder={t('placeholders.serviceSpeed')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
                   <div className="flex justify-between w-full">
-                    <span>No evaluation needed</span>
+                    <span>{t('options.none')}</span>
                   </div>
                 </SelectItem>
                 {Object.entries(EVALUATION_SERVICES.FOREIGN_CREDENTIAL.FIRST_DEGREE).map(
                   ([value, service]) => (
                     <SelectItem key={value} value={value}>
                       <div className="flex justify-between w-full">
-                        <span>{renderLabel(service.label, value)}</span>
-                        <span className="text-muted-foreground ml-4">${service.price}</span>
+                        <span>
+                          {renderLabel(
+                            t(`services.foreignCredential.firstDegree.${value}`),
+                            value
+                          )}
+                        </span>
+                        <span className="text-muted-foreground ml-4">
+                          {formatPrice(service.price)}
+                        </span>
                       </div>
                     </SelectItem>
                   )
@@ -91,7 +102,7 @@ export function ServiceSelection() {
 
             {watch('serviceType.foreignCredentialEvaluation.firstDegree.speed') && (
               <div className="mt-4 ml-6">
-                <Label>Additional Degrees</Label>
+                <Label>{t('labels.additionalDegrees')}</Label>
                 <Input
                   type="number"
                   min={0}
@@ -104,9 +115,13 @@ export function ServiceSelection() {
                   })}
                 />
                 <p className="text-sm text-muted-foreground mt-1">
-                  {watch('serviceType.foreignCredentialEvaluation.firstDegree.speed') === '7day'
-                    ? `$${EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price} per additional degree`
-                    : `$${EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price} per additional degree`}
+                  {t('labels.perAdditionalDegree', {
+                    price: formatPrice(
+                      watch('serviceType.foreignCredentialEvaluation.firstDegree.speed') === '7day'
+                        ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+                        : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+                    ),
+                  })}
                 </p>
               </div>
             )}
@@ -114,7 +129,7 @@ export function ServiceSelection() {
 
           {/* Course-by-Course Evaluation */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">Course-by-Course Evaluation (Including GPA)</h4>
+            <h4 className="font-medium mb-3">{t('sections.courseByCourse.title')}</h4>
             <Select
               onValueChange={(value) => {
                 setValue(
@@ -125,20 +140,24 @@ export function ServiceSelection() {
               defaultValue={watch('serviceType.coursebyCourse.firstDegree.speed') || 'none'}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select service speed" />
+                <SelectValue placeholder={t('placeholders.serviceSpeed')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
                   <div className="flex justify-between w-full">
-                    <span>No evaluation needed</span>
+                    <span>{t('options.none')}</span>
                   </div>
                 </SelectItem>
                 {Object.entries(EVALUATION_SERVICES.COURSE_BY_COURSE.FIRST_DEGREE).map(
                   ([value, service]) => (
                     <SelectItem key={value} value={value}>
                       <div className="flex justify-between w-full">
-                        <span>{renderLabel(service.label, value)}</span>
-                        <span className="text-muted-foreground ml-4">${service.price}</span>
+                        <span>
+                          {renderLabel(t(`services.courseByCourse.firstDegree.${value}`), value)}
+                        </span>
+                        <span className="text-muted-foreground ml-4">
+                          {formatPrice(service.price)}
+                        </span>
                       </div>
                     </SelectItem>
                   )
@@ -148,7 +167,7 @@ export function ServiceSelection() {
 
             {watch('serviceType.coursebyCourse.firstDegree.speed') && (
               <div className="mt-4 ml-6">
-                <Label>Additional Degrees</Label>
+                <Label>{t('labels.additionalDegrees')}</Label>
                 <Input
                   type="number"
                   min={0}
@@ -161,9 +180,13 @@ export function ServiceSelection() {
                   })}
                 />
                 <p className="text-sm text-muted-foreground mt-1">
-                  {watch('serviceType.coursebyCourse.firstDegree.speed') === '8day'
-                    ? `$${EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price} per additional degree`
-                    : `$${EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price} per additional degree`}
+                  {t('labels.perAdditionalDegree', {
+                    price: formatPrice(
+                      watch('serviceType.coursebyCourse.firstDegree.speed') === '8day'
+                        ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+                        : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+                    ),
+                  })}
                 </p>
               </div>
             )}
@@ -171,7 +194,7 @@ export function ServiceSelection() {
 
           {/* Expert Opinion Letter */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">Expert Opinion Letter</h4>
+            <h4 className="font-medium mb-3">{t('sections.professionalExperience.title')}</h4>
             <Select
               onValueChange={(value) => {
                 setValue(
@@ -182,20 +205,27 @@ export function ServiceSelection() {
               defaultValue={watch('serviceType.professionalExperience.speed') || 'none'}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select service speed" />
+                <SelectValue placeholder={t('placeholders.serviceSpeed')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
                   <div className="flex justify-between w-full">
-                    <span>No evaluation needed</span>
+                    <span>{t('options.none')}</span>
                   </div>
                 </SelectItem>
                 {Object.entries(EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE).map(
                   ([value, service]) => (
                     <SelectItem key={value} value={value}>
                       <div className="flex justify-between w-full">
-                        <span>{renderLabel(service.label, value)}</span>
-                        <span className="text-muted-foreground ml-4">${service.price}</span>
+                        <span>
+                          {renderLabel(
+                            t(`services.professionalExperience.${value}`),
+                            value
+                          )}
+                        </span>
+                        <span className="text-muted-foreground ml-4">
+                          {formatPrice(service.price)}
+                        </span>
                       </div>
                     </SelectItem>
                   )
@@ -206,7 +236,7 @@ export function ServiceSelection() {
 
           {/* Position Evaluation */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">Position Evaluation</h4>
+            <h4 className="font-medium mb-3">{t('sections.position.title')}</h4>
             <Select
               onValueChange={(value) => {
                 setValue(
@@ -217,19 +247,21 @@ export function ServiceSelection() {
               defaultValue={watch('serviceType.positionEvaluation.speed') || 'none'}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select service speed" />
+                <SelectValue placeholder={t('placeholders.serviceSpeed')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
                   <div className="flex justify-between w-full">
-                    <span>No evaluation needed</span>
+                    <span>{t('options.none')}</span>
                   </div>
                 </SelectItem>
                 {Object.entries(EVALUATION_SERVICES.POSITION).map(([value, service]) => (
                   <SelectItem key={value} value={value}>
                     <div className="flex justify-between w-full">
-                      <span>{renderLabel(service.label, value)}</span>
-                      <span className="text-muted-foreground ml-4">${service.price}</span>
+                      <span>{renderLabel(t(`services.position.${value}`), value)}</span>
+                      <span className="text-muted-foreground ml-4">
+                        {formatPrice(service.price)}
+                      </span>
                     </div>
                   </SelectItem>
                 ))}
@@ -239,7 +271,7 @@ export function ServiceSelection() {
 
           {/* Translation Service */}
           <div className="mb-6">
-            <h4 className="font-medium mb-3">Translation Service</h4>
+            <h4 className="font-medium mb-3">{t('sections.translation.title')}</h4>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="translation-required"
@@ -249,15 +281,15 @@ export function ServiceSelection() {
                 checked={watch('serviceType.translation.required')}
               />
               <Label htmlFor="translation-required" className="flex justify-between w-full">
-                <span>Translation Service Required</span>
-                <span className="text-muted-foreground">Price varies by document</span>
+                <span>{t('sections.translation.required')}</span>
+                <span className="text-muted-foreground">{t('sections.translation.note')}</span>
               </Label>
             </div>
           </div>
 
           {/* Add note at bottom of card */}
           <div className="mt-6 text-xs text-muted-foreground">
-            * Payment and documents must be received by 1:00pm EST.
+            {t('notes.rush')}
           </div>
         </CardContent>
       </Card>
@@ -267,7 +299,8 @@ export function ServiceSelection() {
         <CardContent className="pt-6 space-y-6">
           <div>
             <h3 className="text-lg font-semibold mb-4">
-              How Would You Like to Receive Your Report?<span className="text-red-500">*</span>
+              {t('reportDelivery.title')}
+              <span className="text-red-500">*</span>
             </h3>
             <Select
               onValueChange={(value) => {
@@ -293,25 +326,33 @@ export function ServiceSelection() {
               value={watch('additionalServices')?.[0] || 'pdf_only'}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select report type" />
+                <SelectValue placeholder={t('placeholders.reportType')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="pdf_only">
                   <div className="flex justify-between w-full">
-                    <span>PDF Report Only (No Hard Copy)</span>
-                    <span className="text-muted-foreground ml-4">$10</span>
+                    <span>{t('options.additionalServices.pdf_only')}</span>
+                    <span className="text-muted-foreground ml-4">
+                      {formatPrice(ADDITIONAL_SERVICES.pdf_only.price)}
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="pdf_with_hard_copy">
                   <div className="flex justify-between w-full">
-                    <span>PDF Report with Hard Copy</span>
-                    <span className="text-muted-foreground ml-4">$20</span>
+                    <span>{t('options.additionalServices.pdf_with_hard_copy')}</span>
+                    <span className="text-muted-foreground ml-4">
+                      {formatPrice(ADDITIONAL_SERVICES.pdf_with_hard_copy.price)}
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="extra_copy">
                   <div className="flex justify-between w-full">
-                    <span>Extra Hard Copy Report</span>
-                    <span className="text-muted-foreground ml-4">$20 each</span>
+                    <span>{t('options.additionalServices.extra_copy')}</span>
+                    <span className="text-muted-foreground ml-4">
+                      {t('labels.priceEach', {
+                        price: formatPrice(ADDITIONAL_SERVICES.extra_copy.price),
+                      })}
+                    </span>
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -321,7 +362,7 @@ export function ServiceSelection() {
           {/* Quantity input for extra copies */}
           {watch('additionalServices')?.[0] === 'extra_copy' && (
             <div>
-              <Label>Number of Extra Copies</Label>
+              <Label>{t('labels.extraCopiesQuantity')}</Label>
               <Input
                 type="number"
                 min={1}
@@ -340,7 +381,8 @@ export function ServiceSelection() {
           {watch('additionalServices')?.[0] !== 'pdf_only' && (
             <div>
               <h3 className="text-lg font-semibold mb-4">
-                Type of Delivery<span className="text-red-500">*</span>
+                {t('delivery.title')}
+                <span className="text-red-500">*</span>
               </h3>
               <Select
                 onValueChange={(value) => {
@@ -349,14 +391,16 @@ export function ServiceSelection() {
                 value={watch('deliveryMethod')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select delivery method" />
+                  <SelectValue placeholder={t('placeholders.deliveryMethod')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(DELIVERY_OPTIONS).map(([value, { label, price }]) => (
+                  {Object.entries(DELIVERY_OPTIONS).map(([value, { price }]) => (
                     <SelectItem key={value} value={value}>
                       <div className="flex justify-between w-full">
-                        <span>{label}</span>
-                        <span className="text-muted-foreground ml-4">${price}</span>
+                        <span>{t(`delivery.options.${value}`)}</span>
+                        <span className="text-muted-foreground ml-4">
+                          {formatPrice(price)}
+                        </span>
                       </div>
                     </SelectItem>
                   ))}
@@ -367,7 +411,9 @@ export function ServiceSelection() {
 
           {/* Add note at bottom of card */}
           <div className="text-xs text-muted-foreground">
-            * By default, <strong>PDF Report Only</strong> is selected.
+            {t.rich('notes.default', {
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </div>
         </CardContent>
       </Card>

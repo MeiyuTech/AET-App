@@ -362,7 +362,7 @@ export default function FCEApplicationForm() {
             <Label htmlFor="terms" className="text-sm">
               I have read and agree to{' '}
               <Link
-                href="https://www.americantranslationservice.com/e-terms-of-use.html"
+                href="https://www.americantranslationservice.com/e-terms-of-use.php"
                 className="text-blue-500 hover:underline"
                 target="_blank"
               >

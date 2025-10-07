@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { RotateCcw } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
 import { motion, useAnimationControls } from 'framer-motion'
 
@@ -41,6 +42,8 @@ export default function FCEApplicationForm() {
   const { toast } = useToast()
   const router = useRouter()
   const controls = useAnimationControls()
+  const t = useTranslations('degreeEquivalencyForm')
+  const tCommon = useTranslations('common')
   const {
     formData,
     currentStep,
@@ -141,8 +144,8 @@ export default function FCEApplicationForm() {
       await scrollToTop()
     } else {
       toast({
-        title: 'Please Complete Current Step',
-        description: 'Please fill in all required fields',
+        title: t('toast.incomplete.title'),
+        description: t('toast.incomplete.description'),
         variant: 'destructive',
       })
     }
@@ -197,8 +200,8 @@ export default function FCEApplicationForm() {
 
         // Show success toast notification with better styling
         toast({
-          title: ' 🎉 Degree Equivalency Application Submitted Successfully!  🎉',
-          description: `Your application has been successfully submitted.`,
+          title: t('toast.success.title'),
+          description: t('toast.success.description'),
           className: 'bg-green-50 border border-green-200 text-green-800',
         })
 
@@ -210,8 +213,8 @@ export default function FCEApplicationForm() {
     } catch (error) {
       console.error('Submission error:', error)
       toast({
-        title: 'Degree Equivalency Submission Failed',
-        description: 'There was an error submitting your application. Please try again later.',
+        title: t('toast.error.title'),
+        description: t('toast.error.description'),
         variant: 'destructive',
       })
     }
@@ -272,14 +275,14 @@ export default function FCEApplicationForm() {
     resetFormState()
     await scrollToTop()
     toast({
-      title: 'Form Reset',
-      description: 'You can start filling out the application again',
+      title: t('toast.reset.title'),
+      description: t('toast.reset.description'),
       variant: 'destructive',
     })
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>{tCommon('loading')}</div>
   }
 
   return (
@@ -310,14 +313,17 @@ export default function FCEApplicationForm() {
               onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
             />
             <Label htmlFor="terms" className="text-sm">
-              I have read and agree to{' '}
-              <Link
-                href="https://www.americantranslationservice.com/e-terms-of-use.html"
-                className="text-blue-500 hover:underline"
-                target="_blank"
-              >
-                AET&apos;s Terms of Service
-              </Link>
+              {t.rich('terms.label', {
+                link: (chunks) => (
+                  <Link
+                    href="https://www.americantranslationservice.com/e-terms-of-use.php"
+                    className="text-blue-500 hover:underline"
+                    target="_blank"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </Label>
           </div>
         )}
@@ -329,13 +335,13 @@ export default function FCEApplicationForm() {
             disabled={currentStep === FormStep.CLIENT_INFO}
             data-testid="form-previous-button"
           >
-            Previous
+            {tCommon('previous')}
           </Button>
 
           <div className="flex gap-2">
             {currentStep === FormStep.REVIEW ? (
               <Button type="submit" disabled={isSaving || !termsAgreed}>
-                {isSaving ? 'Submitting...' : 'Submit Application'}
+                {isSaving ? t('actions.submitLoading') : t('actions.submit')}
               </Button>
             ) : (
               <Button
@@ -344,7 +350,7 @@ export default function FCEApplicationForm() {
                 disabled={isSaving}
                 data-testid="form-next-button"
               >
-                {isSaving ? 'Saving...' : 'Next'}
+                {isSaving ? t('actions.nextLoading') : tCommon('next')}
               </Button>
             )}
           </div>
@@ -357,24 +363,21 @@ export default function FCEApplicationForm() {
                 className="bg-gray-100 text-red-600 hover:bg-red-200 hover:text-red-700"
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
-                Reset Application
+                {t('actions.reset')}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure you want to reset the application?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action will clear all filled information, and you will need to start filling
-                  out the application again. This action cannot be undone.
-                </AlertDialogDescription>
+                <AlertDialogTitle>{t('dialog.title')}</AlertDialogTitle>
+                <AlertDialogDescription>{t('dialog.description')}</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleReset}
                   className="bg-red-500 text-white hover:bg-red-600"
                 >
-                  Confirm Reset
+                  {t('dialog.confirm')}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -382,7 +385,9 @@ export default function FCEApplicationForm() {
         </div>
 
         {draftId && (
-          <p className="text-sm text-gray-500 text-center">Draft Saved (ID: {draftId})</p>
+          <p className="text-sm text-gray-500 text-center">
+            {t('status.draftSaved', { id: draftId })}
+          </p>
         )}
       </motion.form>
     </Form>

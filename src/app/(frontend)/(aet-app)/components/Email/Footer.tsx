@@ -8,7 +8,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   companyName = 'American Education and Translation Services',
-  websiteUrl = 'https://www.americantranslationservice.com/english.html',
+  websiteUrl = 'https://www.americantranslationservice.com/',
 }) => {
   return (
     <>
