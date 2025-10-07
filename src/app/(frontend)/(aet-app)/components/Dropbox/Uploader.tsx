@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, DragEvent } from 'react'
+import { useTranslations } from 'next-intl'
 import { MAX_FILE_SIZE, ALLOWED_TYPES, CHUNK_SIZE } from '../../utils/dropbox/config.client'
 import { getUploadStatusColor } from '../../utils/statusColors'
 
@@ -22,6 +23,7 @@ export default function DropboxUploader({
   const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
+  const [isErrorMessage, setIsErrorMessage] = useState(false)
   const [progress, setProgress] = useState<{
     [key: string]: {
       status: UploadStatus
@@ -33,12 +35,20 @@ export default function DropboxUploader({
   const abortControllersRef = useRef<{ [key: string]: AbortController }>({})
   const uploadSessionsRef = useRef<{ [key: string]: string }>({})
 
+  const t = useTranslations('dropboxUploader')
+  const tCommon = useTranslations('common')
+  const maxFileSizeMb = (MAX_FILE_SIZE / 1024 / 1024).toFixed(0)
+  const chunkSizeMb = (CHUNK_SIZE / 1024 / 1024).toFixed(1)
+
   const validateFile = (file: File) => {
     if (file.size > MAX_FILE_SIZE) {
-      return `${file.name} is too large (max ${MAX_FILE_SIZE / 1024 / 1024}MB)`
+      return t('validation.tooLarge', {
+        name: file.name,
+        maxSize: maxFileSizeMb,
+      })
     }
     if (!ALLOWED_TYPES.some((type) => file.type.includes(type))) {
-      return `${file.name} has unsupported format`
+      return t('validation.unsupportedFormat', { name: file.name })
     }
     return null
   }
@@ -49,12 +59,14 @@ export default function DropboxUploader({
     const validationErrors = Array.from(fileList).map(validateFile).filter(Boolean)
 
     if (validationErrors.length > 0) {
-      setMessage(validationErrors.join(', '))
+      setMessage(validationErrors.join(' '))
+      setIsErrorMessage(true)
       return
     }
 
     setFiles(fileList)
     setMessage('')
+    setIsErrorMessage(false)
     setProgress({})
   }
 
@@ -80,6 +92,23 @@ export default function DropboxUploader({
       ...prev,
       [fileName]: { ...prev[fileName], status: 'cancelled' },
     }))
+  }
+
+  const getStatusText = (fileName: string) => {
+    const fileProgress = progress[fileName]
+    const status = fileProgress?.status ?? 'pending'
+
+    if (status === 'uploading') {
+      if (fileProgress?.chunks) {
+        return t('status.uploadingWithProgress', {
+          uploaded: fileProgress.chunks.uploaded,
+          total: fileProgress.chunks.total,
+        })
+      }
+      return t('status.uploading')
+    }
+
+    return t(`status.${status}`)
   }
 
   // Helper function to convert file to base64
@@ -222,12 +251,14 @@ export default function DropboxUploader({
 
   const handleUpload = async () => {
     if (!files || files.length === 0) {
-      setMessage('Please select files first')
+      setMessage(t('selectFilesFirst'))
+      setIsErrorMessage(true)
       return
     }
 
     setUploading(true)
-    setMessage('Uploading...')
+    setMessage(tCommon('loading'))
+    setIsErrorMessage(false)
     abortControllersRef.current = {}
     uploadSessionsRef.current = {}
 
@@ -292,12 +323,16 @@ export default function DropboxUploader({
 
       const successful = results.filter((r) => r.success).length
       const aborted = results.filter((r) => r.aborted).length
-      setMessage(
-        `Uploaded ${successful} of ${files.length} files` +
-          (aborted ? ` (${aborted} cancelled)` : '')
-      )
+      if (aborted) {
+        setMessage(t('summaryWithCancelled', { successful, total: files.length, cancelled: aborted }))
+      } else {
+        setMessage(t('summary', { successful, total: files.length }))
+      }
+      setIsErrorMessage(false)
     } catch (error) {
-      setMessage('Error uploading files: ' + error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      setMessage(t('errorUploading', { error: errorMessage }))
+      setIsErrorMessage(true)
     } finally {
       setUploading(false)
       abortControllersRef.current = {}
@@ -328,20 +363,24 @@ export default function DropboxUploader({
             file:bg-blue-50 file:text-blue-700
             hover:file:bg-blue-100"
         />
-        <p className="mt-2 text-sm text-gray-500">or drag and drop files here</p>
+        <p className="mt-2 text-sm text-gray-500">{t('dragOrDrop')}</p>
         <p className="mt-1 text-xs text-gray-400">
-          Supported: JPG, PNG, PDF, DOC(X) &nbsp;•&nbsp; Max 5MB per file. Large files use chunked
-          upload.
+          {t('supportedFormats', {
+            formats: 'JPG, PNG, PDF, DOC(X)',
+            maxSize: `${maxFileSizeMb}MB`,
+            chunkSize: `${chunkSizeMb}MB`,
+          })}
         </p>
         <p className="mt-1 text-xs text-gray-400">
-          If upload fails, please retry several times. If it still fails,{' '}
-          <span className="font-semibold text-blue-700">contact us:</span>
+          {t.rich('retryHelp', {
+            contact: (chunks) => <span className="font-semibold text-blue-700">{chunks}</span>,
+          })}
         </p>
         <p className="mt-1 text-xs text-gray-400">
-          <span className="font-semibold text-blue-700">LA/SF:</span>{' '}
+          <span className="font-semibold text-blue-700">{t('contact.laSf')}</span>{' '}
           <span className="font-mono bg-blue-50 px-1 rounded text-blue-700">ca2@aet21.com</span>
-          &nbsp;|&nbsp;
-          <span className="font-semibold text-blue-700">Other offices:</span>{' '}
+          <br />
+          <span className="font-semibold text-blue-700">{t('contact.other')}</span>{' '}
           <span className="font-mono bg-blue-50 px-1 rounded text-blue-700">
             info@americantranslationservice.com
           </span>
@@ -350,7 +389,7 @@ export default function DropboxUploader({
 
       {files && files.length > 0 && (
         <div className="text-sm text-gray-600">
-          <p>Selected {files.length} files:</p>
+          <p>{t('selectedFilesLabel', { count: files.length })}</p>
           <ul className="mt-2 space-y-2">
             {Array.from(files).map((file) => (
               <li key={file.name} className="flex flex-col gap-1">
@@ -361,21 +400,11 @@ export default function DropboxUploader({
                       onClick={() => cancelUpload(file.name)}
                       className="text-red-500 text-xs hover:text-red-700"
                     >
-                      Cancel
+                      {tCommon('cancel')}
                     </button>
                   )}
                   <span className={getUploadStatusColor(progress[file.name]?.status || 'pending')}>
-                    {progress[file.name]?.status === 'uploading'
-                      ? progress[file.name]?.chunks
-                        ? `Uploading... (${progress[file.name].chunks?.uploaded}/${progress[file.name].chunks?.total} chunks)`
-                        : 'Uploading...'
-                      : progress[file.name]?.status === 'success'
-                        ? 'Completed'
-                        : progress[file.name]?.status === 'failed'
-                          ? 'Failed'
-                          : progress[file.name]?.status === 'cancelled'
-                            ? 'Cancelled'
-                            : 'Pending'}
+                    {getStatusText(file.name)}
                   </span>
                 </div>
                 {progress[file.name] && (
@@ -398,11 +427,11 @@ export default function DropboxUploader({
         className="w-full py-2 px-4 bg-blue-600 text-white rounded-md
           hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-        {uploading ? 'Uploading...' : 'Upload Files'}
+        {uploading ? t('status.uploading') : t('cta')}
       </button>
 
       {message && (
-        <p className={`text-sm ${message.includes('Error') ? 'text-red-600' : 'text-green-600'}`}>
+        <p className={`text-sm ${isErrorMessage ? 'text-red-600' : 'text-green-600'}`}>
           {message}
         </p>
       )}

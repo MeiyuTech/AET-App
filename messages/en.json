@@ -455,5 +455,32 @@
         "empty": "No education information provided"
       }
     }
+  },
+  "dropboxUploader": {
+    "dragOrDrop": "or drag and drop files here",
+    "supportedFormats": "Supported formats: {formats} • Max size: {maxSize} • Files larger than {chunkSize} will be uploaded in chunks",
+    "retryHelp": "If uploading fails, please try again a few times. If it still fails, <contact>contact us</contact>:",
+    "contact": {
+      "laSf": "LA/SF:",
+      "other": "Other offices:"
+    },
+    "selectedFilesLabel": "{count, plural, one {Selected # file:} other {Selected # files:}}",
+    "status": {
+      "uploading": "Uploading...",
+      "uploadingWithProgress": "Uploading... ({uploaded}/{total} chunks)",
+      "success": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "pending": "Pending"
+    },
+    "cta": "Upload Files",
+    "selectFilesFirst": "Please select files first",
+    "validation": {
+      "tooLarge": "{name} is too large (max {maxSize}MB)",
+      "unsupportedFormat": "{name} has an unsupported format"
+    },
+    "summary": "Uploaded {successful} of {total} files",
+    "summaryWithCancelled": "Uploaded {successful} of {total} files ({cancelled} cancelled)",
+    "errorUploading": "Error uploading files: {error}"
   }
 }
