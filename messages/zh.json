@@ -226,5 +226,232 @@
     "title": "美国教育与翻译服务 (AET) | 自2009年",
     "description": "位于迈阿密、波士顿、旧金山、洛杉矶、纽约的美国教育与翻译服务公司自2009年以来一直致力于成为您最好的认证翻译和学历评估机构。点击了解更多。",
     "keywords": "认证翻译, 公证翻译, 外国学历评估, 学历认证, 翻译服务"
+  },
+  "degreeEquivalencyApplication": {
+    "metadata": {
+      "title": "学历等值评估申请 | AET 服务申请",
+      "description": "AET 学历等值评估申请"
+    },
+    "page": {
+      "hero": {
+        "imageAlt": "毕业帽",
+        "title": "学历等值评估",
+        "highlight": "工具"
+      }
+    }
+  },
+  "degreeEquivalencyForm": {
+    "toast": {
+      "incomplete": {
+        "title": "请完成当前步骤",
+        "description": "请填写所有必填字段"
+      },
+      "success": {
+        "title": "🎉 学历等值申请提交成功！ 🎉",
+        "description": "您的申请已成功提交。"
+      },
+      "error": {
+        "title": "学历等值申请提交失败",
+        "description": "提交申请时出现错误，请稍后重试。"
+      },
+      "reset": {
+        "title": "表单已重置",
+        "description": "您可以重新开始填写申请。"
+      }
+    },
+    "terms": {
+      "label": "我已阅读并同意<link>AET 服务条款</link>"
+    },
+    "actions": {
+      "submit": "提交申请",
+      "submitLoading": "正在提交...",
+      "nextLoading": "正在保存...",
+      "reset": "重置申请"
+    },
+    "dialog": {
+      "title": "确定要重置申请吗？",
+      "description": "该操作会清除所有已填写的信息，需要重新填写，且无法撤销。",
+      "confirm": "确认重置"
+    },
+    "status": {
+      "draftSaved": "草稿已保存 (ID: {id})"
+    },
+    "steps": {
+      "clientInfo": "客户信息",
+      "educationInfo": "教育信息",
+      "services": "服务",
+      "review": "审核"
+    },
+    "clientInfo": {
+      "title": "客户信息",
+      "country": {
+        "label": "当前所在国家",
+        "placeholder": "选择国家"
+      },
+      "firstName": {
+        "label": "名字"
+      },
+      "lastName": {
+        "label": "姓氏"
+      },
+      "middleName": {
+        "label": "中间名",
+        "optional": "（可选）"
+      },
+      "email": {
+        "label": "电子邮箱",
+        "placeholder": "name@example.com"
+      }
+    },
+    "educationFields": {
+      "schoolName": {
+        "label": "学校名称",
+        "placeholder": "输入学校全称"
+      },
+      "studyCountry": {
+        "label": "学习国家",
+        "placeholder": "选择国家",
+        "clear": "清除选择"
+      },
+      "degreeObtained": {
+        "label": "获得的学位",
+        "description": "请详细说明您的学位，包括专业。例如：“计算机科学理学学士”。",
+        "placeholder": "例如：计算机科学理学学士"
+      },
+      "studyPeriod": {
+        "label": "学习时段",
+        "startMonth": "开始月份",
+        "startYear": "开始年份",
+        "endMonth": "结束月份",
+        "endYear": "结束年份",
+        "monthPlaceholder": "选择月份",
+        "yearPlaceholder": "选择年份",
+        "clear": "清除选择"
+      },
+      "diploma": {
+        "label": "毕业证书"
+      }
+    },
+    "evalueeInfo": {
+      "title": "教育信息",
+      "historyTitle": "教育经历"
+    },
+    "serviceSelection": {
+      "title": "服务选择",
+      "errors": {
+        "serviceRequired": "请至少选择一项服务"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "境外学历评估报告（文件评估）"
+        },
+        "courseByCourse": {
+          "title": "课程逐项评估（含 GPA）"
+        },
+        "professionalExperience": {
+          "title": "专家意见函"
+        },
+        "position": {
+          "title": "职位评估"
+        },
+        "translation": {
+          "title": "翻译服务",
+          "required": "需要翻译服务",
+          "note": "费用视文件而定"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "选择服务速度",
+        "reportType": "选择报告类型",
+        "deliveryMethod": "选择寄送方式"
+      },
+      "options": {
+        "none": "不需要评估",
+        "additionalServices": {
+          "pdf_only": "仅电子报告（无纸质件）",
+          "pdf_with_hard_copy": "电子报告 + 纸质件",
+          "extra_copy": "额外纸质报告"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 个工作日",
+            "3day": "3 个工作日",
+            "24hour": "24 小时",
+            "sameday": "当日"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 个工作日",
+            "5day": "5 个工作日",
+            "3day": "3 个工作日",
+            "24hour": "24 小时",
+            "sameday": "当日"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 个工作日",
+          "7day": "7 个工作日",
+          "3day": "3 个工作日"
+        },
+        "position": {
+          "10day": "10 个工作日",
+          "5day": "5 个工作日",
+          "3day": "3 个工作日",
+          "2day": "2 个工作日"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "附加学位数量",
+        "perAdditionalDegree": "{price} / 每个额外学位",
+        "priceEach": "{price} / 份",
+        "extraCopiesQuantity": "额外纸质份数"
+      },
+      "notes": {
+        "rush": "* 需在美国东部时间下午 1:00 前收到付款和文件。",
+        "default": "* 默认选择 <strong>仅电子报告</strong>。"
+      },
+      "reportDelivery": {
+        "title": "您希望如何接收评估报告？"
+      },
+      "delivery": {
+        "title": "寄送方式",
+        "options": {
+          "usps_first_class_domestic": "美国邮政一级邮件（美国境内）",
+          "usps_first_class_international": "美国邮政一级邮件（国际）",
+          "usps_priority_domestic": "美国邮政优先邮件（美国境内）",
+          "usps_express_domestic": "美国邮政特快邮件（美国境内）",
+          "ups_express_domestic": "UPS 特快邮件（美国境内）",
+          "usps_express_international": "美国邮政特快邮件（国际）",
+          "fedex_express_international": "联邦快递特快（国际）"
+        }
+      }
+    },
+    "review": {
+      "note": "请仔细核对所有信息，我们将在您提交后尽快处理申请。"
+    },
+    "infoCard": {
+      "clientSectionTitle": "客户信息",
+      "fields": {
+        "firstName": "名字",
+        "middleName": "中间名",
+        "lastName": "姓氏",
+        "country": "当前所在国家",
+        "email": "电子邮箱"
+      },
+      "educationSectionTitle": "教育信息",
+      "education": {
+        "degreeTitle": "学位 {index}",
+        "fields": {
+          "country": "国家",
+          "degree": "学位",
+          "school": "学校",
+          "studyPeriod": "学习时段"
+        },
+        "empty": "尚未提供教育信息"
+      }
+    }
   }
 }

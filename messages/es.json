@@ -226,5 +226,232 @@
     "title": "Servicios de Educación y Traducción Americana (AET) | Desde 2009",
     "description": "Ubicados en Miami, Boston, SF, LA, NYC, los Servicios de Educación y Traducción Americana se han dedicado a ser su mejor agencia de Traducciones Certificadas y Evaluación de Credenciales desde 2009. Haga clic para aprender más.",
     "keywords": "traducción certificada, traducción notariada, evaluación de credenciales extranjeras, servicios de traducción"
+  },
+  "degreeEquivalencyApplication": {
+    "metadata": {
+      "title": "Solicitud de Evaluación de Credenciales | Aplicación de Servicio AET",
+      "description": "Aplicación de servicio AET para la evaluación de credenciales"
+    },
+    "page": {
+      "hero": {
+        "imageAlt": "Birrete",
+        "title": "Equivalencia de Grados",
+        "highlight": "Herramienta"
+      }
+    }
+  },
+  "degreeEquivalencyForm": {
+    "toast": {
+      "incomplete": {
+        "title": "Completa el paso actual",
+        "description": "Por favor completa todos los campos obligatorios"
+      },
+      "success": {
+        "title": "🎉 ¡Solicitud de equivalencia enviada con éxito! 🎉",
+        "description": "Tu solicitud se envió correctamente."
+      },
+      "error": {
+        "title": "Error al enviar la solicitud",
+        "description": "Ocurrió un error al enviar tu solicitud. Inténtalo de nuevo más tarde."
+      },
+      "reset": {
+        "title": "Formulario restablecido",
+        "description": "Puedes comenzar a completar la solicitud nuevamente."
+      }
+    },
+    "terms": {
+      "label": "He leído y acepto los <link>Términos de servicio de AET</link>"
+    },
+    "actions": {
+      "submit": "Enviar solicitud",
+      "submitLoading": "Enviando...",
+      "nextLoading": "Guardando...",
+      "reset": "Restablecer solicitud"
+    },
+    "dialog": {
+      "title": "¿Seguro que deseas restablecer la solicitud?",
+      "description": "Esta acción borrará toda la información y tendrás que completarla nuevamente. No se puede deshacer.",
+      "confirm": "Confirmar restablecimiento"
+    },
+    "status": {
+      "draftSaved": "Borrador guardado (ID: {id})"
+    },
+    "steps": {
+      "clientInfo": "Información del cliente",
+      "educationInfo": "Información educativa",
+      "services": "Servicios",
+      "review": "Revisión"
+    },
+    "clientInfo": {
+      "title": "Información del cliente",
+      "country": {
+        "label": "País actual",
+        "placeholder": "Selecciona un país"
+      },
+      "firstName": {
+        "label": "Nombre"
+      },
+      "lastName": {
+        "label": "Apellido"
+      },
+      "middleName": {
+        "label": "Segundo nombre",
+        "optional": "(Opcional)"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "name@example.com"
+      }
+    },
+    "educationFields": {
+      "schoolName": {
+        "label": "Nombre de la institución",
+        "placeholder": "Ingresa el nombre completo"
+      },
+      "studyCountry": {
+        "label": "País de estudio",
+        "placeholder": "Selecciona un país",
+        "clear": "Borrar selección"
+      },
+      "degreeObtained": {
+        "label": "Título obtenido",
+        "description": "Indica tu título con detalles, incluyendo la especialidad. Ejemplo: \"Licenciatura en Ciencias de la Computación\"",
+        "placeholder": "Ej.: Licenciatura en Ciencias de la Computación"
+      },
+      "studyPeriod": {
+        "label": "Periodo de estudio",
+        "startMonth": "Mes de inicio",
+        "startYear": "Año de inicio",
+        "endMonth": "Mes de finalización",
+        "endYear": "Año de finalización",
+        "monthPlaceholder": "Selecciona un mes",
+        "yearPlaceholder": "Selecciona un año",
+        "clear": "Borrar selección"
+      },
+      "diploma": {
+        "label": "Diploma"
+      }
+    },
+    "evalueeInfo": {
+      "title": "Información educativa",
+      "historyTitle": "Historial académico"
+    },
+    "serviceSelection": {
+      "title": "Selección de servicios",
+      "errors": {
+        "serviceRequired": "Selecciona al menos un servicio"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "Informe de credenciales extranjeras (Documento por documento)"
+        },
+        "courseByCourse": {
+          "title": "Informe curso por curso (incluye GPA)"
+        },
+        "professionalExperience": {
+          "title": "Carta de opinión experta"
+        },
+        "position": {
+          "title": "Evaluación del puesto"
+        },
+        "translation": {
+          "title": "Servicio de traducción",
+          "required": "Requiere servicio de traducción",
+          "note": "El precio varía según el documento"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "Selecciona la velocidad",
+        "reportType": "Selecciona el tipo de informe",
+        "deliveryMethod": "Selecciona el método de entrega"
+      },
+      "options": {
+        "none": "No necesito evaluación",
+        "additionalServices": {
+          "pdf_only": "Solo informe PDF (sin copia física)",
+          "pdf_with_hard_copy": "Informe PDF con copia física",
+          "extra_copy": "Copia física adicional"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 días hábiles",
+            "3day": "3 días hábiles",
+            "24hour": "24 horas",
+            "sameday": "Mismo día"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 días hábiles",
+            "5day": "5 días hábiles",
+            "3day": "3 días hábiles",
+            "24hour": "24 horas",
+            "sameday": "Mismo día"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 días hábiles",
+          "7day": "7 días hábiles",
+          "3day": "3 días hábiles"
+        },
+        "position": {
+          "10day": "10 días hábiles",
+          "5day": "5 días hábiles",
+          "3day": "3 días hábiles",
+          "2day": "2 días hábiles"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "Títulos adicionales",
+        "perAdditionalDegree": "{price} por cada título adicional",
+        "priceEach": "{price} c/u",
+        "extraCopiesQuantity": "Número de copias adicionales"
+      },
+      "notes": {
+        "rush": "* El pago y los documentos deben recibirse antes de la 1:00 p. m. (EST).",
+        "default": "* Por defecto se selecciona <strong>solo informe PDF</strong>."
+      },
+      "reportDelivery": {
+        "title": "¿Cómo deseas recibir tu informe?"
+      },
+      "delivery": {
+        "title": "Método de entrega",
+        "options": {
+          "usps_first_class_domestic": "USPS First Class Mail (Estados Unidos)",
+          "usps_first_class_international": "USPS First Class Mail (Internacional)",
+          "usps_priority_domestic": "USPS Priority Mail (Estados Unidos)",
+          "usps_express_domestic": "USPS Express Mail (Estados Unidos)",
+          "ups_express_domestic": "UPS Express (Estados Unidos)",
+          "usps_express_international": "USPS Express Mail (Internacional)",
+          "fedex_express_international": "FedEx Express (Internacional)"
+        }
+      }
+    },
+    "review": {
+      "note": "Revisa toda la información con atención. Procesaremos tu solicitud lo antes posible después del envío."
+    },
+    "infoCard": {
+      "clientSectionTitle": "Información del cliente",
+      "fields": {
+        "firstName": "Nombre",
+        "middleName": "Segundo nombre",
+        "lastName": "Apellido",
+        "country": "País actual",
+        "email": "Correo electrónico"
+      },
+      "educationSectionTitle": "Información educativa",
+      "education": {
+        "degreeTitle": "Título {index}",
+        "fields": {
+          "country": "País",
+          "degree": "Título",
+          "school": "Institución",
+          "studyPeriod": "Periodo de estudio"
+        },
+        "empty": "No se proporcionó información educativa"
+      }
+    }
   }
 }

@@ -226,5 +226,232 @@
     "title": "American Education and Translation Services (AET) | Since 2009",
     "description": "Located in Miami, Boston, SF, LA, NYC, American Education and Translation Services has been dedicated to being your best agency for Certified Translations and Credential Evaluation since 2009. Click to learn more.",
     "keywords": "certified translation, notarized translation, foreign credential evaluation, translation services"
+  },
+  "degreeEquivalencyApplication": {
+    "metadata": {
+      "title": "Credential Evaluation Application | AET Service Application",
+      "description": "AET Service Application for Credential Evaluation"
+    },
+    "page": {
+      "hero": {
+        "imageAlt": "Graduation Cap",
+        "title": "Degree Equivalency",
+        "highlight": "Tool"
+      }
+    }
+  },
+  "degreeEquivalencyForm": {
+    "toast": {
+      "incomplete": {
+        "title": "Please Complete Current Step",
+        "description": "Please fill in all required fields"
+      },
+      "success": {
+        "title": "🎉 Degree Equivalency Application Submitted Successfully! 🎉",
+        "description": "Your application has been successfully submitted."
+      },
+      "error": {
+        "title": "Degree Equivalency Submission Failed",
+        "description": "There was an error submitting your application. Please try again later."
+      },
+      "reset": {
+        "title": "Form Reset",
+        "description": "You can start filling out the application again"
+      }
+    },
+    "terms": {
+      "label": "I have read and agree to <link>AET's Terms of Service</link>"
+    },
+    "actions": {
+      "submit": "Submit Application",
+      "submitLoading": "Submitting...",
+      "nextLoading": "Saving...",
+      "reset": "Reset Application"
+    },
+    "dialog": {
+      "title": "Are you sure you want to reset the application?",
+      "description": "This action will clear all filled information, and you will need to start filling out the application again. This action cannot be undone.",
+      "confirm": "Confirm Reset"
+    },
+    "status": {
+      "draftSaved": "Draft Saved (ID: {id})"
+    },
+    "steps": {
+      "clientInfo": "Client Info",
+      "educationInfo": "Education Info",
+      "services": "Services",
+      "review": "Review"
+    },
+    "clientInfo": {
+      "title": "Client Information",
+      "country": {
+        "label": "Current Country",
+        "placeholder": "Select country"
+      },
+      "firstName": {
+        "label": "First Name"
+      },
+      "lastName": {
+        "label": "Last Name"
+      },
+      "middleName": {
+        "label": "Middle Name",
+        "optional": "(Optional)"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com"
+      }
+    },
+    "educationFields": {
+      "schoolName": {
+        "label": "School Name",
+        "placeholder": "Enter full school name"
+      },
+      "studyCountry": {
+        "label": "Study Country",
+        "placeholder": "Select country",
+        "clear": "Clear selection"
+      },
+      "degreeObtained": {
+        "label": "Degree Obtained",
+        "description": "Please specify your degree in detail, including your major if applicable. For example: \"Bachelor of Science in Computer Science\"",
+        "placeholder": "e.g.: Bachelor of Science in Computer Science"
+      },
+      "studyPeriod": {
+        "label": "Study Period",
+        "startMonth": "Start Month",
+        "startYear": "Start Year",
+        "endMonth": "End Month",
+        "endYear": "End Year",
+        "monthPlaceholder": "Select month",
+        "yearPlaceholder": "Select year",
+        "clear": "Clear selection"
+      },
+      "diploma": {
+        "label": "Diploma"
+      }
+    },
+    "evalueeInfo": {
+      "title": "Education Information",
+      "historyTitle": "Education History"
+    },
+    "serviceSelection": {
+      "title": "Service Selection",
+      "errors": {
+        "serviceRequired": "Please select at least one service"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "Foreign Credential Evaluation Report (Document-by-Document)"
+        },
+        "courseByCourse": {
+          "title": "Course-by-Course Evaluation (Including GPA)"
+        },
+        "professionalExperience": {
+          "title": "Expert Opinion Letter"
+        },
+        "position": {
+          "title": "Position Evaluation"
+        },
+        "translation": {
+          "title": "Translation Service",
+          "required": "Translation Service Required",
+          "note": "Price varies by document"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "Select service speed",
+        "reportType": "Select report type",
+        "deliveryMethod": "Select delivery method"
+      },
+      "options": {
+        "none": "No evaluation needed",
+        "additionalServices": {
+          "pdf_only": "PDF Report Only (No Hard Copy)",
+          "pdf_with_hard_copy": "PDF Report with Hard Copy",
+          "extra_copy": "Extra Hard Copy Report"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 Business Days",
+            "5day": "5 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 Business Days",
+          "7day": "7 Business Days",
+          "3day": "3 Business Days"
+        },
+        "position": {
+          "10day": "10 Business Days",
+          "5day": "5 Business Days",
+          "3day": "3 Business Days",
+          "2day": "2 Business Days"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "Additional Degrees",
+        "perAdditionalDegree": "{price} per additional degree",
+        "priceEach": "{price} each",
+        "extraCopiesQuantity": "Number of Extra Copies"
+      },
+      "notes": {
+        "rush": "* Payment and documents must be received by 1:00pm EST.",
+        "default": "* By default, <strong>PDF Report Only</strong> is selected."
+      },
+      "reportDelivery": {
+        "title": "How Would You Like to Receive Your Report?"
+      },
+      "delivery": {
+        "title": "Type of Delivery",
+        "options": {
+          "usps_first_class_domestic": "USPS First Class Mail (Domestic)",
+          "usps_first_class_international": "USPS First Class Mail (International)",
+          "usps_priority_domestic": "USPS Priority Mail (Domestic)",
+          "usps_express_domestic": "USPS Express Mail (Domestic)",
+          "ups_express_domestic": "UPS Express Mail (Domestic)",
+          "usps_express_international": "USPS Express Mail (International)",
+          "fedex_express_international": "FedEx Express Mail (International)"
+        }
+      }
+    },
+    "review": {
+      "note": "Please review all information carefully. We will process your application as soon as possible after submission."
+    },
+    "infoCard": {
+      "clientSectionTitle": "Client Information",
+      "fields": {
+        "firstName": "First Name",
+        "middleName": "Middle Name",
+        "lastName": "Last Name",
+        "country": "Current Country",
+        "email": "Email"
+      },
+      "educationSectionTitle": "Education Information",
+      "education": {
+        "degreeTitle": "Degree {index}",
+        "fields": {
+          "country": "Country",
+          "degree": "Degree",
+          "school": "School",
+          "studyPeriod": "Study Period"
+        },
+        "empty": "No education information provided"
+      }
+    }
   }
 }

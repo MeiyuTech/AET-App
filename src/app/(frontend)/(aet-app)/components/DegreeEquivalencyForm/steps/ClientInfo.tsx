@@ -1,6 +1,6 @@
 'use client'
 
-import { FileText, GraduationCap } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -26,6 +26,7 @@ import { FormData } from '../types'
 
 export function ClientInfo() {
   const form = useFormContext<FormData>()
+  const t = useTranslations('degreeEquivalencyForm.clientInfo')
 
   // Get selected country
   const selectedCountry = form.watch('country')
@@ -35,7 +36,7 @@ export function ClientInfo() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Client Information</h2>
+      <h2 className="text-xl font-semibold">{t('title')}</h2>
 
       <div className="grid grid-cols-2 gap-4">
         {/* <FormField
@@ -60,11 +61,12 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="country-select">
-                Current Country<span className="text-red-500">*</span>
+                {t('country.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger id="country-select" data-testid="country-select">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t('country.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {COUNTRIES.map((country) => (
@@ -214,7 +216,7 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                First Name <span className="text-red-500">*</span>
+                {t('firstName.label')} <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input data-testid="first-name-input" {...field} />
@@ -230,7 +232,7 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Last Name <span className="text-red-500">*</span>
+                {t('lastName.label')} <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input data-testid="last-name-input" {...field} />
@@ -246,8 +248,8 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Middle Name
-                <span className="text-sm text-gray-500 ml-2">(Optional)</span>
+                {t('middleName.label')}
+                <span className="text-sm text-gray-500 ml-2">{t('middleName.optional')}</span>
               </FormLabel>
               <FormControl>
                 <Input data-testid="middle-name-input" {...field} />
@@ -292,13 +294,14 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Email<span className="text-red-500">*</span>
+                {t('email.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   data-testid="email-input"
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder={t('email.placeholder')}
                   {...field}
                 />
               </FormControl>
