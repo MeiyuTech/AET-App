@@ -273,6 +273,18 @@
       "durationRange": "{start} a {end}",
       "equivalencyInUS": "Equivalencia en EE. UU.:",
       "notProvided": "No proporcionado"
+    },
+    "paymentOverlay": {
+      "title": "Desbloquea tu resultado de equivalencia en EE. UU.",
+      "priceLabel": "{amount}",
+      "button": {
+        "cta": "Pagar ahora",
+        "loading": "Procesando..."
+      },
+      "errors": {
+        "toastTitle": "Error de pago",
+        "creationFailed": "No se pudo crear el pago"
+      }
     }
   },
   "degreeEquivalencyForm": {

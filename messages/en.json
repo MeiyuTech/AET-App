@@ -273,6 +273,18 @@
       "durationRange": "{start} to {end}",
       "equivalencyInUS": "Equivalency in U.S.:",
       "notProvided": "Not provided"
+    },
+    "paymentOverlay": {
+      "title": "Unlock Your U.S. Degree Equivalency Result",
+      "priceLabel": "{amount}",
+      "button": {
+        "cta": "Pay Now",
+        "loading": "Processing..."
+      },
+      "errors": {
+        "toastTitle": "Payment error",
+        "creationFailed": "Payment creation failed"
+      }
     }
   },
   "degreeEquivalencyForm": {
