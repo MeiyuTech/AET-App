@@ -15,12 +15,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
-import { getServerSideURL } from '@/utilities/getURL'
 import { DatabaseCoreApplication } from '../DegreeEquivalencyForm/types'
 
 const getStatusPageLink = (applicationId: string): string => {
-  const currentUrl = getServerSideURL()
-  return `${currentUrl}/degree-equivalency-tool/application/success?applicationId=${applicationId}`
+  const root = 'https://app.americantranslationservice.com'
+
+  return `${root}/degree-equivalency-tool/application/success?applicationId=${applicationId}`
 }
 
 // get the dropbox link for the office

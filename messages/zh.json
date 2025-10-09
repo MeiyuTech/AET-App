@@ -210,8 +210,8 @@
       "description": "填写申请表开始您的学历评估请求"
     },
     "degreeEquivalency": {
-      "title": "提交学位等同评估申请",
-      "description": "填写申请表开始您的学位等效性请求"
+      "title": "提交学历等同评估申请",
+      "description": "填写申请表开始您的学历等同请求"
     },
     "aiAssistant": {
       "title": "AI 助手",
@@ -237,6 +237,53 @@
         "imageAlt": "毕业帽",
         "title": "学历等同评估",
         "highlight": "工具"
+      }
+    }
+  },
+  "degreeEquivalencySuccess": {
+    "paidCard": {
+      "title": "这是您的 AET 学历等同结果",
+      "description": "现在您已经了解在美国您的学历价值，可以申请 AET 学历评估来核实学历，从而获得美国高校、雇主和执照机构的认可。请按照以下步骤操作：",
+      "steps": {
+        "step1": "立即开始您的学历评估申请。",
+        "step2": "提交相关文件（毕业证、成绩单等）。",
+        "step3": "AET 将出具学历评估并安全存储您的文件，报告永久有效。"
+      }
+    },
+    "unpaidCard": {
+      "title": "您的 AET 学历等同结果正在处理。"
+    },
+    "uploader": {
+      "title": "毕业证上传",
+      "description": "上传清晰的毕业证或相关文件截图/扫描件可以显著提升预评估准确性。请提交清晰可读的文件以获得最佳结果。"
+    },
+    "note": {
+      "label": "提示",
+      "message": "任何学历等同结果均基于您填写的信息，并未结合已验证的文件，不能作为就读或获得学位的证明。AET 可能会在文件核验和分析后调整该临时结果。"
+    },
+    "actions": {
+      "back": "返回"
+    },
+    "table": {
+      "credentialTitle": "资历 1",
+      "countryOfStudy": "就读国家：",
+      "degreeName": "学位名称：",
+      "institutionName": "院校名称：",
+      "studyDuration": "学习时长：",
+      "durationRange": "{start} 至 {end}",
+      "equivalencyInUS": "美国等同学历：",
+      "notProvided": "未提供"
+    },
+    "paymentOverlay": {
+      "title": "解锁您的美国学历等同结果",
+      "priceLabel": "{amount}",
+      "button": {
+        "cta": "立即支付",
+        "loading": "处理中..."
+      },
+      "errors": {
+        "toastTitle": "支付错误",
+        "creationFailed": "创建支付失败"
       }
     }
   },

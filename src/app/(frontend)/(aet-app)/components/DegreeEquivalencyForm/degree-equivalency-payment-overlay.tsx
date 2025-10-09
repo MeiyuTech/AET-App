@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { createDegreeEquivalencyPayment } from '@/app/(frontend)/(aet-app)/utils/stripe/actions'
 import { LockClosedIcon } from '@heroicons/react/24/solid'
+import { useLocale, useTranslations } from 'next-intl'
 
 interface DegreeEquivalencyPaymentOverlayProps {
   applicationId: string
@@ -15,6 +16,17 @@ export function DegreeEquivalencyPaymentOverlay({
 }: DegreeEquivalencyPaymentOverlayProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const t = useTranslations('degreeEquivalencySuccess.paymentOverlay')
+  const locale = useLocale()
+  const priceAmount = 19
+  const priceValue = '19.00'
+  const formattedPrice = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(priceAmount)
+  const priceLabel = t('priceLabel', { amount: formattedPrice })
 
   const handlePayment = async () => {
     setIsLoading(true)
@@ -22,14 +34,14 @@ export function DegreeEquivalencyPaymentOverlay({
       const response = await createDegreeEquivalencyPayment({
         // amount: '1.01',
         // amount: '40.00',
-        amount: '39.00',
+        amount: priceValue,
         applicationId,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Payment creation failed')
+        throw new Error(data.error || t('errors.creationFailed'))
       }
 
       window.location.href = data.url
@@ -37,8 +49,8 @@ export function DegreeEquivalencyPaymentOverlay({
       console.error('Payment creation failed:', error)
       toast({
         variant: 'destructive',
-        title: 'Payment error',
-        description: error instanceof Error ? error.message : 'Payment creation failed',
+        title: t('errors.toastTitle'),
+        description: error instanceof Error ? error.message : t('errors.creationFailed'),
       })
     } finally {
       setIsLoading(false)
@@ -52,11 +64,9 @@ export function DegreeEquivalencyPaymentOverlay({
           <div className="mb-2 text-blue-700">
             <LockClosedIcon className="w-8 h-8" />
           </div>
-          <h2 className="text-lg font-bold mb-1 text-center">
-            Unlock Your U.S. Degree Equivalency Result
-          </h2>
+          <h2 className="text-lg font-bold mb-1 text-center">{t('title')}</h2>
           {/* <p className="text-gray-500 text-sm mb-4 text-center">Pay to view</p> */}
-          <div className="text-2xl font-extrabold text-blue-700 mb-4">$39</div>
+          <div className="text-2xl font-extrabold text-blue-700 mb-4">{priceLabel}</div>
           <Button
             onClick={handlePayment}
             disabled={isLoading}
@@ -79,7 +89,7 @@ export function DegreeEquivalencyPaymentOverlay({
                 ></path>
               </svg>
             )}
-            {isLoading ? 'Processing...' : 'Pay Now'}
+            {isLoading ? t('button.loading') : t('button.cta')}
           </Button>
         </div>
       </div>
