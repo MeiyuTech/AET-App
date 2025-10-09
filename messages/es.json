@@ -240,6 +240,41 @@
       }
     }
   },
+  "degreeEquivalencySuccess": {
+    "paidCard": {
+      "title": "Aquí está su equivalencia de grado de AET",
+      "description": "Ahora que sabe cuánto vale su educación en los EE. UU., obtenga una evaluación de credenciales de AET para verificar sus credenciales y que sean reconocidas por universidades, empleadores y juntas de licencias estadounidenses. Siga estos pasos sencillos:",
+      "steps": {
+        "step1": "Comience su solicitud de evaluación de credenciales ahora.",
+        "step2": "Envíe los documentos relacionados (diploma, expedientes, etc.).",
+        "step3": "AET prepara una evaluación de credenciales y almacena sus documentos de forma electrónica. Su informe nunca caduca."
+      }
+    },
+    "unpaidCard": {
+      "title": "Su equivalencia de grado de AET está en proceso."
+    },
+    "uploader": {
+      "title": "Cargador de Diplomas",
+      "description": "Subir una captura clara o un escaneo de su diploma u otros documentos ayuda a mejorar la precisión de nuestra preevaluación. Envíe archivos legibles para obtener mejores resultados."
+    },
+    "note": {
+      "label": "Nota",
+      "message": "Cualquier equivalencia de grado mostrada se basa en la información que proporcionó. No proviene de documentos verificados y no puede usarse como comprobante de estudios o de obtención del título. AET podrá actualizar este resultado provisional después de verificar y analizar los documentos."
+    },
+    "actions": {
+      "back": "Regresar"
+    },
+    "table": {
+      "credentialTitle": "Credencial 1",
+      "countryOfStudy": "País de estudio:",
+      "degreeName": "Nombre del título:",
+      "institutionName": "Nombre de la institución:",
+      "studyDuration": "Duración de los estudios:",
+      "durationRange": "{start} a {end}",
+      "equivalencyInUS": "Equivalencia en EE. UU.:",
+      "notProvided": "No proporcionado"
+    }
+  },
   "degreeEquivalencyForm": {
     "toast": {
       "incomplete": {

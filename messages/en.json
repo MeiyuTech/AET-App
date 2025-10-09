@@ -240,6 +240,41 @@
       }
     }
   },
+  "degreeEquivalencySuccess": {
+    "paidCard": {
+      "title": "Here is Your AET Degree Equivalency",
+      "description": "Now that you know what your education is worth in the U.S., get an AET credential evaluation to verify your credentials so they will be recognized by U.S. universities, employers, and licensing boards. Follow these simple steps:",
+      "steps": {
+        "step1": "Begin Your Credential Evaluation Application Now.",
+        "step2": "Submit related documents (Diploma, Transcripts, etc.)",
+        "step3": "AET prepares a credential evaluation and securely stores your documents. Your report never expires."
+      }
+    },
+    "unpaidCard": {
+      "title": "Your AET Degree Equivalency is being processed."
+    },
+    "uploader": {
+      "title": "Diploma Uploader",
+      "description": "Uploading a clear screenshot or scan of your diploma or related documents helps improve the accuracy of our pre-evaluation. Please submit legible files for the best results."
+    },
+    "note": {
+      "label": "Note",
+      "message": "Any degree equivalency shown is based on the information you provided. It is not derived from verified documents and cannot be used as proof of attendance or degree completion. AET may update this provisional result after document verification and analysis."
+    },
+    "actions": {
+      "back": "Go Back"
+    },
+    "table": {
+      "credentialTitle": "Credential 1",
+      "countryOfStudy": "Country of Study:",
+      "degreeName": "Name of Degree:",
+      "institutionName": "Name of Institution:",
+      "studyDuration": "Study Duration:",
+      "durationRange": "{start} to {end}",
+      "equivalencyInUS": "Equivalency in U.S.:",
+      "notProvided": "Not provided"
+    }
+  },
   "degreeEquivalencyForm": {
     "toast": {
       "incomplete": {
