@@ -153,7 +153,7 @@
       "noDelivery": "No Delivery Needed - Free",
       "additionalServices": "Additional Services",
       "dueAmount": "Due Amount: ${amount}",
-      "estimatedTotal": "Estimated Total: ${amount}",
+      "estimatedTotal": "Estimated Total: {amount}",
       "dueNotSet": "Due amount is not set yet",
       "footnote": "* This fee applies to most applications but it may vary for some applicants. We will reconfirm your service details during the evaluation process. If any adjustments are needed, we will contact you—any overpayment will be refunded, and underpayment will be collected. Thank you for your trust!"
     },
@@ -227,6 +227,15 @@
     "description": "Located in Miami, Boston, SF, LA, NYC, American Education and Translation Services has been dedicated to being your best agency for Certified Translations and Credential Evaluation since 2009. Click to learn more.",
     "keywords": "certified translation, notarized translation, foreign credential evaluation, translation services"
   },
+  "credentialEvaluationApplication": {
+    "metadata": {
+      "title": "Credential Evaluation Application | AET Service Application",
+      "description": "AET Service Application for Credential Evaluation"
+    },
+    "page": {
+      "heading": "AET Credential Evaluation Application"
+    }
+  },
   "degreeEquivalencyApplication": {
     "metadata": {
       "title": "Credential Evaluation Application | AET Service Application",
@@ -285,6 +294,271 @@
         "toastTitle": "Payment error",
         "creationFailed": "Payment creation failed"
       }
+    }
+  },
+  "credentialEvaluationForm": {
+    "toast": {
+      "incomplete": {
+        "title": "Please Complete Current Step",
+        "description": "Please fill in all required fields"
+      },
+      "success": {
+        "title": "🎉 Application Submitted Successfully! 🎉",
+        "description": "Your application has been successfully submitted. We are processing your information."
+      },
+      "error": {
+        "title": "Submission Failed",
+        "description": "There was an error submitting your application. Please try again later."
+      },
+      "reset": {
+        "title": "Form Reset",
+        "description": "You can start filling out the application again"
+      }
+    },
+    "terms": {
+      "label": "I have read and agree to <link>AET's Terms of Service</link>"
+    },
+    "actions": {
+      "submit": "Submit Application",
+      "submitLoading": "Submitting...",
+      "nextLoading": "Saving...",
+      "reset": "Reset Application"
+    },
+    "dialog": {
+      "title": "Are you sure you want to reset the application?",
+      "description": "This action will clear all filled information, and you will need to start filling out the application again. This action cannot be undone.",
+      "confirm": "Confirm Reset"
+    },
+    "status": {
+      "draftSaved": "Draft Saved (ID: {id})"
+    },
+    "steps": {
+      "clientInfo": "Client Info",
+      "evalueeInfo": "Evaluee Info",
+      "services": "Services",
+      "review": "Review"
+    },
+    "clientInfo": {
+      "title": "Client Information",
+      "name": {
+        "label": "Company/Individual Name"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Select country"
+      },
+      "streetAddress": {
+        "label": "Street Address",
+        "placeholder": "1234 Main St"
+      },
+      "streetAddress2": {
+        "label": "Street Address 2",
+        "optional": "(Optional)",
+        "placeholder": "Apartment, suite, unit, etc."
+      },
+      "city": {
+        "label": "City"
+      },
+      "region": {
+        "label": "{regionLabel}",
+        "placeholder": "Select {regionLabel}"
+      },
+      "zipCode": {
+        "label": "Zip/Postal Code",
+        "placeholder": "12345"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "123-456-7890"
+      },
+      "fax": {
+        "label": "Fax",
+        "optional": "(Optional)",
+        "placeholder": "123-456-7890"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com"
+      },
+      "office": {
+        "label": "Office",
+        "placeholder": "Select office"
+      },
+      "purpose": {
+        "label": "Service Type",
+        "placeholder": "Select service type",
+        "options": {
+          "evaluation-uscis": "Evaluation - USCIS(For submissions to USCIS)",
+          "evaluation-employment": "Evaluation - Employment",
+          "evaluation-education": "Evaluation - Education"
+        }
+      },
+      "serviceNotes": {
+        "label": "Service Notes",
+        "optional": "(Optional)",
+        "placeholder": "e.g. I am applying for an H1B visa and need my bachelor's degree evaluated. The report will be submitted to USCIS.",
+        "description": "Please provide details about your evaluation request, including the purpose (employment, education, visa), the documents you would like us to evaluate, and the organization or individual who will receive the evaluation.",
+        "hint": "The more details you provide, the faster and more accurately we can assist you.",
+        "samplesHeading": "Check out our sample reports",
+        "samples": {
+          "degree": "Degree Credential Evaluation Report",
+          "course": "Course by Course Evaluation Report"
+        }
+      }
+    },
+    "educationFields": {
+      "sectionTitle": "Education Information",
+      "addEducation": "Add Education",
+      "schoolName": {
+        "label": "School Name",
+        "placeholder": "Enter full school name"
+      },
+      "studyCountry": {
+        "label": "Study Country",
+        "placeholder": "Select country",
+        "clear": "Clear selection"
+      },
+      "degreeObtained": {
+        "label": "Degree Obtained",
+        "placeholder": "e.g.: Bachelor of Science"
+      },
+      "studyPeriod": {
+        "label": "Study Period",
+        "startMonth": "Start Month",
+        "startYear": "Start Year",
+        "endMonth": "End Month",
+        "endYear": "End Year",
+        "monthPlaceholder": "Select month",
+        "yearPlaceholder": "Select year",
+        "clear": "Clear selection"
+      }
+    },
+    "evalueeInfo": {
+      "title": "Evaluee Information",
+      "pronouns": {
+        "label": "Pronouns",
+        "placeholder": "Select your pronouns",
+        "options": {
+          "mr": "Mr. (he/him)",
+          "ms": "Ms. (she/her)",
+          "mx": "Mx. (they/them)"
+        }
+      },
+      "firstName": {
+        "label": "First Name"
+      },
+      "lastName": {
+        "label": "Last Name"
+      },
+      "middleName": {
+        "label": "Middle Name",
+        "optional": "(Optional)"
+      },
+      "dateOfBirth": {
+        "label": "Date of Birth",
+        "month": "Birth Month",
+        "monthPlaceholder": "Select month",
+        "day": "Birth Day",
+        "dayPlaceholder": "Select day",
+        "year": "Birth Year",
+        "yearPlaceholder": "Select year"
+      }
+    },
+    "serviceSelection": {
+      "title": "Service Selection",
+      "errors": {
+        "serviceRequired": "Please select at least one service"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "Foreign Credential Evaluation Report (Document-by-Document)"
+        },
+        "courseByCourse": {
+          "title": "Course-by-Course Evaluation (Including GPA)"
+        },
+        "professionalExperience": {
+          "title": "Expert Opinion Letter"
+        },
+        "position": {
+          "title": "Position Evaluation"
+        },
+        "translation": {
+          "title": "Translation Service",
+          "required": "Translation Service Required",
+          "note": "Price varies by document"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "Select service speed",
+        "reportType": "Select report type",
+        "deliveryMethod": "Select delivery method"
+      },
+      "options": {
+        "none": "No evaluation needed",
+        "additionalServices": {
+          "pdf_only": "PDF Report Only (No Hard Copy)",
+          "pdf_with_hard_copy": "PDF Report with Hard Copy",
+          "extra_copy": "Extra Hard Copy Report"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 Business Days",
+            "5day": "5 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 Business Days",
+          "7day": "7 Business Days",
+          "3day": "3 Business Days"
+        },
+        "position": {
+          "10day": "10 Business Days",
+          "5day": "5 Business Days",
+          "3day": "3 Business Days",
+          "2day": "2 Business Days"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "Additional Degrees",
+        "perAdditionalDegree": "{price} per additional degree",
+        "priceEach": "{price} each",
+        "extraCopiesQuantity": "Number of Extra Copies"
+      },
+      "notes": {
+        "rush": "* Payment and documents must be received by 1:00pm EST.",
+        "default": "* By default, <strong>PDF Report Only</strong> is selected."
+      },
+      "reportDelivery": {
+        "title": "How Would You Like to Receive Your Report?"
+      },
+      "delivery": {
+        "title": "Type of Delivery",
+        "options": {
+          "usps_first_class_domestic": "USPS First Class Mail (Domestic)",
+          "usps_first_class_international": "USPS First Class Mail (International)",
+          "usps_priority_domestic": "USPS Priority Mail (Domestic)",
+          "usps_express_domestic": "USPS Express Mail (Domestic)",
+          "ups_express_domestic": "UPS Express Mail (Domestic)",
+          "usps_express_international": "USPS Express Mail (International)",
+          "fedex_express_international": "FedEx Express Mail (International)"
+        }
+      }
+    },
+    "review": {
+      "note": "Please review all information carefully. We will process your application as soon as possible after submission."
     }
   },
   "degreeEquivalencyForm": {

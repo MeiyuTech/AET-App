@@ -50,10 +50,10 @@ export const PURPOSE_OPTIONS = [
   // { value: 'evaluation-immigration', label: 'Evaluation-Immigration' },
   {
     value: 'evaluation-uscis',
-    label: 'Evaluation-USCIS (For all that needs to be submitted to USCIS)',
+    labelKey: 'evaluation-uscis',
   },
-  { value: 'evaluation-employment', label: 'Evaluation-Employment' },
-  { value: 'evaluation-education', label: 'Evaluation-Education' },
+  { value: 'evaluation-employment', labelKey: 'evaluation-employment' },
+  { value: 'evaluation-education', labelKey: 'evaluation-education' },
   // { value: 'other', label: 'Other' },
 ] as const
 

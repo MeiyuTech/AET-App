@@ -1,6 +1,7 @@
 'use client'
 
 import { FileText, GraduationCap } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -26,6 +27,7 @@ import { FormData } from '../types'
 
 export function ClientInfo() {
   const form = useFormContext<FormData>()
+  const t = useTranslations('credentialEvaluationForm.clientInfo')
 
   // Get selected country
   const selectedCountry = form.watch('country')
@@ -35,7 +37,7 @@ export function ClientInfo() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Client Information</h2>
+      <h2 className="text-xl font-semibold">{t('title')}</h2>
 
       <div className="grid grid-cols-2 gap-4">
         <FormField
@@ -44,7 +46,8 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Company/Individual Name<span className="text-red-500">*</span>
+                {t('name.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input data-testid="client-name-input" {...field} />
@@ -60,11 +63,12 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="country-select">
-                Country<span className="text-red-500">*</span>
+                {t('country.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger id="country-select" data-testid="country-select">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t('country.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {COUNTRIES.map((country) => (
@@ -87,10 +91,15 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Street Address<span className="text-red-500">*</span>
+                {t('streetAddress.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input data-testid="street-address-input" placeholder="1234 Main St" {...field} />
+                <Input
+                  data-testid="street-address-input"
+                  placeholder={t('streetAddress.placeholder')}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,12 +112,13 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Street Address 2<span className="text-sm text-gray-500 ml-2">(Optional)</span>
+                {t('streetAddress2.label')}
+                <span className="text-sm text-gray-500 ml-2">{t('streetAddress2.optional')}</span>
               </FormLabel>
               <FormControl>
                 <Input
                   data-testid="street-address2-input"
-                  placeholder="Apartment, suite, unit, etc."
+                  placeholder={t('streetAddress2.placeholder')}
                   {...field}
                 />
               </FormControl>
@@ -125,7 +135,8 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                City<span className="text-red-500">*</span>
+                {t('city.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input data-testid="city-input" {...field} />
@@ -141,12 +152,14 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="region-select">
-                {regionConfig.label}
+                {t('region.label', { regionLabel: regionConfig.label })}
                 <span className="text-red-500">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger id="region-select" data-testid="region-select">
-                  <SelectValue placeholder={`Select ${regionConfig.label}`} />
+                  <SelectValue
+                    placeholder={t('region.placeholder', { regionLabel: regionConfig.label })}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {regionConfig.options.map((option) => (
@@ -169,10 +182,16 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Zip Code<span className="text-red-500">*</span>
+                {t('zipCode.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input data-testid="zip-code-input" placeholder="12345" maxLength={10} {...field} />
+                <Input
+                  data-testid="zip-code-input"
+                  placeholder={t('zipCode.placeholder')}
+                  maxLength={10}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -185,13 +204,13 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Fax
-                <span className="text-sm text-gray-500 ml-2">(Optional)</span>
+                {t('fax.label')}
+                <span className="text-sm text-gray-500 ml-2">{t('fax.optional')}</span>
               </FormLabel>
               <FormControl>
                 <Input
                   data-testid="fax-input"
-                  placeholder="123-456-7890"
+                  placeholder={t('fax.placeholder')}
                   {...field}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, '')
@@ -215,12 +234,13 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Phone<span className="text-red-500">*</span>
+                {t('phone.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   data-testid="phone-input"
-                  placeholder="123-456-7890"
+                  placeholder={t('phone.placeholder')}
                   {...field}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, '')
@@ -242,13 +262,14 @@ export function ClientInfo() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Email<span className="text-red-500">*</span>
+                {t('email.label')}
+                <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   data-testid="email-input"
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder={t('email.placeholder')}
                   {...field}
                 />
               </FormControl>
@@ -264,11 +285,12 @@ export function ClientInfo() {
         render={({ field }) => (
           <FormItem>
             <FormLabel htmlFor="office-select">
-              Office<span className="text-red-500">*</span>
+              {t('office.label')}
+              <span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger id="office-select" data-testid="office-select">
-                <SelectValue placeholder="Select office" />
+                <SelectValue placeholder={t('office.placeholder')} />
               </SelectTrigger>
               <SelectContent>
                 {OFFICE_OPTIONS.map((option) => (
@@ -289,19 +311,20 @@ export function ClientInfo() {
         render={({ field }) => (
           <FormItem>
             <FormLabel htmlFor="purpose-select">
-              Service Type<span className="text-red-500">*</span>
+              {t('purpose.label')}
+              <span className="text-red-500">*</span>
             </FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger id="purpose-select" data-testid="purpose-select">
-                <SelectValue placeholder="Select service type" />
+                <SelectValue placeholder={t('purpose.placeholder')} />
               </SelectTrigger>
-              <SelectContent>
-                {PURPOSE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+                <SelectContent>
+                  {PURPOSE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {t(`purpose.options.${option.labelKey}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
             </Select>
             <FormMessage />
           </FormItem>
@@ -329,28 +352,21 @@ export function ClientInfo() {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              Service Notes
-              <span className="text-sm text-gray-500 ml-2">(Optional)</span>
+              {t('serviceNotes.label')}
+              <span className="text-sm text-gray-500 ml-2">{t('serviceNotes.optional')}</span>
             </FormLabel>
             <FormControl>
               <Textarea
                 data-testid="service-notes-input"
-                placeholder="e.g. I am applying for an H1B visa and need my bachelor's degree evaluated. The report will be submitted to USCIS."
+                placeholder={t('serviceNotes.placeholder')}
                 {...field}
               />
             </FormControl>
-            <FormDescription>
-              Please provide details about your evaluation request. Include the purpose (e.g.,
-              employment, education, visa), the documents you&apos;d like us to evaluate (e.g.,
-              bachelor&apos;s degree, transcripts), and the organization or individual who will
-              receive the evaluation.
-              <br />
-              <br />
-              The more details you provide, the faster and more accurately we can assist you.
-            </FormDescription>
+            <FormDescription>{t('serviceNotes.description')}</FormDescription>
+            <FormDescription>{t('serviceNotes.hint')}</FormDescription>
 
             <div className="mt-2 text-sm text-gray-700">
-              <p className="mb-1">Check out our sample reports</p>
+              <p className="mb-1">{t('serviceNotes.samplesHeading')}</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-blue-600" />
@@ -360,7 +376,7 @@ export function ClientInfo() {
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline flex items-center"
                   >
-                    Degree Credential Evaluation Report
+                    {t('serviceNotes.samples.degree')}
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
@@ -371,7 +387,7 @@ export function ClientInfo() {
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline flex items-center"
                   >
-                    Course by Course Evaluation Report
+                    {t('serviceNotes.samples.course')}
                   </a>
                 </li>
               </ul>

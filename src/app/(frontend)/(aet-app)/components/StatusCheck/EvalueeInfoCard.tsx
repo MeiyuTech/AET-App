@@ -19,6 +19,7 @@ interface EvalueeInfoCardProps {
 export default function EvalueeInfoCard({ application }: EvalueeInfoCardProps) {
   const t = useTranslations('status')
   const tCommon = useTranslations('common')
+  const tFce = useTranslations('credentialEvaluationForm.evalueeInfo')
 
   return (
     <Card>
@@ -58,8 +59,9 @@ export default function EvalueeInfoCard({ application }: EvalueeInfoCardProps) {
           <div>
             <dt className="font-medium">{t('evalueeInfo.pronouns')}</dt>
             <dd className="text-muted-foreground">
-              {PRONOUN_OPTIONS.find((o) => o.value === application.pronouns)?.label ||
-                tCommon('notProvided')}
+              {application.pronouns
+                ? tFce(`pronouns.options.${application.pronouns}`)
+                : tCommon('notProvided')}
             </dd>
           </div>
 
