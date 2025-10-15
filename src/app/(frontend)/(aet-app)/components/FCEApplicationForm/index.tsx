@@ -44,6 +44,7 @@ export default function FCEApplicationForm() {
   const controls = useAnimationControls()
   const t = useTranslations('credentialEvaluationForm')
   const tCommon = useTranslations('common')
+  const tPage = useTranslations('credentialEvaluationApplication.page')
   const {
     formData,
     currentStep,
@@ -336,8 +337,10 @@ export default function FCEApplicationForm() {
   }
 
   return (
-    <Form {...form}>
-      <motion.form animate={controls} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">{tPage('heading')}</h1>
+      <Form {...form}>
+        <motion.form animate={controls} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* // Debugging information
         <div className="text-xs text-gray-400">
           Current Step: {currentStep} (Review = {FormStep.REVIEW})
@@ -439,7 +442,8 @@ export default function FCEApplicationForm() {
             {t('status.draftSaved', { id: draftId })}
           </p>
         )}
-      </motion.form>
-    </Form>
+        </motion.form>
+      </Form>
+    </div>
   )
 }
