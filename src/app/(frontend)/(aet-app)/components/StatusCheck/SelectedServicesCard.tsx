@@ -18,6 +18,14 @@ interface SelectedServicesCardProps {
 export default function SelectedServicesCard({ application }: SelectedServicesCardProps) {
   const t = useTranslations('status')
   const tCommon = useTranslations('common')
+  const tServices = useTranslations('credentialEvaluationForm.serviceSelection')
+  const tClient = useTranslations('credentialEvaluationForm.clientInfo')
+
+  const purposeLabel =
+    application.purpose &&
+    PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.labelKey
+      ? tClient(`purpose.options.${PURPOSE_OPTIONS.find((o) => o.value === application.purpose)!.labelKey}`)
+      : ''
 
   return (
     <Card>
@@ -29,8 +37,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
         <div>
           <div className="font-medium">{t('selectedServices.purpose')}</div>
           <div className="pl-4">
-            {' '}
-            {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
+            {application.purpose ? purposeLabel : tCommon('notProvided')}
           </div>
         </div>
         {/* Service Notes */}
@@ -58,12 +65,14 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                   service && (
                     <>
                       <div>
-                        {t('selectedServices.firstDegree')}: {service.label} - ${service.price}
+                        {t('selectedServices.firstDegree')}:{' '}
+                        {tServices(`services.foreignCredential.firstDegree.${speed}`)} - $
+                        {service.price}
                       </div>
                       {application.serviceType.foreignCredentialEvaluation.secondDegrees > 0 && (
                         <div>
-                          {t('selectedServices.secondDegree')}:{' '}
-                          {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
+                     {t('selectedServices.secondDegree')}:{' '}
+                      {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
                           {speed === '7day'
                             ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
                             : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT
@@ -95,7 +104,8 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                   service && (
                     <>
                       <div>
-                        {t('selectedServices.firstDegree')}: {service.label} - ${service.price}
+                        {t('selectedServices.firstDegree')}:{' '}
+                        {tServices(`services.courseByCourse.firstDegree.${speed}`)} - ${service.price}
                       </div>
                       {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                         <div>
@@ -127,7 +137,9 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
               {(() => {
                 const speed = application.serviceType.professionalExperience.speed
                 const service = speed && EVALUATION_SERVICES.PROFESSIONAL_EXPERIENCE[speed]
-                return service ? `${service.label} - $${service.price}` : null
+                return service
+                  ? `${tServices(`services.professionalExperience.${speed}`)} - $${service.price}`
+                  : null
               })()}
             </div>
           </div>
@@ -141,7 +153,9 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
               {(() => {
                 const speed = application.serviceType.positionEvaluation.speed
                 const service = speed && EVALUATION_SERVICES.POSITION[speed]
-                return service ? `${service.label} - $${service.price}` : null
+                return service
+                  ? `${tServices(`services.position.${speed}`)} - $${service.price}`
+                  : null
               })()}
             </div>
           </div>
@@ -164,7 +178,7 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                 const method = application.deliveryMethod
                 const service = method && DELIVERY_OPTIONS[method as keyof typeof DELIVERY_OPTIONS]
                 return service
-                  ? `${service.label} - $${service.price.toFixed(2)}`
+                  ? `${tServices(`delivery.options.${method}`)} - $${service.price.toFixed(2)}`
                   : t('selectedServices.noDelivery')
               })()}
             </div>
@@ -183,13 +197,15 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                     const quantity = application.additionalServicesQuantity.extra_copy
                     return (
                       <div key={serviceId}>
-                        {service.label} × {quantity} = ${(service.price * quantity).toFixed(2)}
+                        {tServices(`options.additionalServices.${serviceId}`)} × {quantity} = $
+                        {(service.price * quantity).toFixed(2)}
                       </div>
                     )
                   } else {
                     return (
                       <div key={serviceId}>
-                        {service.label} - ${service.price.toFixed(2)}
+                        {tServices(`options.additionalServices.${serviceId}`)} - $
+                        {service.price.toFixed(2)}
                       </div>
                     )
                   }

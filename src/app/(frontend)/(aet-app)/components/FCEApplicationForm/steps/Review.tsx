@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useFormContext } from 'react-hook-form'
 
 import { CONFIG } from '../constants'
@@ -10,6 +11,7 @@ import SelectedServicesCard from '../../StatusCheck/SelectedServicesCard'
 
 export function Review() {
   const { watch } = useFormContext<FormData>()
+  const t = useTranslations('credentialEvaluationForm.review')
   const formData = watch()
   const applicationData = formData as ApplicationData
 
@@ -20,10 +22,7 @@ export function Review() {
 
       {/* Service Selection */}
       {CONFIG.SHOW_SERVICE_SELECTION && <SelectedServicesCard application={applicationData} />}
-      <div className="text-muted-foreground mt-1">
-        Please review all information carefully. We will process your application as soon as
-        possible after submission.
-      </div>
+      <div className="text-muted-foreground mt-1">{t('note')}</div>
     </div>
   )
 }

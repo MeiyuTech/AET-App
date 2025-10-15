@@ -153,7 +153,7 @@
       "noDelivery": "无需邮寄 — 免费",
       "additionalServices": "附加服务",
       "dueAmount": "应付金额：${amount}",
-      "estimatedTotal": "预估总计：${amount}",
+      "estimatedTotal": "预估总计：{amount}",
       "dueNotSet": "应付金额尚未设定",
       "footnote": "* 此费用适用于大多数申请，个别申请人可能有所调整。我们会在评估过程中再次确认服务细项。如需调整，我们将联系您——多付部分会退还，少付部分将补收。感谢您的信任！"
     },
@@ -227,6 +227,15 @@
     "description": "位于迈阿密、波士顿、旧金山、洛杉矶、纽约的美国教育与翻译服务公司自2009年以来一直致力于成为您最好的认证翻译和学历评估机构。点击了解更多。",
     "keywords": "认证翻译, 公证翻译, 外国学历评估, 学历认证, 翻译服务"
   },
+  "credentialEvaluationApplication": {
+    "metadata": {
+      "title": "学历评估申请 | AET 服务申请",
+      "description": "AET 学历评估服务在线申请"
+    },
+    "page": {
+      "heading": "AET 学历评估申请"
+    }
+  },
   "degreeEquivalencyApplication": {
     "metadata": {
       "title": "学历等同评估申请 | AET 服务申请",
@@ -287,6 +296,271 @@
       }
     }
   },
+  "credentialEvaluationForm": {
+    "toast": {
+      "incomplete": {
+        "title": "请完成当前步骤",
+        "description": "请填写所有必填字段。"
+      },
+      "success": {
+        "title": "🎉 申请提交成功！🎉",
+        "description": "您的申请已提交，我们正在处理相关信息。"
+      },
+      "error": {
+        "title": "提交失败",
+        "description": "提交申请时发生错误，请稍后再试。"
+      },
+      "reset": {
+        "title": "表单已重置",
+        "description": "您可以重新开始填写申请。"
+      }
+    },
+    "terms": {
+      "label": "我已阅读并同意<link>AET 服务条款</link>"
+    },
+    "actions": {
+      "submit": "提交申请",
+      "submitLoading": "正在提交...",
+      "nextLoading": "正在保存...",
+      "reset": "重置申请"
+    },
+    "dialog": {
+      "title": "确定要重置申请吗？",
+      "description": "此操作将清除所有已填写的信息，且无法撤销。您需要重新填写申请。",
+      "confirm": "确认重置"
+    },
+    "status": {
+      "draftSaved": "草稿已保存（ID: {id}）"
+    },
+    "steps": {
+      "clientInfo": "客户信息",
+      "evalueeInfo": "被评估人信息",
+      "services": "服务",
+      "review": "确认"
+    },
+    "clientInfo": {
+      "title": "客户信息",
+      "name": {
+        "label": "公司/个人名称"
+      },
+      "country": {
+        "label": "国家",
+        "placeholder": "选择国家"
+      },
+      "streetAddress": {
+        "label": "街道地址",
+        "placeholder": "示例：1234 Main St"
+      },
+      "streetAddress2": {
+        "label": "地址 2",
+        "optional": "（可选）",
+        "placeholder": "公寓、单元等"
+      },
+      "city": {
+        "label": "城市"
+      },
+      "region": {
+        "label": "{regionLabel}",
+        "placeholder": "选择 {regionLabel}"
+      },
+      "zipCode": {
+        "label": "邮编",
+        "placeholder": "12345"
+      },
+      "phone": {
+        "label": "电话",
+        "placeholder": "123-456-7890"
+      },
+      "fax": {
+        "label": "传真",
+        "optional": "（可选）",
+        "placeholder": "123-456-7890"
+      },
+      "email": {
+        "label": "电子邮箱",
+        "placeholder": "name@example.com"
+      },
+      "office": {
+        "label": "办公室",
+        "placeholder": "选择办公室"
+      },
+      "purpose": {
+        "label": "服务类型",
+        "placeholder": "选择服务类型",
+        "options": {
+          "evaluation-uscis": "Evaluation - USCIS(For submissions to USCIS)",
+          "evaluation-employment": "Evaluation - Employment",
+          "evaluation-education": "Evaluation - Education"
+        }
+      },
+      "serviceNotes": {
+        "label": "服务说明",
+        "optional": "（可选）",
+        "placeholder": "例如：申请 H1B 签证，需要评估本科文凭，报告将提交给 USCIS。",
+        "description": "请说明申请目的（如就业、升学、签证）、希望评估的文件以及接收评估的机构或个人。",
+        "hint": "提供越多细节，我们处理得越快、越准确。",
+        "samplesHeading": "示例报告",
+        "samples": {
+          "degree": "学历评估报告示例",
+          "course": "课程逐项评估报告示例"
+        }
+      }
+    },
+    "educationFields": {
+      "sectionTitle": "教育信息",
+      "addEducation": "新增学历记录",
+      "schoolName": {
+        "label": "学校名称",
+        "placeholder": "填写学校全称"
+      },
+      "studyCountry": {
+        "label": "就读国家",
+        "placeholder": "选择国家",
+        "clear": "清除选择"
+      },
+      "degreeObtained": {
+        "label": "获得的学位",
+        "placeholder": "例如：理学学士"
+      },
+      "studyPeriod": {
+        "label": "学习时间",
+        "startMonth": "开始月份",
+        "startYear": "开始年份",
+        "endMonth": "结束月份",
+        "endYear": "结束年份",
+        "monthPlaceholder": "选择月份",
+        "yearPlaceholder": "选择年份",
+        "clear": "清除选择"
+      }
+    },
+    "evalueeInfo": {
+      "title": "被评估人信息",
+      "pronouns": {
+        "label": "称谓",
+        "placeholder": "选择称谓",
+        "options": {
+          "mr": "Mr. (he/him)",
+          "ms": "Ms. (she/her)",
+          "mx": "Mx. (they/them)"
+        }
+      },
+      "firstName": {
+        "label": "名字"
+      },
+      "lastName": {
+        "label": "姓氏"
+      },
+      "middleName": {
+        "label": "中间名",
+        "optional": "（可选）"
+      },
+      "dateOfBirth": {
+        "label": "出生日期",
+        "month": "出生月份",
+        "monthPlaceholder": "选择月份",
+        "day": "出生日",
+        "dayPlaceholder": "选择日期",
+        "year": "出生年份",
+        "yearPlaceholder": "选择年份"
+      }
+    },
+    "serviceSelection": {
+      "title": "服务选择",
+      "errors": {
+        "serviceRequired": "请选择至少一项服务"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "国外学历评估报告（文件对应）"
+        },
+        "courseByCourse": {
+          "title": "逐科评估（含 GPA）"
+        },
+        "professionalExperience": {
+          "title": "专家意见信"
+        },
+        "position": {
+          "title": "岗位评估"
+        },
+        "translation": {
+          "title": "翻译服务",
+          "required": "需要翻译服务",
+          "note": "费用因文件而异"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "选择办理时效",
+        "reportType": "选择报告类型",
+        "deliveryMethod": "选择寄送方式"
+      },
+      "options": {
+        "none": "不需要此项评估",
+        "additionalServices": {
+          "pdf_only": "仅电子版报告（无纸质）",
+          "pdf_with_hard_copy": "电子版 + 纸质报告",
+          "extra_copy": "额外纸质报告"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 Business Days",
+            "5day": "5 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 Business Days",
+          "7day": "7 Business Days",
+          "3day": "3 Business Days"
+        },
+        "position": {
+          "10day": "10 Business Days",
+          "5day": "5 Business Days",
+          "3day": "3 Business Days",
+          "2day": "2 Business Days"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "额外学历份数",
+        "perAdditionalDegree": "{price} / 每份额外学历",
+        "priceEach": "{price} / 份",
+        "extraCopiesQuantity": "额外纸质份数"
+      },
+      "notes": {
+        "rush": "* 请在美国东部时间下午 1 点前完成付款并提交文件。",
+        "default": "* 默认选择 <strong>仅电子版报告</strong>。"
+      },
+      "reportDelivery": {
+        "title": "请选择报告的接收方式"
+      },
+      "delivery": {
+        "title": "寄送方式",
+        "options": {
+          "usps_first_class_domestic": "USPS First Class Mail (Domestic)",
+          "usps_first_class_international": "USPS First Class Mail (International)",
+          "usps_priority_domestic": "USPS Priority Mail (Domestic)",
+          "usps_express_domestic": "USPS Express Mail (Domestic)",
+          "ups_express_domestic": "UPS Express Mail (Domestic)",
+          "usps_express_international": "USPS Express Mail (International)",
+          "fedex_express_international": "FedEx Express Mail (International)"
+        }
+      }
+    },
+    "review": {
+      "note": "请仔细核对所有信息，提交后我们会尽快处理您的申请。"
+    }
+  },
   "degreeEquivalencyForm": {
     "toast": {
       "incomplete": {
@@ -307,7 +581,7 @@
       }
     },
     "terms": {
-      "label": "我已阅读并同意<link>AET 服务条款</link>"
+      "label": "我已阅读并同意<link> AET 服务条款</link>"
     },
     "actions": {
       "submit": "提交申请",

@@ -153,7 +153,7 @@
       "noDelivery": "No se requiere envío - Gratis",
       "additionalServices": "Servicios adicionales",
       "dueAmount": "Monto adeudado: ${amount}",
-      "estimatedTotal": "Total estimado: ${amount}",
+      "estimatedTotal": "Total estimado: {amount}",
       "dueNotSet": "El monto adeudado aún no está definido",
       "footnote": "* Esta tarifa aplica para la mayoría de las solicitudes, pero puede variar según el solicitante. Confirmaremos los detalles del servicio durante la evaluación. Si es necesario ajustar el monto, nos pondremos en contacto contigo: cualquier pago en exceso será reembolsado y los faltantes serán cobrados. ¡Gracias por tu confianza!"
     },
@@ -227,6 +227,15 @@
     "description": "Ubicados en Miami, Boston, SF, LA, NYC, los Servicios de Educación y Traducción Americana se han dedicado a ser su mejor agencia de Traducciones Certificadas y Evaluación de Credenciales desde 2009. Haga clic para aprender más.",
     "keywords": "traducción certificada, traducción notariada, evaluación de credenciales extranjeras, servicios de traducción"
   },
+  "credentialEvaluationApplication": {
+    "metadata": {
+      "title": "Solicitud de Evaluación de Credenciales | Aplicación de Servicio AET",
+      "description": "Aplicación de servicio de AET para la evaluación de credenciales"
+    },
+    "page": {
+      "heading": "Solicitud de Evaluación de Credenciales de AET"
+    }
+  },
   "degreeEquivalencyApplication": {
     "metadata": {
       "title": "Solicitud de Evaluación de Credenciales | Aplicación de Servicio AET",
@@ -285,6 +294,271 @@
         "toastTitle": "Error de pago",
         "creationFailed": "No se pudo crear el pago"
       }
+    }
+  },
+  "credentialEvaluationForm": {
+    "toast": {
+      "incomplete": {
+        "title": "Completa este paso",
+        "description": "Por favor completa todos los campos obligatorios."
+      },
+      "success": {
+        "title": "🎉 ¡Solicitud enviada correctamente! 🎉",
+        "description": "Tu solicitud se ha enviado correctamente. Estamos procesando tu información."
+      },
+      "error": {
+        "title": "Error al enviar la solicitud",
+        "description": "Hubo un error al enviar tu solicitud. Inténtalo nuevamente más tarde."
+      },
+      "reset": {
+        "title": "Formulario reiniciado",
+        "description": "Puedes volver a completar la solicitud desde el principio."
+      }
+    },
+    "terms": {
+      "label": "He leído y acepto los <link>Términos de servicio de AET</link>"
+    },
+    "actions": {
+      "submit": "Enviar solicitud",
+      "submitLoading": "Enviando...",
+      "nextLoading": "Guardando...",
+      "reset": "Reiniciar solicitud"
+    },
+    "dialog": {
+      "title": "¿Seguro que deseas reiniciar la solicitud?",
+      "description": "Esta acción borrará toda la información ingresada y tendrás que completar la solicitud nuevamente. Esta acción no se puede deshacer.",
+      "confirm": "Confirmar reinicio"
+    },
+    "status": {
+      "draftSaved": "Borrador guardado (ID: {id})"
+    },
+    "steps": {
+      "clientInfo": "Información del cliente",
+      "evalueeInfo": "Información del evaluado",
+      "services": "Servicios",
+      "review": "Revisión"
+    },
+    "clientInfo": {
+      "title": "Información del cliente",
+      "name": {
+        "label": "Nombre de la empresa o persona"
+      },
+      "country": {
+        "label": "País",
+        "placeholder": "Selecciona un país"
+      },
+      "streetAddress": {
+        "label": "Dirección",
+        "placeholder": "Calle 1234"
+      },
+      "streetAddress2": {
+        "label": "Dirección 2",
+        "optional": "(Opcional)",
+        "placeholder": "Apartamento, suite, unidad, etc."
+      },
+      "city": {
+        "label": "Ciudad"
+      },
+      "region": {
+        "label": "{regionLabel}",
+        "placeholder": "Selecciona {regionLabel}"
+      },
+      "zipCode": {
+        "label": "Código postal",
+        "placeholder": "12345"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "placeholder": "123-456-7890"
+      },
+      "fax": {
+        "label": "Fax",
+        "optional": "(Opcional)",
+        "placeholder": "123-456-7890"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "name@example.com"
+      },
+      "office": {
+        "label": "Oficina",
+        "placeholder": "Selecciona una oficina"
+      },
+      "purpose": {
+        "label": "Tipo de servicio",
+        "placeholder": "Selecciona un tipo de servicio",
+        "options": {
+          "evaluation-uscis": "Evaluation - USCIS(For submissions to USCIS)",
+          "evaluation-employment": "Evaluation - Employment",
+          "evaluation-education": "Evaluation - Education"
+        }
+      },
+      "serviceNotes": {
+        "label": "Notas del servicio",
+        "optional": "(Opcional)",
+        "placeholder": "Ej.: Solicito evaluación para una visa H1B; el informe se enviará a USCIS.",
+        "description": "Proporciona detalles sobre tu solicitud, incluyendo el propósito (empleo, educación, visa), los documentos que deseas que evaluemos y la organización o persona que recibirá el informe.",
+        "hint": "Cuantos más detalles proporciones, más rápido y con mayor precisión podremos ayudarte.",
+        "samplesHeading": "Consulta nuestros informes de ejemplo",
+        "samples": {
+          "degree": "Informe de evaluación de credenciales",
+          "course": "Informe de evaluación curso por curso"
+        }
+      }
+    },
+    "educationFields": {
+      "sectionTitle": "Información educativa",
+      "addEducation": "Agregar estudios",
+      "schoolName": {
+        "label": "Nombre de la institución",
+        "placeholder": "Ingresa el nombre completo de la institución"
+      },
+      "studyCountry": {
+        "label": "País de estudio",
+        "placeholder": "Selecciona un país",
+        "clear": "Borrar selección"
+      },
+      "degreeObtained": {
+        "label": "Título obtenido",
+        "placeholder": "Ej.: Licenciatura en Ciencias"
+      },
+      "studyPeriod": {
+        "label": "Periodo de estudio",
+        "startMonth": "Mes de inicio",
+        "startYear": "Año de inicio",
+        "endMonth": "Mes de finalización",
+        "endYear": "Año de finalización",
+        "monthPlaceholder": "Selecciona un mes",
+        "yearPlaceholder": "Selecciona un año",
+        "clear": "Borrar selección"
+      }
+    },
+    "evalueeInfo": {
+      "title": "Información del evaluado",
+      "pronouns": {
+        "label": "Pronombres",
+        "placeholder": "Selecciona tus pronombres",
+        "options": {
+          "mr": "Sr. (él)",
+          "ms": "Sra. (ella)",
+          "mx": "Mx. (elle)"
+        }
+      },
+      "firstName": {
+        "label": "Nombre"
+      },
+      "lastName": {
+        "label": "Apellido"
+      },
+      "middleName": {
+        "label": "Segundo nombre",
+        "optional": "(Opcional)"
+      },
+      "dateOfBirth": {
+        "label": "Fecha de nacimiento",
+        "month": "Mes de nacimiento",
+        "monthPlaceholder": "Selecciona un mes",
+        "day": "Día de nacimiento",
+        "dayPlaceholder": "Selecciona un día",
+        "year": "Año de nacimiento",
+        "yearPlaceholder": "Selecciona un año"
+      }
+    },
+    "serviceSelection": {
+      "title": "Selección de servicios",
+      "errors": {
+        "serviceRequired": "Selecciona al menos un servicio"
+      },
+      "sections": {
+        "foreignCredential": {
+          "title": "Informe de credenciales extranjeras (documento por documento)"
+        },
+        "courseByCourse": {
+          "title": "Evaluación curso por curso (incluye GPA)"
+        },
+        "professionalExperience": {
+          "title": "Carta de opinión experta"
+        },
+        "position": {
+          "title": "Evaluación del puesto"
+        },
+        "translation": {
+          "title": "Servicio de traducción",
+          "required": "Se requiere servicio de traducción",
+          "note": "El precio varía según el documento"
+        }
+      },
+      "placeholders": {
+        "serviceSpeed": "Selecciona el tiempo de entrega",
+        "reportType": "Selecciona el tipo de informe",
+        "deliveryMethod": "Selecciona el método de envío"
+      },
+      "options": {
+        "none": "No necesito evaluación",
+        "additionalServices": {
+          "pdf_only": "Informe solo en PDF (sin copia impresa)",
+          "pdf_with_hard_copy": "Informe en PDF con copia impresa",
+          "extra_copy": "Copia impresa adicional"
+        }
+      },
+      "services": {
+        "foreignCredential": {
+          "firstDegree": {
+            "7day": "7 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "courseByCourse": {
+          "firstDegree": {
+            "8day": "8 Business Days",
+            "5day": "5 Business Days",
+            "3day": "3 Business Days",
+            "24hour": "24 Hours",
+            "sameday": "Same Day"
+          }
+        },
+        "professionalExperience": {
+          "21day": "21 Business Days",
+          "7day": "7 Business Days",
+          "3day": "3 Business Days"
+        },
+        "position": {
+          "10day": "10 Business Days",
+          "5day": "5 Business Days",
+          "3day": "3 Business Days",
+          "2day": "2 Business Days"
+        }
+      },
+      "labels": {
+        "additionalDegrees": "Grados adicionales",
+        "perAdditionalDegree": "{price} por grado adicional",
+        "priceEach": "{price} cada uno",
+        "extraCopiesQuantity": "Número de copias adicionales"
+      },
+      "notes": {
+        "rush": "* El pago y los documentos deben recibirse antes de la 1:00 p. m. (hora del Este).",
+        "default": "* Por defecto se selecciona <strong>solo informe en PDF</strong>."
+      },
+      "reportDelivery": {
+        "title": "¿Cómo deseas recibir tu informe?"
+      },
+      "delivery": {
+        "title": "Tipo de envío",
+        "options": {
+          "usps_first_class_domestic": "USPS First Class Mail (Domestic)",
+          "usps_first_class_international": "USPS First Class Mail (International)",
+          "usps_priority_domestic": "USPS Priority Mail (Domestic)",
+          "usps_express_domestic": "USPS Express Mail (Domestic)",
+          "ups_express_domestic": "UPS Express Mail (Domestic)",
+          "usps_express_international": "USPS Express Mail (International)",
+          "fedex_express_international": "FedEx Express Mail (International)"
+        }
+      }
+    },
+    "review": {
+      "note": "Revisa cuidadosamente toda la información. Procesaremos tu solicitud tan pronto como sea posible después del envío."
     }
   },
   "degreeEquivalencyForm": {

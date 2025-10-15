@@ -12,6 +12,12 @@ interface ClientInfoCardProps {
 export default function ClientInfoCard({ application }: ClientInfoCardProps) {
   const t = useTranslations('status')
   const tCommon = useTranslations('common')
+  const tFce = useTranslations('credentialEvaluationForm.clientInfo')
+
+  const resolvedPurpose =
+    application.purpose && PURPOSE_OPTIONS.find((o) => o.value === application.purpose)
+      ? tFce(`purpose.options.${application.purpose}`)
+      : ''
 
   return (
     <Card>
@@ -75,7 +81,7 @@ export default function ClientInfoCard({ application }: ClientInfoCardProps) {
           <div>
             <dt className="font-medium">{t('clientInfo.purpose')}</dt>
             <dd className="text-muted-foreground">
-              {PURPOSE_OPTIONS.find((o) => o.value === application.purpose)?.label}
+              {resolvedPurpose}
               {application.purpose === 'other' && application.purposeOther && (
                 <span> - {application.purposeOther}</span>
               )}
