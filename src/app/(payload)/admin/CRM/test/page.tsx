@@ -247,22 +247,22 @@ export default function CRMDashboard() {
         {/* Tabs */}
         <Tabs defaultValue="applications" className="mb-8">
           {/* Tabs List */}
-          <TabsList className="bg-white dark:bg-slate-900 border">
-            <TabsTrigger value="applications" className="gap-2">
-              <FileText className="h-4 w-4" />
+          <TabsList className="bg-white dark:bg-slate-900 border h-auto">
+            <TabsTrigger value="applications" className="gap-2 px-6 py-3 text-base">
+              <FileText className="h-5 w-5" />
               Applications
             </TabsTrigger>
-            <TabsTrigger value="payment-links" className="gap-2">
-              <DollarSign className="h-4 w-4" />
+            <TabsTrigger value="payment-links" className="gap-2 px-6 py-3 text-base">
+              <DollarSign className="h-5 w-5" />
               Payment Links
-              <Badge variant="secondary" className="ml-1 text-base">
+              <Badge variant="secondary" className="ml-1">
                 Beta
               </Badge>
             </TabsTrigger>
-            <TabsTrigger value="degree-equivalency" className="gap-2">
-              <GraduationCap className="h-4 w-4" />
+            <TabsTrigger value="degree-equivalency" className="gap-2 px-6 py-3 text-base">
+              <GraduationCap className="h-5 w-5" />
               Degree Equivalency
-              <Badge variant="secondary" className="ml-1 text-base">
+              <Badge variant="secondary" className="ml-1">
                 Beta
               </Badge>
             </TabsTrigger>
