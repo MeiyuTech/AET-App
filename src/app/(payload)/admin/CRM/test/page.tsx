@@ -262,7 +262,7 @@ export default function CRMDashboard() {
 
           <TabsContent value="applications" className="space-y-6 mt-6">
             {/* Summary Cards */}
-            <Card className="border-2 shadow-sm rounded-2xl">
+            <Card className="border border-slate-200 bg-white shadow-lg rounded-2xl">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl">
                   Total Due Amount Summary (Paid Applications)
@@ -357,7 +357,7 @@ export default function CRMDashboard() {
             </Card>
 
             {/* Applications Table */}
-            <Card className="border-2 shadow-sm rounded-2xl">
+            <Card className="border border-slate-200 bg-white shadow-lg rounded-2xl">
               <CardHeader className="pb-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
