@@ -373,6 +373,7 @@ export default function CRMDashboard() {
               </CardContent>
             </Card>
 
+            {/* Applications Table */}
             <Card className="border-2 shadow-sm">
               <CardHeader className="pb-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -389,24 +390,24 @@ export default function CRMDashboard() {
                         placeholder="Search all columns..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9"
+                        className="pl-9 text-lg"
                       />
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm" className="gap-2 bg-transparent">
                           <Download className="h-4 w-4" />
-                          Export
+                          <span className="text-lg">Export</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem className="gap-2">
                           <FileSpreadsheet className="h-4 w-4" />
-                          Export to Excel
+                          <span className="text-lg">Export to Excel</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2">
                           <FileText className="h-4 w-4" />
-                          Export to CSV
+                          <span className="text-lg">Export to CSV</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -419,12 +420,12 @@ export default function CRMDashboard() {
                     <TableHeader>
                       <TableRow className="bg-slate-50 dark:bg-slate-900/50">
                         <TableHead className="w-[40px]"></TableHead>
-                        <TableHead className="font-semibold">Evaluee Name</TableHead>
-                        <TableHead className="font-semibold">Office</TableHead>
-                        <TableHead className="font-semibold">Status</TableHead>
-                        <TableHead className="font-semibold">Due Amount</TableHead>
-                        <TableHead className="font-semibold">Payment</TableHead>
-                        <TableHead className="font-semibold text-right">Actions</TableHead>
+                        <TableHead className="font-semibold text-lg">Evaluee Name</TableHead>
+                        <TableHead className="font-semibold text-lg">Office</TableHead>
+                        <TableHead className="font-semibold text-lg">Status</TableHead>
+                        <TableHead className="font-semibold text-lg">Due Amount</TableHead>
+                        <TableHead className="font-semibold text-lg">Payment</TableHead>
+                        <TableHead className="font-semibold text-lg text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -446,7 +447,7 @@ export default function CRMDashboard() {
                             </TableCell>
                             <TableCell className="py-3">
                               <div className="flex flex-col">
-                                <span className="font-medium text-slate-900 dark:text-white">
+                                <span className="font-medium text-lg text-slate-900 dark:text-white">
                                   {app.evaluee}
                                 </span>
                                 <span className="text-base text-slate-500 font-mono">
@@ -455,32 +456,32 @@ export default function CRMDashboard() {
                               </div>
                             </TableCell>
                             <TableCell className="py-3">
-                              <Badge variant="outline" className="font-normal">
+                              <Badge variant="outline" className="font-normal text-lg">
                                 {app.office}
                               </Badge>
                             </TableCell>
                             <TableCell className="py-3">
                               <Badge
                                 variant="outline"
-                                className={cn('font-medium', getStatusColor(app.status))}
+                                className={cn('font-medium text-lg', getStatusColor(app.status))}
                               >
                                 {app.status}
                               </Badge>
                             </TableCell>
                             <TableCell className="py-3">
                               {app.dueAmount ? (
-                                <span className="font-semibold text-slate-900 dark:text-white">
+                                <span className="font-semibold text-lg text-slate-900 dark:text-white">
                                   ${app.dueAmount.toFixed(2)}
                                 </span>
                               ) : (
-                                <span className="text-slate-400">N/A</span>
+                                <span className="text-slate-400 text-lg">N/A</span>
                               )}
                             </TableCell>
                             <TableCell className="py-3">
                               <Badge
                                 variant="outline"
                                 className={cn(
-                                  'font-medium',
+                                  'font-medium text-lg',
                                   getPaymentStatusColor(app.paymentStatus)
                                 )}
                               >
@@ -501,7 +502,7 @@ export default function CRMDashboard() {
                                       onClick={() => setSelectedApplication(app)}
                                     >
                                       <Eye className="h-4 w-4" />
-                                      Details
+                                      <span className="text-lg">Details</span>
                                     </Button>
                                   </SheetTrigger>
                                   <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
