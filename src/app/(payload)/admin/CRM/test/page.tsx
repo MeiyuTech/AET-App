@@ -211,41 +211,42 @@ export default function CRMDashboard() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="px-16 py-2">
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Button
             variant="outline"
-            className="h-auto py-4 flex-col gap-2 hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-blue-950/30 transition-all bg-transparent"
+            className="h-auto py-3 flex-col gap-2 hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-blue-950/30 transition-all bg-transparent"
           >
             <Plus className="h-5 w-5 text-blue-600" />
-            <span className="font-medium">Create Payment Link</span>
+            <span className="font-semibold text-lg">Create Payment Link</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-4 flex-col gap-2 hover:bg-purple-50 hover:border-purple-300 dark:hover:bg-purple-950/30 transition-all bg-transparent"
+            className="h-auto py-3 flex-col gap-2 hover:bg-purple-50 hover:border-purple-300 dark:hover:bg-purple-950/30 transition-all bg-transparent"
           >
             <Upload className="h-5 w-5 text-purple-600" />
-            <span className="font-medium">Import Orders</span>
+            <span className="font-semibold text-lg">Import Orders</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-4 flex-col gap-2 hover:bg-green-50 hover:border-green-300 dark:hover:bg-green-950/30 transition-all bg-transparent"
+            className="h-auto py-3 flex-col gap-2 hover:bg-green-50 hover:border-green-300 dark:hover:bg-green-950/30 transition-all bg-transparent"
           >
             <Calculator className="h-5 w-5 text-green-600" />
-            <span className="font-medium">GPA Calculator</span>
+            <span className="font-semibold text-lg">GPA Calculator</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-4 flex-col gap-2 hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-950/30 transition-all bg-transparent"
+            className="h-auto py-3 flex-col gap-2 hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-950/30 transition-all bg-transparent"
           >
             <GraduationCap className="h-5 w-5 text-amber-600" />
-            <span className="font-medium">Degree Equivalency</span>
+            <span className="font-semibold text-lg">Degree Equivalency</span>
           </Button>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="applications" className="mb-8">
+          {/* Tabs List */}
           <TabsList className="bg-white dark:bg-slate-900 border">
             <TabsTrigger value="applications" className="gap-2">
               <FileText className="h-4 w-4" />
@@ -270,14 +271,16 @@ export default function CRMDashboard() {
           <TabsContent value="applications" className="space-y-6 mt-6">
             {/* Summary Cards */}
             <Card className="border-2 shadow-sm">
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle className="text-2xl">
                   Total Due Amount Summary (Paid Applications)
                 </CardTitle>
-                <CardDescription>Filter by date range to view payment statistics</CardDescription>
+                <CardDescription className="text-lg">
+                  Filter by date range to view payment statistics
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <CardContent className="pt-4 pb-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                   <div className="space-y-2">
                     <label className="text-lg font-medium text-slate-700 dark:text-slate-300">
                       Start Date
@@ -335,8 +338,8 @@ export default function CRMDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
-                    <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 rounded-lg p-5 border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2.5 mb-2">
                       <div className="p-2 bg-blue-600 rounded-lg">
                         <Users className="h-5 w-5 text-white" />
                       </div>
@@ -346,8 +349,8 @@ export default function CRMDashboard() {
                     </div>
                     <p className="text-6xl font-bold text-slate-900 dark:text-white">0</p>
                   </div>
-                  <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 rounded-lg p-6 border border-green-200 dark:border-green-800">
-                    <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 rounded-lg p-5 border border-green-200 dark:border-green-800">
+                    <div className="flex items-center gap-2.5 mb-2">
                       <div className="p-2 bg-green-600 rounded-lg">
                         <DollarSign className="h-5 w-5 text-white" />
                       </div>
@@ -362,11 +365,13 @@ export default function CRMDashboard() {
             </Card>
 
             <Card className="border-2 shadow-sm">
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
                     <CardTitle>Applications</CardTitle>
-                    <CardDescription>Manage and track all service applications</CardDescription>
+                    <CardDescription className="text-lg">
+                      Manage and track all service applications
+                    </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="relative flex-1 md:w-64">
@@ -399,7 +404,7 @@ export default function CRMDashboard() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="rounded-lg border overflow-hidden">
                   <Table>
                     <TableHeader>
@@ -421,7 +426,7 @@ export default function CRMDashboard() {
                             className="hover:bg-slate-50 dark:hover:bg-slate-900/30 cursor-pointer"
                             onClick={() => toggleRow(app.id)}
                           >
-                            <TableCell>
+                            <TableCell className="py-3">
                               <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                                 {expandedRows.has(app.id) ? (
                                   <ChevronDown className="h-4 w-4" />
@@ -430,7 +435,7 @@ export default function CRMDashboard() {
                                 )}
                               </Button>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3">
                               <div className="flex flex-col">
                                 <span className="font-medium text-slate-900 dark:text-white">
                                   {app.evaluee}
@@ -440,12 +445,12 @@ export default function CRMDashboard() {
                                 </span>
                               </div>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3">
                               <Badge variant="outline" className="font-normal">
                                 {app.office}
                               </Badge>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3">
                               <Badge
                                 variant="outline"
                                 className={cn('font-medium', getStatusColor(app.status))}
@@ -453,7 +458,7 @@ export default function CRMDashboard() {
                                 {app.status}
                               </Badge>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3">
                               {app.dueAmount ? (
                                 <span className="font-semibold text-slate-900 dark:text-white">
                                   ${app.dueAmount.toFixed(2)}
@@ -462,7 +467,7 @@ export default function CRMDashboard() {
                                 <span className="text-slate-400">N/A</span>
                               )}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3">
                               <Badge
                                 variant="outline"
                                 className={cn(
@@ -473,7 +478,10 @@ export default function CRMDashboard() {
                                 {app.paymentStatus}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                            <TableCell
+                              className="py-3 text-right"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <div className="flex items-center justify-end gap-2">
                                 <Sheet>
                                   <SheetTrigger asChild>
@@ -768,7 +776,7 @@ export default function CRMDashboard() {
                           {expandedRows.has(app.id) && (
                             <TableRow className="bg-slate-50/50 dark:bg-slate-900/20">
                               <TableCell colSpan={7} className="p-0">
-                                <div className="px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 border-t">
+                                <div className="px-5 py-3 grid grid-cols-2 md:grid-cols-4 gap-4 border-t">
                                   <div>
                                     <label className="text-base text-slate-500 font-medium">
                                       Created At
