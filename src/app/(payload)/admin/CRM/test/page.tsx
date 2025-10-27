@@ -356,7 +356,7 @@ export default function CRMDashboard() {
                         Total Paid Applications
                       </span>
                     </div>
-                    <p className="text-6xl font-bold text-slate-900 dark:text-white">0</p>
+                    <p className="text-4xl font-bold text-slate-900 dark:text-white">0</p>
                   </div>
                   <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 rounded-lg p-5 border border-green-200 dark:border-green-800">
                     <div className="flex items-center gap-2.5 mb-2">
@@ -367,7 +367,7 @@ export default function CRMDashboard() {
                         Total Due Amount (Paid)
                       </span>
                     </div>
-                    <p className="text-6xl font-bold text-slate-900 dark:text-white">$0.00</p>
+                    <p className="text-4xl font-bold text-slate-900 dark:text-white">$0.00</p>
                   </div>
                 </div>
               </CardContent>
