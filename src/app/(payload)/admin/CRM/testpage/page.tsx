@@ -32,7 +32,6 @@ import {
   Calculator,
   GraduationCap,
   CalendarIcon,
-  Users,
   DollarSign,
   FileText,
   ChevronDown,
@@ -297,7 +296,7 @@ export default function CRMDashboard() {
                           {startDate ? format(startDate, 'PPP') : 'Select date'}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 rounded-xl">
+                      <PopoverContent className="w-auto p-0 rounded-xl bg-white/80 backdrop-blur-lg border border-white/40 shadow-xl ring-1 ring-black/5">
                         <Calendar
                           mode="single"
                           selected={startDate}
@@ -324,7 +323,7 @@ export default function CRMDashboard() {
                           {endDate ? format(endDate, 'PPP') : 'Select date'}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 rounded-xl">
+                      <PopoverContent className="w-auto p-0 rounded-xl bg-white/80 backdrop-blur-lg border border-white/40 shadow-xl ring-1 ring-black/5">
                         <Calendar
                           mode="single"
                           selected={endDate}
@@ -388,12 +387,15 @@ export default function CRMDashboard() {
                           <span className="text-lg">Export</span>
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-xl">
-                        <DropdownMenuItem className="gap-2 rounded-lg">
+                      <DropdownMenuContent
+                        align="end"
+                        className="rounded-xl bg-white/80 backdrop-blur-lg border border-white/40 shadow-xl ring-1 ring-black/5"
+                      >
+                        <DropdownMenuItem className="gap-2 rounded-lg bg-white/60 backdrop-blur-sm hover:bg-white/80 hover:backdrop-blur-md transition-all">
                           <FileSpreadsheet className="h-4 w-4" />
                           <span className="text-lg">Export to Excel</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 rounded-lg">
+                        <DropdownMenuItem className="gap-2 rounded-lg bg-white/60 backdrop-blur-sm hover:bg-white/80 hover:backdrop-blur-md transition-all">
                           <FileText className="h-4 w-4" />
                           <span className="text-lg">Export to CSV</span>
                         </DropdownMenuItem>
