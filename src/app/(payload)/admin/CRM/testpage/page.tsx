@@ -184,7 +184,7 @@ export default function CRMDashboard() {
               <div className="flex items-center gap-4">
                 <Image src="/icon.svg" alt="AET Logo" width={60} height={32} />
                 <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
-                  AET Services Applications
+                  AET CRM Dashboard
                 </h1>
               </div>
               <p className="text-lg text-slate-600 dark:text-slate-400 mt-1">
@@ -337,22 +337,16 @@ export default function CRMDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
+                  <div className="p-5 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 shadow-lg shadow-blue-200/50 dark:from-blue-950/50 dark:via-blue-900/30 dark:to-blue-950/50 transition-all bg-white/80 backdrop-blur-sm rounded-xl border border-white/40 border-blue-300/50 shadow-sm">
                     <div className="flex items-center gap-2.5 mb-2">
-                      <div className="p-2 bg-blue-600 rounded-lg">
-                        <Users className="h-5 w-5 text-white" />
-                      </div>
                       <span className="text-lg font-medium text-slate-600 dark:text-slate-400">
                         Total Paid Applications
                       </span>
                     </div>
                     <p className="text-4xl font-bold text-slate-900 dark:text-white">0</p>
                   </div>
-                  <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 rounded-xl p-5 border border-green-200 dark:border-green-800">
+                  <div className="p-5 bg-gradient-to-br from-green-50 via-green-100 to-green-50 shadow-lg shadow-green-200/50 dark:from-green-950/50 dark:via-green-900/30 dark:to-green-950/50 transition-all bg-white/80 backdrop-blur-sm rounded-xl border border-white/40 border-green-300/50 shadow-sm">
                     <div className="flex items-center gap-2.5 mb-2">
-                      <div className="p-2 bg-green-600 rounded-lg">
-                        <DollarSign className="h-5 w-5 text-white" />
-                      </div>
                       <span className="text-lg font-medium text-slate-600 dark:text-slate-400">
                         Total Due Amount (Paid)
                       </span>
