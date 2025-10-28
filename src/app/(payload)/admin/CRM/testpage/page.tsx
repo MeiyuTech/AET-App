@@ -151,26 +151,26 @@ export default function CRMDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Processing':
-        return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20'
+        return 'bg-gradient-to-br from-blue-500/20 via-blue-400/15 to-blue-600/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 backdrop-blur-sm shadow-sm ring-1 ring-blue-400/20 rounded-2xl'
       case 'Submitted':
-        return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20'
+        return 'bg-gradient-to-br from-purple-500/20 via-purple-400/15 to-purple-600/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 backdrop-blur-sm shadow-sm ring-1 ring-purple-400/20 rounded-2xl'
       case 'In Progress':
-        return 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
+        return 'bg-gradient-to-br from-amber-500/20 via-amber-400/15 to-amber-600/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 backdrop-blur-sm shadow-sm ring-1 ring-amber-400/20 rounded-2xl'
       case 'Completed':
-        return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20'
+        return 'bg-gradient-to-br from-green-500/20 via-green-400/15 to-green-600/20 text-green-700 dark:text-green-300 border border-green-500/30 backdrop-blur-sm shadow-sm ring-1 ring-green-400/20 rounded-2xl'
       default:
-        return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20'
+        return 'bg-gradient-to-br from-gray-500/20 via-gray-400/15 to-gray-600/20 text-gray-700 dark:text-gray-300 border border-gray-500/30 backdrop-blur-sm shadow-sm ring-1 ring-gray-400/20 rounded-2xl'
     }
   }
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
       case 'Paid':
-        return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20'
+        return 'bg-gradient-to-br from-green-500/20 via-green-400/15 to-green-600/20 text-green-700 dark:text-green-300 border border-green-500/30 backdrop-blur-sm shadow-sm ring-1 ring-green-400/20 rounded-2xl'
       case 'Pending':
-        return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20'
+        return 'bg-gradient-to-br from-orange-500/20 via-orange-400/15 to-orange-600/20 text-orange-700 dark:text-orange-300 border border-orange-500/30 backdrop-blur-sm shadow-sm ring-1 ring-orange-400/20 rounded-2xl'
       default:
-        return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20'
+        return 'bg-gradient-to-br from-gray-500/20 via-gray-400/15 to-gray-600/20 text-gray-700 dark:text-gray-300 border border-gray-500/30 backdrop-blur-sm shadow-sm ring-1 ring-gray-400/20 rounded-2xl'
     }
   }
 
@@ -337,7 +337,7 @@ export default function CRMDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-5 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 shadow-lg shadow-blue-200/50 dark:from-blue-950/50 dark:via-blue-900/30 dark:to-blue-950/50 transition-all bg-white/80 backdrop-blur-sm rounded-xl border border-white/40 border-blue-300/50 shadow-sm">
+                  <div className="p-5 bg-gradient-to-br from-blue-50/80 via-blue-100/60 to-blue-50/80 dark:from-blue-950/50 dark:via-blue-900/30 dark:to-blue-950/50 backdrop-blur-md rounded-xl border border-blue-200/50 dark:border-blue-800/50 shadow-lg ring-1 ring-blue-200/20 dark:ring-blue-800/20 transition-all">
                     <div className="flex items-center gap-2.5 mb-2">
                       <span className="text-lg font-medium text-slate-600 dark:text-slate-400">
                         Total Paid Applications
@@ -345,7 +345,7 @@ export default function CRMDashboard() {
                     </div>
                     <p className="text-4xl font-bold text-slate-900 dark:text-white">0</p>
                   </div>
-                  <div className="p-5 bg-gradient-to-br from-green-50 via-green-100 to-green-50 shadow-lg shadow-green-200/50 dark:from-green-950/50 dark:via-green-900/30 dark:to-green-950/50 transition-all bg-white/80 backdrop-blur-sm rounded-xl border border-white/40 border-green-300/50 shadow-sm">
+                  <div className="p-5 bg-gradient-to-br from-green-50/80 via-green-100/60 to-green-50/80 dark:from-green-950/50 dark:via-green-900/30 dark:to-green-950/50 backdrop-blur-md rounded-xl border border-green-200/50 dark:border-green-800/50 shadow-lg ring-1 ring-green-200/20 dark:ring-green-800/20 transition-all">
                     <div className="flex items-center gap-2.5 mb-2">
                       <span className="text-lg font-medium text-slate-600 dark:text-slate-400">
                         Total Due Amount (Paid)
@@ -443,7 +443,10 @@ export default function CRMDashboard() {
                               </div>
                             </TableCell>
                             <TableCell className="py-3">
-                              <Badge variant="outline" className="font-normal text-lg rounded-lg">
+                              <Badge
+                                variant="outline"
+                                className="font-normal text-lg rounded-2xl bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm ring-1 ring-black/5"
+                              >
                                 {app.office}
                               </Badge>
                             </TableCell>
