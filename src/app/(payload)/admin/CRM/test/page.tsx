@@ -177,7 +177,7 @@ export default function CRMDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Header */}
-      <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b bg-white/70 dark:bg-slate-900/70 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="px-16 py-8">
           <div className="flex items-center justify-between">
             <div>
@@ -203,28 +203,28 @@ export default function CRMDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Button
             variant="outline"
-            className="h-auto py-3 flex-col gap-2 hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-blue-950/30 transition-all bg-transparent rounded-xl"
+            className="h-auto py-3 flex-col gap-2 hover:bg-blue-50/80 hover:border-blue-300 dark:hover:bg-blue-950/30 transition-all bg-white/60 backdrop-blur-sm rounded-xl border-white/20"
           >
             <Plus className="h-5 w-5 text-blue-600" />
             <span className="font-semibold text-lg">Create Payment Link</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-3 flex-col gap-2 hover:bg-purple-50 hover:border-purple-300 dark:hover:bg-purple-950/30 transition-all bg-transparent rounded-xl"
+            className="h-auto py-3 flex-col gap-2 hover:bg-purple-50/80 hover:border-purple-300 dark:hover:bg-purple-950/30 transition-all bg-white/60 backdrop-blur-sm rounded-xl border-white/20"
           >
             <Upload className="h-5 w-5 text-purple-600" />
             <span className="font-semibold text-lg">Import Orders</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-3 flex-col gap-2 hover:bg-green-50 hover:border-green-300 dark:hover:bg-green-950/30 transition-all bg-transparent rounded-xl"
+            className="h-auto py-3 flex-col gap-2 hover:bg-green-50/80 hover:border-green-300 dark:hover:bg-green-950/30 transition-all bg-white/60 backdrop-blur-sm rounded-xl border-white/20"
           >
             <Calculator className="h-5 w-5 text-green-600" />
             <span className="font-semibold text-lg">GPA Calculator</span>
           </Button>
           <Button
             variant="outline"
-            className="h-auto py-3 flex-col gap-2 hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-950/30 transition-all bg-transparent rounded-xl"
+            className="h-auto py-3 flex-col gap-2 hover:bg-amber-50/80 hover:border-amber-300 dark:hover:bg-amber-950/30 transition-all bg-white/60 backdrop-blur-sm rounded-xl border-white/20"
           >
             <GraduationCap className="h-5 w-5 text-amber-600" />
             <span className="font-semibold text-lg">Degree Equivalency</span>
@@ -234,10 +234,10 @@ export default function CRMDashboard() {
         {/* Tabs */}
         <Tabs defaultValue="applications" className="mb-8">
           {/* Tabs List */}
-          <TabsList className="bg-white dark:bg-slate-900 border h-auto rounded-xl grid w-full grid-cols-3">
+          <TabsList className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/20 dark:border-white/10 h-auto rounded-xl grid w-full grid-cols-3 shadow-sm">
             <TabsTrigger
               value="applications"
-              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl backdrop-blur-sm transition-all data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 data-[state=active]:backdrop-blur-md"
             >
               <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">Applications</span>
@@ -245,7 +245,7 @@ export default function CRMDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="payment-links"
-              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl backdrop-blur-sm transition-all data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 data-[state=active]:backdrop-blur-md"
             >
               <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">Payment Links</span>
@@ -256,7 +256,7 @@ export default function CRMDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="degree-equivalency"
-              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl backdrop-blur-sm transition-all data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-500/30 data-[state=active]:backdrop-blur-md"
             >
               <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">Degree Equivalency</span>
@@ -269,7 +269,7 @@ export default function CRMDashboard() {
 
           <TabsContent value="applications" className="space-y-6 mt-6">
             {/* Summary Cards */}
-            <Card className="border border-slate-200 bg-white shadow-lg rounded-2xl">
+            <Card className="border border-white/20 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl">
                   Total Due Amount Summary (Paid Applications)
@@ -364,7 +364,7 @@ export default function CRMDashboard() {
             </Card>
 
             {/* Applications Table */}
-            <Card className="border border-slate-200 bg-white shadow-lg rounded-2xl">
+            <Card className="border border-white/20 bg-white/80 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader className="pb-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
