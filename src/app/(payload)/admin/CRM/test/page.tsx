@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -177,12 +178,15 @@ export default function CRMDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Header */}
       <header className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+        <div className="px-16 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
-                AET Services Applications
-              </h1>
+              <div className="flex items-center gap-4">
+                <Image src="/icon.svg" alt="AET Logo" width={60} height={32} />
+                <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
+                  AET Services Applications
+                </h1>
+              </div>
               <p className="text-lg text-slate-600 dark:text-slate-400 mt-1">
                 Welcome{' '}
                 <span className="font-medium text-blue-600 dark:text-blue-400">
@@ -230,31 +234,34 @@ export default function CRMDashboard() {
         {/* Tabs */}
         <Tabs defaultValue="applications" className="mb-8">
           {/* Tabs List */}
-          <TabsList className="bg-white dark:bg-slate-900 border h-auto rounded-xl">
+          <TabsList className="bg-white dark:bg-slate-900 border h-auto rounded-xl grid w-full grid-cols-3">
             <TabsTrigger
               value="applications"
-              className="gap-2 px-6 py-3 text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
             >
-              <FileText className="h-5 w-5" />
-              Applications
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline">Applications</span>
+              <span className="sm:hidden">Apps</span>
             </TabsTrigger>
             <TabsTrigger
               value="payment-links"
-              className="gap-2 px-6 py-3 text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
             >
-              <DollarSign className="h-5 w-5" />
-              Payment Links
-              <Badge variant="secondary" className="ml-1">
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline">Payment Links</span>
+              <span className="sm:hidden">Pay</span>
+              <Badge variant="secondary" className="ml-1 text-xs">
                 Beta
               </Badge>
             </TabsTrigger>
             <TabsTrigger
               value="degree-equivalency"
-              className="gap-2 px-6 py-3 text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
+              className="gap-1 px-2 py-2 text-sm sm:gap-2 sm:px-4 sm:py-3 sm:text-base rounded-xl data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:border-blue-600"
             >
-              <GraduationCap className="h-5 w-5" />
-              Degree Equivalency
-              <Badge variant="secondary" className="ml-1">
+              <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline">Degree Equivalency</span>
+              <span className="sm:hidden">Degree</span>
+              <Badge variant="secondary" className="ml-1 text-xs">
                 Beta
               </Badge>
             </TabsTrigger>
