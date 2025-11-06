@@ -57,7 +57,7 @@ const thanksgivingStyles = {
     borderRadius: '18px',
     padding: spacing.xxxl,
     border: `1px solid ${fallPalette.border}`,
-    position: 'relative',
+    position: 'relative' as React.CSSProperties['position'],
     overflow: 'hidden',
   },
   heading: {
@@ -104,7 +104,7 @@ const thanksgivingStyles = {
     background: fallPalette.background.hero,
     borderRadius: '18px',
     padding: spacing.xxxl,
-    textAlign: 'center',
+    textAlign: 'center' as React.CSSProperties['textAlign'],
     color: fallPalette.text.primary,
     boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.4)',
     marginBottom: spacing.xxxl,
@@ -117,7 +117,7 @@ const thanksgivingStyles = {
     borderRadius: '9999px',
     fontSize: '13px',
     letterSpacing: '2px',
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as React.CSSProperties['textTransform'],
     marginBottom: spacing.sm,
   },
   leafDivider: {
@@ -144,10 +144,10 @@ const thanksgivingStyles = {
     border: '1px solid rgba(217, 119, 6, 0.35)',
     borderRadius: '18px',
     padding: spacing.xxxl,
-    textAlign: 'center',
+    textAlign: 'center' as React.CSSProperties['textAlign'],
   },
   ctaButtonWrapper: {
-    textAlign: 'center',
+    textAlign: 'center' as React.CSSProperties['textAlign'],
     margin: `${spacing.xl} 0`,
   },
 }
@@ -277,10 +277,20 @@ export const ThanksgivingPromotionEmail = ({
 
               {/* Urgency Message */}
               <Section style={thanksgivingStyles.highlight}>
-                <Heading style={{ ...thanksgivingStyles.heading.h2, textAlign: 'center' }}>
+                <Heading
+                  style={{
+                    ...thanksgivingStyles.heading.h2,
+                    textAlign: 'center' as React.CSSProperties['textAlign'],
+                  }}
+                >
                   ⚠️ 把握感恩佳节优惠窗口 ⚠️
                 </Heading>
-                <Text style={{ ...thanksgivingStyles.text.default, textAlign: 'center' }}>
+                <Text
+                  style={{
+                    ...thanksgivingStyles.text.default,
+                    textAlign: 'center' as React.CSSProperties['textAlign'],
+                  }}
+                >
                   时间紧迫，美域集团15年来深耕投资与职业移民领域，以真实实业为基础，助您抢占绿卡先机，安心布局未来。
                 </Text>
               </Section>
@@ -300,7 +310,12 @@ export const ThanksgivingPromotionEmail = ({
               <div style={thanksgivingStyles.leafDivider} />
 
               {/* Thanksgiving Wishes */}
-              <Section style={{ ...styles.section.default, textAlign: 'center' }}>
+              <Section
+                style={{
+                  ...styles.section.default,
+                  textAlign: 'center' as React.CSSProperties['textAlign'],
+                }}
+              >
                 <Text style={{ ...thanksgivingStyles.text.highlight, fontSize: '20px' }}>
                   🦃 祝您与挚爱共享丰盛佳节 · 感恩常伴 🦃
                 </Text>
@@ -315,7 +330,7 @@ export const ThanksgivingPromotionEmail = ({
               {/* Promotional Image */}
               <Section
                 style={{
-                  textAlign: 'center',
+                  textAlign: 'center' as React.CSSProperties['textAlign'],
                   margin: `${spacing.xl} 0`,
                   backgroundColor: 'rgba(255, 244, 222, 0.45)',
                   padding: spacing.lg,
