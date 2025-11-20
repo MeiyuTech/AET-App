@@ -2,12 +2,14 @@ import * as React from 'react'
 import { Section, Text, Link, Hr } from '@react-email/components'
 
 interface FooterMeiyuProps {
-  companyName?: string
+  companyNameCN?: string
+  companyNameEN?: string
   websiteUrl?: string
 }
 
 export const FooterMeiyu: React.FC<FooterMeiyuProps> = ({
-  companyName = '美域佳华',
+  companyNameCN = '美域佳华',
+  companyNameEN = 'Meiyu Group',
   websiteUrl = 'https://www.usyimin.com',
 }) => {
   return (
@@ -16,7 +18,8 @@ export const FooterMeiyu: React.FC<FooterMeiyuProps> = ({
 
       <Section className="text-center text-[#6b7280] text-[14px]">
         <Text className="m-0">
-          {companyName}
+          {companyNameCN}
+          {companyNameEN}
           <br />© All rights reserved.
         </Text>
         <Text className="mt-[8px]">

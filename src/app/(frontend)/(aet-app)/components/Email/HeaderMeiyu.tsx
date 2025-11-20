@@ -8,7 +8,7 @@ interface HeaderMeiyuProps {
 }
 
 export const HeaderMeiyu: React.FC<HeaderMeiyuProps> = ({
-  logoUrl = 'https://americantranslationservice.com/images/Logo-Thanksgiving.jpg',
+  logoUrl = 'https://americantranslationservice.com/images/aet-favicon.svg',
   logoAlt = '美域佳华 Logo',
   companyName = '美域佳华',
 }) => {
