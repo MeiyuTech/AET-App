@@ -19,6 +19,7 @@ export const FooterMeiyu: React.FC<FooterMeiyuProps> = ({
       <Section className="text-center text-[#6b7280] text-[14px]">
         <Text className="m-0">
           {companyNameCN}
+          <br />
           {companyNameEN}
           <br />© All rights reserved.
         </Text>
