@@ -264,6 +264,23 @@ export const ThanksgivingPromotionEmail = ({
                 </Text>
               </Section>
 
+              {/* Unsubscribe */}
+              <Section
+                style={{
+                  ...styles.section.default,
+                  textAlign: 'center' as React.CSSProperties['textAlign'],
+                  marginTop: spacing.md,
+                }}
+              >
+                <Text style={thanksgivingStyles.text.default}>
+                  如果您希望退订或调整邮件偏好，请
+                  <Link href="{{{RESEND_UNSUBSCRIBE_URL}}}" style={{ color: '#1ABC9C' }}>
+                    点击这里
+                  </Link>
+                  。
+                </Text>
+              </Section>
+
               <FooterMeiyu />
             </Section>
           </Container>

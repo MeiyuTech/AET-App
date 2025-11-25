@@ -175,6 +175,23 @@ export const ThanksgivingPromotionEmailEnglish = ({
                 </Text>
               </Section>
 
+              {/* Unsubscribe */}
+              <Section
+                style={{
+                  ...styles.section.default,
+                  textAlign: 'center' as React.CSSProperties['textAlign'],
+                  marginTop: spacing.md,
+                }}
+              >
+                <Text style={thanksgivingStyles.text.default}>
+                  Want to update your email preferences or unsubscribe?{' '}
+                  <Link href="{{{RESEND_UNSUBSCRIBE_URL}}}" style={{ color: '#1ABC9C' }}>
+                    Unsubscribe here
+                  </Link>
+                  .
+                </Text>
+              </Section>
+
               <FooterMeiyu />
             </Section>
           </Container>
