@@ -20,11 +20,6 @@ import { ctaButtonClassName, fallPalette, thanksgivingStyles } from './styles'
 /**
  * ThanksgivingPromotionEmailProps interface
  * @param clientName - The name of the client (optional)
- * @param contactPerson - The contact person name (default: "X先生或小姐")
- * @param contactPhone - The contact phone number (default: "+1-949-978-6699")
- * @param projectWebsite - The project website URL (optional)
- * @param imageUrl - The promotional image URL (optional)
- * @param imageLink - The link URL when clicking on the promotional image (optional, defaults to projectWebsite)
  */
 interface ThanksgivingPromotionEmailProps {
   clientName?: string

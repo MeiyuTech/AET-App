@@ -6,14 +6,7 @@ import { ThanksgivingPromotionEmail } from './ThanksgivingPromotionEmail'
  * This component is used for development and testing purposes
  */
 export const ThanksgivingPromotionPreview = () => {
-  return (
-    <ThanksgivingPromotionEmail
-      clientName="尊敬的客户"
-      contactPerson="美美"
-      contactPhone="+1-949-978-6699"
-      projectWebsite="https://example.com"
-    />
-  )
+  return <ThanksgivingPromotionEmail clientName="尊敬的客户" />
 }
 
 export default ThanksgivingPromotionPreview
