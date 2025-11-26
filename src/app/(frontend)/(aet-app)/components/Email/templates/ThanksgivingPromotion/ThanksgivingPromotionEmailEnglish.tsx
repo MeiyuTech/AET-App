@@ -22,8 +22,11 @@ interface ThanksgivingPromotionEmailEnglishProps {
 }
 
 export const ThanksgivingPromotionEmailEnglish = ({
-  clientName = 'Dear client',
+  clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 }: ThanksgivingPromotionEmailEnglishProps) => {
+  const logoUrl = 'https://www.usyimin.com/aet-favicon.png'
+  const promoImageUrl = 'https://www.usyimin.com/thanksgiving-en.png'
+
   return (
     <Html lang="en" dir="ltr">
       <Head>
@@ -38,7 +41,7 @@ export const ThanksgivingPromotionEmailEnglish = ({
             <Section style={thanksgivingStyles.hero}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Img
-                  src={'https://americantranslationservice.com/images/aet-favicon.svg'}
+                  src={logoUrl}
                   alt={'AET'}
                   className="h-[60px] w-auto"
                   style={{ display: 'block' }}
@@ -153,7 +156,7 @@ export const ThanksgivingPromotionEmailEnglish = ({
               >
                 <Link href={'https://www.usyimin.com/'} style={{ display: 'inline-block' }}>
                   <Img
-                    src={'https://americantranslationservice.com/images/thanksgiving-en.png'}
+                    src={promoImageUrl}
                     alt="理想生活，尽在眼前"
                     style={{
                       maxWidth: '100%',
@@ -202,7 +205,7 @@ export const ThanksgivingPromotionEmailEnglish = ({
 }
 
 ThanksgivingPromotionEmailEnglish.PreviewProps = {
-  clientName: 'Dear client',
+  clientName: '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 } as ThanksgivingPromotionEmailEnglishProps
 
 export default ThanksgivingPromotionEmailEnglish

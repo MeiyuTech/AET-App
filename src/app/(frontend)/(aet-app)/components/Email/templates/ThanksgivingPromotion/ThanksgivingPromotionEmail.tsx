@@ -31,8 +31,11 @@ interface ThanksgivingPromotionEmailProps {
 }
 
 export const ThanksgivingPromotionEmail = ({
-  clientName = '尊敬的客户',
+  clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 }: ThanksgivingPromotionEmailProps) => {
+  const logoUrl = 'https://www.usyimin.com/aet-favicon.png'
+  const promoImageUrl = 'https://www.usyimin.com/chinatown_american_dream.png'
+
   return (
     <Html lang="zh-CN" dir="ltr">
       <Head>
@@ -62,7 +65,7 @@ export const ThanksgivingPromotionEmail = ({
             <Section style={thanksgivingStyles.hero}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Img
-                  src={'https://americantranslationservice.com/images/aet-favicon.svg'}
+                  src={logoUrl}
                   alt={'美域佳华'}
                   className="h-[60px] w-auto"
                   style={{ display: 'block' }}
@@ -235,9 +238,7 @@ export const ThanksgivingPromotionEmail = ({
               >
                 <Link href={'https://www.usyimin.com/'} style={{ display: 'inline-block' }}>
                   <Img
-                    src={
-                      'https://americantranslationservice.com/images/chinatown_american_dream.png'
-                    }
+                    src={promoImageUrl}
                     alt="理想生活，尽在眼前"
                     style={{
                       maxWidth: '100%',
@@ -291,7 +292,7 @@ export const ThanksgivingPromotionEmail = ({
 }
 
 ThanksgivingPromotionEmail.PreviewProps = {
-  clientName: '尊敬的客户',
+  clientName: '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 } as ThanksgivingPromotionEmailProps
 
 export default ThanksgivingPromotionEmail
