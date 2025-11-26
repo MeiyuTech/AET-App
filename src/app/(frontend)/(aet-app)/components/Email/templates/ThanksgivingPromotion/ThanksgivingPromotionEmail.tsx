@@ -33,8 +33,8 @@ interface ThanksgivingPromotionEmailProps {
 export const ThanksgivingPromotionEmail = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 }: ThanksgivingPromotionEmailProps) => {
-  const logoUrl = 'https://www.usyimin.com/aet-favicon.png'
-  const promoImageUrl = 'https://www.usyimin.com/chinatown_american_dream.png'
+  const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
+  const promoImageUrl = 'https://www.meiyugroup.org/images/chinatown_american_dream.png'
 
   return (
     <Html lang="zh-CN" dir="ltr">
@@ -202,17 +202,14 @@ export const ThanksgivingPromotionEmail = ({
                 <Text style={thanksgivingStyles.text.default}>
                   <strong>邮箱：</strong>
                   <Link
-                    href="mailto:ca2@aet21.com"
+                    href="mailto:service@meiyugroup.org"
                     style={{ color: '#1ABC9C', textDecoration: 'none', fontWeight: 'bold' }}
                   >
-                    ca2@aet21.com
+                    service@meiyugroup.org
                   </Link>
                 </Text>
                 <Text style={thanksgivingStyles.text.default}>
                   <strong>微信：</strong>LA9499786699
-                </Text>
-                <Text style={thanksgivingStyles.text.default}>
-                  周一至周五 当地时间: 8:30 AM - 5:00 PM (PST)
                 </Text>
 
                 <Text style={{ ...thanksgivingStyles.text.default, marginTop: spacing.sm }}>
@@ -262,6 +259,39 @@ export const ThanksgivingPromotionEmail = ({
               >
                 <Text style={{ ...thanksgivingStyles.text.highlight, fontSize: '20px' }}>
                   🦃 祝您与挚爱共享丰盛佳节 · 感恩常伴 🦃
+                </Text>
+              </Section>
+
+              <Section
+                style={{
+                  ...styles.section.default,
+                  marginTop: spacing.md,
+                  textAlign: 'left' as React.CSSProperties['textAlign'],
+                }}
+              >
+                <Text style={thanksgivingStyles.text.default}>
+                  本邮件由
+                  <Link
+                    href="https://www.meiyugroup.org"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    {' '}
+                    美域集团
+                  </Link>{' '}
+                  域名发出，我们的业务包括：{' '}
+                  <Link
+                    href="https://americantranslationservice.com"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    留学翻译
+                  </Link>{' '}
+                  以及{' '}
+                  <Link
+                    href="https://www.usyimin.com"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    投资移民
+                  </Link>
                 </Text>
               </Section>
 

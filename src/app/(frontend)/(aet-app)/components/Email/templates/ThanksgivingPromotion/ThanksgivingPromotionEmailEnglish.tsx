@@ -24,8 +24,8 @@ interface ThanksgivingPromotionEmailEnglishProps {
 export const ThanksgivingPromotionEmailEnglish = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 }: ThanksgivingPromotionEmailEnglishProps) => {
-  const logoUrl = 'https://www.usyimin.com/aet-favicon.png'
-  const promoImageUrl = 'https://www.usyimin.com/thanksgiving-en.png'
+  const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
+  const promoImageUrl = 'https://www.meiyugroup.org/images/thanksgiving-en.png'
 
   return (
     <Html lang="en" dir="ltr">
@@ -135,10 +135,10 @@ export const ThanksgivingPromotionEmailEnglish = ({
                 <Text style={thanksgivingStyles.text.default}>
                   <strong>Email:</strong>{' '}
                   <Link
-                    href="mailto:ca2@aet21.com"
+                    href="mailto:service@meiyugroup.org"
                     style={{ color: '#1ABC9C', textDecoration: 'none', fontWeight: 'bold' }}
                   >
-                    ca2@aet21.com
+                    service@meiyugroup.org
                   </Link>
                 </Text>
               </Section>
@@ -178,6 +178,41 @@ export const ThanksgivingPromotionEmailEnglish = ({
                 </Text>
               </Section>
 
+              <Section
+                style={{
+                  ...styles.section.default,
+                  marginTop: spacing.md,
+                  textAlign: 'left' as React.CSSProperties['textAlign'],
+                }}
+              >
+                <Text style={thanksgivingStyles.text.default}>
+                  This email is sent from the{' '}
+                  <Link
+                    href="https://www.meiyugroup.org"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    Meiyu Group
+                  </Link>{' '}
+                  domain. Our services include
+                  <Link
+                    href="https://americantranslationservice.com"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    {' '}
+                    Education & Translation
+                  </Link>{' '}
+                  and
+                  <Link
+                    href="https://www.usyimin.com"
+                    style={{ color: '#1ABC9C', fontWeight: 'bold', textDecoration: 'none' }}
+                  >
+                    {' '}
+                    Investment Immigration
+                  </Link>
+                  .
+                </Text>
+              </Section>
+
               {/* Unsubscribe */}
               <Section
                 style={{
@@ -187,7 +222,8 @@ export const ThanksgivingPromotionEmailEnglish = ({
                 }}
               >
                 <Text style={thanksgivingStyles.text.default}>
-                  Want to update your email preferences or unsubscribe?{' '}
+                  Want to update your email preferences or unsubscribe?
+                  <br />
                   <Link href="{{{RESEND_UNSUBSCRIBE_URL}}}" style={{ color: '#1ABC9C' }}>
                     Unsubscribe here
                   </Link>
