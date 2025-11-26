@@ -35,3 +35,7 @@ backup*.sql
 aet_core_applications_rows.csv
 aet_core_educations_rows.csv
 fce_applications_rows.csv
+
+# Local email scripts (contain secrets / temp code)
+src/app/(frontend)/(aet-app)/components/Email/scripts/create-broadcast.ts
+src/app/(frontend)/(aet-app)/components/Email/scripts/test.ts
