@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 
 interface ZellePaymentOptionProps {
@@ -7,6 +8,7 @@ interface ZellePaymentOptionProps {
 }
 export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) {
   const t = useTranslations('status.paymentOptions.zelle')
+  const showQrGuide = office !== 'Boston' && office !== 'New York'
   // Return different bank information based on the office
   const getBankInfo = () => {
     if (office === 'Boston' || office === 'New York') {
@@ -88,6 +90,34 @@ export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) 
           </li>
         </ol>
       </div>
+
+      {showQrGuide && (
+        <div className="border rounded-lg p-4 bg-purple-50">
+          <h4 className="font-semibold text-purple-800 mb-2">{t('qrGuide.title')}</h4>
+          <ul className="space-y-2 text-sm text-purple-900">
+            <li>
+              {t.rich('qrGuide.steps.step1', {
+                em: (chunks) => <em className="font-semibold not-italic">{chunks}</em>,
+              })}
+            </li>
+            <li>{t('qrGuide.steps.step2')}</li>
+            <li>{t('qrGuide.steps.step3')}</li>
+          </ul>
+          <div className="mt-3 flex flex-col items-center gap-2">
+            <div className="rounded-lg bg-white p-2 shadow-sm">
+              <Image
+                src="/info-aet21-com-zelle-qr-code.png"
+                alt={t('qrGuide.title')}
+                width={220}
+                height={220}
+                className="h-52 w-52 object-contain"
+                priority
+              />
+            </div>
+            <p className="text-xs text-purple-800 text-center">{t('qrGuide.note')}</p>
+          </div>
+        </div>
+      )}
 
       {/* Bank Information Card */}
       <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50">

@@ -143,7 +143,16 @@
           "businessName": "Nombre comercial:",
           "zelleEmail": "Correo de Zelle:"
         },
-        "note": "Para ver los bancos participantes de Zelle, visita <link>el sitio oficial de Zelle</link>."
+        "note": "Para ver los bancos participantes de Zelle, visita <link>el sitio oficial de Zelle</link>.",
+        "qrGuide": {
+          "title": "Escanea y paga con Zelle en segundos",
+          "steps": {
+            "step1": "Paso 1: Abre la <em>app móvil de tu banco</em> y ve a Zelle®.",
+            "step2": "Paso 2: Usa la función de escaneo de Zelle® para escanear el código QR.",
+            "step3": "Paso 3: Ingresa el monto y envía tu pago — sin necesidad de escribir."
+          },
+          "note": "Cuando termines, vuelve a esta página para completar tu pedido."
+        }
       },
       "toast": {
         "errorTitle": "Error de pago",

@@ -143,7 +143,16 @@
           "businessName": "Business Name:",
           "zelleEmail": "Zelle Email:"
         },
-        "note": "For a list of Zelle participating banks, visit <link>Zelle's official website</link>."
+        "note": "For a list of Zelle participating banks, visit <link>Zelle's official website</link>.",
+        "qrGuide": {
+          "title": "Scan & Pay with Zelle in Seconds",
+          "steps": {
+            "step1": "Step 1: Open your <em>Bank’s Mobile App</em> and go to Zelle®.",
+            "step2": "Step 2: Use the Zelle® scan feature to scan the QR code below.",
+            "step3": "Step 3: Enter the amount and send your payment — no typing required."
+          },
+          "note": "Once completed, simply return to this page to finish your order."
+        }
       },
       "toast": {
         "errorTitle": "Payment error",

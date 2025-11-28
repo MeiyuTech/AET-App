@@ -143,7 +143,16 @@
           "businessName": "公司名称：",
           "zelleEmail": "Zelle 邮箱："
         },
-        "note": "查看支持 Zelle 的银行名单，请访问<link>Zelle 官方网站</link>。"
+        "note": "查看支持 Zelle 的银行名单，请访问<link>Zelle 官方网站</link>。",
+        "qrGuide": {
+          "title": "扫码使用 Zelle 秒级完成付款",
+          "steps": {
+            "step1": "步骤 1：打开<em>您银行的手机 App</em>并进入 Zelle®。",
+            "step2": "步骤 2：使用 Zelle® 的扫码功能扫描下方二维码。",
+            "step3": "步骤 3：输入金额并发送付款——无需手动输入。"
+          },
+          "note": "完成后，返回本页面继续完成订单。"
+        }
       },
       "toast": {
         "errorTitle": "付款错误",
