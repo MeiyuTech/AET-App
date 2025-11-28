@@ -152,14 +152,14 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   <CardTitle>{t('upload.title', { office: application.office })}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {t('upload.description')}
-                  </p>
+                  <p className="text-sm text-muted-foreground mb-2">{t('upload.description')}</p>
                   <div className="mb-2">
                     <InfoHoverCard
                       title={t('upload.infoTitle')}
                       content={
-                        <p className="text-sm text-muted-foreground">{t('upload.infoDescription')}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {t('upload.infoDescription')}
+                        </p>
                       }
                     />
                     <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
@@ -220,9 +220,7 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                   <PaymentOptions application={application} applicationId={applicationId} />
                 ) : (
                   <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                    <p className="text-sm text-yellow-700">
-                      {t('payment.pendingNotice')}
-                    </p>
+                    <p className="text-sm text-yellow-700">{t('payment.pendingNotice')}</p>
                   </div>
                 )}
               </CardContent>

@@ -98,6 +98,67 @@
       "title": "Payment",
       "pendingNotice": "Payment is not available until the due amount is set by our staff."
     },
+    "paymentOptions": {
+      "methodSelector": {
+        "title": "Choose Your Payment Method:",
+        "zelle": {
+          "label": "Zelle",
+          "recommended": "✅ Recommended:",
+          "description": "Safe, fast, and no processing fee. Direct bank-to-bank transfers.",
+          "note": "Most customers prefer this option."
+        },
+        "stripe": {
+          "label": "Online Payment",
+          "description": "Quick & easy. Supports a variety of flexible payment options."
+        }
+      },
+      "actions": {
+        "processing": "Processing...",
+        "continueZelle": "Continue with Zelle Payment",
+        "proceedOnline": "Proceed to Online Payment",
+        "back": "Back to Payment Options"
+      },
+      "messages": {
+        "invalidAmount": "Payment cannot be processed: Invalid amount",
+        "amountMustBeGreater": "Cannot process payment: Amount must be greater than 0",
+        "agreement": "By proceeding with payment, you agree to our terms of service."
+      },
+      "zelleSelected": {
+        "title": "Zelle Payment Selected",
+        "description": "Follow the instructions below to complete your payment via Zelle."
+      },
+      "zelle": {
+        "stepsTitle": "Zelle Payment Steps",
+        "steps": {
+          "step1": "Log in to your bank account that participates in Zelle (via computer or mobile app).",
+          "step2": "Select \"Transfer Zelle\" → \"Manage Recipients\" → \"Add New Recipient\" → \"Business\".",
+          "step3": "Fill in the recipient information:",
+          "step4": "After successfully adding the recipient, return to the main menu and select \"Send\" → choose \"American Education and Translation Services\".",
+          "step5": "Enter the transfer amount → select \"Continue\".",
+          "step6": "Select \"Confirm\" to complete the payment."
+        },
+        "bankInfo": {
+          "title": "Our Bank Information",
+          "bankName": "Bank Name:",
+          "businessName": "Business Name:",
+          "zelleEmail": "Zelle Email:"
+        },
+        "note": "For a list of Zelle participating banks, visit <link>Zelle's official website</link>.",
+        "qrGuide": {
+          "title": "Scan & Pay with Zelle in Seconds",
+          "steps": {
+            "step1": "Step 1: Open your <em>Bank’s Mobile App</em> and go to Zelle®.",
+            "step2": "Step 2: Use the Zelle® scan feature to scan the QR code below.",
+            "step3": "Step 3: Enter the amount and send your payment — no typing required."
+          },
+          "note": "Once completed, simply return to this page to finish your order."
+        }
+      },
+      "toast": {
+        "errorTitle": "Payment error",
+        "creationFailed": "Payment creation failed"
+      }
+    },
     "applicationStatus": {
       "title": "Application Status",
       "status": "Status",
