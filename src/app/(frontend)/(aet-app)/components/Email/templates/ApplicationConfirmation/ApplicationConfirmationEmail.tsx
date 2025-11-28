@@ -86,7 +86,7 @@ export const ApplicationConfirmationEmail = ({
                 </Text>
 
                 <Text style={styles.heading.h3}>3. Make Payment</Text>
-                {paymentLink !== '' ? (
+                {/* {paymentLink !== '' ? (
                   <Section style={{ textAlign: 'center', margin: '20px 0' }}>
                     <Button href={paymentLink}>Proceed to Online Payment</Button>
                   </Section>
@@ -94,7 +94,7 @@ export const ApplicationConfirmationEmail = ({
                   <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
                     Due amount is not set yet. Please wait for our review.
                   </Text>
-                )}
+                )} */}
 
                 <Text style={styles.heading.h3}>4. Processing</Text>
                 <Text style={{ ...styles.text.default, marginLeft: '24px' }}>
