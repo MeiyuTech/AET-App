@@ -1,7 +1,8 @@
 'use client'
 
-import { CheckCircle2, AlertCircle } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { cn } from '@/utilities/cn'
+import { useTranslations } from 'next-intl'
 
 interface PaymentMethodSelectorProps {
   onSelect: (method: 'zelle' | 'stripe') => void
@@ -12,9 +13,11 @@ export default function PaymentMethodSelector({
   onSelect,
   selectedMethod,
 }: PaymentMethodSelectorProps) {
+  const t = useTranslations('status.paymentOptions.methodSelector')
+
   return (
     <div className="space-y-4">
-      <h3 className="text-base font-medium text-gray-800">Choose Your Payment Method:</h3>
+      <h3 className="text-base font-medium text-gray-800">{t('title')}</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Zelle Option */}
@@ -44,16 +47,15 @@ export default function PaymentMethodSelector({
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <div className="font-medium">
-                  <span className="text-green-700">✅ Recommended:</span> Zelle
+                  <span className="text-green-700">{t('zelle.recommended')}</span>{' '}
+                  {t('zelle.label')}
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 mt-1.5">
-                Safe, Fast, and No Processing Fee. Direct bank-to-bank transfers.
-              </p>
+              <p className="text-sm text-gray-600 mt-1.5">{t('zelle.description')}</p>
 
               <div className="flex items-center text-xs text-green-700 mt-2 font-medium">
-                <span>Most customers prefer this option</span>
+                <span>{t('zelle.note')}</span>
               </div>
             </div>
           </div>
@@ -85,12 +87,10 @@ export default function PaymentMethodSelector({
 
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <div className="font-medium">Online Payment</div>
+                <div className="font-medium">{t('stripe.label')}</div>
               </div>
 
-              <p className="text-sm text-gray-600 mt-1.5">
-                Qucik & Easy. Supports a variety of flexible payment options.
-              </p>
+              <p className="text-sm text-gray-600 mt-1.5">{t('stripe.description')}</p>
 
               {/* <div className="flex items-center text-xs text-orange-600 mt-2">
                 <AlertCircle className="h-3 w-3 mr-1" />

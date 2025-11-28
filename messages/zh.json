@@ -98,6 +98,58 @@
       "title": "付款",
       "pendingNotice": "在我们设定应付款金额之前暂无法进行付款。"
     },
+    "paymentOptions": {
+      "methodSelector": {
+        "title": "选择付款方式：",
+        "zelle": {
+          "label": "Zelle",
+          "recommended": "✅ 推荐：",
+          "description": "安全、快速且无手续费。银行间直接转账。",
+          "note": "大多数客户选择此方式。"
+        },
+        "stripe": {
+          "label": "在线支付",
+          "description": "快捷简便，支持多种灵活的支付方式。"
+        }
+      },
+      "actions": {
+        "processing": "正在处理...",
+        "continueZelle": "继续使用 Zelle 付款",
+        "proceedOnline": "前往在线支付",
+        "back": "返回付款选项"
+      },
+      "messages": {
+        "invalidAmount": "无法处理付款：金额无效",
+        "amountMustBeGreater": "无法处理付款：金额必须大于 0",
+        "agreement": "继续付款即表示您同意我们的服务条款。"
+      },
+      "zelleSelected": {
+        "title": "已选择 Zelle 付款",
+        "description": "请按照以下步骤完成 Zelle 付款。"
+      },
+      "zelle": {
+        "stepsTitle": "Zelle 付款步骤",
+        "steps": {
+          "step1": "登录支持 Zelle 的网银（电脑或手机 App）。",
+          "step2": "选择“Transfer Zelle” → “Manage Recipients” → “Add New Recipient” → “Business”。",
+          "step3": "填写收款人信息：",
+          "step4": "添加成功后返回主菜单，选择“Send”→ 选择“American Education and Translation Services”。",
+          "step5": "输入转账金额 → 选择“Continue”。",
+          "step6": "选择“Confirm”完成付款。"
+        },
+        "bankInfo": {
+          "title": "我们的银行信息",
+          "bankName": "银行名称：",
+          "businessName": "公司名称：",
+          "zelleEmail": "Zelle 邮箱："
+        },
+        "note": "查看支持 Zelle 的银行名单，请访问<link>Zelle 官方网站</link>。"
+      },
+      "toast": {
+        "errorTitle": "付款错误",
+        "creationFailed": "创建付款失败"
+      }
+    },
     "applicationStatus": {
       "title": "申请状态",
       "status": "当前状态",

@@ -98,6 +98,58 @@
       "title": "Pago",
       "pendingNotice": "El pago no estará disponible hasta que nuestro equipo establezca el monto adeudado."
     },
+    "paymentOptions": {
+      "methodSelector": {
+        "title": "Elige tu método de pago:",
+        "zelle": {
+          "label": "Zelle",
+          "recommended": "✅ Recomendado:",
+          "description": "Seguro, rápido y sin comisión. Transferencias directas banco a banco.",
+          "note": "La mayoría de los clientes prefieren esta opción."
+        },
+        "stripe": {
+          "label": "Pago en línea",
+          "description": "Rápido y fácil. Admite varias opciones de pago flexibles."
+        }
+      },
+      "actions": {
+        "processing": "Procesando...",
+        "continueZelle": "Continuar con pago por Zelle",
+        "proceedOnline": "Continuar con pago en línea",
+        "back": "Volver a las opciones de pago"
+      },
+      "messages": {
+        "invalidAmount": "No se puede procesar el pago: monto no válido",
+        "amountMustBeGreater": "No se puede procesar el pago: el monto debe ser mayor que 0",
+        "agreement": "Al continuar con el pago, aceptas nuestros términos de servicio."
+      },
+      "zelleSelected": {
+        "title": "Pago por Zelle seleccionado",
+        "description": "Sigue las instrucciones a continuación para completar tu pago por Zelle."
+      },
+      "zelle": {
+        "stepsTitle": "Pasos para pagar con Zelle",
+        "steps": {
+          "step1": "Inicia sesión en tu banco participante de Zelle (en computadora o app móvil).",
+          "step2": "Selecciona \"Transfer Zelle\" → \"Manage Recipients\" → \"Add New Recipient\" → \"Business\".",
+          "step3": "Completa la información del destinatario:",
+          "step4": "Después de agregar el destinatario, vuelve al menú principal y elige \"Send\" → selecciona \"American Education and Translation Services\".",
+          "step5": "Ingresa el monto a transferir → selecciona \"Continue\".",
+          "step6": "Selecciona \"Confirm\" para completar el pago."
+        },
+        "bankInfo": {
+          "title": "Información bancaria",
+          "bankName": "Nombre del banco:",
+          "businessName": "Nombre comercial:",
+          "zelleEmail": "Correo de Zelle:"
+        },
+        "note": "Para ver los bancos participantes de Zelle, visita <link>el sitio oficial de Zelle</link>."
+      },
+      "toast": {
+        "errorTitle": "Error de pago",
+        "creationFailed": "No se pudo crear el pago"
+      }
+    },
     "applicationStatus": {
       "title": "Estado de la solicitud",
       "status": "Estado",

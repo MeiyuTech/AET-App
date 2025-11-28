@@ -1,9 +1,12 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 interface ZellePaymentOptionProps {
   office?: string
 }
 export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) {
+  const t = useTranslations('status.paymentOptions.zelle')
   // Return different bank information based on the office
   const getBankInfo = () => {
     if (office === 'Boston' || office === 'New York') {
@@ -44,52 +47,44 @@ export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) 
             <path d="M13 12h8" />
             <path d="M13 18h8" />
           </svg>
-          Zelle Payment Steps
+          {t('stepsTitle')}
         </h4>
         <ol className="space-y-3 pl-0">
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               1
             </div>
-            <div>
-              Login to your bank account that participates in Zelle (via computer or mobile app).
-            </div>
+            <div>{t('steps.step1')}</div>
           </li>
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               2
             </div>
-            <div>
-              Select &quot;Transfer Zelle&quot; → Select &quot;Manage Recipients&quot; → &quot;Add
-              New Recipient&quot; → &quot;Business&quot;.
-            </div>
+            <div>{t('steps.step2')}</div>
           </li>
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               3
             </div>
-            <div>Fill in the recipient information:</div>
+            <div>{t('steps.step3')}</div>
           </li>
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               4
             </div>
-            <div>
-              After successfully adding the recipient, return to the main menu and select
-              &quot;Send&quot; → select &quot;American Education and Translation Services&quot;.
-            </div>
+            <div>{t('steps.step4')}</div>
           </li>
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               5
             </div>
-            <div>Enter the transfer amount → select &quot;Continue&quot;.</div>
+            <div>{t('steps.step5')}</div>
           </li>
           <li className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-medium text-sm">
               6
             </div>
-            <div>Select &quot;Confirm&quot; to complete the payment.</div>
+            <div>{t('steps.step6')}</div>
           </li>
         </ol>
       </div>
@@ -118,18 +113,18 @@ export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) 
             <path d="M8 14h.01" />
             <path d="M16 14h.01" />
           </svg>
-          Our Bank Information
+          {t('bankInfo.title')}
         </h4>
         <div className="space-y-2">
           <p>
-            <span className="font-medium">Bank Name:</span> {bankName}
+            <span className="font-medium">{t('bankInfo.bankName')}</span> {bankName}
           </p>
           <p>
-            <span className="font-medium">Business Name:</span> American Education and Translation
-            Services
+            <span className="font-medium">{t('bankInfo.businessName')}</span> American Education and
+            Translation Services
           </p>
           <p>
-            <span className="font-medium">Zelle Email:</span>{' '}
+            <span className="font-medium">{t('bankInfo.zelleEmail')}</span>{' '}
             <span className="font-bold text-blue-700">{email}</span>
           </p>
         </div>
@@ -154,16 +149,18 @@ export default function ZellePaymentOption({ office }: ZellePaymentOptionProps) 
           <path d="M12 8h.01" />
         </svg>
         <div>
-          For a list of Zelle participating banks, visit{' '}
-          <a
-            href="https://www.zellepay.com/get-started"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 underline"
-          >
-            Zelle&apos;s official website
-          </a>
-          .
+          {t.rich('note', {
+            link: (chunks) => (
+              <a
+                href="https://www.zellepay.com/get-started"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                {chunks}
+              </a>
+            ),
+          })}
         </div>
       </div>
     </div>
