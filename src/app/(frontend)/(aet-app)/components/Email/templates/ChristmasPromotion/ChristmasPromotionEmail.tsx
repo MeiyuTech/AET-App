@@ -27,6 +27,15 @@ export const ChristmasPromotionEmail = ({
   const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
   const headerImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Header.jpg'
   const squareImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Squre.jpg'
+  const heroStyle = {
+    ...christmasStyles.hero,
+    backgroundImage: `url(${headerImageUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    position: 'relative' as React.CSSProperties['position'],
+    overflow: 'hidden',
+  }
 
   return (
     <Html lang="en" dir="ltr">
@@ -53,20 +62,45 @@ export const ChristmasPromotionEmail = ({
               />
             </Section>
 
-            <Section style={christmasStyles.hero}>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Img
-                  src={logoUrl}
-                  alt={'AET'}
-                  className="h-[60px] w-auto"
-                  style={{ display: 'block' }}
-                />
+            <Section style={heroStyle}>
+              {/* Blurred background overlay */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url(${headerImageUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'blur(6px)',
+                  transform: 'scale(1.05)',
+                  opacity: 0.85,
+                  zIndex: 0,
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 100%)',
+                  zIndex: 1,
+                }}
+              />
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Img
+                    src={logoUrl}
+                    alt={'AET'}
+                    className="h-[60px] w-auto"
+                    style={{ display: 'block' }}
+                  />
+                </div>
+                <span style={christmasStyles.ribbon}>The Best Gift - Help Someone You Know</span>
+                <Heading style={christmasStyles.heading.h1}>🎄 Merry Christmas 🎄</Heading>
+                <Text style={christmasStyles.text.hero}>
+                  Share the gift of opportunity with someone who needs Foreign Credential Evaluation.
+                </Text>
               </div>
-              <span style={christmasStyles.ribbon}>The Best Gift - Help Someone You Know</span>
-              <Heading style={christmasStyles.heading.h1}>🎄 Merry Christmas 🎄</Heading>
-              <Text style={christmasStyles.text.hero}>
-                Share the gift of opportunity with someone who needs Foreign Credential Evaluation.
-              </Text>
             </Section>
 
             <Section style={christmasStyles.content}>
