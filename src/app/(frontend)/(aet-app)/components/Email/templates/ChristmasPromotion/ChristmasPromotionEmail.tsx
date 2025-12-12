@@ -25,6 +25,8 @@ export const ChristmasPromotionEmail = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
 }: ChristmasPromotionEmailProps) => {
   const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
+  const headerImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Header.jpg'
+  const squareImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Squre.jpg'
 
   return (
     <Html lang="en" dir="ltr">
@@ -36,6 +38,21 @@ export const ChristmasPromotionEmail = ({
       <Tailwind>
         <Body style={christmasStyles.body}>
           <Container style={christmasStyles.container}>
+            <Section style={{ ...styles.section.default, padding: 0, marginBottom: spacing.lg }}>
+              <Img
+                src={headerImageUrl}
+                alt="Share the gift of opportunity this Christmas"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  borderRadius: '16px',
+                }}
+                width={1200}
+                height={640}
+              />
+            </Section>
+
             <Section style={christmasStyles.hero}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Img
@@ -101,6 +118,22 @@ export const ChristmasPromotionEmail = ({
                   <br />
                   • Neighbors needing job verification
                 </Text>
+
+                <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
+                  <Img
+                    src={squareImageUrl}
+                    alt="Foreign Credential Evaluation for Christmas referrals"
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      display: 'inline-block',
+                      borderRadius: '14px',
+                      border: `1px solid ${holidayPalette.border}`,
+                    }}
+                    width={520}
+                    height={520}
+                  />
+                </Section>
 
                 <Section style={christmasStyles.ctaButtonWrapper}>
                   <Button
