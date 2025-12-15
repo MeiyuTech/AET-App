@@ -16,16 +16,16 @@ import { FooterMeiyu } from '../../FooterMeiyu'
 import { styles, spacing } from '../../styles/config'
 import { christmasStyles, holidayPalette } from './styles'
 
-interface ChristmasPromotionEmailProps {
+interface ChristmasPromotionEmailChineseProps {
   clientName?: string
 }
 
-export const ChristmasPromotionEmail = ({
+export const ChristmasPromotionEmailChinese = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
-}: ChristmasPromotionEmailProps) => {
+}: ChristmasPromotionEmailChineseProps) => {
   const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
   const headerImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Header.png'
-  const squareImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Squre-en.png'
+  const squareImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Squre-cn.png'
   const heroStyle = {
     ...christmasStyles.hero,
     backgroundImage: `url(${headerImageUrl})`,
@@ -37,9 +37,9 @@ export const ChristmasPromotionEmail = ({
   }
 
   return (
-    <Html lang="en" dir="ltr">
+    <Html lang="zh-CN" dir="ltr">
       <Head>
-        <title>AET Christmas Referral - Foreign Credential Evaluation</title>
+        <title>AET 圣诞转介绍 - 学历认证服务</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -47,7 +47,7 @@ export const ChristmasPromotionEmail = ({
         <Body style={christmasStyles.body}>
           <Container style={christmasStyles.container}>
             <Section style={heroStyle}>
-              {/* Blurred background overlay */}
+              {/* 模糊背景层 */}
               <div
                 style={{
                   position: 'absolute',
@@ -78,35 +78,32 @@ export const ChristmasPromotionEmail = ({
                     style={{ display: 'block' }}
                   />
                 </div>
-                <span style={christmasStyles.ribbon}>The Best Gift - Help Someone You Know</span>
-                <Heading style={christmasStyles.heading.h1}>🎄 Merry Christmas 🎄</Heading>
+                <span style={christmasStyles.ribbon}>最好的礼物——帮身边人一把</span>
+                <Heading style={christmasStyles.heading.h1}>🎄 圣诞快乐 🎄</Heading>
                 <Text style={christmasStyles.text.hero}>
-                  Share the gift of opportunity with someone who needs Foreign Credential
-                  Evaluation.
+                  与需要学历认证的朋友分享机会的礼物，让他们在美国少走弯路。
                 </Text>
               </div>
             </Section>
 
             <Section style={christmasStyles.content}>
-              <Heading style={christmasStyles.heading.h2}>Dear {clientName},</Heading>
+              <Heading style={christmasStyles.heading.h2}>亲爱的 {clientName}：</Heading>
 
               <div style={christmasStyles.ornamentDivider} />
 
               <Text style={christmasStyles.text.default}>
-                Do you know someone struggling to use their foreign degree in the U.S.? You probably
-                still remember how stressful it was.
+                您身边是否有人想在美国使用海外学历，却被认证流程卡住？您或许还记得当时有多焦虑。
               </Text>
               <Text style={christmasStyles.text.default}>
-                <strong>Don&apos;t let others go through that struggle!</strong>
+                <strong>别让他们再重复这些困难！</strong>
               </Text>
 
               <Text style={christmasStyles.text.highlight}>
-                Your referral can change someone&apos;s life — help them unlock opportunities in the
-                U.S. with{' '}
+                您的介绍可以改变朋友的未来——向他们推荐{' '}
                 <Link href="https://americantranslationservice.com/e-evaluation.php">
-                  AET&apos;s Foreign Credential Evaluation (FCE)
+                  AET 的学历评估（FCE）
                 </Link>
-                .
+                ，帮他们解锁美国的机会。
               </Text>
 
               <Section
@@ -118,38 +115,34 @@ export const ChristmasPromotionEmail = ({
                   border: `1px dashed ${holidayPalette.accent}`,
                 }}
               >
-                <Text style={christmasStyles.heading.h2}>
-                  AET makes it easy for your friends and family:
-                </Text>
+                <Text style={christmasStyles.heading.h2}>AET 让您的亲友更省心：</Text>
                 <Text style={christmasStyles.text.default}>
-                  ✅ 24-hour service available
+                  ✅ 提供 24 小时加急服务
                   <br />
-                  ✅ 5-star review customer service
-                  <br />✅ Digital copies accepted
+                  ✅ 客服口碑 5 星好评
+                  <br />✅ 接受电子版材料
                 </Text>
               </Section>
 
               <Section style={christmasStyles.card}>
-                <Text style={christmasStyles.heading.h2}>
-                  🎄 Share the gift of opportunity this Christmas
-                </Text>
+                <Text style={christmasStyles.heading.h2}>🎄 这个圣诞，分享机会的礼物</Text>
 
                 <Text style={{ ...christmasStyles.text.default, marginLeft: spacing.indent }}>
-                  Know someone who needs evaluation?
+                  想到需要学历评估的人了吗？
                   <br />
-                  Share AET with:
+                  推荐 AET 给：
                   <br />
-                  • Anyone applying for green cards or work visas
+                  • 申请绿卡或工作签证的朋友
                   <br />
-                  • Colleagues seeking U.S. professional licenses
-                  <br />• Neighbors needing job verification
+                  • 申请美国职业执照的同事
+                  <br />• 求职需要学历证明的邻居
                 </Text>
 
                 <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
                   <Link href="https://americantranslationservice.com/e-contact.php">
                     <Img
                       src={squareImageUrl}
-                      alt="Foreign Credential Evaluation for Christmas referrals"
+                      alt="圣诞学历评估转介绍"
                       style={{
                         maxWidth: '100%',
                         height: 'auto',
@@ -166,11 +159,10 @@ export const ChristmasPromotionEmail = ({
 
               <Section style={christmasStyles.highlight}>
                 <Text style={christmasStyles.text.default}>
-                  🎁 Your recommendation means everything!
+                  🎁 感谢您的信任与推荐！
                   <br />
                   <br />
-                  With over 15 years of experience, AET has helped thousands of international
-                  professionals achieve their American dreams.
+                  AET 拥有 15 年以上经验，已帮助成千上万的国际专业人士实现他们的美国梦想。
                 </Text>
               </Section>
 
@@ -178,12 +170,12 @@ export const ChristmasPromotionEmail = ({
 
               <Section style={christmasStyles.contactCard}>
                 <Heading style={{ ...christmasStyles.heading.h2, marginBottom: spacing.sm }}>
-                  📞 Contact Us
+                  📞 联系我们
                 </Heading>
                 <div style={{ ...styles.section.default, marginTop: spacing.md }}>
-                  <Text style={christmasStyles.heading.h3}>Miami Office</Text>
+                  <Text style={christmasStyles.heading.h3}>迈阿密办公室</Text>
                   <Text style={{ ...christmasStyles.text.default, marginBottom: spacing.sm }}>
-                    Phone:{' '}
+                    电话：{' '}
                     <Link
                       href="tel:+17862503999"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -191,7 +183,7 @@ export const ChristmasPromotionEmail = ({
                       +1 786-250-3999
                     </Link>
                     <br />
-                    Email:{' '}
+                    邮箱：{' '}
                     <Link
                       href="mailto:info@americantranslationservice.com"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -200,9 +192,9 @@ export const ChristmasPromotionEmail = ({
                     </Link>
                   </Text>
 
-                  <Text style={christmasStyles.heading.h3}>San Francisco Office</Text>
+                  <Text style={christmasStyles.heading.h3}>旧金山办公室</Text>
                   <Text style={{ ...christmasStyles.text.default, marginBottom: spacing.sm }}>
-                    Phone:{' '}
+                    电话：{' '}
                     <Link
                       href="tel:+14158684892"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -210,7 +202,7 @@ export const ChristmasPromotionEmail = ({
                       +1 415-868-4892
                     </Link>
                     <br />
-                    Email:{' '}
+                    邮箱：{' '}
                     <Link
                       href="mailto:ca@aet21.com"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -219,9 +211,9 @@ export const ChristmasPromotionEmail = ({
                     </Link>
                   </Text>
 
-                  <Text style={christmasStyles.heading.h3}>Los Angeles Office</Text>
+                  <Text style={christmasStyles.heading.h3}>洛杉矶办公室</Text>
                   <Text style={{ ...christmasStyles.text.default, marginBottom: spacing.sm }}>
-                    Phone:{' '}
+                    电话：{' '}
                     <Link
                       href="tel:+19499547996"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -229,7 +221,7 @@ export const ChristmasPromotionEmail = ({
                       +1 949-954-7996
                     </Link>
                     <br />
-                    Email:{' '}
+                    邮箱：{' '}
                     <Link
                       href="mailto:ca2@aet21.com"
                       style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
@@ -243,7 +235,7 @@ export const ChristmasPromotionEmail = ({
                     href="https://americantranslationservice.com/e-contact.php"
                     style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 'bold' }}
                   >
-                    Contact us online
+                    在线联系我们
                   </Link>
                 </Text>
               </Section>
@@ -256,9 +248,9 @@ export const ChristmasPromotionEmail = ({
                 }}
               >
                 <Text style={christmasStyles.text.default}>
-                  Sincerely,
+                  诚挚敬上，
                   <br />
-                  American Education &amp; Translation Services (Meiyu Group)
+                  American Education &amp; Translation Services（美域集团）
                 </Text>
               </Section>
 
@@ -270,11 +262,11 @@ export const ChristmasPromotionEmail = ({
                 }}
               >
                 <Text style={christmasStyles.text.default}>
-                  If you wish to unsubscribe or adjust preferences, please{' '}
+                  如需退订或更新邮件偏好，请{' '}
                   <Link href="{{{RESEND_UNSUBSCRIBE_URL}}}" style={{ color: '#0f766e' }}>
-                    click here
+                    点击这里
                   </Link>
-                  .
+                  。
                 </Text>
               </Section>
 
@@ -287,8 +279,8 @@ export const ChristmasPromotionEmail = ({
   )
 }
 
-ChristmasPromotionEmail.PreviewProps = {
+ChristmasPromotionEmailChinese.PreviewProps = {
   clientName: '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
-} as ChristmasPromotionEmailProps
+} as ChristmasPromotionEmailChineseProps
 
-export default ChristmasPromotionEmail
+export default ChristmasPromotionEmailChinese
