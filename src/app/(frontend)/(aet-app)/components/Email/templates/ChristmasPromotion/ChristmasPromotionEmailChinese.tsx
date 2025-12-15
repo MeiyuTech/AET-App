@@ -78,11 +78,9 @@ export const ChristmasPromotionEmailChinese = ({
                     style={{ display: 'block' }}
                   />
                 </div>
-                <span style={christmasStyles.ribbon}>最好的礼物——帮身边人一把</span>
+                <span style={christmasStyles.ribbon}>最好的节日就是帮助身边人</span>
                 <Heading style={christmasStyles.heading.h1}>🎄 圣诞快乐 🎄</Heading>
-                <Text style={christmasStyles.text.hero}>
-                  与需要学历认证的朋友分享机会的礼物，让他们在美国少走弯路。
-                </Text>
+                <Text style={christmasStyles.text.hero}>分享给身边需要学历认证的亲朋好友</Text>
               </div>
             </Section>
 
@@ -92,18 +90,22 @@ export const ChristmasPromotionEmailChinese = ({
               <div style={christmasStyles.ornamentDivider} />
 
               <Text style={christmasStyles.text.default}>
-                您身边是否有人想在美国使用海外学历，却被认证流程卡住？您或许还记得当时有多焦虑。
+                您身边是否有亲朋好友正在为认证国外学历发愁？
+                <br />
+                是的，当年的经历或许正发生在亲近人的身上。
               </Text>
               <Text style={christmasStyles.text.default}>
-                <strong>别让他们再重复这些困难！</strong>
+                <strong>所以就别让他们烦恼了！</strong>
               </Text>
 
               <Text style={christmasStyles.text.highlight}>
-                您的介绍可以改变朋友的未来——向他们推荐{' '}
+                您的推荐可以改变他们的一生：帮助他们通过国外学历认证解锁美国梦。
+                <br />
+                推荐{' '}
                 <Link href="https://americantranslationservice.com/e-evaluation.php">
                   AET 的学历评估（FCE）
                 </Link>
-                ，帮他们解锁美国的机会。
+                。
               </Text>
 
               <Section
@@ -115,7 +117,7 @@ export const ChristmasPromotionEmailChinese = ({
                   border: `1px dashed ${holidayPalette.accent}`,
                 }}
               >
-                <Text style={christmasStyles.heading.h2}>AET 让您的亲友更省心：</Text>
+                <Text style={christmasStyles.heading.h2}>AET 可让您的亲友更省心：</Text>
                 <Text style={christmasStyles.text.default}>
                   ✅ 提供 24 小时加急服务
                   <br />
@@ -125,10 +127,10 @@ export const ChristmasPromotionEmailChinese = ({
               </Section>
 
               <Section style={christmasStyles.card}>
-                <Text style={christmasStyles.heading.h2}>🎄 这个圣诞，分享机会的礼物</Text>
+                <Text style={christmasStyles.heading.h2}>🎄 这个圣诞，抓住这个分享礼物的机会</Text>
 
                 <Text style={{ ...christmasStyles.text.default, marginLeft: spacing.indent }}>
-                  想到需要学历评估的人了吗？
+                  想到需要学历评估的身边人了吗？
                   <br />
                   推荐 AET 给：
                   <br />
