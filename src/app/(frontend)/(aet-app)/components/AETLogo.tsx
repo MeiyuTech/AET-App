@@ -7,7 +7,7 @@ type AETLogoProps = {
 
 export function AETLogo({ className }: AETLogoProps) {
   return (
-    <div className={clsx('flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-2', className)}>
+    <div className={clsx('flex items-center gap-2', className)}>
       <Image
         src="/web-app-manifest-512x512.png"
         alt="American Education and Translation Services Logo"
@@ -16,12 +16,12 @@ export function AETLogo({ className }: AETLogoProps) {
         className="h-20 w-auto sm:h-20 lg:h-24"
         priority
       />
-      <div className="flex items-start gap-3 sm:items-center md:gap-4">
-        <div className="h-12 w-px bg-gray-300 sm:h-14 lg:h-16" />
+      <div className="hidden md:flex items-center gap-4">
+        <div className="h-14 w-px bg-gray-400 lg:h-16" />
         <div className="text-left leading-tight flex flex-col">
           <div
             style={{
-              color: '#B31217',
+              color: '#bc271b',
               fontFamily: 'Merriweather, \"Times New Roman\", serif',
               fontWeight: 800,
               fontSize: '30px',
