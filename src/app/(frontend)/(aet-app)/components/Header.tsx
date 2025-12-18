@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -33,6 +32,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { AETLogo } from './AETLogo'
 
 // Languages configuration
 const languages = [
@@ -126,27 +126,7 @@ export default function Header() {
         <div className="flex h-[100px] items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/web-app-manifest-512x512.png"
-              alt="American Education and Translation Services Logo"
-              width={400}
-              height={80}
-              className="h-20 w-auto sm:h-20 lg:h-24"
-              priority
-            />
-            <div
-              className="hidden md:block text-left"
-              style={{
-                color: '#3f6983',
-                fontFamily: 'Verdana, sans-serif',
-                fontWeight: 600,
-                fontSize: 'clamp(14px, 2.8vw, 20px)',
-                lineHeight: 1.2,
-              }}
-            >
-              <div>American Education and</div>
-              <div>Translation Services,CORP (AET)</div>
-            </div>
+            <AETLogo />
           </Link>
 
           {/* Desktop Navigation */}
