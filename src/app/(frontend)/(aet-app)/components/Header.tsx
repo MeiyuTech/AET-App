@@ -125,15 +125,28 @@ export default function Header() {
       <div className="container mx-auto px-8 lg:px-16">
         <div className="flex h-[100px] items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/aet_e_logo.png"
+              src="/web-app-manifest-512x512.png"
               alt="American Education and Translation Services Logo"
               width={400}
               height={80}
-              className="h-20 w-auto"
+              className="h-20 w-auto sm:h-20 lg:h-24"
               priority
             />
+            <div
+              className="hidden md:block text-left"
+              style={{
+                color: '#3f6983',
+                fontFamily: 'Verdana, sans-serif',
+                fontWeight: 600,
+                fontSize: 'clamp(14px, 2.8vw, 20px)',
+                lineHeight: 1.2,
+              }}
+            >
+              <div>American Education and</div>
+              <div>Translation Services,CORP (AET)</div>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
