@@ -79,7 +79,7 @@ export const ChristmasPromotionEmail = ({
                   />
                 </div>
                 <span style={christmasStyles.ribbon}>The Best Gift - Help Someone You Know</span>
-                <Heading style={christmasStyles.heading.h1}>🎄 Merry Christmas 🎄</Heading>
+                <Heading style={christmasStyles.heading.h1}>🎄 Happy Holidays 🎄</Heading>
                 <Text style={christmasStyles.text.hero}>
                   Share the gift of opportunity with someone who needs Foreign Credential
                   Evaluation.
