@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Eye, Edit, FileText } from 'lucide-react'
+import { Eye, Edit, FileText, Copy } from 'lucide-react'
 import {
   getStatusColor,
   getPaymentStatusColor,
@@ -132,19 +132,45 @@ export const getDegreeEquivalencyColumns = (
       )
     },
   },
-  // {
-  //   accessorKey: 'email',
-  //   header: ({ column }) => (
-  //     <Button
-  //       variant="ghost"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-  //       className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
-  //     >
-  //       Email
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => (row.getValue('email') as string) || 'N/A',
-  // },
+  {
+    accessorKey: 'email',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-lg font-semibold hover:bg-gray-100 w-full justify-center"
+      >
+        Email
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const email = (row.getValue('email') as string) || ''
+      if (!email) return 'N/A'
+      return (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            title="Copy email"
+            aria-label="Copy email"
+            onClick={async () => {
+              try {
+                await navigator.clipboard?.writeText(email)
+              } catch {
+                // Ignore clipboard errors to avoid blocking UI.
+              }
+            }}
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+          <span className="max-w-[220px] truncate" title={email}>
+            {email}
+          </span>
+        </div>
+      )
+    },
+  },
   {
     id: 'educations',
     header: () => (

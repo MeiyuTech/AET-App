@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ThanksgivingPromotionEmail } from './ThanksgivingPromotionEmail'
+import { ThanksgivingPromotionEmail } from './ThanksgivingPromotionEmailCN'
 
 /**
  * Preview component for ThanksgivingPromotionEmail
