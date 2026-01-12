@@ -18,10 +18,12 @@ import { christmasStyles, holidayPalette } from './styles'
 
 interface ChristmasPromotionEmailChineseProps {
   clientName?: string
+  unsubscribeUrl?: string
 }
 
 export const ChristmasPromotionEmailChinese = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
+  unsubscribeUrl = '{{{RESEND_UNSUBSCRIBE_URL}}}',
 }: ChristmasPromotionEmailChineseProps) => {
   const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
   const headerImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Header.png'
@@ -114,7 +116,7 @@ export const ChristmasPromotionEmailChinese = ({
                   backgroundColor: holidayPalette.background.highlight,
                   padding: spacing.md,
                   borderRadius: '16px',
-                  border: `1px dashed ${holidayPalette.accent}`,
+                  boxShadow: '0 10px 24px rgba(12,83,53,0.08)',
                 }}
               >
                 <Text style={christmasStyles.heading.h2}>AET 可让您的亲友更省心：</Text>
@@ -139,24 +141,23 @@ export const ChristmasPromotionEmailChinese = ({
                   • 申请美国职业执照的同事
                   <br />• 求职需要学历证明的邻居
                 </Text>
+              </Section>
 
-                <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
-                  <Link href="https://americantranslationservice.com/e-contact.php">
-                    <Img
-                      src={squareImageUrl}
-                      alt="圣诞学历评估转介绍"
-                      style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        display: 'inline-block',
-                        borderRadius: '14px',
-                        border: `1px solid ${holidayPalette.border}`,
-                      }}
-                      width={520}
-                      height={520}
-                    />
-                  </Link>
-                </Section>
+              <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
+                <Link href="https://americantranslationservice.com/e-contact.php">
+                  <Img
+                    src={squareImageUrl}
+                    alt="圣诞学历评估转介绍"
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      display: 'inline-block',
+                      borderRadius: '14px',
+                    }}
+                    width={520}
+                    height={520}
+                  />
+                </Link>
               </Section>
 
               <Section style={christmasStyles.highlight}>
@@ -283,6 +284,7 @@ export const ChristmasPromotionEmailChinese = ({
 
 ChristmasPromotionEmailChinese.PreviewProps = {
   clientName: '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
+  unsubscribeUrl: '{{{RESEND_UNSUBSCRIBE_URL}}}',
 } as ChristmasPromotionEmailChineseProps
 
 export default ChristmasPromotionEmailChinese

@@ -18,10 +18,12 @@ import { christmasStyles, holidayPalette } from './styles'
 
 interface ChristmasPromotionEmailProps {
   clientName?: string
+  unsubscribeUrl?: string
 }
 
 export const ChristmasPromotionEmail = ({
   clientName = '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
+  unsubscribeUrl = '{{{RESEND_UNSUBSCRIBE_URL}}}',
 }: ChristmasPromotionEmailProps) => {
   const logoUrl = 'https://www.meiyugroup.org/images/aet-favicon.png'
   const headerImageUrl = 'https://americantranslationservice.com/images/Xmas-Email-Header.png'
@@ -115,7 +117,7 @@ export const ChristmasPromotionEmail = ({
                   backgroundColor: holidayPalette.background.highlight,
                   padding: spacing.md,
                   borderRadius: '16px',
-                  border: `1px dashed ${holidayPalette.accent}`,
+                  boxShadow: '0 10px 24px rgba(12,83,53,0.08)',
                 }}
               >
                 <Text style={christmasStyles.heading.h2}>
@@ -144,24 +146,23 @@ export const ChristmasPromotionEmail = ({
                   • Colleagues seeking U.S. professional licenses
                   <br />• Neighbors needing job verification
                 </Text>
+              </Section>
 
-                <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
-                  <Link href="https://americantranslationservice.com/e-contact.php">
-                    <Img
-                      src={squareImageUrl}
-                      alt="Foreign Credential Evaluation for Christmas referrals"
-                      style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        display: 'inline-block',
-                        borderRadius: '14px',
-                        border: `1px solid ${holidayPalette.border}`,
-                      }}
-                      width={520}
-                      height={520}
-                    />
-                  </Link>
-                </Section>
+              <Section style={{ textAlign: 'center' as React.CSSProperties['textAlign'] }}>
+                <Link href="https://americantranslationservice.com/e-contact.php">
+                  <Img
+                    src={squareImageUrl}
+                    alt="Foreign Credential Evaluation for Christmas referrals"
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                      display: 'inline-block',
+                      borderRadius: '14px',
+                    }}
+                    width={520}
+                    height={520}
+                  />
+                </Link>
               </Section>
 
               <Section style={christmasStyles.highlight}>
@@ -289,6 +290,7 @@ export const ChristmasPromotionEmail = ({
 
 ChristmasPromotionEmail.PreviewProps = {
   clientName: '{{{FIRST_NAME}}} {{{LAST_NAME}}}',
+  unsubscribeUrl: '{{{RESEND_UNSUBSCRIBE_URL}}}',
 } as ChristmasPromotionEmailProps
 
 export default ChristmasPromotionEmail
