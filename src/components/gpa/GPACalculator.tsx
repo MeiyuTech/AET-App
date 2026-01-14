@@ -38,15 +38,17 @@ const GRADE_POINTS: Record<string, number> = {
   P: 0.0,
   PASS: 0.0,
   CR: 0.0,
+  T: 0.0,
 }
 
 // Grades that don't count towards GPA but count for credits
-const NON_GPA_GRADES = ['P', 'PASS', 'CR']
+const NON_GPA_GRADES = ['P', 'PASS', 'CR', 'T']
 
 // Grade aliases for normalization
 const GRADE_ALIASES: Record<string, string> = {
   FAIL: 'F',
   PASS: 'P',
+  CREDIT: 'CR',
 }
 
 const GPACalculator = () => {
@@ -173,7 +175,7 @@ const GPACalculator = () => {
                 <div>B- = 2.65</div>
                 <div>F/Fail = 0.00 (counts in GPA)</div>
                 <div>C+ = 2.35</div>
-                <div>P/Pass/CR = credits only (not in GPA)</div>
+                <div>P/Pass/CR/Credit/T = credits only (not in GPA)</div>
               </div>
             </div>
             <div className="mt-6">
