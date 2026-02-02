@@ -92,6 +92,13 @@
       "list": {
         "degrees": "请上传<strong>学位证书</strong>与<strong>成绩单</strong>的扫描件",
         "translations": "<strong>提供官方或认证的英文翻译件</strong>"
+      },
+      "licensure": {
+        "title": "伊利诺伊州与新墨西哥州执照：需提交官方原件/官方电子件",
+        "summary": "针对伊利诺伊州与新墨西哥州的 Paraprofessional/Teacher Licensure，州教育委员会要求评估机构审核学位证书原件与官方成绩单，或由学校直接发送的官方电子记录。",
+        "verification": "只有在原始学术记录核验后，评估报告才可标注符合伊利诺伊州教育委员会（ISBE）及新墨西哥州教育委员会的执照要求。",
+        "limitation": "若未提供原件或学校出具的官方电子记录，评估只能作为一般学术等同性评估，不能标注符合州教育委员会执照要求。",
+        "reminder": "请尽量上传官方电子版或原件文件；需要原件/官方电子件的材料不要上传扫描件或拍照件。"
       }
     },
     "payment": {
