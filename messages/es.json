@@ -92,6 +92,13 @@
       "list": {
         "degrees": "Copias escaneadas de tus <strong>títulos</strong> y <strong>historiales académicos</strong>",
         "translations": "<strong>Traducciones oficiales o certificadas al inglés</strong>"
+      },
+      "licensure": {
+        "title": "Licencia en Illinois y Nuevo México: se requieren documentos oficiales",
+        "summary": "Para licencias de paraprofesional y docente, los Consejos Estatales de Educación requieren que la agencia de evaluación revise el título original y los historiales académicos oficiales, o registros electrónicos oficiales enviados directamente por la institución otorgante.",
+        "verification": "Solo después de verificar esos registros originales/oficiales electrónicos, el informe puede declararse como que cumple con los requisitos de la Junta Estatal de Educación de Illinois (ISBE) y del Consejo Estatal de Educación de Nuevo México.",
+        "limitation": "Si no se proporcionan originales o registros electrónicos oficiales emitidos por la institución, la evaluación se emitirá solo como equivalencia académica general y no puede indicarse como conforme a los requisitos de licencia del Consejo Estatal.",
+        "reminder": "Por favor sube la versión electrónica oficial o los documentos originales. No subas escaneos ni fotos cuando se requieren originales/documentos electrónicos oficiales."
       }
     },
     "payment": {

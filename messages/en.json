@@ -92,6 +92,13 @@
       "list": {
         "degrees": "Scanned copies of your <strong>degree(s)</strong> and <strong>transcript(s)</strong>",
         "translations": "<strong>Official or certified English translations</strong>"
+      },
+      "licensure": {
+        "title": "Illinois & New Mexico licensure: official documents required",
+        "summary": "For Paraprofessional and Teacher Licensure, the State Boards of Education require the credential evaluation agency to review the original degree certificate and official academic transcripts, or official electronic records sent directly by the awarding institution.",
+        "verification": "Only after these original/official electronic records are verified may the evaluation report be stated as meeting the requirements of the Illinois State Board of Education (ISBE) and the New Mexico State Board of Education.",
+        "limitation": "If original documents or institution-issued official electronic records are not provided, the evaluation will be issued only as a general academic equivalency and cannot be designated as compliant with State Board licensure requirements.",
+        "reminder": "Please upload the official electronic version or original documents. Do not upload scans or photos when originals/official e-documents are required."
       }
     },
     "payment": {

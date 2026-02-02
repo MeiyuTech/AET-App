@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 import { fetchFCEApplication } from '../../utils/actions'
 
@@ -174,6 +175,25 @@ export default function StatusCheck({ initialApplicationId }: StatusCheckProps) 
                         })}
                       </li>
                     </ul>
+                  </div>
+                  <div className="mb-4">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="licensure" className="border-none">
+                        <div className="rounded-md border border-amber-300 bg-amber-50 px-3">
+                          <AccordionTrigger className="text-amber-900 text-sm font-semibold">
+                            {t('upload.licensure.title')}
+                          </AccordionTrigger>
+                          <AccordionContent className="text-amber-900">
+                            <div className="space-y-2 text-sm">
+                              <p>{t('upload.licensure.summary')}</p>
+                              <p>{t('upload.licensure.verification')}</p>
+                              <p>{t('upload.licensure.limitation')}</p>
+                              <p className="font-semibold">{t('upload.licensure.reminder')}</p>
+                            </div>
+                          </AccordionContent>
+                        </div>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
 
                   {/* Add uploaded files viewer */}
