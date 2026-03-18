@@ -1,23 +1,64 @@
 import { describe, it, expect } from 'vitest'
-import { getEstimatedCompletionDate } from './utils'
+import {
+  calculateTotalPrice,
+  getEstimatedCompletionDate,
+  getCourseByCourseSecondDegreePrice,
+  getForeignCredentialSecondDegreePrice,
+} from './utils'
 import { ApplicationData } from './types'
+
+type ServiceType = NonNullable<ApplicationData['serviceType']>
+
+const createBaseServiceType = (): ServiceType => ({
+  customizedService: { required: false },
+  foreignCredentialEvaluation: { firstDegree: { speed: undefined }, secondDegrees: 0 },
+  coursebyCourse: { firstDegree: { speed: undefined }, secondDegrees: 0 },
+  professionalExperience: { speed: undefined },
+  positionEvaluation: { speed: undefined },
+  translation: { required: false },
+})
+
+const createBaseApplication = (): ApplicationData => ({
+  status: 'draft',
+  submitted_at: '',
+  due_amount: 0,
+  payment_status: 'pending',
+  payment_id: null,
+  paid_at: null,
+  serviceType: createBaseServiceType(),
+  additionalServices: [],
+  additionalServicesQuantity: {
+    extra_copy: 0,
+    pdf_with_hard_copy: 0,
+    pdf_only: 0,
+  },
+  deliveryMethod: 'no_delivery_needed',
+})
+
+const mergeServiceType = (serviceType: Partial<ServiceType>): ServiceType => {
+  const baseServiceType = createBaseServiceType()
+
+  return {
+    customizedService:
+      serviceType.customizedService ?? baseServiceType.customizedService,
+    foreignCredentialEvaluation:
+      serviceType.foreignCredentialEvaluation ?? baseServiceType.foreignCredentialEvaluation,
+    coursebyCourse: serviceType.coursebyCourse ?? baseServiceType.coursebyCourse,
+    professionalExperience:
+      serviceType.professionalExperience ?? baseServiceType.professionalExperience,
+    positionEvaluation:
+      serviceType.positionEvaluation ?? baseServiceType.positionEvaluation,
+    translation: serviceType.translation ?? baseServiceType.translation,
+  }
+}
 
 describe('getEstimatedCompletionDate', () => {
   // Helper function to create a mock application with specific service type and speed
-  const createMockApplication = (
-    serviceType: Partial<ApplicationData['serviceType']>
-  ): ApplicationData =>
+  const createMockApplication = (serviceType: Partial<ServiceType>): ApplicationData =>
     ({
-      serviceType: {
-        customizedService: { required: false },
-        foreignCredentialEvaluation: { firstDegree: { speed: undefined }, secondDegrees: 0 },
-        coursebyCourse: { firstDegree: { speed: undefined }, secondDegrees: 0 },
-        professionalExperience: { speed: undefined },
-        positionEvaluation: { speed: undefined },
-        translation: { required: false },
-        ...serviceType,
-      },
-    }) as ApplicationData
+      ...createBaseApplication(),
+      serviceType: mergeServiceType(serviceType),
+    })
 
   describe('Foreign Credential Evaluation', () => {
     it('should handle 7-day service', () => {
@@ -206,5 +247,30 @@ describe('getEstimatedCompletionDate', () => {
       const result = getEstimatedCompletionDate(application, paidAt)
       expect(result).toBe('2024-03-26') // Should use the longest duration (7 days)
     })
+  })
+})
+
+describe('additional degree pricing', () => {
+  const createPricingApplication = (serviceType: Partial<ServiceType>): ApplicationData =>
+    ({
+      ...createBaseApplication(),
+      serviceType: mergeServiceType(serviceType),
+    })
+
+  it('uses $40 for foreign credential 7 business days additional degrees', () => {
+    expect(getForeignCredentialSecondDegreePrice('7day')).toBe(40)
+  })
+
+  it('uses $60 for course-by-course 8 business days additional degrees', () => {
+    expect(getCourseByCourseSecondDegreePrice('8day')).toBe(60)
+  })
+
+  it('includes the updated additional degree prices in total calculation', () => {
+    const application = createPricingApplication({
+      foreignCredentialEvaluation: { firstDegree: { speed: '7day' }, secondDegrees: 2 },
+      coursebyCourse: { firstDegree: { speed: '8day' }, secondDegrees: 1 },
+    })
+
+    expect(calculateTotalPrice(application)).toBe('420.00')
   })
 })

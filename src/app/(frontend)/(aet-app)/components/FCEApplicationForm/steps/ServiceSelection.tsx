@@ -17,6 +17,10 @@ import {
 } from '@/components/ui/select'
 
 import { DELIVERY_OPTIONS, ADDITIONAL_SERVICES, EVALUATION_SERVICES } from '../constants'
+import {
+  getCourseByCourseSecondDegreePrice,
+  getForeignCredentialSecondDegreePrice,
+} from '../utils'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat(undefined, {
@@ -123,9 +127,9 @@ export function ServiceSelection() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {t('labels.perAdditionalDegree', {
                     price: formatPrice(
-                      watch('serviceType.foreignCredentialEvaluation.firstDegree.speed') === '7day'
-                        ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-                        : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+                      getForeignCredentialSecondDegreePrice(
+                        watch('serviceType.foreignCredentialEvaluation.firstDegree.speed')
+                      )
                     ),
                   })}
                 </p>
@@ -191,9 +195,9 @@ export function ServiceSelection() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {t('labels.perAdditionalDegree', {
                     price: formatPrice(
-                      watch('serviceType.coursebyCourse.firstDegree.speed') === '8day'
-                        ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-                        : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+                      getCourseByCourseSecondDegreePrice(
+                        watch('serviceType.coursebyCourse.firstDegree.speed')
+                      )
                     ),
                   })}
                 </p>

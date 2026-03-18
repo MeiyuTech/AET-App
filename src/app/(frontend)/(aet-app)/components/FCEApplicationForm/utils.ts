@@ -238,10 +238,7 @@ export function calculateTotalPrice(application: ApplicationData | null): string
 
       // Second Degrees
       if (application.serviceType.foreignCredentialEvaluation.secondDegrees > 0) {
-        const secondDegreePrice =
-          fceSpeed === '7day'
-            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+        const secondDegreePrice = getForeignCredentialSecondDegreePrice(fceSpeed)
 
         total +=
           secondDegreePrice * application.serviceType.foreignCredentialEvaluation.secondDegrees
@@ -256,10 +253,7 @@ export function calculateTotalPrice(application: ApplicationData | null): string
 
       // Second Degrees
       if (application.serviceType.coursebyCourse.secondDegrees > 0) {
-        const secondDegreePrice =
-          cbeSpeed === '8day'
-            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
+        const secondDegreePrice = getCourseByCourseSecondDegreePrice(cbeSpeed)
 
         total += secondDegreePrice * application.serviceType.coursebyCourse.secondDegrees
       }
@@ -302,6 +296,18 @@ export function calculateTotalPrice(application: ApplicationData | null): string
   })
 
   return total.toFixed(2)
+}
+
+export function getForeignCredentialSecondDegreePrice(speed?: string): number {
+  return speed === '7day'
+    ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
+    : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price
+}
+
+export function getCourseByCourseSecondDegreePrice(speed?: string): number {
+  return speed === '8day'
+    ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
+    : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price
 }
 
 export const formatUtils = {
