@@ -18,7 +18,7 @@ import { useEffect } from 'react'
 import {
   getCourseByCourseSecondDegreePrice,
   getForeignCredentialSecondDegreePrice,
-} from '../utils'
+} from '../../FCEApplicationForm/utils'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
