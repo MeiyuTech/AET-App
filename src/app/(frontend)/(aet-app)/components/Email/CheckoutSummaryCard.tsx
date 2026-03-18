@@ -6,6 +6,10 @@ import {
   ADDITIONAL_SERVICES,
   PURPOSE_OPTIONS,
 } from '../FCEApplicationForm/constants'
+import {
+  getCourseByCourseSecondDegreePrice,
+  getForeignCredentialSecondDegreePrice,
+} from '../FCEApplicationForm/utils'
 import { styles } from './styles/config'
 
 interface CheckoutSummaryCardProps {
@@ -65,13 +69,9 @@ export default function CheckoutSummaryCard({ application, amount }: CheckoutSum
                       <Text style={styles.serviceCard.content}>
                         Second Degree:{' '}
                         {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
-                        {speed === '7day'
-                          ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-                          : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price}{' '}
+                        {getForeignCredentialSecondDegreePrice(speed)}{' '}
                         - $
-                        {(speed === '7day'
-                          ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-                          : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price) *
+                        {getForeignCredentialSecondDegreePrice(speed) *
                           application.serviceType.foreignCredentialEvaluation.secondDegrees}
                       </Text>
                     )}
@@ -100,13 +100,9 @@ export default function CheckoutSummaryCard({ application, amount }: CheckoutSum
                     {application.serviceType.coursebyCourse.secondDegrees > 0 && (
                       <Text style={styles.serviceCard.content}>
                         Second Degree: {application.serviceType.coursebyCourse.secondDegrees} × $
-                        {speed === '8day'
-                          ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-                          : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price}{' '}
+                        {getCourseByCourseSecondDegreePrice(speed)}{' '}
                         - $
-                        {(speed === '8day'
-                          ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-                          : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price) *
+                        {getCourseByCourseSecondDegreePrice(speed) *
                           application.serviceType.coursebyCourse.secondDegrees}
                       </Text>
                     )}

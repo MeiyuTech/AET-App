@@ -8,7 +8,11 @@ import {
   ADDITIONAL_SERVICES,
   PURPOSE_OPTIONS,
 } from '../FCEApplicationForm/constants'
-import { calculateTotalPrice } from '../FCEApplicationForm/utils'
+import {
+  calculateTotalPrice,
+  getCourseByCourseSecondDegreePrice,
+  getForeignCredentialSecondDegreePrice,
+} from '../FCEApplicationForm/utils'
 import { useTranslations } from 'next-intl'
 
 interface SelectedServicesCardProps {
@@ -71,16 +75,11 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                       </div>
                       {application.serviceType.foreignCredentialEvaluation.secondDegrees > 0 && (
                         <div>
-                     {t('selectedServices.secondDegree')}:{' '}
-                      {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
-                          {speed === '7day'
-                            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-                            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT
-                                .price}{' '}
+                          {t('selectedServices.secondDegree')}:{' '}
+                          {application.serviceType.foreignCredentialEvaluation.secondDegrees} × $
+                          {getForeignCredentialSecondDegreePrice(speed)}{' '}
                           = $
-                          {(speed === '7day'
-                            ? EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE['7day'].price
-                            : EVALUATION_SERVICES.FOREIGN_CREDENTIAL.SECOND_DEGREE.DEFAULT.price) *
+                          {getForeignCredentialSecondDegreePrice(speed) *
                             application.serviceType.foreignCredentialEvaluation.secondDegrees}
                         </div>
                       )}
@@ -111,13 +110,9 @@ export default function SelectedServicesCard({ application }: SelectedServicesCa
                         <div>
                           {t('selectedServices.secondDegree')}:{' '}
                           {application.serviceType.coursebyCourse.secondDegrees} × $
-                          {speed === '8day'
-                            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-                            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price}{' '}
+                          {getCourseByCourseSecondDegreePrice(speed)}{' '}
                           = $
-                          {(speed === '8day'
-                            ? EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE['8day'].price
-                            : EVALUATION_SERVICES.COURSE_BY_COURSE.SECOND_DEGREE.DEFAULT.price) *
+                          {getCourseByCourseSecondDegreePrice(speed) *
                             application.serviceType.coursebyCourse.secondDegrees}
                         </div>
                       )}

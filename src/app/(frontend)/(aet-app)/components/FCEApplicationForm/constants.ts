@@ -121,7 +121,7 @@ export const EVALUATION_SERVICES = {
     SECOND_DEGREE: {
       '7day': {
         label: '7 Business Days',
-        price: 30,
+        price: 40,
       },
       DEFAULT: {
         label: 'Standard',
@@ -155,7 +155,7 @@ export const EVALUATION_SERVICES = {
     SECOND_DEGREE: {
       '8day': {
         label: '8 Business Days',
-        price: 40,
+        price: 60,
       },
       DEFAULT: {
         label: 'Standard',
