@@ -173,7 +173,7 @@ export const ThanksgivingPromotionEmail = ({
                   📍 联系我们
                 </Heading>
                 <Text style={{ ...thanksgivingStyles.text.default, fontWeight: 'bold' }}>
-                  17802 Sky Park Circle, Suite 205, Irvine, CA 92614
+                  17802 Sky Park Cir, Suite 205 A, IRVINE, CA 92614-6403, United States
                 </Text>
 
                 <Text style={thanksgivingStyles.text.default}>
