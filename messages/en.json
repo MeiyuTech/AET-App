@@ -467,6 +467,10 @@
         "placeholder": "e.g. I am applying for an H1B visa and need my bachelor's degree evaluated. The report will be submitted to USCIS.",
         "description": "Please provide details about your evaluation request, including the purpose (employment, education, visa), the documents you would like us to evaluate, and the organization or individual who will receive the evaluation.",
         "hint": "The more details you provide, the faster and more accurately we can assist you.",
+        "acceptanceNotice": {
+          "title": "Before you apply",
+          "description": "You are responsible for confirming with the receiving institution, employer, licensing board, or other organization that it accepts AET evaluation reports and that the report you request meets its specific requirements before submitting your application. AET does not guarantee that its reports will meet every organization’s requirements or be accepted by any particular organization."
+        },
         "samplesHeading": "Check out our sample reports",
         "samples": {
           "degree": "Degree Credential Evaluation Report",

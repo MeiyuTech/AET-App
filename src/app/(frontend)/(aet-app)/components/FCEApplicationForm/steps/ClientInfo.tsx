@@ -393,6 +393,11 @@ export function ClientInfo() {
               </ul>
             </div>
 
+            <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+              <p className="font-semibold">{t('serviceNotes.acceptanceNotice.title')}</p>
+              <p className="mt-1">{t('serviceNotes.acceptanceNotice.description')}</p>
+            </div>
+
             <FormMessage />
           </FormItem>
         )}
