@@ -467,6 +467,10 @@
         "placeholder": "Ej.: Solicito evaluación para una visa H1B; el informe se enviará a USCIS.",
         "description": "Proporciona detalles sobre tu solicitud, incluyendo el propósito (empleo, educación, visa), los documentos que deseas que evaluemos y la organización o persona que recibirá el informe.",
         "hint": "Cuantos más detalles proporciones, más rápido y con mayor precisión podremos ayudarte.",
+        "acceptanceNotice": {
+          "title": "Antes de presentar tu solicitud",
+          "description": "Antes de presentar tu solicitud, es tu responsabilidad confirmar con la institución receptora, el empleador, la junta de licencias u otra organización que acepta los informes de evaluación de AET y que el informe que solicitas cumple con sus requisitos específicos. AET no garantiza que sus informes cumplan con los requisitos de todas las organizaciones ni que una organización en particular los acepte."
+        },
         "samplesHeading": "Consulta nuestros informes de ejemplo",
         "samples": {
           "degree": "Informe de evaluación de credenciales",
