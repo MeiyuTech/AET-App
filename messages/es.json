@@ -95,7 +95,7 @@
       },
       "licensure": {
         "title": "Requisitos de documentación: originales y registros electrónicos oficiales",
-        "summary": "Según el propósito de su evaluación y los requisitos de la organización receptora, AET puede requerir títulos originales, expedientes académicos oficiales o registros electrónicos oficiales enviados directamente por la institución emisora.",
+        "summary": "Según el propósito de su evaluación y los requisitos de la organización receptora, AET puede requerir títulos originales, expedientes académicos oficiales o registros electrónicos oficiales enviados directamente por la institución emisora. Si los requisitos de su evaluación lo permiten, también puede optar por pagar por la verificación de su título.",
         "verification": "AET puede necesitar verificar estos registros antes de completar su evaluación. Proporcionar los registros requeridos no garantiza que la organización receptora acepte el informe.",
         "limitation": "Las copias escaneadas o fotografías no sustituyen los originales ni los registros electrónicos oficiales emitidos por la institución cuando estos sean requeridos. La falta de los registros requeridos puede retrasar la evaluación.",
         "reminder": "Antes de enviar originales por correo o solicitar el envío de registros electrónicos oficiales, confirme los requisitos de documentación y las instrucciones de entrega con su oficina de AET."
@@ -469,7 +469,7 @@
         "hint": "Cuantos más detalles proporciones, más rápido y con mayor precisión podremos ayudarte.",
         "acceptanceNotice": {
           "title": "Antes de presentar tu solicitud",
-          "description": "Antes de presentar tu solicitud, es tu responsabilidad confirmar con la institución receptora, el empleador, la junta de licencias u otra organización que acepta los informes de evaluación de AET y que el informe que solicitas cumple con sus requisitos específicos. AET no garantiza que sus informes cumplan con los requisitos de todas las organizaciones ni que una organización en particular los acepte. Según los requisitos de tu evaluación, AET puede necesitar documentos originales o registros electrónicos oficiales enviados directamente por tu institución educativa."
+          "description": "Antes de presentar tu solicitud, es tu responsabilidad confirmar con la institución receptora, el empleador, la junta de licencias u otra organización que acepta los informes de evaluación de AET y que el informe que solicitas cumple con sus requisitos específicos. AET no garantiza que sus informes cumplan con los requisitos de todas las organizaciones ni que una organización en particular los acepte. Según los requisitos de tu evaluación, AET puede necesitar documentos originales o registros electrónicos oficiales enviados directamente por tu institución educativa. Si los requisitos de tu evaluación lo permiten, también puedes optar por pagar por la verificación de tu título."
         },
         "samplesHeading": "Consulta nuestros informes de ejemplo",
         "samples": {

@@ -95,7 +95,7 @@
       },
       "licensure": {
         "title": "Document requirements: originals and official electronic records",
-        "summary": "Depending on the purpose of your evaluation and the receiving organization’s requirements, AET may require original degree certificates, official academic transcripts, or official electronic records sent directly by the issuing institution.",
+        "summary": "Depending on the purpose of your evaluation and the receiving organization’s requirements, AET may require original degree certificates, official academic transcripts, or official electronic records sent directly by the issuing institution. If your evaluation allows it, you may instead pay to have your degree verified.",
         "verification": "AET may need to verify these records before completing your evaluation. Providing the required records does not guarantee that the receiving organization will accept the report.",
         "limitation": "Scanned copies or photographs do not replace originals or institution-issued official electronic records when those records are required. Missing required records may delay completion of your evaluation.",
         "reminder": "Please confirm document requirements and delivery instructions with your AET office before mailing originals or arranging for official electronic records to be sent."
@@ -469,7 +469,7 @@
         "hint": "The more details you provide, the faster and more accurately we can assist you.",
         "acceptanceNotice": {
           "title": "Before you apply",
-          "description": "You are responsible for confirming with the receiving institution, employer, licensing board, or other organization that it accepts AET evaluation reports and that the report you request meets its specific requirements before submitting your application. AET does not guarantee that its reports will meet every organization’s requirements or be accepted by any particular organization. Depending on the requirements for your evaluation, AET may need original documents or official electronic records sent directly by your school."
+          "description": "You are responsible for confirming with the receiving institution, employer, licensing board, or other organization that it accepts AET evaluation reports and that the report you request meets its specific requirements before submitting your application. AET does not guarantee that its reports will meet every organization’s requirements or be accepted by any particular organization. Depending on the requirements for your evaluation, AET may need original documents or official electronic records sent directly by your school. If your evaluation allows it, you may instead pay to have your degree verified."
         },
         "samplesHeading": "Check out our sample reports",
         "samples": {
