@@ -94,11 +94,11 @@
         "translations": "<strong>Traducciones oficiales o certificadas al inglés</strong>"
       },
       "licensure": {
-        "title": "Licencia en Illinois y Nuevo México: se requieren documentos oficiales",
-        "summary": "Para licencias de paraprofesional y docente, los Consejos Estatales de Educación requieren que la agencia de evaluación revise el título original y los historiales académicos oficiales, o registros electrónicos oficiales enviados directamente por la institución otorgante.",
-        "verification": "Solo después de verificar esos registros originales/oficiales electrónicos, el informe puede declararse como que cumple con los requisitos de la Junta Estatal de Educación de Illinois (ISBE) y del Consejo Estatal de Educación de Nuevo México.",
-        "limitation": "Si no se proporcionan originales o registros electrónicos oficiales emitidos por la institución, la evaluación se emitirá solo como equivalencia académica general y no puede indicarse como conforme a los requisitos de licencia del Consejo Estatal.",
-        "reminder": "Por favor sube la versión electrónica oficial o los documentos originales. No subas escaneos ni fotos cuando se requieren originales/documentos electrónicos oficiales."
+        "title": "Requisitos de documentación: originales y registros electrónicos oficiales",
+        "summary": "Según el propósito de su evaluación y los requisitos de la organización receptora, AET puede requerir títulos originales, expedientes académicos oficiales o registros electrónicos oficiales enviados directamente por la institución emisora.",
+        "verification": "AET puede necesitar verificar estos registros antes de completar su evaluación. Proporcionar los registros requeridos no garantiza que la organización receptora acepte el informe.",
+        "limitation": "Las copias escaneadas o fotografías no sustituyen los originales ni los registros electrónicos oficiales emitidos por la institución cuando estos sean requeridos. La falta de los registros requeridos puede retrasar la evaluación.",
+        "reminder": "Antes de enviar originales por correo o solicitar el envío de registros electrónicos oficiales, confirme los requisitos de documentación y las instrucciones de entrega con su oficina de AET."
       }
     },
     "payment": {
